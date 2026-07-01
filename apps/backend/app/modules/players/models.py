@@ -10,7 +10,7 @@ import enum
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, String, UniqueConstraint
+from sqlalchemy import Boolean, DateTime, String, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID as PgUUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -46,6 +46,10 @@ class Player(TenantOwnedMixin, BaseModel):
     )
     kyc_status: Mapped[str] = mapped_column(
         String(20), nullable=False, default=KycState.unstarted.value, server_default="unstarted"
+    )
+    # Explicit opt-in for location features (GOLDEN RULE #8 — consent).
+    location_consent: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=False, server_default="false"
     )
 
 
