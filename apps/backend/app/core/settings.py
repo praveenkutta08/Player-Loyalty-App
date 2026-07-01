@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     api_base_path: str = "/api/v1"
 
     # Infra (used from later phases; declared now so config is complete)
-    database_url: str = "postgresql+asyncpg://player:player@localhost:5432/player"
+    database_url: str = "postgresql+asyncpg://player:player@localhost:5433/player"
     redis_url: str = "redis://localhost:6379/0"
 
     # Auth
