@@ -4,6 +4,10 @@ build/
 .turbo/
 coverage/
 
+# Generated code / artifacts
+**/generated/**
+apps/backend/openapi.json
+
 # Dependencies
 node_modules/
 

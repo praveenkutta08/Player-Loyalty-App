@@ -274,13 +274,12 @@ async def _evaluate(
     dwell_seconds: int | None,
     now: datetime,
 ) -> tuple[str, UUID | None]:
-    if event is TriggerEvent.dwell:
-        if (
-            trigger.dwell_seconds is None
-            or dwell_seconds is None
-            or dwell_seconds < trigger.dwell_seconds
-        ):
-            return "dwell_not_met", None
+    if event is TriggerEvent.dwell and (
+        trigger.dwell_seconds is None
+        or dwell_seconds is None
+        or dwell_seconds < trigger.dwell_seconds
+    ):
+        return "dwell_not_met", None
 
     if trigger.segment and trigger.segment != "all" and player.segment != trigger.segment:
         return "segment_mismatch", None
@@ -291,12 +290,12 @@ async def _evaluate(
     if _in_quiet_hours(now, trigger.quiet_hours_start, trigger.quiet_hours_end):
         return "quiet_hours", None
 
-    if trigger.frequency_cap_per_day is not None:
-        if (
-            await _dispatched_today(session, player.id, trigger.id, now)
-            >= trigger.frequency_cap_per_day
-        ):
-            return "frequency_capped", None
+    if (
+        trigger.frequency_cap_per_day is not None
+        and await _dispatched_today(session, player.id, trigger.id, now)
+        >= trigger.frequency_cap_per_day
+    ):
+        return "frequency_capped", None
 
     if trigger.offer_id is None:
         return "no_offer", None
