@@ -1,0 +1,31 @@
+{
+  "name": "@repo/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint": "./eslint.config.js",
+    "./prettier": "./prettier.config.js",
+    "./tsconfig.base.json": "./tsconfig.base.json"
+  },
+  "files": [
+    "eslint.config.js",
+    "prettier.config.js",
+    "tsconfig.base.json"
+  ],
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@eslint/js": "^9.11.1",
+    "eslint-import-resolver-typescript": "^3.6.3",
+    "eslint-plugin-import": "^2.30.0",
+    "globals": "^15.10.0",
+    "typescript-eslint": "^8.8.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.11.1",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.2"
+  }
+}

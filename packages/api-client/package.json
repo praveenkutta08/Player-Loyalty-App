@@ -1,0 +1,29 @@
+{
+  "name": "@repo/api-client",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "prettier": "@repo/config/prettier",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "generate": "node ./scripts/generate.mjs"
+  },
+  "dependencies": {
+    "@repo/shared-types": "workspace:*"
+  },
+  "devDependencies": {
+    "@repo/config": "workspace:*",
+    "eslint": "^9.11.1",
+    "typescript": "^5.6.2"
+  }
+}

@@ -1,0 +1,25 @@
+# Build output
+dist/
+build/
+.turbo/
+coverage/
+
+# Dependencies
+node_modules/
+
+# Tooling
+.claude/
+
+# Python
+.venv/
+__pycache__/
+
+# Lockfiles & generated
+pnpm-lock.yaml
+
+# Authored reference material — left as-written, not reformatted
+docs/
+design/
+Casino Management Platform Design/
+CLAUDE.md
+**/CLAUDE.md
