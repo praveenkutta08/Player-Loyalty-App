@@ -20,6 +20,7 @@ from app.modules.notifications import models as _notifications_models  # noqa: E
 from app.modules.offers import models as _offers_models  # noqa: E402, F401
 from app.modules.players import models as _players_models  # noqa: E402, F401
 from app.modules.reservations import models as _reservations_models  # noqa: E402, F401
+from app.modules.rewards import models as _rewards_models  # noqa: E402, F401
 from app.modules.tenant_config import models as _tenant_config_models  # noqa: E402, F401
 from app.modules.tenants.models import Tenant  # noqa: E402, F401
 from app.modules.wallet import models as _wallet_models  # noqa: E402, F401
