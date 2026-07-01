@@ -36,6 +36,17 @@ class Settings(BaseSettings):
 
     # Adapters (mock | sandbox | live) — MVP default = mock
     adapter_mode: str = "mock"
+    # Per-port provider overrides; fall back to adapter_mode when unset.
+    loyalty_provider: str | None = None
+    cashless_provider: str | None = None
+    digital_key_provider: str | None = None
+    kyc_provider: str | None = None
+    geo_provider: str | None = None
+    payment_provider: str | None = None
+    push_provider: str | None = None
+    # Mock adapter behaviour (0 = deterministic; raise in dev to exercise resilience).
+    mock_latency_ms: int = 0
+    mock_failure_rate: float = 0.0
 
     # CORS — the admin console dev origin (Vite default port).
     cors_origins: list[str] = ["http://localhost:5173"]
