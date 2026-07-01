@@ -1,0 +1,24 @@
+digraph cms {
+  rankdir=TB; bgcolor="white";
+  graph [fontname="DejaVu Sans", fontsize=13, nodesep=0.30, ranksep=0.45];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=10, color="#3B475C", fillcolor="#F4F6FA"];
+  edge [style=invis];
+
+  title [label="Reconciled CMS Portal — grouped navigation", fillcolor="#F5D9A8", fontsize=13, penwidth=1.5];
+  legend [label="Legend:   (plain) already in the design   ·   [~] extend it   ·   [+] ADD — missing but required", fillcolor="#ECEEF2", fontsize=10];
+
+  g1 [label="OVERVIEW\l • Dashboard (role-aware)\l"];
+  g2 [label="CASINOS  (Platform)\l • Directory\l • Property Detail\l • Creation Wizard\l"];
+  g3 [label="EXPERIENCE\l • Homepage Builder\l • Navigation Builder\l • Content\l • Media Library\l • Theme\l • Localization\l"];
+  g4 [label="ENGAGEMENT\l • Promotions & Offers  [~]\l • Rewards: tiers + marketplace  [~]\l • Games  [+]\l • Notifications\l • Geofencing / Location  [+]\l • Support Assistant  [+]\l", fillcolor="#FBF0E8"];
+  g5 [label="OPERATIONS\l • Hotel\l • Dining\l • Entertainment\l • Valet  [+]\l • Reservations queue  [+]\l", fillcolor="#FBF0E8"];
+  g6 [label="PLAYERS\l • Members (CRM)  [+]\l • Compliance & Responsible Gaming  [+]\l", fillcolor="#FBF0E8"];
+  g7 [label="MONEY\l • Payments & Cashless  [+]\l", fillcolor="#FBF0E8"];
+  g8 [label="PLATFORM\l • Users & Roles\l • Feature Flags\l • Audit & Publishing\l • Settings & Integrations\l • Analytics\l"];
+
+  title -> g1;
+  { rank=same; g1; g2; g3; g4; }
+  { rank=same; g5; g6; g7; g8; }
+  g1 -> g5; g2 -> g6; g3 -> g7; g4 -> g8;
+  g6 -> legend;
+}

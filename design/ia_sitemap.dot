@@ -1,0 +1,26 @@
+digraph ia {
+  rankdir=TB; bgcolor="white";
+  graph [fontname="DejaVu Sans", fontsize=13, nodesep=0.35, ranksep=0.45];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=10, color="#3B475C"];
+  edge [color="#6B7280", arrowsize=0.55];
+
+  app [label="Player App  —  Option B nav  (white-label, manifest-driven)", fillcolor="#F5D9A8", fontsize=12.5, penwidth=1.4];
+  global [label="GLOBAL (from any screen):   Notifications bell   ·   Search", fillcolor="#F4C7C7", fontsize=10];
+  app -> global [style=dashed, color="#B45454", arrowsize=0.5];
+
+  home    [label="HOME", fillcolor="#C9DAF8", penwidth=1.4];
+  offers  [label="OFFERS", fillcolor="#C9DAF8", penwidth=1.4];
+  play    [label="◉  SCAN / PLAY\n(center action)", fillcolor="#E8C982", penwidth=1.8];
+  account [label="ACCOUNT", fillcolor="#C9DAF8", penwidth=1.4];
+  more    [label="MORE", fillcolor="#C9DAF8", penwidth=1.4];
+  app -> home; app -> offers; app -> play; app -> account; app -> more;
+
+  home_c [fillcolor="#EAF3EA", label="\l• Welcome / hero + Continue visit\l• Quick actions: Wallet · Scan/Play\l• Recommendations\l• Promotions carousel\l• Leaderboard snapshot\l"];
+  offers_c [fillcolor="#D9EAD3", label="\lSegmented control:\l  • Offers  (list · detail · redeem)\l  • Promotions  (list · detail)\l  • My Rewards  (redemptions)\l"];
+  play_c [fillcolor="#F7E9C6", label="\l• Cardless pairing (BLE / QR)\l• Wallet: balance, deposit,\l   withdraw, transfer, cash-out\l• Fallback -> Wallet if\l   cashless flag is off\l"];
+  account_c [fillcolor="#D9EAD3", label="\l• Digital Member Card\l• Points · Tier · Benefits\l• Activity / Win-Loss\l• Leaderboard  ▸\l• Rewards Marketplace  ▸\l• Games catalog  ▸\l• Reservations · Valet ·\l   Digital Key  ▸\l• Profile · KYC\l"];
+  more_c [fillcolor="#EAF3EA", label="\l• Settings\l• Language\l• Theme / Appearance\l• Notification preferences\l• Messages / Inbox\l• Support (AI chat, FAQ)  ▸\l• Responsible Gaming\l• Legal · Privacy · About\l• Log out\l"];
+
+  home -> home_c; offers -> offers_c; play -> play_c; account -> account_c; more -> more_c;
+  { rank=same; home_c; offers_c; play_c; account_c; more_c; }
+}

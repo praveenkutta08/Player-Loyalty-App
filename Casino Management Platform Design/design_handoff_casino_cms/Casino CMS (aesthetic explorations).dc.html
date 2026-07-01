@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600;6..96,700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#08090b;font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased}
+  ::-webkit-scrollbar{width:0;height:0}
+  @keyframes riseIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;padding:64px 72px 120px;background:radial-gradient(1200px 600px at 20% -10%, #14120c 0%, #08090b 60%)">
+
+  <div style="max-width:1560px;margin:0 auto">
+    <div style="display:flex;align-items:baseline;gap:16px;margin-bottom:6px">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.28em;color:#E6B450;font-weight:600">TURN 01</span>
+      <span style="font-size:12px;letter-spacing:.24em;color:#5a616b;text-transform:uppercase">Dashboard — aesthetic directions</span>
+    </div>
+    <h1 style="font-size:30px;font-weight:800;color:#eef0f3;letter-spacing:-.02em;margin-bottom:6px">Three ways to build the Casino CMS</h1>
+    <p style="font-size:15px;color:#8a919b;max-width:720px;line-height:1.55">Same dashboard, same deep-gold accent — three visual languages. Pick <a href="#1a" style="color:#E6B450;text-decoration:none;font-weight:600">1a</a>, <a href="#1b" style="color:#E6B450;text-decoration:none;font-weight:600">1b</a>, or <a href="#1c" style="color:#E6B450;text-decoration:none;font-weight:600">1c</a> and I'll build the entire portal — all modules, both themes, both admin types — in that language.</p>
+
+    <div style="display:flex;gap:64px;flex-wrap:wrap;align-items:flex-start;margin-top:44px">
+
+      <!-- ============ OPTION 1A — OBSIDIAN ============ -->
+      <div id="1a" style="display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;gap:14px">
+          <span style="display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:28px;padding:0 12px;background:#E6B450;color:#0b0c0e;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;border-radius:7px">1a</span>
+          <div>
+            <div style="font-size:17px;font-weight:700;color:#eef0f3">Obsidian</div>
+            <div style="font-size:13px;color:#7e858f">Dense &amp; keyboard-first · Linear-inspired</div>
+          </div>
+        </div>
+
+        <div style="width:1440px;height:940px;background:#0B0C0E;border:1px solid #21242B;border-radius:16px;overflow:hidden;display:flex;font-family:'Hanken Grotesk',sans-serif;box-shadow:0 40px 120px -30px rgba(0,0,0,.8)">
+
+          <!-- SIDEBAR -->
+          <aside style="width:236px;flex-shrink:0;background:#0E0F12;border-right:1px solid #1a1d22;display:flex;flex-direction:column;padding:18px 0">
+            <div style="display:flex;align-items:center;gap:10px;padding:0 20px 22px">
+              <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#E6B450,#B7842B);display:flex;align-items:center;justify-content:center"><i class="ph-fill ph-spade" style="color:#0b0c0e;font-size:17px"></i></div>
+              <div><div style="font-weight:800;color:#eef0f3;font-size:15px;letter-spacing:-.01em">CasinoOps</div><div style="font-size:10px;color:#5a616b;letter-spacing:.16em">PLATFORM CMS</div></div>
+            </div>
+
+            <div style="padding:0 12px;margin-bottom:16px">
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:#16181D;border:1px solid #23262d;border-radius:9px">
+                <i class="ph ph-buildings" style="color:#E6B450;font-size:15px"></i>
+                <div style="flex:1"><div style="font-size:12.5px;color:#e7e9ec;font-weight:600">All Casinos</div><div style="font-size:10px;color:#6a717b">142 properties</div></div>
+                <i class="ph ph-caret-up-down" style="color:#6a717b;font-size:13px"></i>
+              </div>
+            </div>
+
+            <nav style="flex:1;padding:0 10px;display:flex;flex-direction:column;gap:2px;overflow:hidden">
+              <div style="font-size:10px;color:#4b515a;letter-spacing:.16em;padding:6px 10px 4px">OVERVIEW</div>
+              <a style="display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;background:#1a1c21;color:#eef0f3;font-size:13px;font-weight:600;text-decoration:none"><i class="ph-fill ph-squares-four" style="font-size:16px;color:#E6B450"></i>Dashboard<span style="margin-left:auto;width:5px;height:5px;border-radius:50%;background:#E6B450"></span></a>
+              <a style="display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;color:#a2a8b0;font-size:13px;text-decoration:none"><i class="ph ph-buildings" style="font-size:16px"></i>Casinos<span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:#5a616b">142</span></a>
+              <a style="display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;color:#a2a8b0;font-size:13px;text-decoration:none"><i class="ph ph-chart-line-up" style="font-size:16px"></i>Analytics</a>
+              <div style="font-size:10px;color:#4b515a;letter-spacing:.16em;padding:12px 10px 4px">CONTENT</div>
+              <a style="display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;color:#a2a8b0;font-size:13px;text-decoration:none"><i class="ph ph-layout" style="font-size:16px"></i>Homepage Builder</a>
+              <a style="display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;color:#a2a8b0;font-size:13px;text-decoration:none"><i class="ph ph-ticket" style="font-size:16px"></i>Promotions<span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:#0b0c0e;background:#E6B450;padding:1px 6px;border-radius:20px;font-weight:700">47</span></a>
+              <a style="display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;color:#a2a8b0;font-size:13px;text-decoration:none"><i class="ph ph-images" style="font-size:16px"></i>Media Library</a>
+              <a style="display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;color:#a2a8b0;font-size:13px;text-decoration:none"><i class="ph ph-bell" style="font-size:16px"></i>Notifications</a>
+              <div style="font-size:10px;color:#4b515a;letter-spacing:.16em;padding:12px 10px 4px">PLATFORM</div>
+              <a style="display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;color:#a2a8b0;font-size:13px;text-decoration:none"><i class="ph ph-palette" style="font-size:16px"></i>Themes</a>
+              <a style="display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;color:#a2a8b0;font-size:13px;text-decoration:none"><i class="ph ph-toggle-right" style="font-size:16px"></i>Feature Flags</a>
+              <a style="display:flex;align-items:center;gap:11px;padding:8px 10px;border-radius:8px;color:#a2a8b0;font-size:13px;text-decoration:none"><i class="ph ph-users-three" style="font-size:16px"></i>Users &amp; Roles</a>
+            </nav>
+
+            <div style="padding:10px 12px 0;border-top:1px solid #1a1d22;margin-top:6px">
+              <div style="display:flex;align-items:center;gap:10px;padding:6px 8px">
+                <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3a3f47,#22252b);display:flex;align-items:center;justify-content:center;color:#E6B450;font-weight:700;font-size:12px">DM</div>
+                <div style="flex:1"><div style="font-size:12.5px;color:#e7e9ec;font-weight:600">Dana Mercer</div><div style="font-size:10px;color:#6a717b">Platform Admin</div></div>
+                <i class="ph ph-gear" style="color:#6a717b;font-size:15px"></i>
+              </div>
+            </div>
+          </aside>
+
+          <!-- MAIN -->
+          <main style="flex:1;display:flex;flex-direction:column;min-width:0">
+            <!-- TOPBAR -->
+            <header style="height:60px;flex-shrink:0;border-bottom:1px solid #1a1d22;display:flex;align-items:center;padding:0 22px;gap:16px">
+              <div style="display:flex;flex-direction:column">
+                <div style="display:flex;align-items:center;gap:7px;font-size:11px;color:#5a616b"><span>Platform</span><i class="ph ph-caret-right" style="font-size:9px"></i><span style="color:#a2a8b0">Overview</span></div>
+              </div>
+              <div style="flex:1;max-width:420px;margin-left:14px;display:flex;align-items:center;gap:9px;background:#121418;border:1px solid #21242B;border-radius:9px;padding:7px 12px">
+                <i class="ph ph-magnifying-glass" style="color:#6a717b;font-size:14px"></i>
+                <span style="font-size:12.5px;color:#6a717b;flex:1">Search casinos, campaigns, media…</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6a717b;border:1px solid #2a2e35;border-radius:5px;padding:1px 6px">⌘K</span>
+              </div>
+              <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+                <button style="display:flex;align-items:center;gap:7px;height:34px;padding:0 13px;background:#E6B450;border:none;border-radius:9px;color:#0b0c0e;font-weight:700;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-plus" style="font-size:13px"></i>Create</button>
+                <div style="width:34px;height:34px;border-radius:9px;border:1px solid #21242B;display:flex;align-items:center;justify-content:center;position:relative"><i class="ph ph-bell" style="color:#a2a8b0;font-size:15px"></i><span style="position:absolute;top:7px;right:8px;width:6px;height:6px;background:#E5736B;border-radius:50%"></span></div>
+                <div style="width:34px;height:34px;border-radius:9px;border:1px solid #21242B;display:flex;align-items:center;justify-content:center"><i class="ph ph-moon-stars" style="color:#E6B450;font-size:15px"></i></div>
+              </div>
+            </header>
+
+            <!-- SCROLL BODY -->
+            <div style="flex:1;overflow:hidden;padding:22px">
+              <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px">
+                <div><h2 style="font-size:20px;font-weight:800;color:#eef0f3;letter-spacing:-.01em">Good evening, Dana</h2><p style="font-size:12.5px;color:#7e858f;margin-top:2px">Platform-wide overview across all 142 casino properties.</p></div>
+                <div style="display:flex;gap:6px"><span style="font-size:11.5px;color:#a2a8b0;background:#121418;border:1px solid #21242B;padding:6px 11px;border-radius:8px">Last 7 days <i class="ph ph-caret-down" style="font-size:9px"></i></span></div>
+              </div>
+
+              <!-- KPI ROW -->
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px">
+                <div style="background:#121418;border:1px solid #1e2127;border-radius:12px;padding:14px 15px">
+                  <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11.5px;color:#7e858f">Active Casinos</span><i class="ph ph-buildings" style="color:#E6B450;font-size:15px"></i></div>
+                  <div style="font-size:27px;font-weight:800;color:#eef0f3;margin-top:8px;letter-spacing:-.02em">142</div>
+                  <div style="font-size:11px;color:#58C08B;margin-top:2px;display:flex;align-items:center;gap:4px"><i class="ph ph-trend-up"></i> +6 this month · 138 live</div>
+                </div>
+                <div style="background:#121418;border:1px solid #1e2127;border-radius:12px;padding:14px 15px">
+                  <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11.5px;color:#7e858f">Publishes Today</span><i class="ph ph-rocket-launch" style="color:#E6B450;font-size:15px"></i></div>
+                  <div style="font-size:27px;font-weight:800;color:#eef0f3;margin-top:8px;letter-spacing:-.02em">28</div>
+                  <div style="font-size:11px;color:#7e858f;margin-top:2px">24 succeeded · <span style="color:#E5736B">2 failed</span></div>
+                </div>
+                <div style="background:#121418;border:1px solid #1e2127;border-radius:12px;padding:14px 15px">
+                  <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11.5px;color:#7e858f">Scheduled</span><i class="ph ph-calendar-dots" style="color:#E6B450;font-size:15px"></i></div>
+                  <div style="font-size:27px;font-weight:800;color:#eef0f3;margin-top:8px;letter-spacing:-.02em">47</div>
+                  <div style="font-size:11px;color:#7e858f;margin-top:2px">campaigns queued · next in 2h</div>
+                </div>
+                <div style="background:#121418;border:1px solid #1e2127;border-radius:12px;padding:14px 15px">
+                  <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11.5px;color:#7e858f">Pending Approvals</span><i class="ph ph-seal-check" style="color:#E6B450;font-size:15px"></i></div>
+                  <div style="font-size:27px;font-weight:800;color:#eef0f3;margin-top:8px;letter-spacing:-.02em">9</div>
+                  <div style="font-size:11px;color:#E6B450;margin-top:2px">3 awaiting you</div>
+                </div>
+              </div>
+
+              <!-- MID ROW: chart + system health -->
+              <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px">
+                <div style="background:#121418;border:1px solid #1e2127;border-radius:12px;padding:16px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+                    <div><div style="font-size:13.5px;font-weight:700;color:#eef0f3">App Sessions</div><div style="font-size:11px;color:#7e858f">Across all properties</div></div>
+                    <div style="display:flex;align-items:baseline;gap:8px"><span style="font-size:22px;font-weight:800;color:#eef0f3">3.84M</span><span style="font-size:11px;color:#58C08B">+12.4%</span></div>
+                  </div>
+                  <div style="display:flex;align-items:flex-end;gap:9px;height:120px">
+                    <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;height:100%"><div style="height:52%;background:linear-gradient(180deg,#E6B450,#8f6620);border-radius:4px 4px 2px 2px"></div><div style="height:5px;background:#26292f;border-radius:2px"></div></div>
+                    <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;height:100%"><div style="height:64%;background:linear-gradient(180deg,#E6B450,#8f6620);border-radius:4px 4px 2px 2px"></div><div style="height:5px;background:#26292f;border-radius:2px"></div></div>
+                    <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;height:100%"><div style="height:48%;background:linear-gradient(180deg,#E6B450,#8f6620);border-radius:4px 4px 2px 2px"></div><div style="height:5px;background:#26292f;border-radius:2px"></div></div>
+                    <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;height:100%"><div style="height:78%;background:linear-gradient(180deg,#E6B450,#8f6620);border-radius:4px 4px 2px 2px"></div><div style="height:5px;background:#26292f;border-radius:2px"></div></div>
+                    <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;height:100%"><div style="height:70%;background:linear-gradient(180deg,#E6B450,#8f6620);border-radius:4px 4px 2px 2px"></div><div style="height:5px;background:#26292f;border-radius:2px"></div></div>
+                    <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;height:100%"><div style="height:88%;background:linear-gradient(180deg,#E6B450,#8f6620);border-radius:4px 4px 2px 2px"></div><div style="height:5px;background:#26292f;border-radius:2px"></div></div>
+                    <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;height:100%"><div style="height:100%;background:linear-gradient(180deg,#ffd680,#E6B450);border-radius:4px 4px 2px 2px;box-shadow:0 0 20px rgba(230,180,80,.4)"></div><div style="height:5px;background:#E6B450;border-radius:2px"></div></div>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#5a616b"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+                </div>
+                <div style="background:#121418;border:1px solid #1e2127;border-radius:12px;padding:16px">
+                  <div style="font-size:13.5px;font-weight:700;color:#eef0f3;margin-bottom:14px">System Health</div>
+                  <div style="display:flex;flex-direction:column;gap:12px">
+                    <div><div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:5px"><span style="color:#a2a8b0">API Gateway</span><span style="color:#58C08B">99.98%</span></div><div style="height:5px;background:#22252b;border-radius:3px"><div style="width:99%;height:100%;background:#58C08B;border-radius:3px"></div></div></div>
+                    <div><div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:5px"><span style="color:#a2a8b0">CDN Delivery</span><span style="color:#58C08B">100%</span></div><div style="height:5px;background:#22252b;border-radius:3px"><div style="width:100%;height:100%;background:#58C08B;border-radius:3px"></div></div></div>
+                    <div><div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:5px"><span style="color:#a2a8b0">Push Pipeline</span><span style="color:#E6B450">97.2%</span></div><div style="height:5px;background:#22252b;border-radius:3px"><div style="width:97%;height:100%;background:#E6B450;border-radius:3px"></div></div></div>
+                    <div><div style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:5px"><span style="color:#a2a8b0">Media Optimizer</span><span style="color:#E5736B">degraded</span></div><div style="height:5px;background:#22252b;border-radius:3px"><div style="width:74%;height:100%;background:#E5736B;border-radius:3px"></div></div></div>
+                  </div>
+                  <div style="margin-top:14px;padding-top:12px;border-top:1px solid #1e2127;display:flex;align-items:center;gap:8px"><span style="width:7px;height:7px;border-radius:50%;background:#58C08B;box-shadow:0 0 8px #58C08B"></span><span style="font-size:11.5px;color:#a2a8b0">All core systems operational</span></div>
+                </div>
+              </div>
+
+              <!-- BOTTOM ROW: 3 cols -->
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+                <div style="background:#121418;border:1px solid #1e2127;border-radius:12px;padding:16px">
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-size:13.5px;font-weight:700;color:#eef0f3">Approval Queue</span><span style="font-size:10.5px;color:#0b0c0e;background:#E6B450;padding:2px 7px;border-radius:20px;font-weight:700">9</span></div>
+                  <div style="display:flex;flex-direction:column;gap:10px">
+                    <div style="display:flex;gap:10px;align-items:center"><div style="width:6px;height:32px;border-radius:3px;background:#E5736B"></div><div style="flex:1;min-width:0"><div style="font-size:12px;color:#e7e9ec;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Golden Mirage — Summer Jackpot hero</div><div style="font-size:10.5px;color:#7e858f">Promotion · Marcus L. · 12m ago</div></div><i class="ph ph-caret-right" style="color:#5a616b;font-size:12px"></i></div>
+                    <div style="display:flex;gap:10px;align-items:center"><div style="width:6px;height:32px;border-radius:3px;background:#E6B450"></div><div style="flex:1;min-width:0"><div style="font-size:12px;color:#e7e9ec;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Velvet Aces — Homepage v4</div><div style="font-size:10.5px;color:#7e858f">Layout · Priya S. · 1h ago</div></div><i class="ph ph-caret-right" style="color:#5a616b;font-size:12px"></i></div>
+                    <div style="display:flex;gap:10px;align-items:center"><div style="width:6px;height:32px;border-radius:3px;background:#6AA6E8"></div><div style="flex:1;min-width:0"><div style="font-size:12px;color:#e7e9ec;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Neon Palms — Loyalty tier update</div><div style="font-size:10.5px;color:#7e858f">Rewards · Auto · 3h ago</div></div><i class="ph ph-caret-right" style="color:#5a616b;font-size:12px"></i></div>
+                  </div>
+                </div>
+
+                <div style="background:#121418;border:1px solid #1e2127;border-radius:12px;padding:16px">
+                  <div style="font-size:13.5px;font-weight:700;color:#eef0f3;margin-bottom:12px">Recent Changes</div>
+                  <div style="display:flex;flex-direction:column;gap:11px">
+                    <div style="display:flex;gap:9px"><div style="width:24px;height:24px;border-radius:6px;background:#1c1f25;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ph ph-check-circle" style="color:#58C08B;font-size:13px"></i></div><div><div style="font-size:12px;color:#c7ccd2"><b style="color:#e7e9ec">Crown Bayou</b> published homepage</div><div style="font-size:10.5px;color:#6a717b">by Sofia R. · 8m ago</div></div></div>
+                    <div style="display:flex;gap:9px"><div style="width:24px;height:24px;border-radius:6px;background:#1c1f25;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ph ph-ticket" style="color:#E6B450;font-size:13px"></i></div><div><div style="font-size:12px;color:#c7ccd2">New promo <b style="color:#e7e9ec">Free Play Friday</b></div><div style="font-size:10.5px;color:#6a717b">by Marcus L. · 22m ago</div></div></div>
+                    <div style="display:flex;gap:9px"><div style="width:24px;height:24px;border-radius:6px;background:#1c1f25;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ph ph-palette" style="color:#6AA6E8;font-size:13px"></i></div><div><div style="font-size:12px;color:#c7ccd2"><b style="color:#e7e9ec">Silver Coast</b> theme recolored</div><div style="font-size:10.5px;color:#6a717b">by Dana M. · 1h ago</div></div></div>
+                    <div style="display:flex;gap:9px"><div style="width:24px;height:24px;border-radius:6px;background:#1c1f25;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ph ph-toggle-right" style="color:#E6B450;font-size:13px"></i></div><div><div style="font-size:12px;color:#c7ccd2">Flag <b style="color:#e7e9ec">digital-keys</b> enabled</div><div style="font-size:10.5px;color:#6a717b">by Ops bot · 2h ago</div></div></div>
+                  </div>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <div style="background:#121418;border:1px solid #1e2127;border-radius:12px;padding:16px">
+                    <div style="font-size:13.5px;font-weight:700;color:#eef0f3;margin-bottom:12px">Feature Flags</div>
+                    <div style="display:flex;flex-direction:column;gap:9px">
+                      <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#c7ccd2">Digital Room Keys</span><span style="width:32px;height:18px;background:#E6B450;border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:14px;height:14px;background:#0b0c0e;border-radius:50%"></span></span></div>
+                      <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#c7ccd2">AI Recommendations <span style="font-size:9px;color:#E6B450;border:1px solid #4a3d1e;padding:0 5px;border-radius:4px">BETA</span></span><span style="width:32px;height:18px;background:#E6B450;border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:14px;height:14px;background:#0b0c0e;border-radius:50%"></span></span></div>
+                      <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;color:#7e858f">Sports Betting <span style="font-size:9px;color:#7e858f;border:1px solid #2a2e35;padding:0 5px;border-radius:4px">EU</span></span><span style="width:32px;height:18px;background:#2a2e35;border-radius:20px;position:relative"><span style="position:absolute;left:2px;top:2px;width:14px;height:14px;background:#6a717b;border-radius:50%"></span></span></div>
+                    </div>
+                  </div>
+                  <div style="background:#121418;border:1px solid #1e2127;border-radius:12px;padding:16px">
+                    <div style="font-size:13.5px;font-weight:700;color:#eef0f3;margin-bottom:10px">User Activity</div>
+                    <div style="display:flex;align-items:center;gap:10px"><span style="font-size:24px;font-weight:800;color:#eef0f3">318</span><span style="font-size:11px;color:#7e858f;line-height:1.35">admins online<br>across 96 casinos</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+
+      <!-- ============ OPTION 1B — VAULT ============ -->
+      <div id="1b" style="display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;gap:14px">
+          <span style="display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:28px;padding:0 12px;background:#E6B450;color:#0b0c0e;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;border-radius:7px">1b</span>
+          <div>
+            <div style="font-size:17px;font-weight:700;color:#eef0f3">Vault</div>
+            <div style="font-size:13px;color:#7e858f">Airy &amp; refined · Vercel / Stripe-inspired</div>
+          </div>
+        </div>
+
+        <div style="width:1440px;height:940px;background:#0d0f12;border-radius:16px;overflow:hidden;display:flex;font-family:'Manrope',sans-serif;box-shadow:0 40px 120px -30px rgba(0,0,0,.8)">
+
+          <aside style="width:250px;flex-shrink:0;background:#0d0f12;border-right:1px solid #191c20;display:flex;flex-direction:column;padding:24px 0">
+            <div style="display:flex;align-items:center;gap:11px;padding:0 24px 26px">
+              <div style="width:32px;height:32px;border-radius:10px;background:#E6B450;display:flex;align-items:center;justify-content:center"><i class="ph-fill ph-spade" style="color:#0b0c0e;font-size:18px"></i></div>
+              <div style="font-weight:800;color:#f4f5f6;font-size:16px;letter-spacing:-.02em">CasinoOps</div>
+            </div>
+            <div style="padding:0 16px 20px">
+              <div style="display:flex;align-items:center;gap:10px;padding:11px 13px;background:#16191d;border-radius:12px">
+                <div style="width:26px;height:26px;border-radius:7px;background:#22262b;display:flex;align-items:center;justify-content:center"><i class="ph ph-buildings" style="color:#E6B450;font-size:14px"></i></div>
+                <div style="flex:1"><div style="font-size:13px;color:#f4f5f6;font-weight:700">All Casinos</div><div style="font-size:10.5px;color:#727a85">142 properties</div></div>
+                <i class="ph ph-caret-up-down" style="color:#727a85;font-size:14px"></i>
+              </div>
+            </div>
+            <nav style="flex:1;padding:0 16px;display:flex;flex-direction:column;gap:3px">
+              <a style="display:flex;align-items:center;gap:13px;padding:11px 13px;border-radius:11px;background:#1b1e22;color:#f4f5f6;font-size:13.5px;font-weight:700;text-decoration:none"><i class="ph-fill ph-squares-four" style="font-size:17px;color:#E6B450"></i>Dashboard</a>
+              <a style="display:flex;align-items:center;gap:13px;padding:11px 13px;border-radius:11px;color:#9aa2ad;font-size:13.5px;font-weight:500;text-decoration:none"><i class="ph ph-buildings" style="font-size:17px"></i>Casinos</a>
+              <a style="display:flex;align-items:center;gap:13px;padding:11px 13px;border-radius:11px;color:#9aa2ad;font-size:13.5px;font-weight:500;text-decoration:none"><i class="ph ph-layout" style="font-size:17px"></i>Homepage Builder</a>
+              <a style="display:flex;align-items:center;gap:13px;padding:11px 13px;border-radius:11px;color:#9aa2ad;font-size:13.5px;font-weight:500;text-decoration:none"><i class="ph ph-ticket" style="font-size:17px"></i>Promotions</a>
+              <a style="display:flex;align-items:center;gap:13px;padding:11px 13px;border-radius:11px;color:#9aa2ad;font-size:13.5px;font-weight:500;text-decoration:none"><i class="ph ph-images" style="font-size:17px"></i>Media Library</a>
+              <a style="display:flex;align-items:center;gap:13px;padding:11px 13px;border-radius:11px;color:#9aa2ad;font-size:13.5px;font-weight:500;text-decoration:none"><i class="ph ph-chart-line-up" style="font-size:17px"></i>Analytics</a>
+              <a style="display:flex;align-items:center;gap:13px;padding:11px 13px;border-radius:11px;color:#9aa2ad;font-size:13.5px;font-weight:500;text-decoration:none"><i class="ph ph-palette" style="font-size:17px"></i>Themes</a>
+              <a style="display:flex;align-items:center;gap:13px;padding:11px 13px;border-radius:11px;color:#9aa2ad;font-size:13.5px;font-weight:500;text-decoration:none"><i class="ph ph-users-three" style="font-size:17px"></i>Users &amp; Roles</a>
+            </nav>
+            <div style="padding:16px 20px 0;margin-top:6px;border-top:1px solid #191c20;display:flex;align-items:center;gap:11px">
+              <div style="width:30px;height:30px;border-radius:50%;background:#22262b;display:flex;align-items:center;justify-content:center;color:#E6B450;font-weight:800;font-size:12px">DM</div>
+              <div style="flex:1"><div style="font-size:13px;color:#f4f5f6;font-weight:700">Dana Mercer</div><div style="font-size:10.5px;color:#727a85">Platform Admin</div></div>
+            </div>
+          </aside>
+
+          <main style="flex:1;display:flex;flex-direction:column;min-width:0;background:#0f1114">
+            <header style="height:72px;flex-shrink:0;display:flex;align-items:center;padding:0 32px;gap:18px;border-bottom:1px solid #191c20">
+              <div style="flex:1;max-width:440px;display:flex;align-items:center;gap:11px;background:#16191d;border-radius:12px;padding:11px 15px">
+                <i class="ph ph-magnifying-glass" style="color:#727a85;font-size:15px"></i>
+                <span style="font-size:13px;color:#727a85;flex:1">Search everything…</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#727a85;background:#22262b;border-radius:6px;padding:2px 7px">⌘K</span>
+              </div>
+              <div style="margin-left:auto;display:flex;align-items:center;gap:11px">
+                <button style="display:flex;align-items:center;gap:8px;height:40px;padding:0 17px;background:#E6B450;border:none;border-radius:12px;color:#0b0c0e;font-weight:800;font-size:13.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-plus" style="font-size:14px"></i>Create</button>
+                <div style="width:40px;height:40px;border-radius:12px;background:#16191d;display:flex;align-items:center;justify-content:center;position:relative"><i class="ph ph-bell" style="color:#9aa2ad;font-size:17px"></i><span style="position:absolute;top:9px;right:10px;width:7px;height:7px;background:#E5736B;border-radius:50%;border:2px solid #16191d"></span></div>
+                <div style="width:40px;height:40px;border-radius:12px;background:#16191d;display:flex;align-items:center;justify-content:center"><i class="ph ph-moon-stars" style="color:#E6B450;font-size:17px"></i></div>
+              </div>
+            </header>
+            <div style="flex:1;overflow:hidden;padding:32px">
+              <div style="margin-bottom:26px"><h2 style="font-size:26px;font-weight:800;color:#f4f5f6;letter-spacing:-.025em">Good evening, Dana</h2><p style="font-size:14px;color:#8b93a0;margin-top:4px">Here's what's happening across your 142 properties.</p></div>
+
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:18px">
+                <div style="background:#16191d;border-radius:16px;padding:20px 22px"><div style="font-size:13px;color:#8b93a0;margin-bottom:14px">Active Casinos</div><div style="font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700;color:#f4f5f6;letter-spacing:-.02em">142</div><div style="font-size:12.5px;color:#5cc48f;margin-top:6px">↑ +6 this month</div></div>
+                <div style="background:#16191d;border-radius:16px;padding:20px 22px"><div style="font-size:13px;color:#8b93a0;margin-bottom:14px">Publishes Today</div><div style="font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700;color:#f4f5f6;letter-spacing:-.02em">28</div><div style="font-size:12.5px;color:#8b93a0;margin-top:6px">24 ok · <span style="color:#E5736B">2 failed</span></div></div>
+                <div style="background:#16191d;border-radius:16px;padding:20px 22px"><div style="font-size:13px;color:#8b93a0;margin-bottom:14px">Scheduled</div><div style="font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700;color:#f4f5f6;letter-spacing:-.02em">47</div><div style="font-size:12.5px;color:#8b93a0;margin-top:6px">next in 2h</div></div>
+                <div style="background:linear-gradient(155deg,#221d10,#16191d);border:1px solid #3a3115;border-radius:16px;padding:20px 22px"><div style="font-size:13px;color:#E6B450;margin-bottom:14px">Awaiting Your Approval</div><div style="font-family:'Space Grotesk',sans-serif;font-size:36px;font-weight:700;color:#f4f5f6;letter-spacing:-.02em">3</div><div style="font-size:12.5px;color:#c9a75e;margin-top:6px">of 9 pending →</div></div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:18px">
+                <div style="background:#16191d;border-radius:16px;padding:24px">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px"><div><div style="font-size:15px;font-weight:700;color:#f4f5f6">App Sessions</div><div style="font-size:12.5px;color:#8b93a0;margin-top:2px">All properties · last 7 days</div></div><div style="text-align:right"><div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:#f4f5f6">3.84M</div><div style="font-size:12px;color:#5cc48f">+12.4%</div></div></div>
+                  <div style="position:relative;height:140px">
+                    <svg viewBox="0 0 600 140" preserveAspectRatio="none" style="width:100%;height:100%">
+                      <defs><linearGradient id="vfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E6B450" stop-opacity="0.35"/><stop offset="1" stop-color="#E6B450" stop-opacity="0"/></linearGradient></defs>
+                      <path d="M0,100 L100,80 L200,92 L300,54 L400,66 L500,34 L600,20 L600,140 L0,140 Z" fill="url(#vfill)"/>
+                      <path d="M0,100 L100,80 L200,92 L300,54 L400,66 L500,34 L600,20" fill="none" stroke="#E6B450" stroke-width="2.5"/>
+                      <circle cx="600" cy="20" r="4" fill="#E6B450"/>
+                    </svg>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:#5c636e"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+                </div>
+                <div style="background:#16191d;border-radius:16px;padding:24px">
+                  <div style="font-size:15px;font-weight:700;color:#f4f5f6;margin-bottom:18px">System Health</div>
+                  <div style="display:flex;flex-direction:column;gap:15px">
+                    <div style="display:flex;align-items:center;gap:12px"><span style="width:9px;height:9px;border-radius:50%;background:#5cc48f;flex-shrink:0"></span><span style="font-size:13px;color:#c8cdd4;flex:1">API Gateway</span><span style="font-size:12.5px;color:#8b93a0">99.98%</span></div>
+                    <div style="display:flex;align-items:center;gap:12px"><span style="width:9px;height:9px;border-radius:50%;background:#5cc48f;flex-shrink:0"></span><span style="font-size:13px;color:#c8cdd4;flex:1">CDN Delivery</span><span style="font-size:12.5px;color:#8b93a0">100%</span></div>
+                    <div style="display:flex;align-items:center;gap:12px"><span style="width:9px;height:9px;border-radius:50%;background:#E6B450;flex-shrink:0"></span><span style="font-size:13px;color:#c8cdd4;flex:1">Push Pipeline</span><span style="font-size:12.5px;color:#8b93a0">97.2%</span></div>
+                    <div style="display:flex;align-items:center;gap:12px"><span style="width:9px;height:9px;border-radius:50%;background:#E5736B;flex-shrink:0"></span><span style="font-size:13px;color:#c8cdd4;flex:1">Media Optimizer</span><span style="font-size:12.5px;color:#E5736B">degraded</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+                <div style="background:#16191d;border-radius:16px;padding:22px">
+                  <div style="font-size:15px;font-weight:700;color:#f4f5f6;margin-bottom:16px">Recent Changes</div>
+                  <div style="display:flex;flex-direction:column;gap:14px">
+                    <div style="display:flex;gap:11px"><i class="ph ph-check-circle" style="color:#5cc48f;font-size:18px"></i><div><div style="font-size:12.5px;color:#c8cdd4"><b style="color:#f4f5f6">Crown Bayou</b> published homepage</div><div style="font-size:11px;color:#727a85">Sofia R. · 8m ago</div></div></div>
+                    <div style="display:flex;gap:11px"><i class="ph ph-ticket" style="color:#E6B450;font-size:18px"></i><div><div style="font-size:12.5px;color:#c8cdd4">New promo <b style="color:#f4f5f6">Free Play Friday</b></div><div style="font-size:11px;color:#727a85">Marcus L. · 22m ago</div></div></div>
+                    <div style="display:flex;gap:11px"><i class="ph ph-palette" style="color:#6AA6E8;font-size:18px"></i><div><div style="font-size:12.5px;color:#c8cdd4"><b style="color:#f4f5f6">Silver Coast</b> theme recolored</div><div style="font-size:11px;color:#727a85">Dana M. · 1h ago</div></div></div>
+                  </div>
+                </div>
+                <div style="background:#16191d;border-radius:16px;padding:22px">
+                  <div style="font-size:15px;font-weight:700;color:#f4f5f6;margin-bottom:16px">Feature Flags</div>
+                  <div style="display:flex;flex-direction:column;gap:13px">
+                    <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;color:#c8cdd4">Digital Room Keys</span><span style="width:36px;height:20px;background:#E6B450;border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:16px;height:16px;background:#0b0c0e;border-radius:50%"></span></span></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;color:#c8cdd4">AI Recommendations</span><span style="width:36px;height:20px;background:#E6B450;border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:16px;height:16px;background:#0b0c0e;border-radius:50%"></span></span></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;color:#727a85">Sports Betting</span><span style="width:36px;height:20px;background:#26292f;border-radius:20px;position:relative"><span style="position:absolute;left:2px;top:2px;width:16px;height:16px;background:#727a85;border-radius:50%"></span></span></div>
+                  </div>
+                </div>
+                <div style="background:#16191d;border-radius:16px;padding:22px">
+                  <div style="font-size:15px;font-weight:700;color:#f4f5f6;margin-bottom:16px">Approval Queue</div>
+                  <div style="display:flex;flex-direction:column;gap:12px">
+                    <div style="display:flex;gap:10px;align-items:center"><span style="width:8px;height:8px;border-radius:50%;background:#E5736B"></span><div style="flex:1;min-width:0"><div style="font-size:12.5px;color:#f4f5f6;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Golden Mirage — Summer Jackpot</div><div style="font-size:11px;color:#727a85">Promotion · 12m ago</div></div></div>
+                    <div style="display:flex;gap:10px;align-items:center"><span style="width:8px;height:8px;border-radius:50%;background:#E6B450"></span><div style="flex:1;min-width:0"><div style="font-size:12.5px;color:#f4f5f6;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Velvet Aces — Homepage v4</div><div style="font-size:11px;color:#727a85">Layout · 1h ago</div></div></div>
+                    <div style="display:flex;gap:10px;align-items:center"><span style="width:8px;height:8px;border-radius:50%;background:#6AA6E8"></span><div style="flex:1;min-width:0"><div style="font-size:12.5px;color:#f4f5f6;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Neon Palms — Loyalty tiers</div><div style="font-size:11px;color:#727a85">Rewards · 3h ago</div></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+
+      <!-- ============ OPTION 1C — SALON ============ -->
+      <div id="1c" style="display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;align-items:center;gap:14px">
+          <span style="display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:28px;padding:0 12px;background:#E6B450;color:#0b0c0e;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;border-radius:7px">1c</span>
+          <div>
+            <div style="font-size:17px;font-weight:700;color:#eef0f3">Salon</div>
+            <div style="font-size:13px;color:#7e858f">Luxury editorial · serif display &amp; gilt detailing</div>
+          </div>
+        </div>
+
+        <div style="width:1440px;height:940px;background:#0e0c09;border:1px solid #2a2417;border-radius:16px;overflow:hidden;display:flex;font-family:'Manrope',sans-serif;box-shadow:0 40px 120px -30px rgba(0,0,0,.85)">
+
+          <aside style="width:252px;flex-shrink:0;background:linear-gradient(180deg,#12100a,#0e0c09);border-right:1px solid #241e12;display:flex;flex-direction:column;padding:26px 0">
+            <div style="padding:0 26px 24px;border-bottom:1px solid #241e12;margin-bottom:18px">
+              <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#f0cd7f,#c69433);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(230,180,80,.3)"><i class="ph-fill ph-spade" style="color:#1a1408;font-size:18px"></i></div>
+                <div><div style="font-family:'Bodoni Moda',serif;font-weight:600;color:#f5efe2;font-size:19px;letter-spacing:.01em">CasinoOps</div><div style="font-size:9.5px;color:#8a7c5c;letter-spacing:.22em">PLATFORM CMS</div></div>
+              </div>
+            </div>
+            <div style="padding:0 18px 20px">
+              <div style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:rgba(230,180,80,.07);border:1px solid #33291580;border-radius:11px">
+                <i class="ph ph-buildings" style="color:#E6B450;font-size:15px"></i>
+                <div style="flex:1"><div style="font-size:13px;color:#f5efe2;font-weight:600">All Casinos</div><div style="font-size:10.5px;color:#8a7c5c">142 properties</div></div>
+                <i class="ph ph-caret-up-down" style="color:#8a7c5c;font-size:13px"></i>
+              </div>
+            </div>
+            <nav style="flex:1;padding:0 18px;display:flex;flex-direction:column;gap:2px">
+              <a style="display:flex;align-items:center;gap:12px;padding:10px 13px;border-radius:10px;background:rgba(230,180,80,.12);color:#f5efe2;font-size:13.5px;font-weight:600;text-decoration:none;border:1px solid #3a2f18"><i class="ph-fill ph-squares-four" style="font-size:16px;color:#E6B450"></i>Dashboard</a>
+              <a style="display:flex;align-items:center;gap:12px;padding:10px 13px;border-radius:10px;color:#b0a488;font-size:13.5px;font-weight:500;text-decoration:none"><i class="ph ph-buildings" style="font-size:16px"></i>Casinos</a>
+              <a style="display:flex;align-items:center;gap:12px;padding:10px 13px;border-radius:10px;color:#b0a488;font-size:13.5px;font-weight:500;text-decoration:none"><i class="ph ph-layout" style="font-size:16px"></i>Homepage Builder</a>
+              <a style="display:flex;align-items:center;gap:12px;padding:10px 13px;border-radius:10px;color:#b0a488;font-size:13.5px;font-weight:500;text-decoration:none"><i class="ph ph-ticket" style="font-size:16px"></i>Promotions</a>
+              <a style="display:flex;align-items:center;gap:12px;padding:10px 13px;border-radius:10px;color:#b0a488;font-size:13.5px;font-weight:500;text-decoration:none"><i class="ph ph-images" style="font-size:16px"></i>Media Library</a>
+              <a style="display:flex;align-items:center;gap:12px;padding:10px 13px;border-radius:10px;color:#b0a488;font-size:13.5px;font-weight:500;text-decoration:none"><i class="ph ph-chart-line-up" style="font-size:16px"></i>Analytics</a>
+              <a style="display:flex;align-items:center;gap:12px;padding:10px 13px;border-radius:10px;color:#b0a488;font-size:13.5px;font-weight:500;text-decoration:none"><i class="ph ph-palette" style="font-size:16px"></i>Themes</a>
+              <a style="display:flex;align-items:center;gap:12px;padding:10px 13px;border-radius:10px;color:#b0a488;font-size:13.5px;font-weight:500;text-decoration:none"><i class="ph ph-users-three" style="font-size:16px"></i>Users &amp; Roles</a>
+            </nav>
+            <div style="padding:16px 22px 0;border-top:1px solid #241e12;display:flex;align-items:center;gap:11px">
+              <div style="width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#3a3221,#241e12);display:flex;align-items:center;justify-content:center;color:#E6B450;font-weight:700;font-size:12px;border:1px solid #4a3d1e">DM</div>
+              <div style="flex:1"><div style="font-size:13px;color:#f5efe2;font-weight:600">Dana Mercer</div><div style="font-size:10.5px;color:#8a7c5c">Platform Admin</div></div>
+            </div>
+          </aside>
+
+          <main style="flex:1;display:flex;flex-direction:column;min-width:0;background:radial-gradient(900px 500px at 85% -20%, #1a150c 0%, #0e0c09 55%)">
+            <header style="height:70px;flex-shrink:0;display:flex;align-items:center;padding:0 30px;gap:18px;border-bottom:1px solid #241e12">
+              <div style="flex:1;max-width:430px;display:flex;align-items:center;gap:11px;background:rgba(255,255,255,.03);border:1px solid #241e12;border-radius:11px;padding:10px 14px">
+                <i class="ph ph-magnifying-glass" style="color:#8a7c5c;font-size:14px"></i>
+                <span style="font-size:13px;color:#8a7c5c;flex:1">Search the platform…</span>
+              </div>
+              <div style="margin-left:auto;display:flex;align-items:center;gap:11px">
+                <button style="display:flex;align-items:center;gap:8px;height:40px;padding:0 18px;background:linear-gradient(135deg,#f0cd7f,#d4a24c);border:none;border-radius:11px;color:#1a1408;font-weight:700;font-size:13.5px;font-family:inherit;cursor:pointer;box-shadow:0 4px 16px rgba(230,180,80,.25)"><i class="ph-fill ph-plus" style="font-size:14px"></i>Create</button>
+                <div style="width:40px;height:40px;border-radius:11px;border:1px solid #241e12;display:flex;align-items:center;justify-content:center;position:relative"><i class="ph ph-bell" style="color:#b0a488;font-size:16px"></i><span style="position:absolute;top:8px;right:9px;width:7px;height:7px;background:#E5736B;border-radius:50%;border:2px solid #0e0c09"></span></div>
+                <div style="width:40px;height:40px;border-radius:11px;border:1px solid #241e12;display:flex;align-items:center;justify-content:center"><i class="ph ph-moon-stars" style="color:#E6B450;font-size:16px"></i></div>
+              </div>
+            </header>
+            <div style="flex:1;overflow:hidden;padding:30px">
+              <div style="margin-bottom:24px"><div style="font-size:11px;color:#8a7c5c;letter-spacing:.2em;margin-bottom:6px">PLATFORM OVERVIEW · JULY 1</div><h2 style="font-family:'Bodoni Moda',serif;font-size:34px;font-weight:500;color:#f5efe2;letter-spacing:.005em">Good evening, Dana</h2></div>
+
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px">
+                <div style="background:rgba(255,255,255,.025);border:1px solid #241e12;border-radius:14px;padding:18px 20px;border-top:2px solid #E6B450"><div style="font-size:12.5px;color:#b0a488;margin-bottom:12px">Active Casinos</div><div style="font-family:'Bodoni Moda',serif;font-size:38px;font-weight:500;color:#f5efe2;line-height:1">142</div><div style="font-size:12px;color:#7cc49a;margin-top:8px">+6 this month</div></div>
+                <div style="background:rgba(255,255,255,.025);border:1px solid #241e12;border-radius:14px;padding:18px 20px;border-top:2px solid #6AA6E8"><div style="font-size:12.5px;color:#b0a488;margin-bottom:12px">Publishes Today</div><div style="font-family:'Bodoni Moda',serif;font-size:38px;font-weight:500;color:#f5efe2;line-height:1">28</div><div style="font-size:12px;color:#8a7c5c;margin-top:8px">24 ok · 2 failed</div></div>
+                <div style="background:rgba(255,255,255,.025);border:1px solid #241e12;border-radius:14px;padding:18px 20px;border-top:2px solid #7cc49a"><div style="font-size:12.5px;color:#b0a488;margin-bottom:12px">Scheduled</div><div style="font-family:'Bodoni Moda',serif;font-size:38px;font-weight:500;color:#f5efe2;line-height:1">47</div><div style="font-size:12px;color:#8a7c5c;margin-top:8px">next in 2h</div></div>
+                <div style="background:rgba(255,255,255,.025);border:1px solid #241e12;border-radius:14px;padding:18px 20px;border-top:2px solid #E5736B"><div style="font-size:12.5px;color:#b0a488;margin-bottom:12px">Pending Approvals</div><div style="font-family:'Bodoni Moda',serif;font-size:38px;font-weight:500;color:#f5efe2;line-height:1">9</div><div style="font-size:12px;color:#E6B450;margin-top:8px">3 awaiting you</div></div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px">
+                <div style="background:rgba(255,255,255,.025);border:1px solid #241e12;border-radius:14px;padding:22px">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px"><div style="font-family:'Bodoni Moda',serif;font-size:18px;color:#f5efe2">App Sessions</div><div style="text-align:right"><div style="font-family:'Bodoni Moda',serif;font-size:24px;color:#f5efe2">3.84M</div><div style="font-size:11.5px;color:#7cc49a">+12.4%</div></div></div>
+                  <div style="position:relative;height:130px">
+                    <svg viewBox="0 0 600 130" preserveAspectRatio="none" style="width:100%;height:100%">
+                      <defs><linearGradient id="sfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E6B450" stop-opacity="0.4"/><stop offset="1" stop-color="#E6B450" stop-opacity="0"/></linearGradient></defs>
+                      <path d="M0,92 L100,74 L200,84 L300,50 L400,60 L500,30 L600,18 L600,130 L0,130 Z" fill="url(#sfill)"/>
+                      <path d="M0,92 L100,74 L200,84 L300,50 L400,60 L500,30 L600,18" fill="none" stroke="#E6B450" stroke-width="2"/>
+                    </svg>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;margin-top:6px;font-size:10.5px;color:#6b6046">
+                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                  </div>
+                </div>
+                <div style="background:rgba(255,255,255,.025);border:1px solid #241e12;border-radius:14px;padding:22px">
+                  <div style="font-family:'Bodoni Moda',serif;font-size:18px;color:#f5efe2;margin-bottom:16px">System Health</div>
+                  <div style="display:flex;flex-direction:column;gap:14px">
+                    <div style="display:flex;align-items:center;gap:11px"><span style="width:8px;height:8px;border-radius:50%;background:#7cc49a"></span><span style="font-size:12.5px;color:#c4baa0;flex:1">API Gateway</span><span style="font-size:12px;color:#8a7c5c">99.98%</span></div>
+                    <div style="display:flex;align-items:center;gap:11px"><span style="width:8px;height:8px;border-radius:50%;background:#7cc49a"></span><span style="font-size:12.5px;color:#c4baa0;flex:1">CDN Delivery</span><span style="font-size:12px;color:#8a7c5c">100%</span></div>
+                    <div style="display:flex;align-items:center;gap:11px"><span style="width:8px;height:8px;border-radius:50%;background:#E6B450"></span><span style="font-size:12.5px;color:#c4baa0;flex:1">Push Pipeline</span><span style="font-size:12px;color:#8a7c5c">97.2%</span></div>
+                    <div style="display:flex;align-items:center;gap:11px"><span style="width:8px;height:8px;border-radius:50%;background:#E5736B"></span><span style="font-size:12.5px;color:#c4baa0;flex:1">Media Optimizer</span><span style="font-size:12px;color:#E5736B">degraded</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+                <div style="background:rgba(255,255,255,.025);border:1px solid #241e12;border-radius:14px;padding:20px">
+                  <div style="font-family:'Bodoni Moda',serif;font-size:17px;color:#f5efe2;margin-bottom:15px">Recent Changes</div>
+                  <div style="display:flex;flex-direction:column;gap:13px">
+                    <div style="display:flex;gap:10px"><i class="ph ph-check-circle" style="color:#7cc49a;font-size:17px"></i><div><div style="font-size:12.5px;color:#c4baa0"><b style="color:#f5efe2">Crown Bayou</b> published homepage</div><div style="font-size:10.5px;color:#7a6e50">8m ago</div></div></div>
+                    <div style="display:flex;gap:10px"><i class="ph ph-ticket" style="color:#E6B450;font-size:17px"></i><div><div style="font-size:12.5px;color:#c4baa0">New promo <b style="color:#f5efe2">Free Play Friday</b></div><div style="font-size:10.5px;color:#7a6e50">22m ago</div></div></div>
+                    <div style="display:flex;gap:10px"><i class="ph ph-palette" style="color:#6AA6E8;font-size:17px"></i><div><div style="font-size:12.5px;color:#c4baa0"><b style="color:#f5efe2">Silver Coast</b> theme recolored</div><div style="font-size:10.5px;color:#7a6e50">1h ago</div></div></div>
+                  </div>
+                </div>
+                <div style="background:rgba(255,255,255,.025);border:1px solid #241e12;border-radius:14px;padding:20px">
+                  <div style="font-family:'Bodoni Moda',serif;font-size:17px;color:#f5efe2;margin-bottom:15px">Feature Flags</div>
+                  <div style="display:flex;flex-direction:column;gap:13px">
+                    <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12.5px;color:#c4baa0">Digital Room Keys</span><span style="width:34px;height:19px;background:#E6B450;border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:15px;height:15px;background:#1a1408;border-radius:50%"></span></span></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12.5px;color:#c4baa0">AI Recommendations</span><span style="width:34px;height:19px;background:#E6B450;border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:15px;height:15px;background:#1a1408;border-radius:50%"></span></span></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12.5px;color:#7a6e50">Sports Betting</span><span style="width:34px;height:19px;background:#2a2417;border-radius:20px;position:relative"><span style="position:absolute;left:2px;top:2px;width:15px;height:15px;background:#7a6e50;border-radius:50%"></span></span></div>
+                  </div>
+                </div>
+                <div style="background:rgba(255,255,255,.025);border:1px solid #241e12;border-radius:14px;padding:20px">
+                  <div style="font-family:'Bodoni Moda',serif;font-size:17px;color:#f5efe2;margin-bottom:15px">Approval Queue</div>
+                  <div style="display:flex;flex-direction:column;gap:12px">
+                    <div style="display:flex;gap:10px;align-items:center"><span style="width:7px;height:7px;border-radius:50%;background:#E5736B"></span><div style="flex:1;min-width:0"><div style="font-size:12px;color:#f5efe2;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Golden Mirage — Summer Jackpot</div><div style="font-size:10.5px;color:#7a6e50">Promotion · 12m ago</div></div></div>
+                    <div style="display:flex;gap:10px;align-items:center"><span style="width:7px;height:7px;border-radius:50%;background:#E6B450"></span><div style="flex:1;min-width:0"><div style="font-size:12px;color:#f5efe2;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Velvet Aces — Homepage v4</div><div style="font-size:10.5px;color:#7a6e50">Layout · 1h ago</div></div></div>
+                    <div style="display:flex;gap:10px;align-items:center"><span style="width:7px;height:7px;border-radius:50%;background:#6AA6E8"></span><div style="flex:1;min-width:0"><div style="font-size:12px;color:#f5efe2;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Neon Palms — Loyalty tiers</div><div style="font-size:10.5px;color:#7a6e50">Rewards · 3h ago</div></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

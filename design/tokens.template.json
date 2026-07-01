@@ -1,0 +1,23 @@
+{
+  "$note": "Fill from Figma, then rename to tokens.json. Keep names identical across admin, mobile, and the tenant manifest.",
+  "color": {
+    "brand": { "primary": "#000000", "onPrimary": "#FFFFFF", "secondary": "#000000", "accent": "#000000" },
+    "bg": { "base": "#FFFFFF", "surface": "#FFFFFF", "elevated": "#FFFFFF" },
+    "text": { "primary": "#111111", "secondary": "#555555", "muted": "#888888", "inverse": "#FFFFFF" },
+    "state": { "success": "#1B8E3D", "warning": "#C8871B", "error": "#C0392B", "info": "#2A6FDB" },
+    "border": { "default": "#E2E2E2", "strong": "#C9C9C9" }
+  },
+  "typography": {
+    "fontFamily": { "sans": "Inter", "display": "Inter", "mono": "JetBrains Mono" },
+    "scale": {
+      "display": { "size": 32, "lineHeight": 40, "weight": 700 },
+      "h1":      { "size": 24, "lineHeight": 32, "weight": 700 },
+      "h2":      { "size": 20, "lineHeight": 28, "weight": 600 },
+      "body":    { "size": 16, "lineHeight": 24, "weight": 400 },
+      "caption": { "size": 13, "lineHeight": 18, "weight": 400 }
+    }
+  },
+  "radius":  { "sm": 6, "md": 10, "lg": 16, "pill": 999 },
+  "spacing": { "xs": 4, "sm": 8, "md": 16, "lg": 24, "xl": 32 },
+  "shadow":  { "sm": "0 1px 2px rgba(0,0,0,0.08)", "md": "0 4px 12px rgba(0,0,0,0.10)" }
+}

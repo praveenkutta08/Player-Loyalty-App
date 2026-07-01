@@ -1,0 +1,36 @@
+# Node
+node_modules/
+dist/
+build/
+.turbo/
+*.log
+.pnpm-store/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Mobile
+apps/mobile/ios/Pods/
+apps/mobile/ios/build/
+apps/mobile/android/.gradle/
+apps/mobile/android/app/build/
+*.keystore
+!debug.keystore
+google-services.json
+GoogleService-Info.plist
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json

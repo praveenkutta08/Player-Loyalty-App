@@ -1,0 +1,40 @@
+digraph flows {
+  rankdir=LR; bgcolor="white";
+  graph [fontname="DejaVu Sans", fontsize=12, nodesep=0.25, ranksep=0.45];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=9.5, color="#3B475C", fillcolor="#EAF3EA", margin="0.09,0.045"];
+  edge [color="#41506B", arrowsize=0.6];
+
+  subgraph cluster1 {
+    label="1 · Enrol"; labeljust="l"; fontsize=12; color="#9AB0D6"; style="rounded";
+    a11 [label="A1 Splash", fillcolor="#C9DAF8"]; a12 [label="A5 Sign-up"]; a13 [label="A4 OTP"];
+    a14 [label="A7 Consent"]; a15 [label="A2 Biometric"]; a16 [label="H1 Home", fillcolor="#F5D9A8"];
+    a11->a12->a13->a14->a15->a16;
+  }
+  subgraph cluster2 {
+    label="2 · Cashless play"; labeljust="l"; fontsize=12; color="#9AB0D6"; style="rounded";
+    b11 [label="S1 Scan/Play", fillcolor="#C9DAF8"]; b12 [label="S6 Fund"]; b13 [label="S2/S3 Pair\n(BLE / QR)"];
+    b14 [label="S8 Transfer\nto EGM"]; b15 [label="S4 Session"]; b16 [label="S7 Cash-out"]; b17 [label="S5 Wallet", fillcolor="#F5D9A8"];
+    b11->b12->b13->b14->b15->b16->b17;
+  }
+  subgraph cluster3 {
+    label="3 · Geofence dwell offer"; labeljust="l"; fontsize=12; color="#9AB0D6"; style="rounded";
+    c11 [label="Enter zone", shape=ellipse, fillcolor="#F4C7C7"]; c12 [label="Dwell 10 min", shape=ellipse, fillcolor="#F4C7C7"];
+    c13 [label="G2 Push"]; c14 [label="O2 Offer"]; c15 [label="O6 Redeemed", fillcolor="#F5D9A8"];
+    c11->c12->c13->c14->c15;
+  }
+  subgraph cluster4 {
+    label="4 · Redeem reward"; labeljust="l"; fontsize=12; color="#9AB0D6"; style="rounded";
+    d11 [label="C1 Account", fillcolor="#C9DAF8"]; d12 [label="C6 Marketplace"]; d13 [label="C7 Redeem"]; d14 [label="O5 My Rewards", fillcolor="#F5D9A8"];
+    d11->d12->d13->d14;
+  }
+  subgraph cluster5 {
+    label="5 · Stay + room key"; labeljust="l"; fontsize=12; color="#9AB0D6"; style="rounded";
+    e11 [label="C11 Book hotel", fillcolor="#C9DAF8"]; e12 [label="C14 Digital Key"]; e13 [label="Unlock", shape=ellipse, fillcolor="#F5D9A8"];
+    e11->e12->e13;
+  }
+  subgraph cluster6 {
+    label="6 · Get support"; labeljust="l"; fontsize=12; color="#9AB0D6"; style="rounded";
+    f11 [label="M7 Support", fillcolor="#C9DAF8"]; f12 [label="M8 Chat"]; f13 [label="Escalate to human", shape=ellipse, fillcolor="#F4C7C7"];
+    f11->f12->f13;
+  }
+}

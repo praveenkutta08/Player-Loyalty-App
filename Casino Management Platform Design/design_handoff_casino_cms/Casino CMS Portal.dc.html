@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-thumb{background:var(--scroll,#33373f);border-radius:8px}
+  ::-webkit-scrollbar-track{background:transparent}
+  :root{
+    --bg:#0e0f13; --bg2:#0a0b0e; --content:#0e0f13;
+    --panel:#16181d; --panel2:#1b1e23; --elev:#1f232a;
+    --border:#23262d; --border-soft:#1b1e24;
+    --text:#f2f3f5; --text2:#c7ccd3; --muted:#8b929c; --faint:#5c636e;
+    --gold:#E6B450; --gold-fill:#E6B450; --gold-bright:#ffd680;
+    --gold-dim:rgba(230,180,80,.12); --gold-border:rgba(230,180,80,.30);
+    --nav-active-bg:rgba(230,180,80,.10);
+    --green:#5cc48f; --green-dim:rgba(92,196,143,.14);
+    --red:#e5736b; --red-dim:rgba(229,115,107,.14);
+    --blue:#6aa6e8; --blue-dim:rgba(106,166,232,.14);
+    --purple:#b08ae0; --purple-dim:rgba(176,138,224,.14);
+    --card-shadow:0 1px 0 rgba(255,255,255,.02);
+    --scroll:#2a2e35; --track-empty:#22252b; --input:#101216;
+    --serif:'Bodoni Moda',serif;
+  }
+  [data-theme="light"]{
+    --bg:#f5f4f0; --bg2:#fbfaf7; --content:#f2f1ec;
+    --panel:#ffffff; --panel2:#faf9f5; --elev:#ffffff;
+    --border:#e5e2da; --border-soft:#edeae2;
+    --text:#1a1c20; --text2:#454a52; --muted:#767c85; --faint:#a3a8b0;
+    --gold:#9a6c15; --gold-fill:#E6B450; --gold-bright:#c9992f;
+    --gold-dim:rgba(230,180,80,.16); --gold-border:rgba(180,130,40,.35);
+    --nav-active-bg:rgba(230,180,80,.18);
+    --green:#1f9d5f; --green-dim:rgba(31,157,95,.12);
+    --red:#d64d43; --red-dim:rgba(214,77,67,.12);
+    --blue:#2f74c8; --blue-dim:rgba(47,116,200,.12);
+    --purple:#7c4fd0; --purple-dim:rgba(124,79,208,.12);
+    --card-shadow:0 1px 2px rgba(20,22,28,.05),0 1px 3px rgba(20,22,28,.05);
+    --scroll:#d4d0c6; --track-empty:#e9e6de; --input:#ffffff;
+  }
+  body{background:var(--bg2);font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased}
+  @keyframes riseIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<div data-theme="{{ theme }}" style="height:100vh;display:flex;background:var(--bg2);color:var(--text);overflow:hidden">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside style="width:250px;flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border-soft);display:flex;flex-direction:column;padding:20px 0">
+    <div style="display:flex;align-items:center;gap:11px;padding:0 22px 20px">
+      <div style="width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--gold-bright),#c69433);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(230,180,80,.28)"><i class="ph-fill ph-spade" style="color:#1a1408;font-size:18px"></i></div>
+      <div><div style="font-weight:800;color:var(--text);font-size:16px;letter-spacing:-.02em">CasinoOps</div><div style="font-size:9.5px;color:var(--faint);letter-spacing:.2em">{{ orgKicker }}</div></div>
+    </div>
+
+    <!-- tenant switcher -->
+    <div style="padding:0 16px 18px">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 13px;background:var(--panel);border:1px solid var(--border);border-radius:12px;cursor:pointer">
+        <div style="width:26px;height:26px;border-radius:7px;background:var(--gold-dim);display:flex;align-items:center;justify-content:center"><i class="ph ph-buildings" style="color:var(--gold);font-size:14px"></i></div>
+        <div style="flex:1;min-width:0"><div style="font-size:13px;color:var(--text);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ tenantName }}</div><div style="font-size:10.5px;color:var(--muted)">{{ tenantSub }}</div></div>
+        <i class="ph ph-caret-up-down" style="color:var(--muted);font-size:14px"></i>
+      </div>
+    </div>
+
+    <!-- nav -->
+    <nav style="flex:1;padding:0 12px;display:flex;flex-direction:column;gap:2px;overflow-y:auto">
+      <sc-for list="{{ navGroups }}" as="grp" hint-placeholder-count="3">
+        <div style="font-size:10px;color:var(--faint);letter-spacing:.16em;padding:12px 10px 5px;text-transform:uppercase">{{ grp.group }}</div>
+        <sc-for list="{{ grp.items }}" as="it" hint-placeholder-count="3">
+          <a onClick="{{ it.onClick }}" style="display:flex;align-items:center;gap:12px;padding:9px 11px;border-radius:9px;background:{{ it.bg }};color:{{ it.fg }};font-size:13px;font-weight:600;text-decoration:none;cursor:pointer;transition:background .12s">
+            <i class="ph ph-{{ it.icon }}" style="font-size:16px;color:{{ it.iconColor }}"></i>
+            <span style="flex:1">{{ it.label }}</span>
+            <sc-if value="{{ it.hasBadge }}" hint-placeholder-val="{{ false }}"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold);background:var(--gold-dim);padding:1px 7px;border-radius:20px;font-weight:600">{{ it.badge }}</span></sc-if>
+            <sc-if value="{{ it.active }}" hint-placeholder-val="{{ false }}"><span style="width:5px;height:5px;border-radius:50%;background:var(--gold)"></span></sc-if>
+          </a>
+        </sc-for>
+      </sc-for>
+    </nav>
+
+    <!-- settings + user -->
+    <div style="padding:8px 12px 0">
+      <a onClick="{{ goSettings }}" style="display:flex;align-items:center;gap:12px;padding:9px 11px;border-radius:9px;color:var(--muted);font-size:13px;font-weight:600;text-decoration:none;cursor:pointer"><i class="ph ph-gear" style="font-size:16px"></i>Settings</a>
+    </div>
+    <div style="margin:10px 16px 0;padding-top:14px;border-top:1px solid var(--border-soft);display:flex;align-items:center;gap:11px">
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--panel2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--gold);font-weight:800;font-size:12px">{{ userInitials }}</div>
+      <div style="flex:1;min-width:0"><div style="font-size:12.5px;color:var(--text);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ userName }}</div><div style="font-size:10.5px;color:var(--muted)">{{ userRole }}</div></div>
+      <i class="ph ph-sign-out" style="color:var(--muted);font-size:15px"></i>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main style="flex:1;display:flex;flex-direction:column;min-width:0;background:var(--content)">
+    <!-- TOPBAR -->
+    <header style="height:64px;flex-shrink:0;display:flex;align-items:center;padding:0 26px;gap:16px;border-bottom:1px solid var(--border-soft);background:var(--bg)">
+      <div style="display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--faint)"><span>{{ crumbRoot }}</span><i class="ph ph-caret-right" style="font-size:9px"></i><span style="color:var(--text2);font-weight:600">{{ viewTitle }}</span></div>
+      <div style="flex:1;max-width:400px;margin-left:12px;display:flex;align-items:center;gap:10px;background:var(--input);border:1px solid var(--border);border-radius:10px;padding:8px 13px">
+        <i class="ph ph-magnifying-glass" style="color:var(--muted);font-size:14px"></i>
+        <span style="font-size:12.5px;color:var(--muted);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Search {{ searchScope }}…</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);border:1px solid var(--border);border-radius:5px;padding:1px 6px">⌘K</span>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+        <!-- role switch -->
+        <div style="display:flex;background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:3px;gap:2px">
+          <button onClick="{{ setPlatform }}" style="border:none;cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:6px;background:{{ platformBtnBg }};color:{{ platformBtnFg }}">Platform</button>
+          <button onClick="{{ setCasino }}" style="border:none;cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:6px;background:{{ casinoBtnBg }};color:{{ casinoBtnFg }}">Casino</button>
+        </div>
+        <button onClick="{{ toggleTheme }}" style="width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--panel);display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ph ph-{{ themeIcon }}" style="color:var(--gold);font-size:16px"></i></button>
+        <div style="width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:var(--panel);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer"><i class="ph ph-bell" style="color:var(--text2);font-size:16px"></i><span style="position:absolute;top:8px;right:9px;width:6px;height:6px;background:var(--red);border-radius:50%;border:2px solid var(--panel)"></span></div>
+        <button style="display:flex;align-items:center;gap:7px;height:36px;padding:0 15px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-plus" style="font-size:13px"></i>Create</button>
+      </div>
+    </header>
+
+    <!-- CONTENT SCROLL -->
+    <div style="flex:1;overflow-y:auto">
+      <div style="padding:26px 30px 60px;max-width:1500px;margin:0 auto">
+
+        <!-- ===== DASHBOARD ===== -->
+        <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:22px">
+            <div>
+              <div style="font-size:11px;color:var(--muted);letter-spacing:.16em;margin-bottom:6px;text-transform:uppercase">{{ dashKicker }}</div>
+              <h1 style="font-family:var(--serif);font-size:32px;font-weight:500;color:var(--text);letter-spacing:.005em">Good evening, {{ firstName }}</h1>
+              <p style="font-size:13.5px;color:var(--muted);margin-top:5px">{{ dashSub }}</p>
+            </div>
+            <div style="display:flex;gap:8px">
+              <span style="font-size:12px;color:var(--text2);background:var(--panel);border:1px solid var(--border);padding:8px 13px;border-radius:9px;display:flex;align-items:center;gap:6px;cursor:pointer">Last 7 days <i class="ph ph-caret-down" style="font-size:10px"></i></span>
+            </div>
+          </div>
+
+          <!-- KPI ROW -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px">
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:18px 20px;box-shadow:var(--card-shadow);border-top:2px solid var(--gold)">
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12.5px;color:var(--muted)">{{ k1label }}</span><i class="ph ph-{{ k1icon }}" style="color:var(--gold);font-size:16px"></i></div>
+              <div style="font-family:var(--serif);font-size:34px;font-weight:500;color:var(--text);margin-top:10px;line-height:1">{{ k1val }}</div>
+              <div style="font-size:12px;color:var(--green);margin-top:8px;display:flex;align-items:center;gap:4px"><i class="ph ph-trend-up"></i>{{ k1sub }}</div>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:18px 20px;box-shadow:var(--card-shadow)">
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12.5px;color:var(--muted)">Publishes Today</span><i class="ph ph-rocket-launch" style="color:var(--text2);font-size:16px"></i></div>
+              <div style="font-family:var(--serif);font-size:34px;font-weight:500;color:var(--text);margin-top:10px;line-height:1">{{ k2val }}</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:8px">{{ k2ok }} ok · <span style="color:var(--red)">{{ k2fail }} failed</span></div>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:18px 20px;box-shadow:var(--card-shadow)">
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12.5px;color:var(--muted)">Scheduled</span><i class="ph ph-calendar-dots" style="color:var(--text2);font-size:16px"></i></div>
+              <div style="font-family:var(--serif);font-size:34px;font-weight:500;color:var(--text);margin-top:10px;line-height:1">{{ k3val }}</div>
+              <div style="font-size:12px;color:var(--muted);margin-top:8px">campaigns · next in 2h</div>
+            </div>
+            <div style="background:linear-gradient(155deg,var(--gold-dim),var(--panel));border:1px solid var(--gold-border);border-radius:15px;padding:18px 20px;box-shadow:var(--card-shadow)">
+              <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12.5px;color:var(--gold)">Awaiting You</span><i class="ph ph-seal-check" style="color:var(--gold);font-size:16px"></i></div>
+              <div style="font-family:var(--serif);font-size:34px;font-weight:500;color:var(--text);margin-top:10px;line-height:1">{{ k4val }}</div>
+              <div style="font-size:12px;color:var(--gold);margin-top:8px">of {{ k4total }} pending approvals →</div>
+            </div>
+          </div>
+
+          <!-- MID: chart + system health -->
+          <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px">
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px">
+                <div><div style="font-size:15px;font-weight:700;color:var(--text)">App Sessions</div><div style="font-size:12.5px;color:var(--muted);margin-top:2px">{{ chartScope }} · last 7 days</div></div>
+                <div style="text-align:right"><div style="font-family:var(--serif);font-size:24px;color:var(--text)">{{ sessionsVal }}</div><div style="font-size:12px;color:var(--green)">+12.4%</div></div>
+              </div>
+              <div style="position:relative;height:150px">
+                <svg viewBox="0 0 640 150" preserveAspectRatio="none" style="width:100%;height:100%">
+                  <defs><linearGradient id="hfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E6B450" stop-opacity="0.35"/><stop offset="1" stop-color="#E6B450" stop-opacity="0"/></linearGradient></defs>
+                  <path d="M0,108 L106,86 L213,98 L320,58 L426,70 L533,36 L640,22 L640,150 L0,150 Z" fill="url(#hfill)"/>
+                  <path d="M0,108 L106,86 L213,98 L320,58 L426,70 L533,36 L640,22" fill="none" stroke="#E6B450" stroke-width="2.5"/>
+                  <circle cx="640" cy="22" r="4.5" fill="#E6B450"/>
+                </svg>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint)"><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span></div>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+              <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:18px">System Health</div>
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <div style="display:flex;align-items:center;gap:11px"><span style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)"></span><span style="font-size:12.5px;color:var(--text2);flex:1">API Gateway</span><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted)">99.98%</span></div>
+                <div style="display:flex;align-items:center;gap:11px"><span style="width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)"></span><span style="font-size:12.5px;color:var(--text2);flex:1">CDN Delivery</span><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted)">100%</span></div>
+                <div style="display:flex;align-items:center;gap:11px"><span style="width:8px;height:8px;border-radius:50%;background:var(--gold)"></span><span style="font-size:12.5px;color:var(--text2);flex:1">Push Pipeline</span><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted)">97.2%</span></div>
+                <div style="display:flex;align-items:center;gap:11px"><span style="width:8px;height:8px;border-radius:50%;background:var(--red)"></span><span style="font-size:12.5px;color:var(--text2);flex:1">Media Optimizer</span><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--red)">degraded</span></div>
+              </div>
+              <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border-soft)">
+                <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:10px">User Activity</div>
+                <div style="display:flex;align-items:center;gap:10px"><span style="font-family:var(--serif);font-size:26px;color:var(--text)">{{ onlineAdmins }}</span><span style="font-size:11.5px;color:var(--muted);line-height:1.35">admins online<br>{{ onlineSub }}</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOTTOM: 3 cols -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--card-shadow)">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><span style="font-size:14.5px;font-weight:700;color:var(--text)">Approval Queue</span><span style="font-size:10.5px;color:#1a1408;background:var(--gold-fill);padding:2px 8px;border-radius:20px;font-weight:800">{{ k4total }}</span></div>
+              <div style="display:flex;flex-direction:column;gap:13px">
+                <div style="display:flex;gap:11px;align-items:center"><div style="width:5px;height:34px;border-radius:3px;background:var(--red)"></div><div style="flex:1;min-width:0"><div style="font-size:12.5px;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Golden Mirage — Summer Jackpot hero</div><div style="font-size:11px;color:var(--muted)">Promotion · Marcus L. · 12m ago</div></div><i class="ph ph-caret-right" style="color:var(--faint);font-size:13px"></i></div>
+                <div style="display:flex;gap:11px;align-items:center"><div style="width:5px;height:34px;border-radius:3px;background:var(--gold)"></div><div style="flex:1;min-width:0"><div style="font-size:12.5px;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Velvet Aces — Homepage v4</div><div style="font-size:11px;color:var(--muted)">Layout · Priya S. · 1h ago</div></div><i class="ph ph-caret-right" style="color:var(--faint);font-size:13px"></i></div>
+                <div style="display:flex;gap:11px;align-items:center"><div style="width:5px;height:34px;border-radius:3px;background:var(--blue)"></div><div style="flex:1;min-width:0"><div style="font-size:12.5px;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Neon Palms — Loyalty tier update</div><div style="font-size:11px;color:var(--muted)">Rewards · Auto · 3h ago</div></div><i class="ph ph-caret-right" style="color:var(--faint);font-size:13px"></i></div>
+              </div>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--card-shadow)">
+              <div style="font-size:14.5px;font-weight:700;color:var(--text);margin-bottom:16px">Recent Changes</div>
+              <div style="display:flex;flex-direction:column;gap:13px">
+                <div style="display:flex;gap:11px"><div style="width:26px;height:26px;border-radius:7px;background:var(--green-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ph ph-check-circle" style="color:var(--green);font-size:14px"></i></div><div><div style="font-size:12.5px;color:var(--text2)"><b style="color:var(--text)">Crown Bayou</b> published homepage</div><div style="font-size:11px;color:var(--faint)">Sofia R. · 8m ago</div></div></div>
+                <div style="display:flex;gap:11px"><div style="width:26px;height:26px;border-radius:7px;background:var(--gold-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ph ph-ticket" style="color:var(--gold);font-size:14px"></i></div><div><div style="font-size:12.5px;color:var(--text2)">New promo <b style="color:var(--text)">Free Play Friday</b></div><div style="font-size:11px;color:var(--faint)">Marcus L. · 22m ago</div></div></div>
+                <div style="display:flex;gap:11px"><div style="width:26px;height:26px;border-radius:7px;background:var(--blue-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ph ph-palette" style="color:var(--blue);font-size:14px"></i></div><div><div style="font-size:12.5px;color:var(--text2)"><b style="color:var(--text)">Silver Coast</b> theme recolored</div><div style="font-size:11px;color:var(--faint)">Dana M. · 1h ago</div></div></div>
+                <div style="display:flex;gap:11px"><div style="width:26px;height:26px;border-radius:7px;background:var(--purple-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ph ph-toggle-right" style="color:var(--purple);font-size:14px"></i></div><div><div style="font-size:12.5px;color:var(--text2)">Flag <b style="color:var(--text)">digital-keys</b> enabled</div><div style="font-size:11px;color:var(--faint)">Ops bot · 2h ago</div></div></div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--card-shadow)">
+                <div style="font-size:14.5px;font-weight:700;color:var(--text);margin-bottom:14px">Feature Flags</div>
+                <div style="display:flex;flex-direction:column;gap:11px">
+                  <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12.5px;color:var(--text2)">Digital Room Keys</span><span style="width:34px;height:19px;background:var(--gold-fill);border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:15px;height:15px;background:#1a1408;border-radius:50%"></span></span></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12.5px;color:var(--text2)">AI Recs <span style="font-size:9px;color:var(--gold);border:1px solid var(--gold-border);padding:0 5px;border-radius:4px">BETA</span></span><span style="width:34px;height:19px;background:var(--gold-fill);border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:15px;height:15px;background:#1a1408;border-radius:50%"></span></span></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12.5px;color:var(--muted)">Sports Betting <span style="font-size:9px;color:var(--muted);border:1px solid var(--border);padding:0 5px;border-radius:4px">EU</span></span><span style="width:34px;height:19px;background:var(--track-empty);border-radius:20px;position:relative"><span style="position:absolute;left:2px;top:2px;width:15px;height:15px;background:var(--faint);border-radius:50%"></span></span></div>
+                </div>
+              </div>
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--card-shadow)">
+                <div style="font-size:14.5px;font-weight:700;color:var(--text);margin-bottom:12px">Scheduled Next</div>
+                <div style="display:flex;align-items:center;gap:11px"><div style="width:40px;height:40px;border-radius:10px;background:var(--gold-dim);display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--gold)">JUL</span><span style="font-family:var(--serif);font-size:16px;color:var(--text);line-height:1">01</span></div><div><div style="font-size:12.5px;color:var(--text);font-weight:600">Weekend Free Play push</div><div style="font-size:11px;color:var(--muted)">18:00 · 3 casinos · 214K users</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== CASINO MANAGEMENT ===== -->
+        <sc-if value="{{ isCasinos }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Casino Management</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">142 properties · 138 live · 4 in setup</p></div>
+            <button onClick="{{ goCasinoWizard }}" style="display:flex;align-items:center;gap:7px;height:38px;padding:0 16px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-plus"></i>New Casino</button>
+          </div>
+          <!-- sub tabs -->
+          <div style="display:flex;gap:3px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:3px;width:fit-content;margin-bottom:20px">
+            <button onClick="{{ goCasinoList }}" style="border:none;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;padding:7px 15px;border-radius:7px;background:{{ casinoListSeg.bg }};color:{{ casinoListSeg.fg }}">Directory</button>
+            <button onClick="{{ goCasinoDetail }}" style="border:none;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;padding:7px 15px;border-radius:7px;background:{{ casinoDetailSeg.bg }};color:{{ casinoDetailSeg.fg }}">Property Detail</button>
+            <button onClick="{{ goCasinoWizard }}" style="border:none;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;padding:7px 15px;border-radius:7px;background:{{ casinoWizardSeg.bg }};color:{{ casinoWizardSeg.fg }}">Creation Wizard</button>
+          </div>
+
+          <!-- DIRECTORY -->
+          <sc-if value="{{ showCasinoList }}" hint-placeholder-val="{{ true }}">
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;box-shadow:var(--card-shadow);overflow:hidden">
+            <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border-soft)">
+              <div style="display:flex;align-items:center;gap:8px;background:var(--input);border:1px solid var(--border);border-radius:8px;padding:7px 11px;width:260px"><i class="ph ph-magnifying-glass" style="color:var(--muted);font-size:13px"></i><span style="font-size:12px;color:var(--muted)">Search casinos…</span></div>
+              <span style="font-size:12px;color:var(--text2);background:var(--input);border:1px solid var(--border);padding:7px 12px;border-radius:8px;display:flex;align-items:center;gap:6px">Region <i class="ph ph-caret-down" style="font-size:9px"></i></span>
+              <span style="font-size:12px;color:var(--text2);background:var(--input);border:1px solid var(--border);padding:7px 12px;border-radius:8px;display:flex;align-items:center;gap:6px">Status <i class="ph ph-caret-down" style="font-size:9px"></i></span>
+              <span style="margin-left:auto;font-size:12px;color:var(--muted)">1–8 of 142</span>
+              <span style="font-size:12px;color:var(--text2);background:var(--input);border:1px solid var(--border);padding:7px 10px;border-radius:8px"><i class="ph ph-funnel"></i></span>
+            </div>
+            <div style="display:grid;grid-template-columns:2.4fr 1.4fr 1fr 1fr 1fr 0.8fr 40px;padding:11px 18px;border-bottom:1px solid var(--border-soft);font-size:11px;color:var(--faint);letter-spacing:.05em;text-transform:uppercase;font-weight:700">
+              <span>Property</span><span>Location</span><span>Status</span><span>Members</span><span>Rev · MTD</span><span>App</span><span></span>
+            </div>
+            <sc-for list="{{ casinoRows }}" as="c" hint-placeholder-count="8">
+              <div onClick="{{ c.onClick }}" style="display:grid;grid-template-columns:2.4fr 1.4fr 1fr 1fr 1fr 0.8fr 40px;padding:13px 18px;border-bottom:1px solid var(--border-soft);align-items:center;cursor:pointer;font-size:13px">
+                <div style="display:flex;align-items:center;gap:11px"><div style="width:30px;height:30px;border-radius:8px;background:{{ c.chip }};display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px;flex-shrink:0">{{ c.mark }}</div><div style="min-width:0"><div style="color:var(--text);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.name }}</div><div style="font-size:10.5px;color:var(--faint);font-family:'JetBrains Mono',monospace">{{ c.id }}</div></div></div>
+                <span style="color:var(--text2)">{{ c.loc }}</span>
+                <span><span style="display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:{{ c.statusFg }};background:{{ c.statusBg }};padding:3px 9px;border-radius:20px"><span style="width:6px;height:6px;border-radius:50%;background:{{ c.statusFg }}"></span>{{ c.status }}</span></span>
+                <span style="color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:12px">{{ c.members }}</span>
+                <span style="color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600">{{ c.rev }}</span>
+                <span style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px">{{ c.app }}</span>
+                <span style="text-align:right"><i class="ph ph-dots-three" style="color:var(--muted)"></i></span>
+              </div>
+            </sc-for>
+          </div>
+          </sc-if>
+
+          <!-- PROPERTY DETAIL -->
+          <sc-if value="{{ showCasinoDetail }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="display:flex;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--card-shadow);margin-bottom:16px">
+              <div style="width:56px;height:56px;border-radius:13px;background:linear-gradient(135deg,#c9962f,#8a5a1a);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:22px;font-family:var(--serif)">GM</div>
+              <div style="flex:1">
+                <div style="display:flex;align-items:center;gap:10px"><h2 style="font-family:var(--serif);font-size:24px;color:var(--text);font-weight:500">Golden Mirage</h2><span style="display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--green);background:var(--green-dim);padding:3px 10px;border-radius:20px"><span style="width:6px;height:6px;border-radius:50%;background:var(--green)"></span>Live</span></div>
+                <div style="font-size:12.5px;color:var(--muted);margin-top:4px;display:flex;gap:16px"><span><i class="ph ph-map-pin"></i> Las Vegas, NV</span><span style="font-family:'JetBrains Mono',monospace">CAS-0041</span><span><i class="ph ph-device-mobile"></i> iOS 4.2.1 · Android 4.2.0</span></div>
+              </div>
+              <button style="height:36px;padding:0 15px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text2);font-weight:700;font-size:12.5px;font-family:inherit;cursor:pointer">Publish History</button>
+              <button style="height:36px;padding:0 15px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer">Edit Casino</button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px">
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--card-shadow)"><div style="font-size:12px;color:var(--muted)">Members</div><div style="font-family:var(--serif);font-size:26px;color:var(--text);margin-top:6px">84,210</div></div>
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--card-shadow)"><div style="font-size:12px;color:var(--muted)">Revenue MTD</div><div style="font-family:var(--serif);font-size:26px;color:var(--text);margin-top:6px">$1.24M</div></div>
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--card-shadow)"><div style="font-size:12px;color:var(--muted)">Active Promos</div><div style="font-family:var(--serif);font-size:26px;color:var(--text);margin-top:6px">8</div></div>
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--card-shadow)"><div style="font-size:12px;color:var(--muted)">App Rating</div><div style="font-family:var(--serif);font-size:26px;color:var(--text);margin-top:6px">4.7</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--card-shadow)">
+                <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px">Feature Configuration</div>
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;color:var(--text2)"><i class="ph ph-bed" style="color:var(--gold);margin-right:8px"></i>Hotel &amp; Rooms</span><span style="width:34px;height:19px;background:var(--gold-fill);border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:15px;height:15px;background:#1a1408;border-radius:50%"></span></span></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;color:var(--text2)"><i class="ph ph-fork-knife" style="color:var(--gold);margin-right:8px"></i>Dining &amp; Reservations</span><span style="width:34px;height:19px;background:var(--gold-fill);border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:15px;height:15px;background:#1a1408;border-radius:50%"></span></span></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;color:var(--text2)"><i class="ph ph-ticket" style="color:var(--gold);margin-right:8px"></i>Entertainment</span><span style="width:34px;height:19px;background:var(--gold-fill);border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:15px;height:15px;background:#1a1408;border-radius:50%"></span></span></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:13px;color:var(--muted)"><i class="ph ph-key" style="margin-right:8px"></i>Digital Room Keys</span><span style="width:34px;height:19px;background:var(--track-empty);border-radius:20px;position:relative"><span style="position:absolute;left:2px;top:2px;width:15px;height:15px;background:var(--faint);border-radius:50%"></span></span></div>
+                </div>
+              </div>
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--card-shadow)">
+                <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px">Publishing History</div>
+                <div style="display:flex;flex-direction:column;gap:13px">
+                  <div style="display:flex;gap:11px"><div style="display:flex;flex-direction:column;align-items:center"><span style="width:9px;height:9px;border-radius:50%;background:var(--green)"></span><span style="width:1px;flex:1;background:var(--border)"></span></div><div><div style="font-size:12.5px;color:var(--text)"><b>Homepage v12</b> · Summer refresh</div><div style="font-size:11px;color:var(--faint)">Published by Alex R. · 2h ago</div></div></div>
+                  <div style="display:flex;gap:11px"><div style="display:flex;flex-direction:column;align-items:center"><span style="width:9px;height:9px;border-radius:50%;background:var(--gold)"></span><span style="width:1px;flex:1;background:var(--border)"></span></div><div><div style="font-size:12.5px;color:var(--text)"><b>Promotion</b> · Free Play Friday</div><div style="font-size:11px;color:var(--faint)">Scheduled · Jul 4, 18:00</div></div></div>
+                  <div style="display:flex;gap:11px"><div style="display:flex;flex-direction:column;align-items:center"><span style="width:9px;height:9px;border-radius:50%;background:var(--muted)"></span></div><div><div style="font-size:12.5px;color:var(--text)"><b>Theme</b> · Brand color update</div><div style="font-size:11px;color:var(--faint)">Published by Dana M. · Jun 28</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- CREATION WIZARD -->
+          <sc-if value="{{ showCasinoWizard }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:240px 1fr;gap:24px;background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:26px;box-shadow:var(--card-shadow)">
+            <div>
+              <div style="font-size:11px;color:var(--faint);letter-spacing:.14em;margin-bottom:16px">NEW CASINO · {{ wizStepLabel }}</div>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <sc-for list="{{ wizSteps }}" as="s" hint-placeholder-count="5">
+                  <div style="display:flex;gap:12px;align-items:center;padding:9px 0">
+                    <div style="width:26px;height:26px;border-radius:50%;background:{{ s.bg }};border:{{ s.border }};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:{{ s.numColor }}">
+                      <sc-if value="{{ s.done }}" hint-placeholder-val="{{ false }}"><i class="ph ph-check" style="font-size:13px"></i></sc-if>
+                      <sc-if value="{{ s.notDone }}" hint-placeholder-val="{{ true }}">{{ s.n }}</sc-if>
+                    </div>
+                    <span style="font-size:13px;color:{{ s.labelColor }};font-weight:{{ s.labelWeight }}">{{ s.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="border-left:1px solid var(--border-soft);padding-left:28px;display:flex;flex-direction:column">
+              <h2 style="font-family:var(--serif);font-size:24px;color:var(--text);font-weight:500">{{ wizTitle }}</h2>
+              <div style="flex:1;margin-top:18px">
+                <!-- Step 1: Basics -->
+                <sc-if value="{{ isWiz1 }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:18px;max-width:560px">
+                  <div><label style="font-size:12.5px;color:var(--text2);font-weight:600;display:block;margin-bottom:7px">Casino name</label><div style="background:var(--input);border:1px solid var(--gold-border);border-radius:9px;padding:11px 13px;font-size:13.5px;color:var(--text)">Diamond Ridge Resort</div></div>
+                  <div style="display:flex;gap:16px">
+                    <div style="flex:1"><label style="font-size:12.5px;color:var(--text2);font-weight:600;display:block;margin-bottom:7px">Location</label><div style="background:var(--input);border:1px solid var(--border);border-radius:9px;padding:11px 13px;font-size:13.5px;color:var(--text)">Denver, CO</div></div>
+                    <div style="flex:1"><label style="font-size:12.5px;color:var(--text2);font-weight:600;display:block;margin-bottom:7px">Property code</label><div style="background:var(--input);border:1px solid var(--border);border-radius:9px;padding:11px 13px;font-size:13.5px;color:var(--muted);font-family:'JetBrains Mono',monospace">CAS-0061</div></div>
+                  </div>
+                  <div><label style="font-size:12.5px;color:var(--text2);font-weight:600;display:block;margin-bottom:7px">Support contact email</label><div style="background:var(--input);border:1px solid var(--border);border-radius:9px;padding:11px 13px;font-size:13.5px;color:var(--text)">ops@diamondridge.com</div></div>
+                </div>
+                </sc-if>
+                <!-- Step 2: Branding -->
+                <sc-if value="{{ isWiz2 }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:18px;max-width:560px">
+                  <div style="display:flex;gap:16px">
+                    <div style="flex:1"><label style="font-size:12.5px;color:var(--text2);font-weight:600;display:block;margin-bottom:7px">Logo</label><div style="border:1.5px dashed var(--border);border-radius:11px;padding:22px;text-align:center;background:var(--input)"><i class="ph ph-upload-simple" style="color:var(--gold);font-size:22px"></i><div style="font-size:12px;color:var(--muted);margin-top:6px">Drop SVG or PNG</div></div></div>
+                    <div style="flex:1"><label style="font-size:12.5px;color:var(--text2);font-weight:600;display:block;margin-bottom:7px">App icon</label><div style="border:1.5px dashed var(--border);border-radius:11px;padding:22px;text-align:center;background:var(--input)"><i class="ph ph-app-store-logo" style="color:var(--gold);font-size:22px"></i><div style="font-size:12px;color:var(--muted);margin-top:6px">1024×1024</div></div></div>
+                  </div>
+                  <div><label style="font-size:12.5px;color:var(--text2);font-weight:600;display:block;margin-bottom:9px">Brand colors</label>
+                    <div style="display:flex;gap:10px">
+                      <div style="display:flex;align-items:center;gap:8px;background:var(--input);border:1px solid var(--border);border-radius:9px;padding:8px 12px"><span style="width:20px;height:20px;border-radius:6px;background:#7b1e3a"></span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2)">#7B1E3A</span></div>
+                      <div style="display:flex;align-items:center;gap:8px;background:var(--input);border:1px solid var(--border);border-radius:9px;padding:8px 12px"><span style="width:20px;height:20px;border-radius:6px;background:#d4af37"></span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2)">#D4AF37</span></div>
+                      <div style="display:flex;align-items:center;gap:8px;background:var(--input);border:1px solid var(--border);border-radius:9px;padding:8px 12px"><span style="width:20px;height:20px;border-radius:6px;background:#0f1420"></span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2)">#0F1420</span></div>
+                    </div>
+                  </div>
+                </div>
+                </sc-if>
+                <!-- Step 3: Features -->
+                <sc-if value="{{ isWiz3 }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:600px">
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:var(--input);border-radius:11px"><span style="font-size:13px;color:var(--text2)"><i class="ph ph-bed" style="color:var(--gold);margin-right:8px"></i>Hotel &amp; Rooms</span><span style="width:34px;height:19px;background:var(--gold-fill);border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:15px;height:15px;background:#1a1408;border-radius:50%"></span></span></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:var(--input);border-radius:11px"><span style="font-size:13px;color:var(--text2)"><i class="ph ph-fork-knife" style="color:var(--gold);margin-right:8px"></i>Dining</span><span style="width:34px;height:19px;background:var(--gold-fill);border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:15px;height:15px;background:#1a1408;border-radius:50%"></span></span></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:var(--input);border-radius:11px"><span style="font-size:13px;color:var(--text2)"><i class="ph ph-crown" style="color:var(--gold);margin-right:8px"></i>Rewards</span><span style="width:34px;height:19px;background:var(--gold-fill);border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:15px;height:15px;background:#1a1408;border-radius:50%"></span></span></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:var(--input);border-radius:11px"><span style="font-size:13px;color:var(--muted)"><i class="ph ph-confetti" style="margin-right:8px"></i>Entertainment</span><span style="width:34px;height:19px;background:var(--track-empty);border-radius:20px;position:relative"><span style="position:absolute;left:2px;top:2px;width:15px;height:15px;background:var(--faint);border-radius:50%"></span></span></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:var(--input);border-radius:11px"><span style="font-size:13px;color:var(--muted)"><i class="ph ph-key" style="margin-right:8px"></i>Digital Keys</span><span style="width:34px;height:19px;background:var(--track-empty);border-radius:20px;position:relative"><span style="position:absolute;left:2px;top:2px;width:15px;height:15px;background:var(--faint);border-radius:50%"></span></span></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 15px;background:var(--input);border-radius:11px"><span style="font-size:13px;color:var(--text2)"><i class="ph ph-ticket" style="color:var(--gold);margin-right:8px"></i>Promotions</span><span style="width:34px;height:19px;background:var(--gold-fill);border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:15px;height:15px;background:#1a1408;border-radius:50%"></span></span></div>
+                </div>
+                </sc-if>
+                <!-- Step 4: Theme -->
+                <sc-if value="{{ isWiz4 }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:24px;align-items:flex-start">
+                  <div style="display:flex;flex-direction:column;gap:16px;flex:1">
+                    <div><label style="font-size:12.5px;color:var(--text2);font-weight:600;display:block;margin-bottom:9px">Preset</label><div style="display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:center;justify-content:space-between;padding:10px 13px;border:1px solid var(--gold-border);border-radius:9px;background:var(--gold-dim)"><span style="font-size:12.5px;color:var(--text);font-weight:600">Deep Ruby &amp; Gold</span><i class="ph-fill ph-check-circle" style="color:var(--gold)"></i></div><div style="display:flex;align-items:center;justify-content:space-between;padding:10px 13px;border:1px solid var(--border);border-radius:9px"><span style="font-size:12.5px;color:var(--muted)">Midnight Emerald</span></div></div></div>
+                    <div><label style="font-size:12.5px;color:var(--text2);font-weight:600;display:block;margin-bottom:9px">Navigation style</label><div style="display:flex;align-items:center;justify-content:space-between;padding:10px 13px;border:1px solid var(--border);border-radius:9px"><span style="font-size:12.5px;color:var(--text2)">Bottom Tab Bar</span><i class="ph ph-caret-down" style="color:var(--muted);font-size:11px"></i></div></div>
+                  </div>
+                  <div style="width:170px;background:#0f1420;border:6px solid #1c1f27;border-radius:24px;overflow:hidden;flex-shrink:0"><div style="height:90px;background:linear-gradient(135deg,#7b1e3a,#d4af37)"></div><div style="padding:8px;display:flex;flex-direction:column;gap:6px"><div style="height:32px;border-radius:8px;background:#171d2b"></div><div style="height:32px;border-radius:8px;background:#171d2b"></div></div></div>
+                </div>
+                </sc-if>
+                <!-- Step 5: Review -->
+                <sc-if value="{{ isWiz5 }}" hint-placeholder-val="{{ false }}">
+                <div style="max-width:600px">
+                  <div style="display:flex;flex-direction:column;gap:11px">
+                    <div style="display:flex;justify-content:space-between;padding:12px 15px;background:var(--input);border-radius:10px;font-size:13px"><span style="color:var(--muted)">Casino name</span><span style="color:var(--text);font-weight:600">Diamond Ridge Resort</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:12px 15px;background:var(--input);border-radius:10px;font-size:13px"><span style="color:var(--muted)">Location</span><span style="color:var(--text);font-weight:600">Denver, CO · CAS-0061</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:12px 15px;background:var(--input);border-radius:10px;font-size:13px"><span style="color:var(--muted)">Modules</span><span style="color:var(--text);font-weight:600">Hotel · Dining · Rewards · Promotions</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:12px 15px;background:var(--input);border-radius:10px;font-size:13px"><span style="color:var(--muted)">Theme</span><span style="color:var(--text);font-weight:600">Deep Ruby &amp; Gold</span></div>
+                  </div>
+                  <div style="margin-top:16px;display:flex;align-items:center;gap:10px;padding:13px 15px;background:var(--green-dim);border-radius:11px"><i class="ph-fill ph-check-circle" style="color:var(--green);font-size:18px"></i><span style="font-size:12.5px;color:var(--text2)">All required fields complete. Ready to provision the casino and generate app builds.</span></div>
+                </div>
+                </sc-if>
+              </div>
+              <div style="display:flex;justify-content:space-between;margin-top:28px;padding-top:20px;border-top:1px solid var(--border-soft)">
+                <sc-if value="{{ canWizBack }}" hint-placeholder-val="{{ false }}"><button onClick="{{ wizBack }}" style="height:38px;padding:0 18px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text2);font-weight:700;font-size:13px;font-family:inherit;cursor:pointer">← Back</button></sc-if>
+                <sc-if value="{{ isWiz1 }}" hint-placeholder-val="{{ true }}"><button onClick="{{ goCasinoList }}" style="height:38px;padding:0 18px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--muted);font-weight:700;font-size:13px;font-family:inherit;cursor:pointer">Cancel</button></sc-if>
+                <button onClick="{{ wizNext }}" style="height:38px;padding:0 20px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:13px;font-family:inherit;cursor:pointer">{{ wizNextLabel }}</button>
+              </div>
+            </div>
+          </div>
+          </sc-if>
+        </div>
+        </sc-if>
+
+        <!-- ===== PROMOTIONS ===== -->
+        <sc-if value="{{ isPromotions }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Promotions</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">47 active · 12 scheduled · 6 drafts</p></div>
+            <button style="display:flex;align-items:center;gap:7px;height:38px;padding:0 16px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-plus"></i>New Promotion</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+            <div style="display:flex;gap:3px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:3px">
+              <button onClick="{{ goPromoList }}" style="border:none;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;padding:7px 15px;border-radius:7px;display:flex;align-items:center;gap:6px;background:{{ promoListSeg.bg }};color:{{ promoListSeg.fg }}"><i class="ph ph-list"></i>List</button>
+              <button onClick="{{ goPromoCal }}" style="border:none;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;padding:7px 15px;border-radius:7px;display:flex;align-items:center;gap:6px;background:{{ promoCalSeg.bg }};color:{{ promoCalSeg.fg }}"><i class="ph ph-calendar-blank"></i>Calendar</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;background:var(--input);border:1px solid var(--border);border-radius:8px;padding:7px 11px;width:220px"><i class="ph ph-magnifying-glass" style="color:var(--muted);font-size:13px"></i><span style="font-size:12px;color:var(--muted)">Search promotions…</span></div>
+            <span style="font-size:12px;color:var(--text2);background:var(--input);border:1px solid var(--border);padding:7px 12px;border-radius:8px;display:flex;align-items:center;gap:6px">Type <i class="ph ph-caret-down" style="font-size:9px"></i></span>
+          </div>
+
+          <!-- LIST -->
+          <sc-if value="{{ showPromoList }}" hint-placeholder-val="{{ true }}">
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;box-shadow:var(--card-shadow);overflow:hidden">
+            <div style="display:grid;grid-template-columns:2.6fr 1fr 1.2fr 1.4fr 1fr 40px;padding:11px 18px;border-bottom:1px solid var(--border-soft);font-size:11px;color:var(--faint);letter-spacing:.05em;text-transform:uppercase;font-weight:700"><span>Promotion</span><span>Type</span><span>Status</span><span>Schedule</span><span>Redeemed</span><span></span></div>
+            <sc-for list="{{ promoRows }}" as="p" hint-placeholder-count="6">
+              <div onClick="{{ p.onClick }}" style="display:grid;grid-template-columns:2.6fr 1fr 1.2fr 1.4fr 1fr 40px;padding:13px 18px;border-bottom:1px solid var(--border-soft);align-items:center;cursor:pointer;font-size:13px">
+                <div style="min-width:0"><div style="color:var(--text);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.name }}</div><div style="font-size:11px;color:var(--faint)">{{ p.casino }} · {{ p.audience }}</div></div>
+                <span><span style="font-size:11px;font-weight:600;color:{{ p.typeColor }};background:{{ p.typeBg }};padding:3px 9px;border-radius:6px">{{ p.type }}</span></span>
+                <span><span style="display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:{{ p.sFg }};background:{{ p.sBg }};padding:3px 9px;border-radius:20px"><span style="width:6px;height:6px;border-radius:50%;background:{{ p.sFg }}"></span>{{ p.status }}</span></span>
+                <span style="color:var(--text2);font-size:12px">{{ p.window }}</span>
+                <span style="color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600">{{ p.redeem }}</span>
+                <span style="text-align:right"><i class="ph ph-dots-three" style="color:var(--muted)"></i></span>
+              </div>
+            </sc-for>
+          </div>
+          </sc-if>
+
+          <!-- CALENDAR -->
+          <sc-if value="{{ showPromoCal }}" hint-placeholder-val="{{ false }}">
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;box-shadow:var(--card-shadow);padding:20px">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px"><div style="font-family:var(--serif);font-size:20px;color:var(--text)">July 2026</div><div style="display:flex;gap:6px"><span style="width:30px;height:30px;border-radius:8px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer"><i class="ph ph-caret-left"></i></span><span style="width:30px;height:30px;border-radius:8px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer"><i class="ph ph-caret-right"></i></span></div></div>
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px">
+              <div style="font-size:11px;color:var(--faint);text-align:center;font-weight:700">SUN</div><div style="font-size:11px;color:var(--faint);text-align:center;font-weight:700">MON</div><div style="font-size:11px;color:var(--faint);text-align:center;font-weight:700">TUE</div><div style="font-size:11px;color:var(--faint);text-align:center;font-weight:700">WED</div><div style="font-size:11px;color:var(--faint);text-align:center;font-weight:700">THU</div><div style="font-size:11px;color:var(--faint);text-align:center;font-weight:700">FRI</div><div style="font-size:11px;color:var(--faint);text-align:center;font-weight:700">SAT</div>
+            </div>
+            <sc-for list="{{ calWeeks }}" as="w" hint-placeholder-count="5">
+              <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px">
+                <sc-for list="{{ w }}" as="d" hint-placeholder-count="7">
+                  <div style="min-height:76px;border:1px solid var(--border-soft);border-radius:9px;padding:7px;background:{{ d.bg }}">
+                    <div style="font-size:11.5px;color:{{ d.numColor }};font-weight:600;font-family:'JetBrains Mono',monospace">{{ d.num }}</div>
+                    <sc-if value="{{ d.hasEvent }}" hint-placeholder-val="{{ false }}"><div style="margin-top:5px;font-size:9.5px;color:{{ d.evColor }};background:{{ d.evBg }};padding:2px 6px;border-radius:5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ d.event }}</div></sc-if>
+                    <sc-if value="{{ d.hasEvent2 }}" hint-placeholder-val="{{ false }}"><div style="margin-top:4px;font-size:9.5px;color:var(--blue);background:var(--blue-dim);padding:2px 6px;border-radius:5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ d.event2 }}</div></sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+          </sc-if>
+
+          <!-- DETAIL -->
+          <sc-if value="{{ showPromoDetail }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px"><button onClick="{{ goPromoList }}" style="height:32px;padding:0 12px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--text2);font-weight:700;font-size:12px;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:6px"><i class="ph ph-arrow-left"></i>Back</button><span style="font-size:12px;color:var(--faint)">Promotions / Summer Jackpot Spectacular</span></div>
+            <div style="display:grid;grid-template-columns:1.6fr 1fr;gap:16px">
+              <div style="display:flex;flex-direction:column;gap:16px">
+                <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:11px;font-weight:600;color:var(--gold);background:var(--gold-dim);padding:3px 9px;border-radius:6px">Campaign</span><span style="display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--green);background:var(--green-dim);padding:3px 9px;border-radius:20px"><span style="width:6px;height:6px;border-radius:50%;background:var(--green)"></span>Live</span></div><span style="font-size:12px;color:var(--muted)">Golden Mirage</span></div>
+                  <h2 style="font-family:var(--serif);font-size:24px;color:var(--text);font-weight:500">Summer Jackpot Spectacular</h2>
+                  <p style="font-size:13px;color:var(--text2);margin-top:8px;line-height:1.55">Triple entries into the $250,000 progressive draw every time members play 30+ minutes. Featured on the app home hero and loyalty tab.</p>
+                  <div style="margin-top:18px;border:1px solid var(--border-soft);border-radius:12px;overflow:hidden">
+                    <div style="height:150px;background:linear-gradient(135deg,#7b1e3a,#c9962f);display:flex;align-items:flex-end;padding:16px"><div><div style="font-size:10px;color:rgba(255,255,255,.8);letter-spacing:.1em">HOME HERO PREVIEW</div><div style="font-family:var(--serif);font-size:22px;color:#fff">Win $250,000</div></div></div>
+                  </div>
+                </div>
+                <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+                  <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px">Performance</div>
+                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+                    <div><div style="font-size:12px;color:var(--muted)">Redemptions</div><div style="font-family:var(--serif);font-size:24px;color:var(--text);margin-top:4px">12,481</div></div>
+                    <div><div style="font-size:12px;color:var(--muted)">Conversion</div><div style="font-family:var(--serif);font-size:24px;color:var(--text);margin-top:4px">18.4%</div></div>
+                    <div><div style="font-size:12px;color:var(--muted)">Rev. lift</div><div style="font-family:var(--serif);font-size:24px;color:var(--green);margin-top:4px">+$96K</div></div>
+                  </div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:16px">
+                <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--card-shadow)">
+                  <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px">Audience Targeting</div>
+                  <div style="display:flex;flex-direction:column;gap:10px">
+                    <div style="display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--text2)"><i class="ph ph-users-three" style="color:var(--gold)"></i>All active members</div>
+                    <div style="display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--text2)"><i class="ph ph-map-pin" style="color:var(--gold)"></i>Within 50 mi of property</div>
+                    <div style="display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--text2)"><i class="ph ph-clock" style="color:var(--gold)"></i>Last visit &lt; 30 days</div>
+                    <div style="margin-top:6px;padding-top:12px;border-top:1px solid var(--border-soft);display:flex;align-items:baseline;gap:8px"><span style="font-family:var(--serif);font-size:22px;color:var(--text)">67,900</span><span style="font-size:12px;color:var(--muted)">members reached</span></div>
+                  </div>
+                </div>
+                <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--card-shadow)">
+                  <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px">Schedule</div>
+                  <div style="display:flex;flex-direction:column;gap:11px;font-size:12.5px;color:var(--text2)">
+                    <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Starts</span><span style="font-family:'JetBrains Mono',monospace">Jun 1, 2026 · 00:00</span></div>
+                    <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Ends</span><span style="font-family:'JetBrains Mono',monospace">Aug 31, 2026 · 23:59</span></div>
+                    <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Time zone</span><span>America/Los_Angeles</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </sc-if>
+        </div>
+        </sc-if>
+
+        <!-- ===== HOMEPAGE BUILDER ===== -->
+        <sc-if value="{{ isHomepage }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <div style="display:flex;align-items:center;gap:12px"><h1 style="font-family:var(--serif);font-size:26px;font-weight:500;color:var(--text)">Homepage Builder</h1><span style="font-size:11px;color:var(--gold);background:var(--gold-dim);padding:3px 9px;border-radius:20px;font-weight:600">Draft · v13</span></div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="display:flex;gap:2px;background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:3px"><span style="padding:5px 10px;border-radius:6px;background:var(--gold-fill);color:#1a1408;font-size:12px;font-weight:700"><i class="ph ph-device-mobile"></i></span><span style="padding:5px 10px;border-radius:6px;color:var(--muted);font-size:12px"><i class="ph ph-device-tablet"></i></span></div>
+              <button style="height:36px;padding:0 14px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text2);font-weight:700;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph ph-eye" style="margin-right:6px"></i>Preview</button>
+              <button style="height:36px;padding:0 14px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text2);font-weight:700;font-size:12.5px;font-family:inherit;cursor:pointer">Save Draft</button>
+              <button style="height:36px;padding:0 16px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-rocket-launch" style="margin-right:6px"></i>Publish</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:230px 1fr 260px;gap:16px;align-items:start">
+            <!-- widget palette -->
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--card-shadow)">
+              <div style="font-size:11px;color:var(--faint);letter-spacing:.1em;margin-bottom:12px;font-weight:700">WIDGETS · DRAG TO ADD</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <sc-for list="{{ widgets }}" as="w" hint-placeholder-count="10">
+                  <div draggable="true" onDragStart="{{ w.onDragStart }}" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border:1px solid var(--border-soft);border-radius:10px;background:var(--input);cursor:grab" style-hover="border-color:var(--gold);background:var(--gold-dim)"><i class="ph ph-{{ w.icon }}" style="color:var(--gold);font-size:18px"></i><span style="font-size:10.5px;color:var(--text2);text-align:center">{{ w.label }}</span></div>
+                </sc-for>
+              </div>
+            </div>
+            <!-- mobile canvas -->
+            <div style="display:flex;justify-content:center;padding:8px 0">
+              <div style="width:300px;background:#0b0d12;border:8px solid #1c1f27;border-radius:34px;overflow:hidden;box-shadow:0 30px 70px -20px rgba(0,0,0,.6)">
+                <div style="height:32px;background:#0b0d12;display:flex;align-items:center;justify-content:center"><div style="width:90px;height:20px;background:#000;border-radius:12px"></div></div>
+                <div onDragOver="{{ onCanvasDragOver }}" onDrop="{{ onCanvasDrop }}" style="padding:10px;display:flex;flex-direction:column;gap:10px;background:#0b0d12;min-height:220px">
+                  <sc-for list="{{ hpBlockList }}" as="b" hint-placeholder-count="4">
+                    <div draggable="true" onDragStart="{{ b.onDragStart }}" onDragOver="{{ b.onDragOver }}" onDrop="{{ b.onDrop }}" onClick="{{ b.onSelect }}" style="border:2px solid {{ b.borderCol }};border-radius:14px;overflow:hidden;position:relative;cursor:grab">
+                      <span style="position:absolute;top:6px;left:6px;font-size:8px;color:#1a1408;background:var(--gold);padding:2px 6px;border-radius:5px;font-weight:800;z-index:3;display:flex;align-items:center;gap:3px"><i class="ph ph-dots-six-vertical"></i>{{ b.label }}</span>
+                      <sc-if value="{{ b.selected }}" hint-placeholder-val="{{ false }}"><span onClick="{{ b.onRemove }}" style="position:absolute;top:6px;right:6px;z-index:3;width:18px;height:18px;border-radius:50%;background:var(--red);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer">×</span></sc-if>
+                      <sc-if value="{{ b.isHero }}" hint-placeholder-val="{{ false }}"><div style="height:120px;background:linear-gradient(135deg,#7b1e3a,#c9962f);display:flex;align-items:flex-end;padding:12px"><div style="font-family:var(--serif);font-size:16px;color:#fff">Win $250,000</div></div></sc-if>
+                      <sc-if value="{{ b.isCarousel }}" hint-placeholder-val="{{ false }}"><div style="background:#14171d;padding:10px;padding-top:22px"><div style="display:flex;gap:6px"><div style="flex:1;height:60px;border-radius:8px;background:linear-gradient(135deg,#2a2f3a,#1a1e26)"></div><div style="width:40px;height:60px;border-radius:8px;background:linear-gradient(135deg,#2a2f3a,#1a1e26)"></div></div></div></sc-if>
+                      <sc-if value="{{ b.isLoyalty }}" hint-placeholder-val="{{ false }}"><div style="background:linear-gradient(135deg,#1e2230,#14171d);padding:12px;padding-top:24px;display:flex;align-items:center;gap:10px"><div style="width:34px;height:34px;border-radius:8px;background:var(--gold);display:flex;align-items:center;justify-content:center"><i class="ph-fill ph-crown" style="color:#1a1408"></i></div><div><div style="font-size:11px;color:#f2f3f5;font-weight:700">Gold Tier</div><div style="font-size:9px;color:#8b929c">12,480 pts · 520 to Platinum</div></div></div></sc-if>
+                      <sc-if value="{{ b.isQuick }}" hint-placeholder-val="{{ false }}"><div style="background:#0b0d12;padding-top:22px;display:flex;gap:8px"><div style="flex:1;border-radius:12px;background:#14171d;padding:12px;text-align:center"><i class="ph ph-bed" style="color:var(--gold);font-size:18px"></i><div style="font-size:9px;color:#c7ccd3;margin-top:5px">Hotel</div></div><div style="flex:1;border-radius:12px;background:#14171d;padding:12px;text-align:center"><i class="ph ph-fork-knife" style="color:var(--gold);font-size:18px"></i><div style="font-size:9px;color:#c7ccd3;margin-top:5px">Dining</div></div><div style="flex:1;border-radius:12px;background:#14171d;padding:12px;text-align:center"><i class="ph ph-ticket" style="color:var(--gold);font-size:18px"></i><div style="font-size:9px;color:#c7ccd3;margin-top:5px">Events</div></div></div></sc-if>
+                      <sc-if value="{{ b.isGeneric }}" hint-placeholder-val="{{ false }}"><div style="background:#14171d;padding:22px 12px 16px;display:flex;align-items:center;justify-content:center;gap:8px;min-height:64px"><i class="ph ph-cube" style="color:var(--gold);font-size:16px"></i><span style="font-size:11px;color:#c7ccd3;font-weight:600">{{ b.label }}</span></div></sc-if>
+                    </div>
+                  </sc-for>
+                  <div style="border:1.5px dashed #2a2f3a;border-radius:12px;padding:14px;text-align:center;color:#5c636e;font-size:10px"><i class="ph ph-plus"></i> Drag a widget here</div>
+                </div>
+              </div>
+            </div>
+            <!-- properties -->
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--card-shadow)">
+              <div style="font-size:11px;color:var(--faint);letter-spacing:.1em;margin-bottom:12px;font-weight:700">{{ selBlockLabel }} · PROPERTIES</div>
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <div><label style="font-size:11.5px;color:var(--muted);display:block;margin-bottom:6px">Headline</label><div style="background:var(--input);border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;color:var(--text)">Win $250,000</div></div>
+                <div><label style="font-size:11.5px;color:var(--muted);display:block;margin-bottom:6px">Linked promotion</label><div style="background:var(--input);border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:12.5px;color:var(--text);display:flex;justify-content:space-between;align-items:center">Summer Jackpot <i class="ph ph-caret-down" style="color:var(--muted);font-size:11px"></i></div></div>
+                <div><label style="font-size:11.5px;color:var(--muted);display:block;margin-bottom:6px">Background</label><div style="display:flex;gap:6px"><span style="width:26px;height:26px;border-radius:6px;background:#7b1e3a;border:2px solid var(--gold)"></span><span style="width:26px;height:26px;border-radius:6px;background:#c9962f"></span><span style="width:26px;height:26px;border-radius:6px;background:#0f1420"></span><span style="width:26px;height:26px;border-radius:6px;background:var(--input);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px"><i class="ph ph-plus"></i></span></div></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding-top:6px"><span style="font-size:12.5px;color:var(--text2)">Auto-schedule</span><span style="width:34px;height:19px;background:var(--gold-fill);border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:15px;height:15px;background:#1a1408;border-radius:50%"></span></span></div>
+                <div style="padding-top:12px;border-top:1px solid var(--border-soft);display:flex;gap:8px"><button style="flex:1;height:32px;background:var(--input);border:1px solid var(--border);border-radius:8px;color:var(--text2);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer">Duplicate</button><button style="flex:1;height:32px;background:var(--red-dim);border:none;border-radius:8px;color:var(--red);font-size:12px;font-weight:700;font-family:inherit;cursor:pointer">Remove</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== ANALYTICS ===== -->
+        <sc-if value="{{ isAnalytics }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Analytics</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">{{ chartScope }} · Jun 1 – Jul 1, 2026</p></div>
+            <div style="display:flex;gap:8px"><span style="font-size:12px;color:var(--text2);background:var(--panel);border:1px solid var(--border);padding:8px 13px;border-radius:9px;display:flex;align-items:center;gap:6px">30 days <i class="ph ph-caret-down" style="font-size:10px"></i></span><button style="height:36px;padding:0 14px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text2);font-weight:700;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph ph-download-simple" style="margin-right:6px"></i>Export</button></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px">
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--card-shadow)"><div style="font-size:12px;color:var(--muted)">Active Users</div><div style="font-family:var(--serif);font-size:28px;color:var(--text);margin-top:5px">612K</div><div style="font-size:11.5px;color:var(--green);margin-top:4px">↑ 8.2%</div></div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--card-shadow)"><div style="font-size:12px;color:var(--muted)">Avg Session</div><div style="font-family:var(--serif);font-size:28px;color:var(--text);margin-top:5px">7m 42s</div><div style="font-size:11.5px;color:var(--green);margin-top:4px">↑ 3.1%</div></div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--card-shadow)"><div style="font-size:12px;color:var(--muted)">Offer Redemptions</div><div style="font-family:var(--serif);font-size:28px;color:var(--text);margin-top:5px">48.1K</div><div style="font-size:11.5px;color:var(--green);margin-top:4px">↑ 14.6%</div></div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 18px;box-shadow:var(--card-shadow)"><div style="font-size:12px;color:var(--muted)">30-day Retention</div><div style="font-family:var(--serif);font-size:28px;color:var(--text);margin-top:5px">61.4%</div><div style="font-size:11.5px;color:var(--red);margin-top:4px">↓ 1.2%</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px">
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+              <div style="display:flex;justify-content:space-between;margin-bottom:18px"><div style="font-size:15px;font-weight:700;color:var(--text)">Daily Active Users</div><div style="display:flex;gap:14px;font-size:11.5px"><span style="color:var(--text2)"><span style="display:inline-block;width:8px;height:8px;background:var(--gold);border-radius:2px;margin-right:5px"></span>This month</span><span style="color:var(--muted)"><span style="display:inline-block;width:8px;height:8px;background:var(--faint);border-radius:2px;margin-right:5px"></span>Last month</span></div></div>
+              <div style="position:relative;height:180px">
+                <svg viewBox="0 0 640 180" preserveAspectRatio="none" style="width:100%;height:100%">
+                  <defs><linearGradient id="afill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E6B450" stop-opacity="0.3"/><stop offset="1" stop-color="#E6B450" stop-opacity="0"/></linearGradient></defs>
+                  <path d="M0,130 L91,120 L182,138 L274,96 L365,108 L457,70 L548,80 L640,44 L640,180 L0,180 Z" fill="url(#afill)"/>
+                  <path d="M0,130 L91,120 L182,138 L274,96 L365,108 L457,70 L548,80 L640,44" fill="none" stroke="#E6B450" stroke-width="2.5"/>
+                  <path d="M0,150 L91,144 L182,152 L274,130 L365,140 L457,120 L548,128 L640,110" fill="none" stroke="var(--faint)" stroke-width="1.5" stroke-dasharray="4 4"/>
+                </svg>
+              </div>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+              <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:16px">Revenue by Channel</div>
+              <div style="display:flex;align-items:center;gap:20px">
+                <div style="width:120px;height:120px;border-radius:50%;background:conic-gradient(var(--gold) 0 46%, var(--purple) 46% 72%, var(--blue) 72% 90%, var(--green) 90% 100%);display:flex;align-items:center;justify-content:center"><div style="width:74px;height:74px;border-radius:50%;background:var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-family:var(--serif);font-size:18px;color:var(--text)">$4.2M</span><span style="font-size:9px;color:var(--muted)">MTD</span></div></div>
+                <div style="flex:1;display:flex;flex-direction:column;gap:9px">
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2)"><span style="width:8px;height:8px;background:var(--gold);border-radius:2px"></span>Gaming <span style="margin-left:auto;color:var(--muted)">46%</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2)"><span style="width:8px;height:8px;background:var(--purple);border-radius:2px"></span>Hotel <span style="margin-left:auto;color:var(--muted)">26%</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2)"><span style="width:8px;height:8px;background:var(--blue);border-radius:2px"></span>Dining <span style="margin-left:auto;color:var(--muted)">18%</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2)"><span style="width:8px;height:8px;background:var(--green);border-radius:2px"></span>Events <span style="margin-left:auto;color:var(--muted)">10%</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+              <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:16px">Top Promotions by Redemption</div>
+              <div style="display:flex;flex-direction:column;gap:13px">
+                <div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="color:var(--text2)">Summer Jackpot Spectacular</span><span style="color:var(--muted);font-family:'JetBrains Mono',monospace">12,481</span></div><div style="height:6px;background:var(--track-empty);border-radius:3px"><div style="width:100%;height:100%;background:var(--gold);border-radius:3px"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="color:var(--text2)">Welcome Bonus 2x Points</span><span style="color:var(--muted);font-family:'JetBrains Mono',monospace">8,902</span></div><div style="height:6px;background:var(--track-empty);border-radius:3px"><div style="width:71%;height:100%;background:var(--gold);border-radius:3px"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="color:var(--text2)">Slot Tournament — Neon Nights</span><span style="color:var(--muted);font-family:'JetBrains Mono',monospace">2,044</span></div><div style="height:6px;background:var(--track-empty);border-radius:3px"><div style="width:33%;height:100%;background:var(--gold);border-radius:3px"></div></div></div>
+                <div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px"><span style="color:var(--text2)">VIP High-Roller Weekend</span><span style="color:var(--muted);font-family:'JetBrains Mono',monospace">318</span></div><div style="height:6px;background:var(--track-empty);border-radius:3px"><div style="width:12%;height:100%;background:var(--gold);border-radius:3px"></div></div></div>
+              </div>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+              <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:16px">Push Notification Performance</div>
+              <div style="display:flex;align-items:flex-end;gap:12px;height:150px">
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end"><div style="width:100%;height:88%;background:var(--gold-dim);border-radius:6px 6px 0 0;position:relative"><div style="position:absolute;bottom:0;width:100%;height:62%;background:var(--gold);border-radius:6px 6px 0 0"></div></div><span style="font-size:10px;color:var(--muted)">Sent</span></div>
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end"><div style="width:100%;height:62%;background:var(--gold);border-radius:6px 6px 0 0"></div><span style="font-size:10px;color:var(--muted)">Opened</span></div>
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end"><div style="width:100%;height:34%;background:var(--purple);border-radius:6px 6px 0 0"></div><span style="font-size:10px;color:var(--muted)">Tapped</span></div>
+                <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end"><div style="width:100%;height:19%;background:var(--green);border-radius:6px 6px 0 0"></div><span style="font-size:10px;color:var(--muted)">Redeemed</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== MEDIA LIBRARY ===== -->
+        <sc-if value="{{ isMedia }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Media Library</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">4,208 assets · 62 GB · CDN synced</p></div>
+            <button style="display:flex;align-items:center;gap:7px;height:38px;padding:0 16px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-upload-simple"></i>Upload</button>
+          </div>
+          <div style="display:grid;grid-template-columns:190px 1fr;gap:16px;align-items:start">
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:var(--card-shadow)">
+              <div style="font-size:11px;color:var(--faint);letter-spacing:.1em;margin-bottom:10px;font-weight:700">FOLDERS</div>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <div style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;background:var(--nav-active-bg);color:var(--text);font-size:12.5px;font-weight:600"><i class="ph-fill ph-folder" style="color:var(--gold)"></i>All Media</div>
+                <div style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;color:var(--muted);font-size:12.5px"><i class="ph ph-folder"></i>Promotions</div>
+                <div style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;color:var(--muted);font-size:12.5px"><i class="ph ph-folder"></i>Branding</div>
+                <div style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;color:var(--muted);font-size:12.5px"><i class="ph ph-folder"></i>Hotel &amp; Dining</div>
+                <div style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;color:var(--muted);font-size:12.5px"><i class="ph ph-folder"></i>Events</div>
+                <div style="display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;color:var(--muted);font-size:12.5px"><i class="ph ph-folder"></i>Documents</div>
+              </div>
+              <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border-soft)"><div style="font-size:11px;color:var(--muted);margin-bottom:6px">Storage · 62 of 200 GB</div><div style="height:5px;background:var(--track-empty);border-radius:3px"><div style="width:31%;height:100%;background:var(--gold);border-radius:3px"></div></div></div>
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+                <div style="display:flex;align-items:center;gap:8px;background:var(--input);border:1px solid var(--border);border-radius:8px;padding:8px 11px;width:240px"><i class="ph ph-magnifying-glass" style="color:var(--muted);font-size:13px"></i><span style="font-size:12px;color:var(--muted)">Search media…</span></div>
+                <span style="font-size:12px;color:var(--text2);background:var(--input);border:1px solid var(--border);padding:8px 12px;border-radius:8px">All types</span>
+                <span style="font-size:12px;color:var(--text2);background:var(--input);border:1px solid var(--border);padding:8px 12px;border-radius:8px">Tags</span>
+                <span style="margin-left:auto;font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center"><i class="ph-fill ph-squares-four" style="color:var(--gold)"></i><i class="ph ph-list"></i></span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+                <sc-for list="{{ mediaAssets }}" as="a" hint-placeholder-count="8">
+                  <div style="background:var(--panel);border:1px solid var(--border);border-radius:13px;overflow:hidden;box-shadow:var(--card-shadow);cursor:pointer">
+                    <div style="height:110px;background:{{ a.chip }};position:relative;display:flex;align-items:center;justify-content:center"><i class="ph ph-{{ a.ic }}" style="color:rgba(255,255,255,.9);font-size:30px"></i><span style="position:absolute;top:8px;left:8px;font-size:9px;font-weight:800;color:#fff;background:rgba(0,0,0,.4);padding:2px 7px;border-radius:5px;letter-spacing:.05em">{{ a.type }}</span></div>
+                    <div style="padding:11px 12px"><div style="font-size:12px;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.name }}</div><div style="font-size:10.5px;color:var(--faint);margin-top:3px;display:flex;justify-content:space-between"><span>{{ a.size }}</span><span>{{ a.usage }}</span></div></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== THEME MANAGEMENT ===== -->
+        <sc-if value="{{ isThemes }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Theme Management</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">White-label appearance · Golden Mirage</p></div>
+            <div style="display:flex;gap:8px"><button style="height:36px;padding:0 14px;background:transparent;border:1px solid var(--border);border-radius:9px;color:var(--text2);font-weight:700;font-size:12.5px;font-family:inherit;cursor:pointer">Reset</button><button style="height:36px;padding:0 16px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer">Publish Theme</button></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:start">
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+                <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px">Brand Colors</div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+                  <div><div style="height:56px;border-radius:10px;background:#7b1e3a;margin-bottom:8px"></div><div style="font-size:12px;color:var(--text);font-weight:600">Primary</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">#7B1E3A</div></div>
+                  <div><div style="height:56px;border-radius:10px;background:#d4af37;margin-bottom:8px"></div><div style="font-size:12px;color:var(--text);font-weight:600">Accent</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">#D4AF37</div></div>
+                  <div><div style="height:56px;border-radius:10px;background:#0f1420;margin-bottom:8px"></div><div style="font-size:12px;color:var(--text);font-weight:600">Surface</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">#0F1420</div></div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+                <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+                  <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px">Typography</div>
+                  <div style="display:flex;flex-direction:column;gap:12px">
+                    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;color:var(--muted)">Display</span><span style="font-family:var(--serif);font-size:16px;color:var(--text)">Bodoni Moda</span></div>
+                    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;color:var(--muted)">Body</span><span style="font-size:14px;color:var(--text);font-weight:600">Manrope</span></div>
+                    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;color:var(--muted)">Base size</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text2)">16 px</span></div>
+                  </div>
+                </div>
+                <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+                  <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px">Navigation Style</div>
+                  <div style="display:flex;flex-direction:column;gap:10px">
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;border:1px solid var(--gold-border);border-radius:9px;background:var(--gold-dim)"><span style="font-size:12.5px;color:var(--text);font-weight:600">Bottom Tab Bar</span><i class="ph-fill ph-check-circle" style="color:var(--gold)"></i></div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;border:1px solid var(--border);border-radius:9px"><span style="font-size:12.5px;color:var(--muted)">Hamburger Drawer</span></div>
+                  </div>
+                </div>
+              </div>
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+                <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px">Assets</div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+                  <div style="border:1.5px dashed var(--border);border-radius:11px;padding:18px;text-align:center;background:var(--input)"><i class="ph ph-upload-simple" style="color:var(--gold);font-size:20px"></i><div style="font-size:11px;color:var(--muted);margin-top:6px">Logo</div></div>
+                  <div style="border:1.5px dashed var(--border);border-radius:11px;padding:18px;text-align:center;background:var(--input)"><i class="ph ph-app-store-logo" style="color:var(--gold);font-size:20px"></i><div style="font-size:11px;color:var(--muted);margin-top:6px">App icon</div></div>
+                  <div style="border:1.5px dashed var(--border);border-radius:11px;padding:18px;text-align:center;background:var(--input)"><i class="ph ph-image" style="color:var(--gold);font-size:20px"></i><div style="font-size:11px;color:var(--muted);margin-top:6px">Splash</div></div>
+                </div>
+              </div>
+            </div>
+            <!-- live mobile preview -->
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--card-shadow);position:sticky;top:0">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><span style="font-size:12.5px;font-weight:700;color:var(--text)">Live Preview</span><span style="font-size:10px;color:var(--gold);background:var(--gold-dim);padding:2px 8px;border-radius:20px;font-weight:600">iOS</span></div>
+              <div style="display:flex;justify-content:center">
+                <div style="width:230px;background:#0f1420;border:7px solid #1c1f27;border-radius:30px;overflow:hidden">
+                  <div style="height:26px;background:#0f1420;display:flex;align-items:center;justify-content:center"><div style="width:70px;height:16px;background:#000;border-radius:10px"></div></div>
+                  <div style="padding:12px;display:flex;flex-direction:column;gap:9px;background:#0f1420">
+                    <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-family:var(--serif);font-size:15px;color:#d4af37">Golden Mirage</span><i class="ph ph-user-circle" style="color:#d4af37;font-size:18px"></i></div>
+                    <div style="height:96px;border-radius:12px;background:linear-gradient(135deg,#7b1e3a,#d4af37);display:flex;align-items:flex-end;padding:10px"><div style="font-family:var(--serif);font-size:14px;color:#fff">Win $250,000</div></div>
+                    <div style="display:flex;gap:7px"><div style="flex:1;height:52px;border-radius:9px;background:#171d2b"></div><div style="flex:1;height:52px;border-radius:9px;background:#171d2b"></div><div style="flex:1;height:52px;border-radius:9px;background:#171d2b"></div></div>
+                    <div style="border-radius:11px;background:linear-gradient(135deg,#7b1e3a,#4a1223);padding:10px;display:flex;align-items:center;gap:8px"><i class="ph-fill ph-crown" style="color:#d4af37;font-size:16px"></i><div><div style="font-size:10px;color:#fff;font-weight:700">Gold Tier · 12,480 pts</div></div></div>
+                  </div>
+                  <div style="height:44px;background:#0b0f18;display:flex;align-items:center;justify-content:space-around;border-top:1px solid #1c2330">
+                    <i class="ph-fill ph-house" style="color:#d4af37;font-size:16px"></i><i class="ph ph-ticket" style="color:#5c636e;font-size:16px"></i><i class="ph ph-crown" style="color:#5c636e;font-size:16px"></i><i class="ph ph-user" style="color:#5c636e;font-size:16px"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== USERS & ROLES ===== -->
+        <sc-if value="{{ isUsers }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Users &amp; Roles</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">318 users · 9 roles · SSO enforced</p></div>
+            <button style="display:flex;align-items:center;gap:7px;height:38px;padding:0 16px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-plus"></i>Invite User</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 260px;gap:16px;align-items:start">
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;box-shadow:var(--card-shadow);overflow:hidden">
+              <div style="display:grid;grid-template-columns:2.4fr 1.4fr 1.4fr 1fr 1fr 40px;padding:11px 18px;border-bottom:1px solid var(--border-soft);font-size:11px;color:var(--faint);letter-spacing:.05em;text-transform:uppercase;font-weight:700"><span>User</span><span>Role</span><span>Scope</span><span>Status</span><span>Last login</span><span></span></div>
+              <sc-for list="{{ users }}" as="u" hint-placeholder-count="8">
+                <div style="display:grid;grid-template-columns:2.4fr 1.4fr 1.4fr 1fr 1fr 40px;padding:12px 18px;border-bottom:1px solid var(--border-soft);align-items:center;font-size:13px;cursor:pointer">
+                  <div style="display:flex;align-items:center;gap:11px"><div style="width:30px;height:30px;border-radius:50%;background:var(--panel2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--gold);font-weight:800;font-size:11px;flex-shrink:0">{{ u.init }}</div><div style="min-width:0"><div style="color:var(--text);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ u.name }}</div><div style="font-size:10.5px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ u.mail }}</div></div></div>
+                  <span><span style="font-size:11px;font-weight:600;color:{{ u.rFg }};background:{{ u.rBg }};padding:3px 9px;border-radius:6px">{{ u.role }}</span></span>
+                  <span style="color:var(--text2);font-size:12px">{{ u.scope }}</span>
+                  <span><span style="display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:{{ u.sFg }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ u.sFg }}"></span>{{ u.status }}</span></span>
+                  <span style="color:var(--muted);font-size:12px">{{ u.last }}</span>
+                  <span style="text-align:right"><i class="ph ph-dots-three" style="color:var(--muted)"></i></span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--card-shadow)">
+              <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px">Roles</div>
+              <div style="display:flex;flex-direction:column;gap:9px">
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px"><span style="color:var(--text2)">Platform Admin</span><span style="color:var(--muted);font-family:'JetBrains Mono',monospace">4</span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px"><span style="color:var(--text2)">Casino Admin</span><span style="color:var(--muted);font-family:'JetBrains Mono',monospace">142</span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px"><span style="color:var(--text2)">Marketing Manager</span><span style="color:var(--muted);font-family:'JetBrains Mono',monospace">58</span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px"><span style="color:var(--text2)">Operations</span><span style="color:var(--muted);font-family:'JetBrains Mono',monospace">44</span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px"><span style="color:var(--text2)">Rewards Manager</span><span style="color:var(--muted);font-family:'JetBrains Mono',monospace">31</span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:12.5px"><span style="color:var(--text2)">Read Only</span><span style="color:var(--muted);font-family:'JetBrains Mono',monospace">39</span></div>
+              </div>
+              <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border-soft)">
+                <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:10px">Marketing Mgr · Permissions</div>
+                <div style="display:flex;flex-direction:column;gap:8px;font-size:12px">
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--text2)"><i class="ph ph-check" style="color:var(--green)"></i>Promotions &amp; offers</div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--text2)"><i class="ph ph-check" style="color:var(--green)"></i>Homepage &amp; content</div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--text2)"><i class="ph ph-check" style="color:var(--green)"></i>Notifications</div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--muted)"><i class="ph ph-x" style="color:var(--red)"></i>User management</div>
+                  <div style="display:flex;align-items:center;gap:8px;color:var(--muted)"><i class="ph ph-x" style="color:var(--red)"></i>Billing &amp; finance</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== NOTIFICATIONS ===== -->
+        <sc-if value="{{ isNotifications }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Notifications</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">Push · In-App · Email · SMS</p></div>
+            <button style="display:flex;align-items:center;gap:7px;height:38px;padding:0 16px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-paper-plane-tilt"></i>New Campaign</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start">
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;box-shadow:var(--card-shadow);overflow:hidden">
+              <div style="display:grid;grid-template-columns:2.4fr 1fr 1.4fr 1fr 1fr;padding:11px 18px;border-bottom:1px solid var(--border-soft);font-size:11px;color:var(--faint);letter-spacing:.05em;text-transform:uppercase;font-weight:700"><span>Campaign</span><span>Channel</span><span>Audience</span><span>Sent</span><span>Open rate</span></div>
+              <div style="display:grid;grid-template-columns:2.4fr 1fr 1.4fr 1fr 1fr;padding:13px 18px;border-bottom:1px solid var(--border-soft);align-items:center;font-size:13px"><div><div style="color:var(--text);font-weight:700">Weekend Free Play</div><div style="font-size:11px;color:var(--faint)">Scheduled · Jul 4 18:00</div></div><span><span style="font-size:11px;font-weight:600;color:var(--gold);background:var(--gold-dim);padding:3px 9px;border-radius:6px">Push</span></span><span style="color:var(--text2);font-size:12px">Gold+ · 214K</span><span style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px">—</span><span style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px">—</span></div>
+              <div style="display:grid;grid-template-columns:2.4fr 1fr 1.4fr 1fr 1fr;padding:13px 18px;border-bottom:1px solid var(--border-soft);align-items:center;font-size:13px"><div><div style="color:var(--text);font-weight:700">Summer Jackpot reminder</div><div style="font-size:11px;color:var(--faint)">Sent · Jun 28</div></div><span><span style="font-size:11px;font-weight:600;color:var(--blue);background:var(--blue-dim);padding:3px 9px;border-radius:6px">In-App</span></span><span style="color:var(--text2);font-size:12px">All · 612K</span><span style="color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px">612K</span><span style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:12px">42.1%</span></div>
+              <div style="display:grid;grid-template-columns:2.4fr 1fr 1.4fr 1fr 1fr;padding:13px 18px;border-bottom:1px solid var(--border-soft);align-items:center;font-size:13px"><div><div style="color:var(--text);font-weight:700">VIP Weekend invite</div><div style="font-size:11px;color:var(--faint)">Sent · Jun 25</div></div><span><span style="font-size:11px;font-weight:600;color:var(--purple);background:var(--purple-dim);padding:3px 9px;border-radius:6px">Email</span></span><span style="color:var(--text2);font-size:12px">Platinum · 4.2K</span><span style="color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px">4,180</span><span style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:12px">58.9%</span></div>
+              <div style="display:grid;grid-template-columns:2.4fr 1fr 1.4fr 1fr 1fr;padding:13px 18px;align-items:center;font-size:13px"><div><div style="color:var(--text);font-weight:700">Dining reservation open</div><div style="font-size:11px;color:var(--faint)">Sent · Jun 22</div></div><span><span style="font-size:11px;font-weight:600;color:var(--green);background:var(--green-dim);padding:3px 9px;border-radius:6px">SMS</span></span><span style="color:var(--text2);font-size:12px">Local · 88K</span><span style="color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px">88K</span><span style="color:var(--green);font-family:'JetBrains Mono',monospace;font-size:12px">31.4%</span></div>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--card-shadow)">
+              <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:14px">Push Preview</div>
+              <div style="background:linear-gradient(160deg,#1c2330,#0f1420);border-radius:16px;padding:14px">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:22px;height:22px;border-radius:6px;background:var(--gold);display:flex;align-items:center;justify-content:center"><i class="ph-fill ph-spade" style="color:#1a1408;font-size:12px"></i></div><span style="font-size:11px;color:rgba(255,255,255,.7)">GOLDEN MIRAGE · now</span></div>
+                <div style="font-size:13px;color:#fff;font-weight:700">🎰 Free Play Friday is here!</div>
+                <div style="font-size:12px;color:rgba(255,255,255,.75);margin-top:3px;line-height:1.4">Claim $25 in free play before midnight. Tap to redeem at Golden Mirage.</div>
+              </div>
+              <div style="margin-top:16px;display:flex;flex-direction:column;gap:11px">
+                <div style="font-size:12px;font-weight:700;color:var(--text)">A/B Test</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--text2)">Variant A <span style="color:var(--green);font-family:'JetBrains Mono',monospace">44.2%</span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--text2)">Variant B <span style="color:var(--muted);font-family:'JetBrains Mono',monospace">39.8%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== FEATURE FLAGS ===== -->
+        <sc-if value="{{ isFlags }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Feature Flags</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">Roll out modules by casino, region, or cohort</p></div>
+            <button style="display:flex;align-items:center;gap:7px;height:38px;padding:0 16px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-plus"></i>New Flag</button>
+          </div>
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;box-shadow:var(--card-shadow);overflow:hidden">
+            <sc-for list="{{ flags }}" as="f" hint-placeholder-count="6">
+              <div style="display:flex;align-items:center;gap:16px;padding:16px 20px;border-bottom:1px solid var(--border-soft)">
+                <div style="flex:1;min-width:0">
+                  <div style="display:flex;align-items:center;gap:9px"><span style="font-size:14px;color:var(--text);font-weight:700">{{ f.name }}</span><sc-if value="{{ f.hasTag }}" hint-placeholder-val="{{ false }}"><span style="font-size:9px;font-weight:700;color:{{ f.tagC }};border:1px solid {{ f.tagC }};padding:1px 6px;border-radius:4px;letter-spacing:.05em">{{ f.tag }}</span></sc-if></div>
+                  <div style="font-size:12px;color:var(--muted);margin-top:3px">{{ f.desc }}</div>
+                </div>
+                <div style="width:130px"><div style="font-size:10.5px;color:var(--faint);margin-bottom:4px">SCOPE</div><div style="font-size:12.5px;color:var(--text2)">{{ f.scope }}</div></div>
+                <div style="width:110px"><div style="font-size:10.5px;color:var(--faint);margin-bottom:4px">ROLLOUT</div><div style="font-size:12.5px;color:{{ f.rolloutColor }};font-family:'JetBrains Mono',monospace;font-weight:600">{{ f.rollout }}</div></div>
+                <span style="width:40px;height:22px;background:{{ f.trackBg }};border-radius:20px;position:relative;flex-shrink:0"><span style="position:absolute;top:2px;{{ f.knobPos }};width:18px;height:18px;background:{{ f.knobBg }};border-radius:50%"></span></span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== NAVIGATION BUILDER ===== -->
+        <sc-if value="{{ isNavigation }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Navigation Builder</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">Configure the mobile app navigation · drag to reorder</p></div>
+            <button style="display:flex;align-items:center;gap:7px;height:38px;padding:0 16px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-plus"></i>Add Module</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start">
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;box-shadow:var(--card-shadow);overflow:hidden">
+              <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="7">
+                <div style="display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border-soft);opacity:{{ n.op }}">
+                  <i class="ph ph-dots-six-vertical" style="color:var(--faint);font-size:18px;cursor:grab"></i>
+                  <div style="width:34px;height:34px;border-radius:9px;background:var(--gold-dim);display:flex;align-items:center;justify-content:center"><i class="ph ph-{{ n.icon }}" style="color:var(--gold);font-size:17px"></i></div>
+                  <div style="flex:1"><div style="font-size:13.5px;color:var(--text);font-weight:700">{{ n.label }}</div><div style="font-size:11px;color:var(--faint);font-family:'JetBrains Mono',monospace">{{ n.link }}</div></div>
+                  <i class="ph ph-pencil-simple" style="color:var(--muted);font-size:15px;cursor:pointer"></i>
+                  <span style="width:40px;height:22px;background:{{ n.trackBg }};border-radius:20px;position:relative;flex-shrink:0"><span style="position:absolute;top:2px;{{ n.knobPos }};width:18px;height:18px;background:{{ n.knobBg }};border-radius:50%"></span></span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--card-shadow)">
+              <div style="font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:14px">Live Preview</div>
+              <div style="display:flex;justify-content:center">
+                <div style="width:220px;background:#0f1420;border:7px solid #1c1f27;border-radius:28px;overflow:hidden">
+                  <div style="height:220px;background:linear-gradient(180deg,#171d2b,#0f1420);display:flex;align-items:center;justify-content:center"><span style="font-family:var(--serif);font-size:14px;color:#5c636e">App screen</span></div>
+                  <div style="height:52px;background:#0b0f18;display:flex;align-items:center;justify-content:space-around;border-top:1px solid #1c2330;padding:0 8px">
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><i class="ph-fill ph-house" style="color:#d4af37;font-size:15px"></i><span style="font-size:7px;color:#d4af37">Home</span></div>
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><i class="ph ph-ticket" style="color:#5c636e;font-size:15px"></i><span style="font-size:7px;color:#5c636e">Promos</span></div>
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><i class="ph ph-crown" style="color:#5c636e;font-size:15px"></i><span style="font-size:7px;color:#5c636e">Rewards</span></div>
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><i class="ph ph-bed" style="color:#5c636e;font-size:15px"></i><span style="font-size:7px;color:#5c636e">Hotel</span></div>
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:2px"><i class="ph ph-user" style="color:#5c636e;font-size:15px"></i><span style="font-size:7px;color:#5c636e">Account</span></div>
+                  </div>
+                </div>
+              </div>
+              <p style="font-size:11.5px;color:var(--muted);margin-top:14px;line-height:1.5">Disabled modules are hidden from the tab bar. Max 5 primary tabs; extras move to a “More” menu.</p>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== REWARDS ===== -->
+        <sc-if value="{{ isRewards }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Rewards</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">Loyalty tiers · points rules · bonus campaigns</p></div>
+            <button style="display:flex;align-items:center;gap:7px;height:38px;padding:0 16px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-plus"></i>New Tier</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px">
+            <sc-for list="{{ tiers }}" as="t" hint-placeholder-count="5">
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:var(--card-shadow);border-top:3px solid {{ t.color }}">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><i class="ph-fill ph-crown" style="color:{{ t.color }};font-size:18px"></i><span style="font-size:15px;font-weight:800;color:var(--text)">{{ t.name }}</span></div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">{{ t.pts }} pts</div>
+                <div style="margin:12px 0;padding:8px 0;border-top:1px solid var(--border-soft);border-bottom:1px solid var(--border-soft)"><span style="font-family:var(--serif);font-size:20px;color:var(--text)">{{ t.members }}</span> <span style="font-size:11px;color:var(--muted)">of members</span></div>
+                <div style="font-size:11.5px;color:var(--text2);line-height:1.5">{{ t.benefits }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+              <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px">Points Earning Rules</div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px"><span style="color:var(--text2)"><i class="ph ph-poker-chip" style="color:var(--gold);margin-right:8px"></i>Slots — per $1 wagered</span><span style="font-family:'JetBrains Mono',monospace;color:var(--text)">1 pt</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px"><span style="color:var(--text2)"><i class="ph ph-cards" style="color:var(--gold);margin-right:8px"></i>Tables — per $5 wagered</span><span style="font-family:'JetBrains Mono',monospace;color:var(--text)">1 pt</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px"><span style="color:var(--text2)"><i class="ph ph-bed" style="color:var(--gold);margin-right:8px"></i>Hotel — per $1 spent</span><span style="font-family:'JetBrains Mono',monospace;color:var(--text)">2 pts</span></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px"><span style="color:var(--text2)"><i class="ph ph-fork-knife" style="color:var(--gold);margin-right:8px"></i>Dining — per $1 spent</span><span style="font-family:'JetBrains Mono',monospace;color:var(--text)">3 pts</span></div>
+              </div>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+              <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px">Active Bonus Campaigns</div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;align-items:center;gap:12px;padding:11px;background:var(--input);border-radius:11px"><div style="width:36px;height:36px;border-radius:9px;background:var(--gold-dim);display:flex;align-items:center;justify-content:center"><i class="ph-fill ph-lightning" style="color:var(--gold)"></i></div><div style="flex:1"><div style="font-size:12.5px;color:var(--text);font-weight:700">3x Points Weekend</div><div style="font-size:11px;color:var(--muted)">Gold+ · ends Jul 6</div></div><span style="font-size:11px;color:var(--green);background:var(--green-dim);padding:3px 9px;border-radius:20px;font-weight:600">Live</span></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:11px;background:var(--input);border-radius:11px"><div style="width:36px;height:36px;border-radius:9px;background:var(--purple-dim);display:flex;align-items:center;justify-content:center"><i class="ph-fill ph-gift" style="color:var(--purple)"></i></div><div style="flex:1"><div style="font-size:12.5px;color:var(--text);font-weight:700">Birthday Free Play</div><div style="font-size:11px;color:var(--muted)">All members · evergreen</div></div><span style="font-size:11px;color:var(--green);background:var(--green-dim);padding:3px 9px;border-radius:20px;font-weight:600">Live</span></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:11px;background:var(--input);border-radius:11px"><div style="width:36px;height:36px;border-radius:9px;background:var(--blue-dim);display:flex;align-items:center;justify-content:center"><i class="ph-fill ph-trophy" style="color:var(--blue)"></i></div><div style="flex:1"><div style="font-size:12.5px;color:var(--text);font-weight:700">Refer-a-Friend 5,000 pts</div><div style="font-size:11px;color:var(--muted)">All members · evergreen</div></div><span style="font-size:11px;color:var(--green);background:var(--green-dim);padding:3px 9px;border-radius:20px;font-weight:600">Live</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== HOTEL ===== -->
+        <sc-if value="{{ isHotel }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Hotel</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">Rooms · packages · amenities · digital keys</p></div>
+            <button style="display:flex;align-items:center;gap:7px;height:38px;padding:0 16px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-plus"></i>Add Room Type</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px">
+            <sc-for list="{{ rooms }}" as="r" hint-placeholder-count="4">
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--card-shadow)">
+                <div style="height:100px;background:{{ r.chip }};display:flex;align-items:flex-end;padding:12px"><span style="font-size:11px;color:rgba(255,255,255,.85);background:rgba(0,0,0,.35);padding:2px 8px;border-radius:6px">{{ r.avail }}</span></div>
+                <div style="padding:14px"><div style="font-size:14px;color:var(--text);font-weight:700">{{ r.name }}</div><div style="font-size:11.5px;color:var(--muted);margin-top:3px">{{ r.occ }}</div><div style="margin-top:10px;display:flex;align-items:baseline;gap:4px"><span style="font-family:var(--serif);font-size:22px;color:var(--text)">{{ r.rate }}</span><span style="font-size:11px;color:var(--muted)">/ night</span></div></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+              <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px">Amenities</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text2)"><i class="ph ph-swimming-pool" style="color:var(--gold)"></i>Pool &amp; Spa</div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text2)"><i class="ph ph-barbell" style="color:var(--gold)"></i>Fitness Center</div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text2)"><i class="ph ph-wifi-high" style="color:var(--gold)"></i>Free Wi-Fi</div>
+                <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text2)"><i class="ph ph-car" style="color:var(--gold)"></i>Valet Parking</div>
+              </div>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="font-size:14px;font-weight:700;color:var(--text)">Digital Room Keys</div><span style="font-size:11px;color:var(--green);background:var(--green-dim);padding:3px 9px;border-radius:20px;font-weight:600">Enabled</span></div>
+              <p style="font-size:12.5px;color:var(--muted);line-height:1.55;margin-bottom:14px">Members unlock rooms from the app via Bluetooth. Booking links sync from Agilysys PMS in real time.</p>
+              <div style="display:flex;align-items:center;gap:10px;padding:11px;background:var(--input);border-radius:11px"><i class="ph-fill ph-key" style="color:var(--gold);font-size:20px"></i><div><div style="font-size:12.5px;color:var(--text);font-weight:600">1,204 active keys</div><div style="font-size:11px;color:var(--muted)">across 88 occupied rooms</div></div></div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== DINING ===== -->
+        <sc-if value="{{ isDining }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Dining</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">Restaurants · menus · reservations · specials</p></div>
+            <button style="display:flex;align-items:center;gap:7px;height:38px;padding:0 16px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-plus"></i>Add Venue</button>
+          </div>
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;box-shadow:var(--card-shadow);overflow:hidden;margin-bottom:16px">
+            <div style="display:grid;grid-template-columns:2fr 1.6fr 1fr 1.2fr 1fr;padding:11px 18px;border-bottom:1px solid var(--border-soft);font-size:11px;color:var(--faint);letter-spacing:.05em;text-transform:uppercase;font-weight:700"><span>Restaurant</span><span>Cuisine</span><span>Hours</span><span>Reservations</span><span>Status</span></div>
+            <sc-for list="{{ restaurants }}" as="r" hint-placeholder-count="4">
+              <div style="display:grid;grid-template-columns:2fr 1.6fr 1fr 1.2fr 1fr;padding:14px 18px;border-bottom:1px solid var(--border-soft);align-items:center;font-size:13px">
+                <div style="display:flex;align-items:center;gap:11px"><div style="width:32px;height:32px;border-radius:8px;background:var(--gold-dim);display:flex;align-items:center;justify-content:center"><i class="ph-fill ph-fork-knife" style="color:var(--gold)"></i></div><span style="color:var(--text);font-weight:700">{{ r.name }}</span></div>
+                <span style="color:var(--text2);font-size:12px">{{ r.cuisine }}</span>
+                <span style="color:var(--muted);font-size:12px;font-family:'JetBrains Mono',monospace">{{ r.hours }}</span>
+                <span style="color:var(--text2);font-size:12px">{{ r.rez }}</span>
+                <span><span style="display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:{{ r.sFg }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ r.sFg }}"></span>{{ r.status }}</span></span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+            <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px">Today's Specials &amp; Happy Hours</div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+              <div style="padding:14px;background:var(--input);border-radius:11px;border-left:3px solid var(--gold)"><div style="font-size:12.5px;color:var(--text);font-weight:700">Surf &amp; Turf Prime</div><div style="font-size:11.5px;color:var(--muted);margin-top:4px">The Golden Table · $89</div></div>
+              <div style="padding:14px;background:var(--input);border-radius:11px;border-left:3px solid var(--purple)"><div style="font-size:12.5px;color:var(--text);font-weight:700">Half-price Cocktails</div><div style="font-size:11.5px;color:var(--muted);margin-top:4px">Sunset Lounge · 4–6pm</div></div>
+              <div style="padding:14px;background:var(--input);border-radius:11px;border-left:3px solid var(--blue)"><div style="font-size:12.5px;color:var(--text);font-weight:700">Late-Night Ramen</div><div style="font-size:11.5px;color:var(--muted);margin-top:4px">Neon Noodle · after 11pm</div></div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== ENTERTAINMENT ===== -->
+        <sc-if value="{{ isEntertainment }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Entertainment</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">Events · concerts · shows · ticketing · venues</p></div>
+            <button style="display:flex;align-items:center;gap:7px;height:38px;padding:0 16px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-plus"></i>New Event</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px">
+            <sc-for list="{{ events }}" as="e" hint-placeholder-count="4">
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:var(--card-shadow);display:flex;gap:16px;align-items:center">
+                <div style="width:56px;height:60px;border-radius:11px;background:var(--gold-dim);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold)">{{ e.date }}</span></div>
+                <div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;font-weight:600;color:var(--gold);background:var(--gold-dim);padding:2px 8px;border-radius:5px">{{ e.type }}</span></div><div style="font-size:15px;color:var(--text);font-weight:700;margin-top:6px">{{ e.name }}</div><div style="font-size:12px;color:var(--muted);margin-top:2px"><i class="ph ph-map-pin"></i> {{ e.venue }}</div></div>
+                <div style="text-align:right"><div style="font-size:12.5px;font-weight:700;color:{{ e.sFg }}">{{ e.tickets }}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">tickets</div></div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== LOCALIZATION ===== -->
+        <sc-if value="{{ isLocalization }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Localization</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">Languages · translation keys · regional formats</p></div>
+            <button style="display:flex;align-items:center;gap:7px;height:38px;padding:0 16px;background:var(--gold-fill);border:none;border-radius:9px;color:#1a1408;font-weight:800;font-size:12.5px;font-family:inherit;cursor:pointer"><i class="ph-fill ph-plus"></i>Add Language</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 300px;gap:16px;align-items:start">
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;box-shadow:var(--card-shadow);overflow:hidden">
+              <div style="display:grid;grid-template-columns:2fr 1fr 1.4fr 1.6fr;padding:11px 18px;border-bottom:1px solid var(--border-soft);font-size:11px;color:var(--faint);letter-spacing:.05em;text-transform:uppercase;font-weight:700"><span>Language</span><span>Code</span><span>Keys</span><span>Progress</span></div>
+              <sc-for list="{{ languages }}" as="l" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:2fr 1fr 1.4fr 1.6fr;padding:14px 18px;border-bottom:1px solid var(--border-soft);align-items:center;font-size:13px">
+                  <div style="display:flex;align-items:center;gap:11px"><span style="font-size:20px">{{ l.flag }}</span><span style="color:var(--text);font-weight:700">{{ l.name }}</span></div>
+                  <span style="color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:12px">{{ l.code }}</span>
+                  <span style="color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:11.5px">{{ l.keys }}</span>
+                  <div style="display:flex;align-items:center;gap:9px"><div style="flex:1;height:6px;background:var(--track-empty);border-radius:3px"><div style="width:{{ l.pct }}%;height:100%;background:var(--gold);border-radius:3px"></div></div><span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;width:34px;text-align:right">{{ l.pct }}%</span></div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:20px;box-shadow:var(--card-shadow)">
+              <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:14px">Regional Formats</div>
+              <div style="display:flex;flex-direction:column;gap:13px;font-size:12.5px">
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Currency</span><span style="color:var(--text2)">USD · $</span></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Time zone</span><span style="color:var(--text2)">America/LA</span></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Date format</span><span style="color:var(--text2);font-family:'JetBrains Mono',monospace">MM/DD/YYYY</span></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">First day</span><span style="color:var(--text2)">Sunday</span></div>
+                <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Number format</span><span style="color:var(--text2);font-family:'JetBrains Mono',monospace">1,234.56</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== AUDIT & PUBLISHING ===== -->
+        <sc-if value="{{ isAudit }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="margin-bottom:18px"><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Audit &amp; Publishing</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">Draft → Review → Approve → Publish · with rollback</p></div>
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow);margin-bottom:16px">
+            <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:18px">Publishing Pipeline</div>
+            <div style="display:flex;align-items:center;gap:0">
+              <div style="flex:1;text-align:center"><div style="width:46px;height:46px;border-radius:50%;background:var(--gold-dim);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;margin:0 auto"><i class="ph ph-note-pencil" style="color:var(--gold);font-size:20px"></i></div><div style="font-size:12.5px;color:var(--text);font-weight:700;margin-top:8px">Draft</div><div style="font-size:11px;color:var(--muted)">14 items</div></div>
+              <div style="flex:1;height:2px;background:var(--border)"></div>
+              <div style="flex:1;text-align:center"><div style="width:46px;height:46px;border-radius:50%;background:var(--blue-dim);border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto"><i class="ph ph-eye" style="color:var(--blue);font-size:20px"></i></div><div style="font-size:12.5px;color:var(--text);font-weight:700;margin-top:8px">In Review</div><div style="font-size:11px;color:var(--muted)">6 items</div></div>
+              <div style="flex:1;height:2px;background:var(--border)"></div>
+              <div style="flex:1;text-align:center"><div style="width:46px;height:46px;border-radius:50%;background:var(--purple-dim);border:2px solid var(--purple);display:flex;align-items:center;justify-content:center;margin:0 auto"><i class="ph ph-seal-check" style="color:var(--purple);font-size:20px"></i></div><div style="font-size:12.5px;color:var(--text);font-weight:700;margin-top:8px">Approved</div><div style="font-size:11px;color:var(--muted)">3 items</div></div>
+              <div style="flex:1;height:2px;background:var(--border)"></div>
+              <div style="flex:1;text-align:center"><div style="width:46px;height:46px;border-radius:50%;background:var(--green-dim);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto"><i class="ph ph-rocket-launch" style="color:var(--green);font-size:20px"></i></div><div style="font-size:12.5px;color:var(--text);font-weight:700;margin-top:8px">Published</div><div style="font-size:11px;color:var(--muted)">Live</div></div>
+            </div>
+          </div>
+          <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px"><div style="font-size:14px;font-weight:700;color:var(--text)">Audit Log</div><span style="font-size:12px;color:var(--text2);background:var(--input);border:1px solid var(--border);padding:6px 12px;border-radius:8px;display:flex;align-items:center;gap:6px">Filter <i class="ph ph-funnel" style="font-size:11px"></i></span></div>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ auditLog }}" as="a" hint-placeholder-count="6">
+                <div style="display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--border-soft);align-items:center">
+                  <div style="width:34px;height:34px;border-radius:9px;background:var(--input);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="ph ph-{{ a.ic }}" style="color:{{ a.c }};font-size:16px"></i></div>
+                  <div style="flex:1"><div style="font-size:13px;color:var(--text2)"><b style="color:var(--text)">{{ a.who }}</b> {{ a.act }} <span style="color:var(--text)">{{ a.obj }}</span></div></div>
+                  <span style="font-size:11.5px;color:var(--faint);font-family:'JetBrains Mono',monospace">{{ a.time }}</span>
+                  <i class="ph ph-arrow-counter-clockwise" style="color:var(--muted);font-size:15px;cursor:pointer" title="Rollback"></i>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- ===== SETTINGS ===== -->
+        <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="margin-bottom:18px"><h1 style="font-family:var(--serif);font-size:28px;font-weight:500;color:var(--text)">Settings</h1><p style="font-size:13px;color:var(--muted);margin-top:3px">Integrations · API keys · authentication · security</p></div>
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">Integrations</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px">
+            <sc-for list="{{ integrations }}" as="i" hint-placeholder-count="8">
+              <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:var(--card-shadow)">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="width:36px;height:36px;border-radius:9px;background:var(--input);display:flex;align-items:center;justify-content:center"><i class="ph ph-{{ i.ic }}" style="color:var(--gold);font-size:18px"></i></div><span style="font-size:10.5px;font-weight:600;color:{{ i.sFg }};background:{{ i.sBg }};padding:3px 8px;border-radius:20px">{{ i.status }}</span></div>
+                <div style="font-size:13.5px;color:var(--text);font-weight:700">{{ i.name }}</div>
+                <div style="font-size:11.5px;color:var(--muted);margin-top:2px">{{ i.cat }}</div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:16px">
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+              <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px">API Keys</div>
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--input);border-radius:10px"><div style="flex:1"><div style="font-size:12.5px;color:var(--text);font-weight:700">Production</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">sk_live_••••••••4a2f</div></div><span style="font-size:11px;color:var(--green);background:var(--green-dim);padding:3px 9px;border-radius:20px;font-weight:600">Active</span><i class="ph ph-copy" style="color:var(--muted);cursor:pointer"></i></div>
+                <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--input);border-radius:10px"><div style="flex:1"><div style="font-size:12.5px;color:var(--text);font-weight:700">Sandbox</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">sk_test_••••••••9c71</div></div><span style="font-size:11px;color:var(--gold);background:var(--gold-dim);padding:3px 9px;border-radius:20px;font-weight:600">Test</span><i class="ph ph-copy" style="color:var(--muted);cursor:pointer"></i></div>
+              </div>
+            </div>
+            <div style="background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:22px;box-shadow:var(--card-shadow)">
+              <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:16px">Security &amp; Auth</div>
+              <div style="display:flex;flex-direction:column;gap:13px">
+                <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12.5px;color:var(--text2)">SSO enforcement (Okta)</span><span style="width:34px;height:19px;background:var(--gold-fill);border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:15px;height:15px;background:#1a1408;border-radius:50%"></span></span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12.5px;color:var(--text2)">Require MFA</span><span style="width:34px;height:19px;background:var(--gold-fill);border-radius:20px;position:relative"><span style="position:absolute;right:2px;top:2px;width:15px;height:15px;background:#1a1408;border-radius:50%"></span></span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12.5px;color:var(--text2)">IP allowlist</span><span style="width:34px;height:19px;background:var(--track-empty);border-radius:20px;position:relative"><span style="position:absolute;left:2px;top:2px;width:15px;height:15px;background:var(--faint);border-radius:50%"></span></span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12.5px;color:var(--text2)">Session timeout</span><span style="font-size:12px;color:var(--text2);font-family:'JetBrains Mono',monospace">30 min</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+
+        <!-- other views appended here -->
+        <sc-if value="{{ isPlaceholder }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 0;text-align:center">
+            <div style="width:64px;height:64px;border-radius:16px;background:var(--gold-dim);display:flex;align-items:center;justify-content:center;margin-bottom:18px"><i class="ph ph-{{ phIcon }}" style="color:var(--gold);font-size:30px"></i></div>
+            <h2 style="font-family:var(--serif);font-size:26px;color:var(--text);font-weight:500">{{ viewTitle }}</h2>
+            <p style="font-size:14px;color:var(--muted);margin-top:8px;max-width:420px">This module is part of the build. Say the word and I'll flesh it out at full fidelity next.</p>
+          </div>
+        </sc-if>
+
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { theme: 'dark', role: 'platform', view: 'dashboard', casinoView: 'list', promoView: 'list', wizStep: 1,
+    hpBlocks: ['hero','carousel','loyalty','quick'], hpSel: 0 };
+
+  seg(active){ return { bg: active ? 'var(--gold-fill)' : 'transparent', fg: active ? '#1a1408' : 'var(--muted)' }; }
+
+  moveBlock(from, to){
+    if (from == null || to == null || from === to) return;
+    this.setState(s => { const arr = [...s.hpBlocks]; const [m] = arr.splice(from, 1); arr.splice(to, 0, m); return { hpBlocks: arr, hpSel: to }; });
+  }
+  addBlock(type){ if (!type) return; this.setState(s => ({ hpBlocks: [...s.hpBlocks, type], hpSel: s.hpBlocks.length })); }
+  removeBlock(i){ this.setState(s => { const arr = s.hpBlocks.filter((_, j) => j !== i); return { hpBlocks: arr, hpSel: Math.max(0, Math.min(s.hpSel, arr.length - 1)) }; }); }
+
+  meta(){
+    const M = {
+      dashboard:{t:'Dashboard', ph:false, icon:'squares-four'},
+      casinos:{t:'Casinos', ph:false, icon:'buildings'},
+      analytics:{t:'Analytics', ph:false, icon:'chart-line-up'},
+      homepage:{t:'Homepage Builder', ph:false, icon:'layout'},
+      promotions:{t:'Promotions', ph:false, icon:'ticket'},
+      media:{t:'Media Library', ph:false, icon:'images'},
+      notifications:{t:'Notifications', ph:false, icon:'bell'},
+      themes:{t:'Themes', ph:false, icon:'palette'},
+      flags:{t:'Feature Flags', ph:false, icon:'toggle-right'},
+      users:{t:'Users & Roles', ph:false, icon:'users-three'},
+      navigation:{t:'Navigation Builder', ph:false, icon:'list-bullets'},
+      rewards:{t:'Rewards', ph:false, icon:'crown'},
+      hotel:{t:'Hotel', ph:false, icon:'bed'},
+      dining:{t:'Dining', ph:false, icon:'fork-knife'},
+      entertainment:{t:'Entertainment', ph:false, icon:'confetti'},
+      localization:{t:'Localization', ph:false, icon:'translate'},
+      audit:{t:'Audit & Publishing', ph:false, icon:'clock-counter-clockwise'},
+      settings:{t:'Settings', ph:false, icon:'gear'},
+    };
+    return M[this.state.view] || {t:'', ph:true, icon:'stack'};
+  }
+
+  renderVals() {
+    const { theme, role, view } = this.state;
+    const isPlatform = role === 'platform';
+
+    const platformNav = [
+      { group:'Overview', items:[
+        {id:'dashboard', label:'Dashboard', icon:'squares-four'},
+        {id:'casinos', label:'Casinos', icon:'buildings', badge:'142'},
+        {id:'analytics', label:'Analytics', icon:'chart-line-up'},
+      ]},
+      { group:'Content', items:[
+        {id:'homepage', label:'Homepage Builder', icon:'layout'},
+        {id:'navigation', label:'Navigation', icon:'list-bullets'},
+        {id:'promotions', label:'Promotions', icon:'ticket', badge:'47'},
+        {id:'media', label:'Media Library', icon:'images'},
+        {id:'notifications', label:'Notifications', icon:'bell'},
+      ]},
+      { group:'Operations', items:[
+        {id:'rewards', label:'Rewards', icon:'crown'},
+        {id:'hotel', label:'Hotel', icon:'bed'},
+        {id:'dining', label:'Dining', icon:'fork-knife'},
+        {id:'entertainment', label:'Entertainment', icon:'confetti'},
+      ]},
+      { group:'Platform', items:[
+        {id:'themes', label:'Themes', icon:'palette'},
+        {id:'flags', label:'Feature Flags', icon:'toggle-right'},
+        {id:'localization', label:'Localization', icon:'translate'},
+        {id:'users', label:'Users & Roles', icon:'users-three'},
+        {id:'audit', label:'Audit & Publishing', icon:'clock-counter-clockwise'},
+      ]},
+    ];
+    const casinoNav = [
+      { group:'Manage', items:[
+        {id:'dashboard', label:'Dashboard', icon:'squares-four'},
+        {id:'homepage', label:'Homepage', icon:'layout'},
+        {id:'navigation', label:'Navigation', icon:'list-bullets'},
+        {id:'promotions', label:'Promotions', icon:'ticket', badge:'8'},
+        {id:'rewards', label:'Rewards', icon:'crown'},
+        {id:'analytics', label:'Analytics', icon:'chart-line-up'},
+      ]},
+      { group:'Property', items:[
+        {id:'hotel', label:'Hotel', icon:'bed'},
+        {id:'dining', label:'Dining', icon:'fork-knife'},
+        {id:'entertainment', label:'Entertainment', icon:'confetti'},
+      ]},
+      { group:'Content', items:[
+        {id:'media', label:'Media Library', icon:'images'},
+        {id:'notifications', label:'Notifications', icon:'bell'},
+        {id:'themes', label:'Theme', icon:'palette'},
+        {id:'users', label:'Team', icon:'users-three'},
+      ]},
+    ];
+    const navGroups = (isPlatform ? platformNav : casinoNav).map(g => ({
+      group: g.group,
+      items: g.items.map(it => ({
+        ...it,
+        active: it.id === view,
+        hasBadge: !!it.badge,
+        bg: it.id === view ? 'var(--nav-active-bg)' : 'transparent',
+        fg: it.id === view ? 'var(--text)' : 'var(--muted)',
+        iconColor: it.id === view ? 'var(--gold)' : 'var(--muted)',
+        onClick: () => this.setState({ view: it.id }),
+      })),
+    }));
+
+    const m = this.meta();
+    const on = 'var(--gold-fill)', onFg = '#1a1408', off = 'transparent', offFg = 'var(--muted)';
+
+    // July 2026 calendar (Jul 1 = Wed). Grid starts Sunday Jun 28.
+    const events = {
+      4:{e:'Free Play Friday', c:'var(--gold)', b:'var(--gold-dim)'},
+      12:{e:'VIP Weekend', c:'var(--purple)', b:'var(--purple-dim)'},
+      13:{e:'VIP Weekend', c:'var(--purple)', b:'var(--purple-dim)'},
+      14:{e:'VIP Weekend', c:'var(--purple)', b:'var(--purple-dim)'},
+      18:{e:'Slot Tourney', c:'var(--gold)', b:'var(--gold-dim)', e2:'Dining Special'},
+      25:{e:'Weekend Draw', c:'var(--gold)', b:'var(--gold-dim)'},
+    };
+    const cells = [];
+    for (let i = 0; i < 3; i++) cells.push({ num: 28 + i, out: true });
+    for (let d = 1; d <= 31; d++) cells.push({ num: d, out: false });
+    while (cells.length % 7 !== 0) cells.push({ num: cells.length - 33, out: true });
+    const calWeeks = [];
+    for (let i = 0; i < cells.length; i += 7) {
+      calWeeks.push(cells.slice(i, i + 7).map(c => {
+        const ev = !c.out && events[c.num];
+        const today = !c.out && c.num === 1;
+        return {
+          num: c.num,
+          numColor: c.out ? 'var(--faint)' : (today ? 'var(--gold)' : 'var(--text2)'),
+          bg: today ? 'var(--gold-dim)' : (c.out ? 'transparent' : 'var(--input)'),
+          hasEvent: !!ev, event: ev ? ev.e : '', evColor: ev ? ev.c : '', evBg: ev ? ev.b : '',
+          hasEvent2: !!(ev && ev.e2), event2: ev && ev.e2 ? ev.e2 : '',
+        };
+      }));
+    }
+
+    return {
+      theme, role, view,
+      isPlatform,
+      navGroups,
+      themeIcon: theme === 'dark' ? 'moon-stars' : 'sun',
+      toggleTheme: () => this.setState(s => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
+      setPlatform: () => this.setState({ role:'platform', view:'dashboard' }),
+      setCasino: () => this.setState({ role:'casino', view:'dashboard' }),
+      goSettings: () => this.setState({ view:'settings' }),
+      platformBtnBg: isPlatform ? on : off, platformBtnFg: isPlatform ? onFg : offFg,
+      casinoBtnBg: !isPlatform ? on : off, casinoBtnFg: !isPlatform ? onFg : offFg,
+
+      orgKicker: isPlatform ? 'PLATFORM CMS' : 'CASINO ADMIN',
+      tenantName: isPlatform ? 'All Casinos' : 'Golden Mirage',
+      tenantSub: isPlatform ? '142 properties' : 'Las Vegas, NV · Live',
+      userName: isPlatform ? 'Dana Mercer' : 'Alex Rivera',
+      userInitials: isPlatform ? 'DM' : 'AR',
+      userRole: isPlatform ? 'Platform Admin' : 'Marketing Manager',
+      firstName: isPlatform ? 'Dana' : 'Alex',
+      crumbRoot: isPlatform ? 'Platform' : 'Golden Mirage',
+      searchScope: isPlatform ? 'casinos, campaigns, media' : 'promotions, media, users',
+
+      viewTitle: m.t,
+      isPlaceholder: m.ph,
+      phIcon: m.icon,
+      isDashboard: view === 'dashboard',
+
+      // dashboard content (role-aware)
+      dashKicker: isPlatform ? 'PLATFORM OVERVIEW · JUL 1' : 'GOLDEN MIRAGE · JUL 1',
+      dashSub: isPlatform ? 'Platform-wide activity across all 142 casino properties.' : 'Everything happening at Golden Mirage today.',
+      k1label: isPlatform ? 'Active Casinos' : 'Active Members',
+      k1icon: isPlatform ? 'buildings' : 'users-three',
+      k1val: isPlatform ? '142' : '84.2K',
+      k1sub: isPlatform ? '+6 this month' : '+3.1% WoW',
+      k2val: isPlatform ? '28' : '6',
+      k2ok: isPlatform ? '24' : '6', k2fail: isPlatform ? '2' : '0',
+      k3val: isPlatform ? '47' : '8',
+      k4val: isPlatform ? '3' : '2', k4total: isPlatform ? '9' : '4',
+      chartScope: isPlatform ? 'All properties' : 'Golden Mirage app',
+      sessionsVal: isPlatform ? '3.84M' : '212K',
+      onlineAdmins: isPlatform ? '318' : '11',
+      onlineSub: isPlatform ? 'across 96 casinos' : 'on your team',
+
+      casinoRows: [
+        {name:'Golden Mirage', id:'CAS-0041', loc:'Las Vegas, NV', mark:'GM', chip:'linear-gradient(135deg,#c9962f,#8a5a1a)', status:'Live', statusFg:'var(--green)', statusBg:'var(--green-dim)', members:'84.2K', rev:'$1.24M', app:'4.2.1'},
+        {name:'Velvet Aces', id:'CAS-0038', loc:'Atlantic City, NJ', mark:'VA', chip:'linear-gradient(135deg,#7b1e3a,#3a0f1c)', status:'Live', statusFg:'var(--green)', statusBg:'var(--green-dim)', members:'52.7K', rev:'$880K', app:'4.2.1'},
+        {name:'Neon Palms', id:'CAS-0052', loc:'Miami, FL', mark:'NP', chip:'linear-gradient(135deg,#1f9d8f,#0e4f48)', status:'Live', statusFg:'var(--green)', statusBg:'var(--green-dim)', members:'41.3K', rev:'$610K', app:'4.1.9'},
+        {name:'Crown Bayou', id:'CAS-0047', loc:'New Orleans, LA', mark:'CB', chip:'linear-gradient(135deg,#6a4fd0,#2e1f66)', status:'Live', statusFg:'var(--green)', statusBg:'var(--green-dim)', members:'38.9K', rev:'$540K', app:'4.2.0'},
+        {name:'Silver Coast', id:'CAS-0059', loc:'San Diego, CA', mark:'SC', chip:'linear-gradient(135deg,#5b6b7a,#2a3540)', status:'Live', statusFg:'var(--green)', statusBg:'var(--green-dim)', members:'29.1K', rev:'$402K', app:'4.2.1'},
+        {name:'Diamond Ridge', id:'CAS-0061', loc:'Denver, CO', mark:'DR', chip:'linear-gradient(135deg,#c9962f,#6a4a12)', status:'Setup', statusFg:'var(--gold)', statusBg:'var(--gold-dim)', members:'—', rev:'—', app:'—'},
+        {name:'Emerald Bay', id:'CAS-0044', loc:'Seattle, WA', mark:'EB', chip:'linear-gradient(135deg,#1f9d5f,#0e4a2c)', status:'Paused', statusFg:'var(--muted)', statusBg:'var(--track-empty)', members:'18.6K', rev:'$121K', app:'4.0.8'},
+        {name:'Royal Sands', id:'CAS-0055', loc:'Phoenix, AZ', mark:'RS', chip:'linear-gradient(135deg,#d4923a,#7a4a12)', status:'Live', statusFg:'var(--green)', statusBg:'var(--green-dim)', members:'22.4K', rev:'$298K', app:'4.2.1'},
+      ].map(r => ({ ...r, onClick: () => this.setState({ casinoView:'detail' }) })),
+
+      promoRows: [
+        {name:'Summer Jackpot Spectacular', type:'Campaign', typeColor:'var(--gold)', typeBg:'var(--gold-dim)', casino:'Golden Mirage', status:'Live', sFg:'var(--green)', sBg:'var(--green-dim)', audience:'All members', window:'Jun 1 – Aug 31', redeem:'12,481'},
+        {name:'Free Play Friday', type:'Offer', typeColor:'var(--blue)', typeBg:'var(--blue-dim)', casino:'Golden Mirage', status:'Scheduled', sFg:'var(--gold)', sBg:'var(--gold-dim)', audience:'Gold+ tier', window:'Jul 4 – Jul 4', redeem:'—'},
+        {name:'VIP High-Roller Weekend', type:'VIP Event', typeColor:'var(--purple)', typeBg:'var(--purple-dim)', casino:'Velvet Aces', status:'Live', sFg:'var(--green)', sBg:'var(--green-dim)', audience:'Platinum', window:'Jul 12 – Jul 14', redeem:'318'},
+        {name:'Slot Tournament — Neon Nights', type:'Tournament', typeColor:'var(--gold)', typeBg:'var(--gold-dim)', casino:'Neon Palms', status:'Live', sFg:'var(--green)', sBg:'var(--green-dim)', audience:'Opted-in', window:'Ongoing', redeem:'2,044'},
+        {name:'Welcome Bonus 2x Points', type:'Loyalty', typeColor:'var(--green)', typeBg:'var(--green-dim)', casino:'All casinos', status:'Live', sFg:'var(--green)', sBg:'var(--green-dim)', audience:'New members', window:'Evergreen', redeem:'8,902'},
+        {name:'Labor Day Draw', type:'Campaign', typeColor:'var(--gold)', typeBg:'var(--gold-dim)', casino:'Crown Bayou', status:'Draft', sFg:'var(--muted)', sBg:'var(--track-empty)', audience:'—', window:'Sep 1 – Sep 2', redeem:'—'},
+      ].map(r => ({ ...r, onClick: () => this.setState({ promoView:'detail' }) })),
+
+      // view flags
+      isCasinos: view === 'casinos',
+      isAnalytics: view === 'analytics',
+      isHomepage: view === 'homepage',
+      isPromotions: view === 'promotions',
+      isMedia: view === 'media',
+      isThemes: view === 'themes',
+      isFlags: view === 'flags',
+      isUsers: view === 'users',
+      isNotifications: view === 'notifications',
+      isNavigation: view === 'navigation',
+      isRewards: view === 'rewards',
+      isHotel: view === 'hotel',
+      isDining: view === 'dining',
+      isEntertainment: view === 'entertainment',
+      isLocalization: view === 'localization',
+      isAudit: view === 'audit',
+      isSettings: view === 'settings',
+
+      // casino sub-views
+      showCasinoList: this.state.casinoView === 'list',
+      showCasinoDetail: this.state.casinoView === 'detail',
+      showCasinoWizard: this.state.casinoView === 'wizard',
+      casinoListSeg: this.seg(this.state.casinoView === 'list'),
+      casinoDetailSeg: this.seg(this.state.casinoView === 'detail'),
+      casinoWizardSeg: this.seg(this.state.casinoView === 'wizard'),
+      goCasinoList: () => this.setState({ casinoView:'list' }),
+      goCasinoDetail: () => this.setState({ casinoView:'detail' }),
+      goCasinoWizard: () => this.setState({ casinoView:'wizard', wizStep:1 }),
+
+      // wizard
+      wizStep: this.state.wizStep,
+      wizSteps: ['Property Basics','Branding','Features','Theme','Review & Launch'].map((label, idx) => {
+        const n = idx + 1, cur = this.state.wizStep;
+        const done = n < cur, active = n === cur;
+        return { n, label, done, active, notDone: !done,
+          numColor: active ? '#1a1408' : (done ? '#fff' : 'var(--muted)'),
+          bg: active ? 'var(--gold-fill)' : (done ? 'var(--green)' : 'transparent'),
+          border: (active || done) ? 'none' : '1.5px solid var(--border)',
+          labelColor: active ? 'var(--text)' : (done ? 'var(--text2)' : 'var(--muted)'),
+          labelWeight: active ? '700' : '500' };
+      }),
+      wizTitle: ['Property Basics','Branding','Features','Theme','Review & Launch'][this.state.wizStep - 1],
+      wizStepLabel: 'STEP ' + this.state.wizStep + ' OF 5',
+      isWiz1: this.state.wizStep === 1,
+      isWiz2: this.state.wizStep === 2,
+      isWiz3: this.state.wizStep === 3,
+      isWiz4: this.state.wizStep === 4,
+      isWiz5: this.state.wizStep === 5,
+      canWizBack: this.state.wizStep > 1,
+      wizNextLabel: this.state.wizStep === 5 ? 'Launch Casino' : 'Continue →',
+      wizNext: () => this.setState(s => s.wizStep >= 5 ? { casinoView:'list', wizStep:1 } : { wizStep: s.wizStep + 1 }),
+      wizBack: () => this.setState(s => ({ wizStep: Math.max(1, s.wizStep - 1) })),
+
+      // promo sub-views
+      showPromoList: this.state.promoView === 'list',
+      showPromoCal: this.state.promoView === 'calendar',
+      showPromoDetail: this.state.promoView === 'detail',
+      promoListSeg: this.seg(this.state.promoView === 'list'),
+      promoCalSeg: this.seg(this.state.promoView === 'calendar'),
+      goPromoList: () => this.setState({ promoView:'list' }),
+      goPromoCal: () => this.setState({ promoView:'calendar' }),
+      goPromoDetail: () => this.setState({ promoView:'detail' }),
+      calWeeks,
+
+      navItems: [
+        {label:'Home', icon:'house', link:'/home', on:true},
+        {label:'Promotions', icon:'ticket', link:'/promos', on:true},
+        {label:'Rewards', icon:'crown', link:'/loyalty', on:true},
+        {label:'Hotel', icon:'bed', link:'/hotel', on:true},
+        {label:'Dining', icon:'fork-knife', link:'/dining', on:true},
+        {label:'Events', icon:'confetti', link:'/events', on:false},
+        {label:'Account', icon:'user', link:'/account', on:true},
+      ].map(n => ({ ...n, trackBg: n.on ? 'var(--gold-fill)' : 'var(--track-empty)', knobPos: n.on ? 'right:2px' : 'left:2px', knobBg: n.on ? '#1a1408' : 'var(--faint)', op: n.on ? '1' : '0.5' })),
+
+      tiers: [
+        {name:'Bronze', pts:'0', color:'#a97142', members:'42%', benefits:'Base earning · Birthday bonus'},
+        {name:'Silver', pts:'5,000', color:'#9aa2ad', members:'31%', benefits:'1.25x points · Free parking'},
+        {name:'Gold', pts:'15,000', color:'#E6B450', members:'19%', benefits:'1.5x points · Priority dining · Free play'},
+        {name:'Platinum', pts:'50,000', color:'#c9c2e0', members:'6%', benefits:'2x points · Suite upgrades · Host'},
+        {name:'Diamond', pts:'150,000', color:'#8fd6e8', members:'2%', benefits:'3x points · Private events · Jet perks'},
+      ],
+
+      rooms: [
+        {name:'Deluxe King', rate:'$189', occ:'2 guests', avail:'42 avail', chip:'linear-gradient(135deg,#3a2f4a,#1f1830)'},
+        {name:'Bayview Suite', rate:'$349', occ:'4 guests', avail:'12 avail', chip:'linear-gradient(135deg,#1f3a4a,#0f2230)'},
+        {name:'High-Roller Villa', rate:'$1,200', occ:'6 guests', avail:'3 avail', chip:'linear-gradient(135deg,#4a2f1f,#301a10)'},
+        {name:'Standard Queen', rate:'$139', occ:'2 guests', avail:'88 avail', chip:'linear-gradient(135deg,#2f3a2f,#182618)'},
+      ],
+
+      restaurants: [
+        {name:'The Golden Table', cuisine:'Fine Dining · Steak', hours:'5pm–11pm', rez:'214 today', status:'Open', sFg:'var(--green)'},
+        {name:'Mirage Buffet', cuisine:'International Buffet', hours:'7am–10pm', rez:'880 today', status:'Open', sFg:'var(--green)'},
+        {name:'Neon Noodle Bar', cuisine:'Pan-Asian', hours:'11am–2am', rez:'132 today', status:'Open', sFg:'var(--green)'},
+        {name:'Sunset Lounge', cuisine:'Cocktails · Small plates', hours:'4pm–2am', rez:'Happy Hour 4–6', status:'Open', sFg:'var(--green)'},
+      ],
+
+      events: [
+        {name:'Nights of Neon Live', type:'Concert', date:'JUL 12', venue:'Grand Theater', tickets:'82% sold', sFg:'var(--gold)'},
+        {name:'Comedy Vault', type:'Show', date:'JUL 15', venue:'Velvet Room', tickets:'54% sold', sFg:'var(--green)'},
+        {name:'Heavyweight Title Bout', type:'Sports', date:'JUL 20', venue:'Arena', tickets:'Sold out', sFg:'var(--red)'},
+        {name:'Summer DJ Series', type:'Nightlife', date:'JUL 26', venue:'Pool Deck', tickets:'31% sold', sFg:'var(--green)'},
+      ],
+
+      languages: [
+        {name:'English (US)', code:'en-US', pct:100, keys:'4,120 / 4,120', flag:'🇺🇸'},
+        {name:'Spanish', code:'es', pct:98, keys:'4,038 / 4,120', flag:'🇪🇸'},
+        {name:'French (CA)', code:'fr-CA', pct:87, keys:'3,584 / 4,120', flag:'🇨🇦'},
+        {name:'Portuguese', code:'pt-BR', pct:64, keys:'2,637 / 4,120', flag:'🇧🇷'},
+        {name:'Japanese', code:'ja', pct:41, keys:'1,689 / 4,120', flag:'🇯🇵'},
+      ],
+
+      integrations: [
+        {name:'Stripe', cat:'Payments', status:'Connected', on:true, ic:'credit-card'},
+        {name:'Agilysys PMS', cat:'Hotel PMS', status:'Connected', on:true, ic:'bed'},
+        {name:'Micros POS', cat:'Point of Sale', status:'Connected', on:true, ic:'cash-register'},
+        {name:'IGT Gaming', cat:'Gaming System', status:'Connected', on:true, ic:'game-controller'},
+        {name:'Comarch Loyalty', cat:'Loyalty Provider', status:'Connected', on:true, ic:'crown'},
+        {name:'Twilio', cat:'SMS / Voice', status:'Connected', on:true, ic:'chat-circle'},
+        {name:'Mapbox', cat:'Maps', status:'Setup', on:false, ic:'map-pin'},
+        {name:'Okta SSO', cat:'Authentication', status:'Connected', on:true, ic:'shield-check'},
+      ].map(i => ({ ...i, sFg: i.on ? 'var(--green)' : 'var(--gold)', sBg: i.on ? 'var(--green-dim)' : 'var(--gold-dim)' })),
+
+      auditLog: [
+        {who:'Alex Rivera', act:'published', obj:'Homepage v13 · Golden Mirage', time:'2m ago', ic:'rocket-launch', c:'var(--green)'},
+        {who:'Marcus Lee', act:'created', obj:'Promotion · Free Play Friday', time:'22m ago', ic:'ticket', c:'var(--gold)'},
+        {who:'Dana Mercer', act:'approved', obj:'Velvet Aces Homepage v4', time:'1h ago', ic:'seal-check', c:'var(--blue)'},
+        {who:'Ops bot', act:'enabled flag', obj:'digital-keys · 12 casinos', time:'2h ago', ic:'toggle-right', c:'var(--purple)'},
+        {who:'Priya Shah', act:'rolled back', obj:'Neon Palms theme → v8', time:'4h ago', ic:'arrow-counter-clockwise', c:'var(--red)'},
+        {who:'Tom Novak', act:'updated', obj:'Payment provider · Stripe keys', time:'Yesterday', ic:'credit-card', c:'var(--muted)'},
+      ],
+
+      widgets: [
+        {label:'Hero Banner', icon:'image-square', type:'hero'}, {label:'Carousel', icon:'slideshow', type:'carousel'},
+        {label:'Promotions', icon:'ticket', type:'promo'}, {label:'Loyalty Card', icon:'crown', type:'loyalty'},
+        {label:'Events', icon:'confetti', type:'events'}, {label:'Dining', icon:'fork-knife', type:'dining'},
+        {label:'Hotel', icon:'bed', type:'hotel'}, {label:'Video', icon:'play-circle', type:'video'},
+        {label:'News', icon:'newspaper', type:'news'}, {label:'Quick Actions', icon:'squares-four', type:'quick'},
+        {label:'Personalized', icon:'user-focus', type:'personalized'}, {label:'Recommends', icon:'sparkle', type:'recommend'},
+      ].map(w => ({ ...w, onDragStart: () => { this.dragNew = w.type; this.dragFrom = null; } })),
+
+      hpBlockList: (() => {
+        const meta = { hero:{label:'Hero Banner'}, carousel:{label:'Promotions Carousel'}, loyalty:{label:'Loyalty Card'}, quick:{label:'Quick Actions'}, promo:{label:'Promotions'}, events:{label:'Events'}, dining:{label:'Dining'}, hotel:{label:'Hotel'}, video:{label:'Video'}, news:{label:'News'}, personalized:{label:'Personalized'}, recommend:{label:'Recommendations'} };
+        const rich = ['hero','carousel','loyalty','quick'];
+        return this.state.hpBlocks.map((type, i) => ({
+          type, i, label: (meta[type] || {label:type}).label,
+          selected: i === this.state.hpSel,
+          borderCol: i === this.state.hpSel ? 'var(--gold)' : 'transparent',
+          isHero: type === 'hero', isCarousel: type === 'carousel', isLoyalty: type === 'loyalty', isQuick: type === 'quick',
+          isGeneric: !rich.includes(type),
+          onSelect: () => this.setState({ hpSel: i }),
+          onDragStart: () => { this.dragFrom = i; this.dragNew = null; },
+          onDragOver: (e) => { e.preventDefault(); },
+          onDrop: (e) => { e.preventDefault(); this.moveBlock(this.dragFrom, i); },
+          onRemove: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.removeBlock(i); },
+        }));
+      })(),
+      selBlockLabel: (() => { const b = this.state.hpBlocks[this.state.hpSel]; const meta = { hero:'Hero Banner', carousel:'Promotions Carousel', loyalty:'Loyalty Card', quick:'Quick Actions' }; return (meta[b] || (b ? b.charAt(0).toUpperCase()+b.slice(1) : 'Block')); })(),
+      onCanvasDragOver: (e) => { e.preventDefault(); },
+      onCanvasDrop: (e) => { e.preventDefault(); if (this.dragNew) { this.addBlock(this.dragNew); this.dragNew = null; } },
+
+      mediaAssets: [
+        {name:'summer-hero.jpg', type:'IMG', kind:'image', chip:'linear-gradient(135deg,#7b1e3a,#c9962f)', size:'2.4 MB', usage:'8 places', ic:'image'},
+        {name:'jackpot-reel.mp4', type:'VID', kind:'video', chip:'linear-gradient(135deg,#1e2230,#0f1420)', size:'18 MB', usage:'2 places', ic:'play-circle'},
+        {name:'loyalty-terms.pdf', type:'PDF', kind:'doc', chip:'linear-gradient(135deg,#3a1f1f,#1f1212)', size:'340 KB', usage:'1 place', ic:'file-pdf'},
+        {name:'brand-logo.svg', type:'SVG', kind:'vector', chip:'linear-gradient(135deg,#1f3a2e,#0f1f18)', size:'12 KB', usage:'24 places', ic:'file-svg'},
+        {name:'neon-nights.jpg', type:'IMG', kind:'image', chip:'linear-gradient(135deg,#1f9d8f,#2e1f66)', size:'1.9 MB', usage:'4 places', ic:'image'},
+        {name:'vip-lounge.jpg', type:'IMG', kind:'image', chip:'linear-gradient(135deg,#6a4fd0,#2e1f66)', size:'3.1 MB', usage:'3 places', ic:'image'},
+        {name:'dining-menu.pdf', type:'PDF', kind:'doc', chip:'linear-gradient(135deg,#3a2f1f,#1f1912)', size:'620 KB', usage:'6 places', ic:'file-pdf'},
+        {name:'app-icon.png', type:'IMG', kind:'image', chip:'linear-gradient(135deg,#c9962f,#7a4a12)', size:'88 KB', usage:'App', ic:'image'},
+      ],
+
+      users: [
+        {name:'Dana Mercer', mail:'dana@casinoops.com', init:'DM', role:'Platform Admin', rFg:'var(--gold)', rBg:'var(--gold-dim)', scope:'All casinos', status:'Active', sFg:'var(--green)', last:'2m ago'},
+        {name:'Alex Rivera', mail:'alex@goldenmirage.com', init:'AR', role:'Marketing Mgr', rFg:'var(--blue)', rBg:'var(--blue-dim)', scope:'Golden Mirage', status:'Active', sFg:'var(--green)', last:'12m ago'},
+        {name:'Priya Shah', mail:'priya@velvetaces.com', init:'PS', role:'Operations', rFg:'var(--purple)', rBg:'var(--purple-dim)', scope:'Velvet Aces', status:'Active', sFg:'var(--green)', last:'1h ago'},
+        {name:'Marcus Lee', mail:'marcus@casinoops.com', init:'ML', role:'Rewards Mgr', rFg:'var(--green)', rBg:'var(--green-dim)', scope:'3 casinos', status:'Active', sFg:'var(--green)', last:'3h ago'},
+        {name:'Sofia Reyes', mail:'sofia@crownbayou.com', init:'SR', role:'Hotel Mgr', rFg:'var(--blue)', rBg:'var(--blue-dim)', scope:'Crown Bayou', status:'Active', sFg:'var(--green)', last:'Yesterday'},
+        {name:'Tom Novak', mail:'tom@casinoops.com', init:'TN', role:'Finance', rFg:'var(--gold)', rBg:'var(--gold-dim)', scope:'All casinos', status:'Active', sFg:'var(--green)', last:'2d ago'},
+        {name:'Jules Park', mail:'jules@neonpalms.com', init:'JP', role:'Support', rFg:'var(--muted)', rBg:'var(--track-empty)', scope:'Neon Palms', status:'Invited', sFg:'var(--gold)', last:'—'},
+        {name:'Ravi Anand', mail:'ravi@silvercoast.com', init:'RA', role:'Read Only', rFg:'var(--muted)', rBg:'var(--track-empty)', scope:'Silver Coast', status:'Disabled', sFg:'var(--muted)', last:'3w ago'},
+      ],
+
+      flags: [
+        {name:'Digital Room Keys', desc:'Unlock hotel rooms from the app', scope:'12 casinos', rollout:'100%', on:true, tag:'', tagC:''},
+        {name:'AI Recommendations', desc:'Personalized offer surfacing', scope:'Beta cohort', rollout:'25%', on:true, tag:'BETA', tagC:'var(--gold)'},
+        {name:'Sports Betting', desc:'In-app sportsbook module', scope:'EU region', rollout:'0%', on:false, tag:'EU', tagC:'var(--blue)'},
+        {name:'Live Dealer Streaming', desc:'Real-time table streams', scope:'3 casinos', rollout:'40%', on:true, tag:'BETA', tagC:'var(--gold)'},
+        {name:'Apple Wallet Passes', desc:'Loyalty card in Apple Wallet', scope:'All casinos', rollout:'100%', on:true, tag:'', tagC:''},
+        {name:'Crypto Payments', desc:'BTC/ETH top-ups', scope:'Disabled', rollout:'0%', on:false, tag:'INTERNAL', tagC:'var(--purple)'},
+      ].map(f => ({ ...f, hasTag: !!f.tag, tagBg: f.tagC ? 'transparent' : 'transparent',
+        trackBg: f.on ? 'var(--gold-fill)' : 'var(--track-empty)',
+        knobPos: f.on ? 'right:2px' : 'left:2px', knobBg: f.on ? '#1a1408' : 'var(--faint)',
+        rolloutColor: f.on ? 'var(--green)' : 'var(--muted)' })),
+    };
+  }
+}
+</script>
+</body>
+</html>
