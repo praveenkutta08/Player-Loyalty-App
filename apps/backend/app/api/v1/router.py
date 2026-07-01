@@ -12,6 +12,7 @@ from ...modules.account.router import router as account_router
 from ...modules.audit.router import router as audit_router
 from ...modules.content.router import router as content_router
 from ...modules.digitalkey.router import router as digitalkey_router
+from ...modules.games.router import router as games_router
 from ...modules.geofencing.router import router as geofencing_router
 from ...modules.identity.router import router as identity_router
 from ...modules.notifications.router import router as notifications_router
@@ -34,3 +35,4 @@ api_router.include_router(digitalkey_router)
 api_router.include_router(notifications_router)
 api_router.include_router(geofencing_router)
 api_router.include_router(audit_router)
+api_router.include_router(games_router)
