@@ -10,6 +10,8 @@ from app.core.settings import get_settings
 from app.db.base import Base
 
 # Import model modules here so their tables register on Base.metadata for autogenerate.
+from app.modules.identity import models as _identity_models  # noqa: E402, F401
+from app.modules.players import models as _players_models  # noqa: E402, F401
 from app.modules.tenants.models import Tenant  # noqa: E402, F401
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection

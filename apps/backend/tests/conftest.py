@@ -9,6 +9,7 @@ import pytest_asyncio
 from app.db.session import engine
 from app.main import app
 from fastapi.testclient import TestClient
+from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 
@@ -27,3 +28,11 @@ async def db_engine() -> AsyncIterator[AsyncEngine]:
     """
     yield engine
     await engine.dispose()
+
+
+@pytest_asyncio.fixture
+async def api(db_engine: AsyncEngine) -> AsyncIterator[AsyncClient]:
+    """Async HTTP client that drives the ASGI app in the current event loop."""
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as http_client:
+        yield http_client

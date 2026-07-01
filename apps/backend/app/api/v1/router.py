@@ -8,6 +8,9 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
-api_router = APIRouter()
+from ...modules.identity.router import router as identity_router
+from ...modules.players.router import router as players_router
 
-# Later: api_router.include_router(identity.router), etc.
+api_router = APIRouter()
+api_router.include_router(identity_router)
+api_router.include_router(players_router)

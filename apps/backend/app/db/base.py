@@ -56,6 +56,4 @@ class TenantOwnedMixin:
     present and indexed is the prerequisite.
     """
 
-    tenant_id: Mapped[uuid.UUID] = mapped_column(
-        PgUUID(as_uuid=True), nullable=False, index=True
-    )
+    tenant_id: Mapped[uuid.UUID] = mapped_column(PgUUID(as_uuid=True), nullable=False, index=True)

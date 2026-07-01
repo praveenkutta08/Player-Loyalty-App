@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
 
     # Auth
-    jwt_secret: str = "change-me-dev-only"
+    jwt_secret: str = "dev-only-insecure-change-me-32bytes-minimum"
     jwt_access_ttl_min: int = 15
     jwt_refresh_ttl_days: int = 30
 

@@ -72,9 +72,7 @@ async def test_rls_isolates_select_update_delete(db_engine: object) -> None:
 
         # Verify as superuser: B's row survived intact, A's rows are gone.
         async with SessionLocal() as session:
-            rows = (
-                await session.execute(select(_RlsWidget.tenant_id, _RlsWidget.name))
-            ).all()
+            rows = (await session.execute(select(_RlsWidget.tenant_id, _RlsWidget.name))).all()
             assert len(rows) == 1
             assert rows[0].tenant_id == TENANT_B
             assert rows[0].name == "b1"
