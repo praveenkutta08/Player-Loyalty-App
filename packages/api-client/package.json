@@ -16,14 +16,21 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "generate": "node ./scripts/generate.mjs"
+    "generate": "openapi-typescript http://localhost:8000/api/v1/openapi.json --output src/generated/schema.ts"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.2.7",
     "@repo/shared-types": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=18"
   },
   "devDependencies": {
     "@repo/config": "workspace:*",
+    "@types/react": "^18.3.5",
     "eslint": "^9.11.1",
+    "openapi-typescript": "^7.4.1",
+    "react": "^18.3.1",
     "typescript": "^5.6.2"
   }
 }
