@@ -48,12 +48,51 @@ async def create_admin(
         return user
 
 
-async def create_player(tenant_id: uuid.UUID, email: str, password: str | None = None) -> Player:
+async def admin_headers(
+    api: object,
+    *,
+    role: str = "super_admin",
+    tenant_id: uuid.UUID | None = None,
+    allowed_tenant_ids: Sequence[uuid.UUID] | None = None,
+) -> dict[str, str]:
+    """Create an admin with the given role, log in, and return auth headers (+ X-Tenant)."""
+    email = f"{unique(role)}@example.com"
+    await create_admin(email, "pw", role, allowed_tenant_ids=allowed_tenant_ids)
+    resp = await api.post(  # type: ignore[attr-defined]
+        "/api/v1/auth/admin/login", json={"email": email, "password": "pw"}
+    )
+    headers = {"Authorization": f"Bearer {resp.json()['access_token']}"}
+    if tenant_id is not None:
+        headers["X-Tenant"] = str(tenant_id)
+    return headers
+
+
+async def player_token(
+    api: object, tenant_id: uuid.UUID, email: str | None = None, password: str = "pw"
+) -> str:
+    """Create a player in the tenant, log in, and return the access token."""
+    email = email or f"{unique('player')}@example.com"
+    await create_player(tenant_id, email, password=password)
+    resp = await api.post(  # type: ignore[attr-defined]
+        "/api/v1/auth/player/login",
+        json={"email": email, "password": password},
+        headers={"X-Tenant": str(tenant_id)},
+    )
+    return resp.json()["access_token"]
+
+
+async def create_player(
+    tenant_id: uuid.UUID,
+    email: str,
+    password: str | None = None,
+    segment: str | None = None,
+) -> Player:
     async with SessionLocal() as session:
         player = Player(
             tenant_id=tenant_id,
             email=email.lower(),
             password_hash=hash_password(password) if password else None,
+            segment=segment,
         )
         session.add(player)
         await session.commit()

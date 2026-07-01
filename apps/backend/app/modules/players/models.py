@@ -27,6 +27,8 @@ class Player(TenantOwnedMixin, BaseModel):
 
     email: Mapped[str] = mapped_column(String(320), nullable=False, index=True)
     phone: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    # Marketing segment used for content/offer targeting (null = default audience).
+    segment: Mapped[str | None] = mapped_column(String(100), nullable=True)
     # Nullable: OTP-only players may never set a password.
     password_hash: Mapped[str | None] = mapped_column(String(255), nullable=True)
     status: Mapped[str] = mapped_column(
