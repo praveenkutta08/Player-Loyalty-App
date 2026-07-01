@@ -16,6 +16,7 @@ from app.modules.offers import models as _offers_models  # noqa: E402, F401
 from app.modules.players import models as _players_models  # noqa: E402, F401
 from app.modules.tenant_config import models as _tenant_config_models  # noqa: E402, F401
 from app.modules.tenants.models import Tenant  # noqa: E402, F401
+from app.modules.wallet import models as _wallet_models  # noqa: E402, F401
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
