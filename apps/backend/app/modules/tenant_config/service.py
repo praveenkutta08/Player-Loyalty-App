@@ -54,7 +54,8 @@ async def update_config(
     return config
 
 
-async def _bump_version(session: AsyncSession, tenant_id: UUID) -> None:
+async def bump_version(session: AsyncSession, tenant_id: UUID) -> None:
+    """Increment the tenant's manifest version so clients refetch (used across modules)."""
     config = await get_or_create_config(session, tenant_id)
     config.version += 1
     await session.flush()
@@ -91,7 +92,7 @@ async def create_theme(session: AsyncSession, tenant_id: UUID, data: ThemeCreate
     await session.flush()
     if theme.is_active:
         await _deactivate_other_themes(session, tenant_id, theme.id)
-    await _bump_version(session, tenant_id)
+    await bump_version(session, tenant_id)
     return theme
 
 
@@ -104,7 +105,7 @@ async def update_theme(
     await session.flush()
     if theme.is_active:
         await _deactivate_other_themes(session, tenant_id, theme.id)
-    await _bump_version(session, tenant_id)
+    await bump_version(session, tenant_id)
     return theme
 
 
@@ -113,14 +114,14 @@ async def activate_theme(session: AsyncSession, tenant_id: UUID, theme_id: UUID)
     theme.is_active = True
     await session.flush()
     await _deactivate_other_themes(session, tenant_id, theme.id)
-    await _bump_version(session, tenant_id)
+    await bump_version(session, tenant_id)
     return theme
 
 
 async def delete_theme(session: AsyncSession, tenant_id: UUID, theme_id: UUID) -> None:
     theme = await _get_theme(session, tenant_id, theme_id)
     await session.delete(theme)
-    await _bump_version(session, tenant_id)
+    await bump_version(session, tenant_id)
 
 
 async def resolve_manifest(session: AsyncSession, tenant: Tenant) -> ManifestOut:

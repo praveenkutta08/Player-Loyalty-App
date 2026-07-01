@@ -48,6 +48,13 @@ class Settings(BaseSettings):
     mock_latency_ms: int = 0
     mock_failure_rate: float = 0.0
 
+    # Object storage (MinIO in dev)
+    s3_endpoint: str = "http://localhost:9000"
+    s3_bucket: str = "player-media"
+    s3_access_key: str = "minioadmin"
+    s3_secret_key: str = "minioadmin"
+    s3_region: str = "us-east-1"
+
     # CORS — the admin console dev origin (Vite default port).
     cors_origins: list[str] = ["http://localhost:5173"]
 
