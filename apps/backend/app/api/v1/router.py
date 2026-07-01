@@ -20,6 +20,7 @@ from ...modules.offers.router import router as offers_router
 from ...modules.players.router import router as players_router
 from ...modules.reservations.router import router as reservations_router
 from ...modules.rewards.router import router as rewards_router
+from ...modules.support.router import router as support_router
 from ...modules.tenant_config.router import router as tenant_config_router
 from ...modules.wallet.router import router as wallet_router
 
@@ -38,3 +39,4 @@ api_router.include_router(geofencing_router)
 api_router.include_router(audit_router)
 api_router.include_router(games_router)
 api_router.include_router(rewards_router)
+api_router.include_router(support_router)

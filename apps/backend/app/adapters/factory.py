@@ -12,6 +12,7 @@ from functools import lru_cache
 from ..core.settings import get_settings
 from ..ports import (
     CashlessPort,
+    ChatPort,
     DigitalKeyPort,
     GeoPort,
     KycPort,
@@ -21,6 +22,7 @@ from ..ports import (
 )
 from ..ports.errors import AdapterError
 from .mock.cashless import MockCashlessAdapter
+from .mock.chat import MockChatAdapter
 from .mock.digital_key import MockDigitalKeyAdapter
 from .mock.geo import MockGeoAdapter
 from .mock.kyc import MockKycAdapter
@@ -94,3 +96,11 @@ def get_push_port() -> PushPort:
     if provider == "mock":
         return MockPushAdapter()
     raise _unsupported("push", provider)
+
+
+@lru_cache
+def get_chat_port() -> ChatPort:
+    provider = _resolve("chat", get_settings().chat_provider)
+    if provider == "mock":
+        return MockChatAdapter()
+    raise _unsupported("chat", provider)

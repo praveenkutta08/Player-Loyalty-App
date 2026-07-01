@@ -5,6 +5,7 @@ implementation (mock vs sandbox vs live) is chosen by env via ``app.adapters.fac
 """
 
 from .cashless import CashlessPort, CashlessTransaction
+from .chat import ChatPort, ChatReply, FaqEntry
 from .digital_key import DigitalKey, DigitalKeyPort, DigitalKeyStatus, UnlockResult
 from .errors import (
     AdapterError,
@@ -33,6 +34,9 @@ __all__ = [
     "LoyaltyTransaction",
     "CashlessPort",
     "CashlessTransaction",
+    "ChatPort",
+    "ChatReply",
+    "FaqEntry",
     "DigitalKeyPort",
     "DigitalKey",
     "DigitalKeyStatus",

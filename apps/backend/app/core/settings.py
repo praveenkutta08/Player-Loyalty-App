@@ -44,6 +44,7 @@ class Settings(BaseSettings):
     geo_provider: str | None = None
     payment_provider: str | None = None
     push_provider: str | None = None
+    chat_provider: str | None = None
     # Mock adapter behaviour (0 = deterministic; raise in dev to exercise resilience).
     mock_latency_ms: int = 0
     mock_failure_rate: float = 0.0
