@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+from datetime import UTC, datetime, timedelta
+
 from ...ports.errors import AdapterRejectedError
-from ...ports.loyalty import LoyaltyAccount, LoyaltyTransaction
+from ...ports.loyalty import LoyaltyAccount, LoyaltyActivity, LoyaltyTransaction
 from .base import MockAdapterBase
 
 
@@ -56,3 +58,34 @@ class MockLoyaltyAdapter(MockAdapterBase):
             balance=balance,
             reason=reason,
         )
+
+    async def get_activity(self, player_ref: str, limit: int = 20) -> list[LoyaltyActivity]:
+        await self._simulate()
+        now = datetime.now(UTC)
+        sample = [
+            LoyaltyActivity(
+                id=self._new_id(),
+                type="win",
+                description="Slots — Golden Dragon",
+                points=120,
+                amount_cents=4500,
+                at=now - timedelta(hours=2),
+            ),
+            LoyaltyActivity(
+                id=self._new_id(),
+                type="loss",
+                description="Blackjack table 7",
+                points=0,
+                amount_cents=-2000,
+                at=now - timedelta(hours=5),
+            ),
+            LoyaltyActivity(
+                id=self._new_id(),
+                type="earn",
+                description="Daily check-in bonus",
+                points=50,
+                amount_cents=0,
+                at=now - timedelta(days=1),
+            ),
+        ]
+        return sample[:limit]

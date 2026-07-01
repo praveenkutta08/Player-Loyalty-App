@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
+from ...modules.account.router import router as account_router
 from ...modules.content.router import router as content_router
 from ...modules.identity.router import router as identity_router
 from ...modules.offers.router import router as offers_router
@@ -20,3 +21,4 @@ api_router.include_router(players_router)
 api_router.include_router(tenant_config_router)
 api_router.include_router(content_router)
 api_router.include_router(offers_router)
+api_router.include_router(account_router)

@@ -15,7 +15,7 @@ from .errors import (
 )
 from .geo import GeoPort, JurisdictionResult
 from .kyc import KycPort, KycSession, KycStatus
-from .loyalty import LoyaltyAccount, LoyaltyPort, LoyaltyTransaction
+from .loyalty import LoyaltyAccount, LoyaltyActivity, LoyaltyPort, LoyaltyTransaction
 from .payment import PaymentIntent, PaymentPort, PaymentResult, PaymentStatus
 from .push import Platform, PushNotification, PushPort, PushReceipt
 from .types import Money
@@ -29,6 +29,7 @@ __all__ = [
     "AdapterUnavailableError",
     "LoyaltyPort",
     "LoyaltyAccount",
+    "LoyaltyActivity",
     "LoyaltyTransaction",
     "CashlessPort",
     "CashlessTransaction",
