@@ -9,6 +9,7 @@ from __future__ import annotations
 from fastapi import APIRouter
 
 from ...modules.account.router import router as account_router
+from ...modules.audit.router import router as audit_router
 from ...modules.content.router import router as content_router
 from ...modules.digitalkey.router import router as digitalkey_router
 from ...modules.geofencing.router import router as geofencing_router
@@ -32,3 +33,4 @@ api_router.include_router(reservations_router)
 api_router.include_router(digitalkey_router)
 api_router.include_router(notifications_router)
 api_router.include_router(geofencing_router)
+api_router.include_router(audit_router)

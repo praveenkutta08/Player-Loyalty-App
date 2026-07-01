@@ -10,9 +10,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.errors import ProblemException
 from ...db.session import get_session
-from ...rbac.deps import AdminTenantIdDep, AdminTenantSessionDep, require
+from ...rbac.deps import AdminContext, AdminTenantIdDep, AdminTenantSessionDep, require
 from ...rbac.matrix import Permission
 from ...tenancy.deps import set_tenant_context
+from ..audit.models import ActorType
+from ..audit.service import write_audit
 from ..tenants.models import Tenant
 from .schemas import (
     ManifestOut,
@@ -52,16 +54,23 @@ async def read_config(
     return TenantConfigOut.model_validate(config)
 
 
-@router.put(
-    "/config",
-    response_model=TenantConfigOut,
-    tags=["config"],
-    dependencies=[Depends(require(Permission.tenant_config_update.value))],
-)
+@router.put("/config", response_model=TenantConfigOut, tags=["config"])
 async def put_config(
-    body: TenantConfigUpdate, session: AdminTenantSessionDep, tenant_id: AdminTenantIdDep
+    body: TenantConfigUpdate,
+    session: AdminTenantSessionDep,
+    tenant_id: AdminTenantIdDep,
+    ctx: Annotated[AdminContext, Depends(require(Permission.tenant_config_update.value))],
 ) -> TenantConfigOut:
     config = await update_config(session, tenant_id, body)
+    await write_audit(
+        session,
+        tenant_id=tenant_id,
+        actor_type=ActorType.admin.value,
+        actor_id=ctx.user.id,
+        action="tenant_config:update",
+        entity="tenant_config",
+        entity_id=config.id,
+    )
     return TenantConfigOut.model_validate(config)
 
 

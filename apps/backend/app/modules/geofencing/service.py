@@ -15,6 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.errors import ProblemException
 from ...ports.push import PushPort
+from ..audit.service import record_event
 from ..notifications.schemas import NotificationCreate
 from ..notifications.service import create_notification
 from ..notifications.service import send as send_notification
@@ -318,6 +319,14 @@ async def _evaluate(
         ),
     )
     await send_notification(session, push, notification, target_player_ids=[player.id])
+    await record_event(
+        session,
+        tenant_id=player.tenant_id,
+        type="trigger_fire",
+        player_id=player.id,
+        entity_id=trigger.id,
+        meta={"offer_id": str(offer.id)},
+    )
     return "dispatched", notification.id
 
 

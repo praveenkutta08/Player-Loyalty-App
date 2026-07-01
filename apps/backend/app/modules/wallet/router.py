@@ -13,6 +13,8 @@ from ...adapters.factory import get_cashless_port
 from ...core.errors import ProblemException
 from ...db.session import get_session
 from ...ports.cashless import CashlessPort
+from ..audit.models import ActorType
+from ..audit.service import write_audit
 from ..players.deps import get_current_player
 from ..players.models import Player
 from .schemas import (
@@ -55,9 +57,18 @@ async def get_wallet(player: PlayerDep, session: SessionDep) -> WalletOut:
 async def wallet_fund(
     body: FundRequest, player: PlayerDep, session: SessionDep, cashless: CashlessDep, idem: IdemDep
 ) -> TransactionOut:
-    return TransactionOut.model_validate(
-        await fund(session, cashless, player, body.amount_cents, idem)
+    txn = await fund(session, cashless, player, body.amount_cents, idem)
+    await write_audit(
+        session,
+        tenant_id=player.tenant_id,
+        actor_type=ActorType.player.value,
+        actor_id=player.id,
+        action="wallet:fund",
+        entity="wallet_transaction",
+        entity_id=txn.id,
+        meta={"amount_cents": body.amount_cents},
     )
+    return TransactionOut.model_validate(txn)
 
 
 @router.post("/wallet/transfer", response_model=TransactionOut, tags=["wallet"])

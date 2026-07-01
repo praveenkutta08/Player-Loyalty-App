@@ -9,6 +9,7 @@ from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.errors import ProblemException
+from ..audit.service import record_event
 from ..players.models import Player
 from .models import Offer, OfferStatus, PlayerOffer, RedemptionStatus
 from .schemas import OfferCreate, OfferUpdate
@@ -134,4 +135,11 @@ async def redeem(
     )
     session.add(redemption)
     await session.flush()
+    await record_event(
+        session,
+        tenant_id=player.tenant_id,
+        type="redemption",
+        player_id=player.id,
+        entity_id=offer_id,
+    )
     return redemption
