@@ -10,7 +10,9 @@ from fastapi import APIRouter
 
 from ...modules.identity.router import router as identity_router
 from ...modules.players.router import router as players_router
+from ...modules.tenant_config.router import router as tenant_config_router
 
 api_router = APIRouter()
 api_router.include_router(identity_router)
 api_router.include_router(players_router)
+api_router.include_router(tenant_config_router)

@@ -7,7 +7,7 @@ admins are constrained to their ``admin_user_tenants`` allow-list; only ``super_
 
 from __future__ import annotations
 
-from collections.abc import Awaitable, Callable
+from collections.abc import AsyncIterator, Awaitable, Callable
 from dataclasses import dataclass
 from typing import Annotated
 from uuid import UUID
@@ -27,6 +27,7 @@ from ..modules.identity.models import (
     RolePermission,
     UserRole,
 )
+from ..tenancy.deps import set_tenant_context
 from .matrix import UNRESTRICTED_ROLES
 
 
@@ -139,3 +140,18 @@ async def get_admin_tenant_id(
     if not ctx.can_access_tenant(x_tenant):
         raise ProblemException(403, "Forbidden", detail="Tenant not in your allow-list.")
     return x_tenant
+
+
+AdminTenantIdDep = Annotated[UUID, Depends(get_admin_tenant_id)]
+
+
+async def get_admin_tenant_session(
+    session: Annotated[AsyncSession, Depends(get_session)],
+    tenant_id: AdminTenantIdDep,
+) -> AsyncIterator[AsyncSession]:
+    """Yield a session bound (RLS-enforced) to the admin's validated acting tenant."""
+    await set_tenant_context(session, tenant_id)
+    yield session
+
+
+AdminTenantSessionDep = Annotated[AsyncSession, Depends(get_admin_tenant_session)]
