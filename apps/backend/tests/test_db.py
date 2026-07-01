@@ -20,7 +20,7 @@ class _Widget(TenantOwnedMixin, BaseModel):
     name: Mapped[str] = mapped_column(String(50), nullable=False)
 
 
-async def test_session_round_trips_a_row() -> None:
+async def test_session_round_trips_a_row(db_engine: object) -> None:
     async with engine.begin() as conn:
         await conn.run_sync(BaseModel.metadata.create_all, tables=[_Widget.__table__])
     try:

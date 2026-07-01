@@ -8,12 +8,12 @@ from logging.config import fileConfig
 from alembic import context
 from app.core.settings import get_settings
 from app.db.base import Base
+
+# Import model modules here so their tables register on Base.metadata for autogenerate.
+from app.modules.tenants.models import Tenant  # noqa: E402, F401
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
-
-# Import model modules here so their tables register on Base.metadata for autogenerate.
-# (No domain models yet — added from P1.3 onward.)
 
 config = context.config
 
