@@ -12,6 +12,7 @@ from ...modules.account.router import router as account_router
 from ...modules.content.router import router as content_router
 from ...modules.digitalkey.router import router as digitalkey_router
 from ...modules.identity.router import router as identity_router
+from ...modules.notifications.router import router as notifications_router
 from ...modules.offers.router import router as offers_router
 from ...modules.players.router import router as players_router
 from ...modules.reservations.router import router as reservations_router
@@ -28,3 +29,4 @@ api_router.include_router(account_router)
 api_router.include_router(wallet_router)
 api_router.include_router(reservations_router)
 api_router.include_router(digitalkey_router)
+api_router.include_router(notifications_router)
