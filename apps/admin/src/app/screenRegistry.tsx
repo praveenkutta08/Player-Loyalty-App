@@ -3,6 +3,7 @@ import type { ComponentType } from 'react';
 import { CasinosScreen } from '@/features/casinos/CasinosScreen';
 import { ContentScreen } from '@/features/content/ContentScreen';
 import { FeatureFlagsScreen } from '@/features/featureflags/FeatureFlagsScreen';
+import { NotificationsScreen } from '@/features/notifications/NotificationsScreen';
 import { OffersScreen } from '@/features/offers/OffersScreen';
 import { PromotionsScreen } from '@/features/promotions/PromotionsScreen';
 import { ThemeScreen } from '@/features/theme/ThemeScreen';
@@ -16,6 +17,7 @@ export const SCREEN_REGISTRY: Record<string, ComponentType> = {
   '/casinos': CasinosScreen,
   '/content': ContentScreen,
   '/feature-flags': FeatureFlagsScreen,
+  '/notifications': NotificationsScreen,
   '/offers': OffersScreen,
   '/promotions': PromotionsScreen,
   '/theme': ThemeScreen,
