@@ -89,7 +89,9 @@ export function SplashWordmark({
   const theme = useTheme();
   const { height } = useWindowDimensions();
   const gold = theme.colors.brand.gold;
-  const cream = theme.scheme === 'light' ? '#2C2118' : '#F3ECDD';
+  // Wordmark ink comes from the resolved theme (M18) — a light-brand tenant gets its own
+  // primary text color, not hardcoded cream/espresso art values.
+  const cream = theme.colors.text.primary;
   return (
     <View style={[styles.wordmarkBlock, { top: height * (topPct / 100) }]} pointerEvents="none">
       <Animated.Text

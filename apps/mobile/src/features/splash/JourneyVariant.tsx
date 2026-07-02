@@ -128,6 +128,8 @@ export function JourneyVariant({
         style={[
           styles.traveler,
           {
+            // Traveler dot ink from theme tokens (M18), not hardcoded cream.
+            backgroundColor: theme.colors.text.primary,
             shadowColor: gold,
             opacity: sampleRange(progressJs, (t) => journeyFrame(t).traveler.opacity, T),
             transform: [
@@ -204,7 +206,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#FFF8EA',
+    // backgroundColor comes from theme tokens at the call site (M18)
     shadowOpacity: 0.8,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 0 },

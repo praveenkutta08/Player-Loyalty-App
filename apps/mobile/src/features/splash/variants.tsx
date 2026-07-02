@@ -235,12 +235,19 @@ export function CollectionVariant({
       </View>
       {isTop && memberTier ? (
         <>
-          <Animated.Text testID="splash-tier" style={[styles.cardTier, { color: '#101520' }]}>
+          {/* Top card is an inverse surface (text.primary), so its ink is bg.base (M18). */}
+          <Animated.Text
+            testID="splash-tier"
+            style={[styles.cardTier, { color: theme.colors.bg.base }]}
+          >
             {memberTier.toUpperCase()}
           </Animated.Text>
           <Animated.Text
             testID="splash-masked-number"
-            style={[styles.cardNumber, { fontFamily: theme.fontFamily.display }]}
+            style={[
+              styles.cardNumber,
+              { fontFamily: theme.fontFamily.display, color: theme.colors.text.faint },
+            ]}
           >
             •••• ••••
           </Animated.Text>
@@ -260,9 +267,23 @@ export function CollectionVariant({
           },
         ]}
       />
-      {card('card1', { backgroundColor: '#141824', borderColor: 'rgba(255,255,255,0.12)' }, false)}
-      {card('card2', { backgroundColor: '#171c2a', borderColor: 'rgba(255,255,255,0.16)' }, false)}
-      {card('card3', { backgroundColor: '#ECEDF1', borderColor: 'rgba(255,255,255,0.5)' }, true)}
+      {/* Card art comes from theme tokens (M18): two elevated brand surfaces + one inverse
+          highlight card, so light-brand tenants get their own palette, not navy/cream art. */}
+      {card(
+        'card1',
+        { backgroundColor: theme.colors.bg.surface, borderColor: theme.colors.border.soft },
+        false,
+      )}
+      {card(
+        'card2',
+        { backgroundColor: theme.colors.bg.elevated, borderColor: theme.colors.border.default },
+        false,
+      )}
+      {card(
+        'card3',
+        { backgroundColor: theme.colors.text.primary, borderColor: theme.colors.border.strong },
+        true,
+      )}
       <SplashWordmark
         progress={progress}
         T={T}
@@ -332,6 +353,6 @@ const styles = StyleSheet.create({
     right: '7%',
     fontSize: 11,
     letterSpacing: 1.5,
-    color: '#3a4356',
+    // color comes from theme tokens at the call site (M18)
   },
 });

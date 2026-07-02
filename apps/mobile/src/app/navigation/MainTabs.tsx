@@ -20,7 +20,8 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
  * icons, per-tab feature gating, and the emphasized center action all come from the manifest
  * `navigation` block (falling back to Option B when absent). Globals toggle the TopBar bell/search.
  * P7.4: `navigation.style` (floatingPill | editorial) skins the bar — visuals only; structure,
- * center-action fallback, deep links and tab state are identical in both styles.
+ * the resolveTabs-enforced center-action fallback + min-tab safety (M15), deep links and tab
+ * state are identical in both styles.
  */
 export function MainTabs(): React.JSX.Element {
   const { manifest } = useManifest();

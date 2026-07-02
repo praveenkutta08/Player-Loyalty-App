@@ -25,7 +25,8 @@ export interface NavBarVisualProps {
 /**
  * The presentational bar (P7.4) — pure function of (style, tabs, active route, insets), shared
  * by the real navigator's tabBar and the dev gallery. Rendering-only: the Option B structure,
- * center action and its cashless fallback are decided upstream in resolveTabs (P4.14).
+ * the center action's cashless->wallet fallback and the minimum-viable-tab safety are all
+ * ENFORCED upstream in resolveTabs (P4.14, M15) — this component never edits the tab set.
  */
 export function NavBarVisual({
   styleKey,

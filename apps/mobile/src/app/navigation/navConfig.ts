@@ -87,16 +87,42 @@ export interface ResolvedTab {
 }
 
 /**
+ * A tab bar below this is degenerate — if a manifest resolves to fewer usable tabs (or drops
+ * Home) we fall back to the full Option B DEFAULT_NAV rather than render a broken shell (M15).
+ */
+export const MIN_VIABLE_TABS = 3;
+
+/** Human label for a fallback center key ('wallet' → 'Wallet'). */
+function labelForKey(key: string): string {
+  return key.charAt(0).toUpperCase() + key.slice(1).replace(/-/g, ' ');
+}
+
+/**
  * Resolve the manifest navigation into an ordered, flag-filtered list of bottom tabs (P4.14 —
- * config-driven nav). `isEnabled` gates tabs by their `requiresFlag`; the center action is marked so
- * MainTabs can emphasize it. Unknown keys (no registered destination) are dropped.
+ * config-driven nav). `isEnabled` gates tabs by their `requiresFlag`. The center action honours
+ * its own `requiresFlag`/`fallback` (M15): with the flag off, the CENTER SLOT stays but its
+ * label/icon swap to the fallback target (Option B: `wallet`, which shares the Play route's
+ * WalletNavigator). Unknown keys are dropped; degenerate results fall back to DEFAULT_NAV.
  */
 export function resolveTabs(
   nav: ManifestNavigation | undefined,
   isEnabled: (flag: string) => boolean,
 ): ResolvedTab[] {
   const config = nav && nav.tabs.length > 0 ? nav : DEFAULT_NAV;
-  const centerRoute = config.centerAction ? KEY_TO_ROUTE[config.centerAction.key] : undefined;
+
+  // M15: apply the center action's requiresFlag/fallback instead of ignoring them.
+  let center = config.centerAction;
+  let fallbackIdentity: { label: string; icon: string } | undefined;
+  if (center?.requiresFlag && !isEnabled(center.requiresFlag)) {
+    const fallbackKey = center.fallback ?? 'wallet';
+    if (KEY_TO_ROUTE[fallbackKey]) {
+      center = { key: fallbackKey, label: labelForKey(fallbackKey), icon: fallbackKey };
+      fallbackIdentity = { label: center.label, icon: center.icon };
+    } else {
+      center = undefined;
+    }
+  }
+  const centerRoute = center ? KEY_TO_ROUTE[center.key] : undefined;
 
   const seen = new Set<TabRoute>();
   const resolved: ResolvedTab[] = [];
@@ -105,13 +131,24 @@ export function resolveTabs(
     if (!route || seen.has(route)) continue;
     if (tab.requiresFlag && !isEnabled(tab.requiresFlag)) continue;
     seen.add(route);
+    const isCenter = route === centerRoute;
+    // When the center action fell back, the slot adopts the fallback identity (label + icon).
+    const identity = isCenter && fallbackIdentity ? fallbackIdentity : tab;
     resolved.push({
       route,
-      label: tab.label,
-      icon: ICON_BY_NAME[tab.icon] ?? DEFAULT_ICON[route],
+      label: identity.label,
+      icon: ICON_BY_NAME[identity.icon] ?? DEFAULT_ICON[route],
       component: TAB_COMPONENTS[route],
-      isCenter: route === centerRoute,
+      isCenter,
     });
+  }
+
+  // Minimum-viable-tab safety (M15): a partial manifest never renders a degenerate bar.
+  if (
+    config !== DEFAULT_NAV &&
+    (resolved.length < MIN_VIABLE_TABS || !resolved.some((t) => t.route === 'Home'))
+  ) {
+    return resolveTabs(undefined, isEnabled);
   }
   return resolved;
 }
