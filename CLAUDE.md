@@ -17,7 +17,7 @@ behind **adapters**; the MVP ships **mock/sandbox** adapters so everything is de
 ## Stack (do not deviate without being asked)
 - **Backend:** Python 3.12, FastAPI, SQLAlchemy 2.0 (async) + asyncpg, Alembic, Pydantic v2,
   pydantic-settings, PostgreSQL 16, Redis 7, `uv` for deps, pytest + httpx.
-- **Admin console:** React 18 + Vite + TypeScript + Redux Toolkit (RTK Query) + TanStack Router
+- **Admin console:** React 19 + Vite + TypeScript + Redux Toolkit (RTK Query) + TanStack Router
   + Tailwind CSS + Lucide icons. Forms: react-hook-form + zod. Map: MapLibre GL.
 - **Mobile:** Bare React Native (TypeScript) + React Navigation + Redux Toolkit/RTK Query.
   Native: react-native-ble-plx (BLE), beacons (iBeacon), geolocation/background-geo, Notifee +

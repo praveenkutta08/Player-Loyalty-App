@@ -4,7 +4,7 @@ One React app = tenant CMS **and** super-admin. Everything gated by RBAC; the UI
 server's permissions (which are the real guard).
 
 ## Stack & layout
-- React 18 + Vite + TS + Redux Toolkit (RTK Query) + TanStack Router + Tailwind + Lucide.
+- React 19 + Vite + TS + Redux Toolkit (RTK Query) + TanStack Router + Tailwind + Lucide.
 - Forms: react-hook-form + zod. Maps (geofence editor): MapLibre GL. Charts: Recharts.
 ```
 src/

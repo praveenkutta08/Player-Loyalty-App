@@ -48,14 +48,6 @@ detox build -c ios.sim.debug        # native build (needs Xcode/Android Studio)
 detox test -c ios.sim.debug
 ```
 
-## Known issue
-
-`apps/admin/src/shell/shell.test.tsx > ThemeProvider` fails under Vitest with an "invalid hook call"
-(two React instances) — a **pre-existing** monorepo tooling issue (the workspace hoists React 18 for
-admin and React 19 for mobile), not an admin code bug. The other admin tests and all backend/mobile
-suites are green. Tracked for a dedicated Vitest React-dedup fix (the mobile jest config solves the
-analogous problem with `moduleNameMapper`).
-
 ## CI shape
 
 Default lane (fast, always): install → lint → typecheck → `pnpm test` (+ `pnpm check:api` drift

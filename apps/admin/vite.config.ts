@@ -12,8 +12,8 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
-    // The workspace hoists multiple React copies (admin 18 + mobile 19 via peers); dedupe so hooks
-    // share one dispatcher.
+    // Admin and mobile are both on React 19, but the workspace can still hoist multiple copies;
+    // dedupe so hooks share one dispatcher (also keeps Vitest from loading two React instances).
     dedupe: ['react', 'react-dom'],
   },
   server: {
