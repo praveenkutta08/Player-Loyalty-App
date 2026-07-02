@@ -88,23 +88,112 @@ class ThemeUpdate(BaseModel):
     is_active: bool | None = None
 
 
+# ----------------------------------------------------------------- typed manifest (audit M6)
+# The manifest is the single most business-critical payload — these models put its full shape
+# into the OpenAPI contract so the generated client (and its drift check) covers it. Everything
+# tenant-tunable is optional with server defaults; `extra="allow"` keeps additive fields from
+# older/newer servers flowing through instead of being stripped.
+
+
+class ManifestTypography(BaseModel):
+    """Typography tokens (camelCase to mirror design/tokens.json)."""
+
+    model_config = ConfigDict(extra="allow")
+
+    fontFamily: dict[str, str] | None = None  # noqa: N815 - token key casing
+    scale: dict[str, dict[str, Any]] | None = None
+
+
+class ManifestTheme(BaseModel):
+    """Design tokens (mirrors design/tokens.json). The app deep-merges these over its bundled
+    defaults, so every group is optional."""
+
+    model_config = ConfigDict(extra="allow")
+
+    # Values are token groups ({"brand": {"gold": "#..."}}) or flat overrides ("gold": "#...").
+    color: dict[str, dict[str, str] | str] | None = None
+    colorLight: dict[str, dict[str, str] | str] | None = None  # noqa: N815 - token key casing
+    typography: ManifestTypography | None = None
+    spacing: dict[str, float] | None = None
+    radius: dict[str, float] | None = None
+    shadow: dict[str, str] | None = None
+    components: dict[str, dict[str, Any]] | None = None
+
+
+class ManifestNavTab(BaseModel):
+    """One bottom-nav tab. Fields default to empty so a corrupt stored tab can never 500 the
+    manifest endpoint — the app drops unknown/empty keys and falls back to Option B."""
+
+    key: str = ""
+    label: str = ""
+    icon: str = ""
+    requires_flag: str | None = None
+
+
+class ManifestCenterAction(BaseModel):
+    """The emphasized center action (Option B: Scan/Play with a wallet fallback)."""
+
+    key: str = ""
+    label: str = ""
+    icon: str = ""
+    requires_flag: str | None = None
+    fallback: str | None = None
+
+
+class ManifestNavGlobals(BaseModel):
+    show_notifications: bool = False
+    show_search: bool = False
+    show_support: bool = False
+
+
+class ManifestNavigation(BaseModel):
+    model_config = ConfigDict(extra="allow")
+
+    tabs: list[ManifestNavTab] = []
+    center_action: ManifestCenterAction | None = None
+    globals: ManifestNavGlobals | None = None
+    # Versioned skin enum (P7.4); reads resolve tolerantly server-side (editorial fallback).
+    style: str = "editorial"
+
+
+class ManifestConcierge(BaseModel):
+    """Concierge persona (P6.4) — public persona only; weights/guardrails stay server-side."""
+
+    persona_name: str = "Concierge"
+    tone: str = "warm"
+    accent_token: str = "gold"
+
+
+class ManifestSplash(BaseModel):
+    """Resolved splash block (P7.1) — always present with safe defaults (variant `silk`)."""
+
+    model_config = ConfigDict(extra="allow")
+
+    schema_version: int = 1
+    variant: str = "silk"
+    logo_asset_id: str | None = None
+    background_value: list[str] | None = None
+    tagline_text: str | None = None
+    animation_duration_ms: int | None = None
+    environment_theme: str | None = None
+    # journey terrain paths from the catalog: {"back": <svg path>, "front": <svg path>}
+    environment_theme_paths: dict[str, str] | None = None
+
+
 class ManifestOut(BaseModel):
-    """The versioned, resolved tenant manifest (matches @repo/shared-types TenantManifest)."""
+    """The versioned, resolved tenant manifest — fully typed into the contract (M6)."""
 
     version: int
     tenant_id: UUID
     tenant_slug: str
     name: str
-    theme: dict[str, Any]
-    feature_flags: dict[str, Any]
-    endpoints: dict[str, Any]
-    navigation: dict[str, Any]
-    # Concierge persona for the app (P6.4): {"persona_name", "tone", "accent_token"}.
+    theme: ManifestTheme
+    feature_flags: dict[str, bool]
+    endpoints: dict[str, str]
+    navigation: ManifestNavigation
     # The `concierge` feature flag gates the UI; persona is config, never hardcoded (rule #5).
-    concierge: dict[str, Any] | None = None
-    # Resolved splash block (P7.1): always present with safe defaults (variant falls back to
-    # "silk"); `journey` additionally carries its environment terrain paths from the catalog.
-    splash: dict[str, Any]
+    concierge: ManifestConcierge | None = None
+    splash: ManifestSplash
     # Curated pairing key (P7.2); its families are already resolved into theme.typography.
     typography_pairing: str
     # Force-update floor (G8/M16): builds below this route to ForceUpdateScreen.

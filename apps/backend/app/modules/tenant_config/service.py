@@ -174,7 +174,10 @@ async def resolve_manifest(session: AsyncSession, tenant: Tenant) -> ManifestOut
     ).scalar_one_or_none()
 
     version = config.version if config else 1
-    feature_flags = config.feature_flags if config else {}
+    # Tolerant read (M6): only honest booleans become flags — a stray string/number in stored
+    # config must never 500 the manifest endpoint or accidentally enable a module.
+    raw_flags = config.feature_flags if config else {}
+    feature_flags = {key: value is True for key, value in raw_flags.items()}
     # Merge stored navigation OVER the defaults so a partial write (e.g. only `style`) never
     # drops the Option B tab structure.
     stored_navigation = dict(config.navigation) if (config and config.navigation) else {}
@@ -187,9 +190,10 @@ async def resolve_manifest(session: AsyncSession, tenant: Tenant) -> ManifestOut
     typography_pairing = resolve_typography_pairing_read(
         (appearance.get("typography") or {}).get("pairing")
     )
-    endpoints: dict[str, Any] = dict(config.endpoints) if config else {}
+    raw_endpoints: dict[str, Any] = dict(config.endpoints) if config else {}
     if config and config.api_base_url:
-        endpoints.setdefault("api_base_url", config.api_base_url)
+        raw_endpoints.setdefault("api_base_url", config.api_base_url)
+    endpoints = {key: value for key, value in raw_endpoints.items() if isinstance(value, str)}
 
     updated_candidates: list[datetime] = []
     if config is not None:

@@ -12,8 +12,12 @@ import type {
   ThemeTokens,
 } from '@repo/shared-types';
 
-/** Raw manifest as served by the backend (snake_case, possibly partial `theme`). */
+/** Raw manifest as served by the backend (snake_case, possibly partial `theme`).
+ * Fully typed in the OpenAPI contract since M6 — the generated schema is the wire-format
+ * source of truth; this module only camelCases + defaults into the app's resolved shape. */
 export type ManifestOut = components['schemas']['ManifestOut'];
+type WireNavigation = components['schemas']['ManifestNavigation'];
+type WireConcierge = components['schemas']['ManifestConcierge'];
 
 /** The manifest after normalization: camelCase, theme merged over defaults, platform-resolved URL. */
 export interface ResolvedManifest {
@@ -47,35 +51,33 @@ export function resolveApiBaseUrl(url?: string): string {
   return url;
 }
 
-function coerceFlags(raw: Record<string, unknown> | undefined): FeatureFlags {
+function coerceFlags(raw: Record<string, boolean> | undefined): FeatureFlags {
   const out: FeatureFlags = {};
   for (const [key, value] of Object.entries(raw ?? {})) out[key] = value === true;
   return out;
 }
 
-function normalizeNavigation(
-  raw: Record<string, unknown> | undefined,
-): ManifestNavigation | undefined {
+/** snake_case wire navigation → the app's camelCase resolved shape (defaults only — the wire
+ * types come straight from the generated OpenAPI schema since M6, no hand re-typing). */
+function normalizeNavigation(raw: WireNavigation | undefined): ManifestNavigation | undefined {
   if (!raw) return undefined;
-  const tabs = Array.isArray(raw.tabs)
-    ? (raw.tabs as Array<Record<string, unknown>>).map((t) => ({
-        key: String(t.key),
-        label: String(t.label),
-        icon: String(t.icon),
-        requiresFlag: t.requires_flag ? String(t.requires_flag) : undefined,
-      }))
-    : [];
-  const ca = raw.center_action as Record<string, unknown> | undefined;
-  const globals = raw.globals as Record<string, unknown> | undefined;
+  const tabs = (raw.tabs ?? []).map((t) => ({
+    key: t.key ?? '',
+    label: t.label ?? '',
+    icon: t.icon ?? '',
+    requiresFlag: t.requires_flag ?? undefined,
+  }));
+  const ca = raw.center_action;
+  const globals = raw.globals;
   return {
     tabs,
     centerAction: ca
       ? {
-          key: String(ca.key),
-          label: String(ca.label),
-          icon: String(ca.icon),
-          requiresFlag: ca.requires_flag ? String(ca.requires_flag) : undefined,
-          fallback: ca.fallback ? String(ca.fallback) : undefined,
+          key: ca.key ?? '',
+          label: ca.label ?? '',
+          icon: ca.icon ?? '',
+          requiresFlag: ca.requires_flag ?? undefined,
+          fallback: ca.fallback ?? undefined,
         }
       : undefined,
     globals: globals
@@ -87,38 +89,33 @@ function normalizeNavigation(
       : undefined,
     // Passed through as-served; resolveNavStyle (P7.4) applies the editorial fallback + warn
     // for values this binary doesn't know (older app, newer manifest).
-    style:
-      typeof raw.style === 'string'
-        ? (raw.style as NonNullable<ManifestNavigation['style']>)
-        : undefined,
+    style: raw.style ? (raw.style as NonNullable<ManifestNavigation['style']>) : undefined,
   };
 }
 
-function normalizeConcierge(
-  raw: Record<string, unknown> | null | undefined,
-): ManifestConcierge | undefined {
+function normalizeConcierge(raw: WireConcierge | null | undefined): ManifestConcierge | undefined {
   if (!raw) return undefined;
   return {
-    personaName: typeof raw.persona_name === 'string' ? raw.persona_name : 'Concierge',
-    tone: typeof raw.tone === 'string' ? raw.tone : 'warm',
-    accentToken: typeof raw.accent_token === 'string' ? raw.accent_token : 'gold',
+    personaName: raw.persona_name ?? 'Concierge',
+    tone: raw.tone ?? 'warm',
+    accentToken: raw.accent_token ?? 'gold',
   };
 }
 
 /** Turn the raw backend manifest into the app's resolved, theme-merged manifest. */
 export function normalizeManifest(raw: ManifestOut, etag?: string): ResolvedManifest {
   const theme = deepMerge<ThemeTokens>(DEFAULT_THEME, raw.theme);
-  const endpoints = (raw.endpoints ?? {}) as Record<string, string>;
+  const endpoints = raw.endpoints ?? {};
   return {
     version: raw.version,
     tenantId: raw.tenant_id,
     tenantSlug: raw.tenant_slug,
     name: raw.name,
     theme,
-    featureFlags: coerceFlags(raw.feature_flags as Record<string, unknown>),
-    navigation: normalizeNavigation(raw.navigation as Record<string, unknown>),
-    concierge: normalizeConcierge(raw.concierge as Record<string, unknown> | null | undefined),
-    splash: (raw.splash as Record<string, unknown> | undefined) ?? undefined,
+    featureFlags: coerceFlags(raw.feature_flags),
+    navigation: normalizeNavigation(raw.navigation),
+    concierge: normalizeConcierge(raw.concierge),
+    splash: raw.splash as Record<string, unknown> | undefined,
     minAppVersion: raw.min_app_version ?? undefined,
     apiBaseUrl: resolveApiBaseUrl(endpoints.api_base_url),
     etag,

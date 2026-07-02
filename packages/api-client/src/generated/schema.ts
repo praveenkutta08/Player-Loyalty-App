@@ -2401,8 +2401,113 @@ export interface components {
             me: components["schemas"]["LeaderboardEntry"] | null;
         };
         /**
+         * ManifestCenterAction
+         * @description The emphasized center action (Option B: Scan/Play with a wallet fallback).
+         */
+        ManifestCenterAction: {
+            /**
+             * Key
+             * @default
+             */
+            key: string;
+            /**
+             * Label
+             * @default
+             */
+            label: string;
+            /**
+             * Icon
+             * @default
+             */
+            icon: string;
+            /** Requires Flag */
+            requires_flag?: string | null;
+            /** Fallback */
+            fallback?: string | null;
+        };
+        /**
+         * ManifestConcierge
+         * @description Concierge persona (P6.4) — public persona only; weights/guardrails stay server-side.
+         */
+        ManifestConcierge: {
+            /**
+             * Persona Name
+             * @default Concierge
+             */
+            persona_name: string;
+            /**
+             * Tone
+             * @default warm
+             */
+            tone: string;
+            /**
+             * Accent Token
+             * @default gold
+             */
+            accent_token: string;
+        };
+        /** ManifestNavGlobals */
+        ManifestNavGlobals: {
+            /**
+             * Show Notifications
+             * @default false
+             */
+            show_notifications: boolean;
+            /**
+             * Show Search
+             * @default false
+             */
+            show_search: boolean;
+            /**
+             * Show Support
+             * @default false
+             */
+            show_support: boolean;
+        };
+        /**
+         * ManifestNavTab
+         * @description One bottom-nav tab. Fields default to empty so a corrupt stored tab can never 500 the
+         *     manifest endpoint — the app drops unknown/empty keys and falls back to Option B.
+         */
+        ManifestNavTab: {
+            /**
+             * Key
+             * @default
+             */
+            key: string;
+            /**
+             * Label
+             * @default
+             */
+            label: string;
+            /**
+             * Icon
+             * @default
+             */
+            icon: string;
+            /** Requires Flag */
+            requires_flag?: string | null;
+        };
+        /** ManifestNavigation */
+        ManifestNavigation: {
+            /**
+             * Tabs
+             * @default []
+             */
+            tabs: components["schemas"]["ManifestNavTab"][];
+            center_action?: components["schemas"]["ManifestCenterAction"] | null;
+            globals?: components["schemas"]["ManifestNavGlobals"] | null;
+            /**
+             * Style
+             * @default editorial
+             */
+            style: string;
+        } & {
+            [key: string]: unknown;
+        };
+        /**
          * ManifestOut
-         * @description The versioned, resolved tenant manifest (matches @repo/shared-types TenantManifest).
+         * @description The versioned, resolved tenant manifest — fully typed into the contract (M6).
          */
         ManifestOut: {
             /** Version */
@@ -2416,36 +2521,114 @@ export interface components {
             tenant_slug: string;
             /** Name */
             name: string;
-            /** Theme */
-            theme: {
-                [key: string]: unknown;
-            };
+            theme: components["schemas"]["ManifestTheme"];
             /** Feature Flags */
             feature_flags: {
-                [key: string]: unknown;
+                [key: string]: boolean;
             };
             /** Endpoints */
             endpoints: {
-                [key: string]: unknown;
+                [key: string]: string;
             };
-            /** Navigation */
-            navigation: {
-                [key: string]: unknown;
-            };
-            /** Concierge */
-            concierge?: {
-                [key: string]: unknown;
-            } | null;
-            /** Splash */
-            splash: {
-                [key: string]: unknown;
-            };
+            navigation: components["schemas"]["ManifestNavigation"];
+            concierge?: components["schemas"]["ManifestConcierge"] | null;
+            splash: components["schemas"]["ManifestSplash"];
             /** Typography Pairing */
             typography_pairing: string;
             /** Min App Version */
             min_app_version?: string | null;
             /** Updated At */
             updated_at: string | null;
+        };
+        /**
+         * ManifestSplash
+         * @description Resolved splash block (P7.1) — always present with safe defaults (variant `silk`).
+         */
+        ManifestSplash: {
+            /**
+             * Schema Version
+             * @default 1
+             */
+            schema_version: number;
+            /**
+             * Variant
+             * @default silk
+             */
+            variant: string;
+            /** Logo Asset Id */
+            logo_asset_id?: string | null;
+            /** Background Value */
+            background_value?: string[] | null;
+            /** Tagline Text */
+            tagline_text?: string | null;
+            /** Animation Duration Ms */
+            animation_duration_ms?: number | null;
+            /** Environment Theme */
+            environment_theme?: string | null;
+            /** Environment Theme Paths */
+            environment_theme_paths?: {
+                [key: string]: string;
+            } | null;
+        } & {
+            [key: string]: unknown;
+        };
+        /**
+         * ManifestTheme
+         * @description Design tokens (mirrors design/tokens.json). The app deep-merges these over its bundled
+         *     defaults, so every group is optional.
+         */
+        ManifestTheme: {
+            /** Color */
+            color?: {
+                [key: string]: {
+                    [key: string]: string;
+                } | string;
+            } | null;
+            /** Colorlight */
+            colorLight?: {
+                [key: string]: {
+                    [key: string]: string;
+                } | string;
+            } | null;
+            typography?: components["schemas"]["ManifestTypography"] | null;
+            /** Spacing */
+            spacing?: {
+                [key: string]: number;
+            } | null;
+            /** Radius */
+            radius?: {
+                [key: string]: number;
+            } | null;
+            /** Shadow */
+            shadow?: {
+                [key: string]: string;
+            } | null;
+            /** Components */
+            components?: {
+                [key: string]: {
+                    [key: string]: unknown;
+                };
+            } | null;
+        } & {
+            [key: string]: unknown;
+        };
+        /**
+         * ManifestTypography
+         * @description Typography tokens (camelCase to mirror design/tokens.json).
+         */
+        ManifestTypography: {
+            /** Fontfamily */
+            fontFamily?: {
+                [key: string]: string;
+            } | null;
+            /** Scale */
+            scale?: {
+                [key: string]: {
+                    [key: string]: unknown;
+                };
+            } | null;
+        } & {
+            [key: string]: unknown;
         };
         /** MeOut */
         MeOut: {

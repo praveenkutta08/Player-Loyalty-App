@@ -193,7 +193,14 @@ async def remove_theme(
 
 
 # --------------------------------------------------------------------------- manifest (public)
-@router.get("/config/manifest", response_model=ManifestOut, tags=["config"])
+# exclude_none keeps the wire format's key-absence semantics now that the manifest is fully
+# typed (M6): optional blocks are omitted, not serialized as null.
+@router.get(
+    "/config/manifest",
+    response_model=ManifestOut,
+    response_model_exclude_none=True,
+    tags=["config"],
+)
 async def get_manifest(
     request: Request,
     response: Response,
