@@ -11,4 +11,6 @@ export type MoreStackParamList = {
   Valet: undefined;
   DigitalKey: undefined;
   NotificationPreferences: undefined;
+  Nearby: undefined;
+  LocationConsent: undefined;
 };

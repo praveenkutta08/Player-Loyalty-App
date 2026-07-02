@@ -1,20 +1,34 @@
 /**
- * OS region-monitoring wrapper (iOS Core Location / Android Geofencing in P4.10). Stubbed until the
- * geofencing feature. Respects the iOS ~20 monitored-region limit by only registering nearest zones
- * (see P4.10). Kept behind this contract so domain code never touches the native module.
+ * OS region-monitoring wrapper (iOS Core Location / Android Geofencing in the real build). The MVP
+ * ships a JS mock that just records the registered regions — background geolocation requires a
+ * native build the MVP doesn't include. Respects the iOS ~20 monitored-region limit; callers pass
+ * only the nearest zones. Kept behind this contract so domain code never touches the native module.
  */
-export interface GeofenceModule {
-  registerZones(
-    zones: Array<{ id: string; lat: number; lng: number; radius: number }>,
-  ): Promise<void>;
-  clearZones(): Promise<void>;
+export interface MonitoredZone {
+  id: string;
+  lat: number;
+  lng: number;
+  radius: number;
 }
 
-const notImplemented = (): never => {
-  throw new Error('Geofencing is implemented in P4.10 (geofencing & beacons).');
-};
+export interface GeofenceModule {
+  registerZones(zones: MonitoredZone[]): Promise<void>;
+  clearZones(): Promise<void>;
+  /** Currently-monitored regions (mock introspection for the demo/tests). */
+  monitored(): MonitoredZone[];
+}
+
+let registered: MonitoredZone[] = [];
 
 export const geofence: GeofenceModule = {
-  registerZones: notImplemented,
-  clearZones: notImplemented,
+  async registerZones(zones: MonitoredZone[]) {
+    // A real impl caps at the OS limit; callers pass the pre-trimmed nearest set.
+    registered = zones.slice(0, 20);
+  },
+  async clearZones() {
+    registered = [];
+  },
+  monitored() {
+    return registered;
+  },
 };

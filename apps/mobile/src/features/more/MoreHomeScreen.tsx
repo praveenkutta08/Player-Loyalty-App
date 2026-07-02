@@ -1,4 +1,4 @@
-import { Bell, CalendarDays, Car, KeyRound, Palette } from 'lucide-react-native';
+import { Bell, CalendarDays, Car, KeyRound, MapPin, Palette } from 'lucide-react-native';
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
@@ -22,12 +22,11 @@ export function MoreHomeScreen({ navigation }: Props): React.JSX.Element {
   return (
     <Screen>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        {reservations || valet || digitalKey ? (
-          <>
-            <ThemedText variant="label" color="muted" style={styles.label}>
-              Concierge
-            </ThemedText>
-            <Card style={styles.card}>
+        {/* Concierge card always shows (Nearby is always available); flagged items gate per-row. */}
+        <ThemedText variant="label" color="muted" style={styles.label}>
+          Concierge
+        </ThemedText>
+        <Card style={styles.card}>
               {reservations ? (
                 <ListRow
                   icon={icon(CalendarDays)}
@@ -52,9 +51,13 @@ export function MoreHomeScreen({ navigation }: Props): React.JSX.Element {
                   onPress={() => navigation.navigate('DigitalKey')}
                 />
               ) : null}
-            </Card>
-          </>
-        ) : null}
+          <ListRow
+            icon={icon(MapPin)}
+            title="Nearby"
+            subtitle="Location-based offers"
+            onPress={() => navigation.navigate('Nearby')}
+          />
+        </Card>
 
         <ThemedText variant="label" color="muted" style={styles.label}>
           Settings

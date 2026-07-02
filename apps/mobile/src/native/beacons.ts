@@ -1,17 +1,25 @@
 /**
- * iBeacon ranging wrapper (react-native-beacons-manager in P4.10) for indoor dwell detection.
- * Stubbed until the geofencing feature; kept behind this contract per the app's native-isolation rule.
+ * iBeacon ranging wrapper (react-native-beacons-manager in the real build) for indoor dwell. The
+ * MVP ships a JS mock that records the ranged UUIDs — beacon ranging needs a native build. Kept
+ * behind this contract per the app's native-isolation rule.
  */
 export interface BeaconsModule {
   startRanging(zoneUuids: string[]): Promise<void>;
   stopRanging(): Promise<void>;
+  /** Currently-ranged region UUIDs (mock introspection for the demo/tests). */
+  ranging(): string[];
 }
 
-const notImplemented = (): never => {
-  throw new Error('Beacon ranging is implemented in P4.10 (geofencing & beacons).');
-};
+let ranged: string[] = [];
 
 export const beacons: BeaconsModule = {
-  startRanging: notImplemented,
-  stopRanging: notImplemented,
+  async startRanging(zoneUuids: string[]) {
+    ranged = [...zoneUuids];
+  },
+  async stopRanging() {
+    ranged = [];
+  },
+  ranging() {
+    return ranged;
+  },
 };

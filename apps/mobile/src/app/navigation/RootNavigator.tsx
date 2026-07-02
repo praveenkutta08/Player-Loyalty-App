@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 
 import { buildConfig } from '../../config/buildConfig';
 import { AuthNavigator } from '../../features/auth/AuthNavigator';
+import { GeoBootstrap } from '../../features/geofencing/GeoBootstrap';
 import { MessageDetailScreen } from '../../features/notifications/MessageDetailScreen';
 import { NotificationCenterScreen } from '../../features/notifications/NotificationCenterScreen';
 import { registerPushHandlers } from '../../features/notifications/pushBridge';
@@ -56,8 +57,10 @@ export function RootNavigator(): React.JSX.Element {
   }
 
   return (
-    <NavigationContainer ref={navigationRef} theme={navTheme}>
-      {status === 'authenticated' ? (
+    <>
+      {status === 'authenticated' ? <GeoBootstrap /> : null}
+      <NavigationContainer ref={navigationRef} theme={navTheme}>
+        {status === 'authenticated' ? (
         <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Main" component={MainTabs} />
           <Stack.Screen name="ForceUpdate" component={ForceUpdateScreen} />
@@ -72,10 +75,11 @@ export function RootNavigator(): React.JSX.Element {
             options={{ ...detailHeader(theme), title: 'Message' }}
           />
         </Stack.Navigator>
-      ) : (
-        <AuthNavigator />
-      )}
-    </NavigationContainer>
+        ) : (
+          <AuthNavigator />
+        )}
+      </NavigationContainer>
+    </>
   );
 }
 
