@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 
 import { CasinosScreen } from '@/features/casinos/CasinosScreen';
+import { ContentScreen } from '@/features/content/ContentScreen';
 import { FeatureFlagsScreen } from '@/features/featureflags/FeatureFlagsScreen';
 import { ThemeScreen } from '@/features/theme/ThemeScreen';
 import { UsersRolesScreen } from '@/features/users/UsersRolesScreen';
@@ -11,8 +12,9 @@ import { UsersRolesScreen } from '@/features/users/UsersRolesScreen';
  */
 export const SCREEN_REGISTRY: Record<string, ComponentType> = {
   '/casinos': CasinosScreen,
+  '/content': ContentScreen,
   '/feature-flags': FeatureFlagsScreen,
   '/theme': ThemeScreen,
   '/users': UsersRolesScreen,
-  // Remaining paths populated by P3.5–P3.19.
+  // Remaining paths populated by P3.6–P3.19.
 };
