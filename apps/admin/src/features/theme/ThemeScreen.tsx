@@ -1,41 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { useUpdateAppearanceMutation } from './appearanceApi';
 import { MobilePreview } from './MobilePreview';
+import { TYPOGRAPHY_PAIRINGS } from './pairings';
+import { buildSplashPayload, parseSplash, DEFAULT_SPLASH_STATE, type SplashState } from './splash';
+import { SplashPreview } from './SplashPreview';
+import { SplashSection } from './SplashSection';
 import {
   useActivateThemeMutation,
   useCreateThemeMutation,
   useListThemesQuery,
   useUpdateThemeMutation,
 } from './themesApi';
-import {
-  BODY_FONTS,
-  DEFAULT_TOKENS,
-  DISPLAY_FONTS,
-  fromTokens,
-  toTokens,
-  type BrandTokens,
-} from './tokens';
+import { DEFAULT_TOKENS, fromTokens, toTokens, type BrandTokens } from './tokens';
 
 import { useAppSelector } from '@/app/store';
 import { Can } from '@/auth/Can';
 import { PageHeader } from '@/components/PageHeader';
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Field,
-  Input,
-  Label,
-  Select,
-  useToast,
-} from '@/components/ui';
-
-const NAV_STYLES: { key: BrandTokens['navStyle']; label: string; hint: string }[] = [
-  { key: 'tab', label: 'Tab Bar', hint: 'Solid bottom tabs' },
-  { key: 'floating', label: 'Floating', hint: 'Elevated pill bar' },
-  { key: 'minimal', label: 'Minimal', hint: 'Icons only' },
-];
+import { Button, Card, CardBody, CardHeader, Input, Label, Tabs, useToast } from '@/components/ui';
+import { useGetConfigQuery } from '@/features/casinos/configApi';
 
 export function ThemeScreen() {
   const { toast } = useToast();
@@ -44,25 +27,40 @@ export function ThemeScreen() {
     useAppSelector((s) => s.session.tenants.find((t) => t.id === activeTenantId)?.name) ?? 'Casino';
 
   const { data: themes } = useListThemesQuery();
+  const { data: config } = useGetConfigQuery();
   const [createTheme] = useCreateThemeMutation();
   const [updateTheme] = useUpdateThemeMutation();
   const [activateTheme] = useActivateThemeMutation();
+  const [updateAppearance] = useUpdateAppearanceMutation();
 
   const [name, setName] = useState('Casino Luxe');
   const [tokens, setTokens] = useState<BrandTokens>(DEFAULT_TOKENS);
+  const [splash, setSplash] = useState<SplashState>(DEFAULT_SPLASH_STATE);
+  const [previewMode, setPreviewMode] = useState('splash');
   const [busy, setBusy] = useState(false);
-  const initialized = useRef(false);
+  const themesSeeded = useRef(false);
+  const splashSeeded = useRef(false);
 
   // Seed the editor once from the active (or first) theme when themes load.
   useEffect(() => {
-    if (initialized.current || !themes) return;
+    if (themesSeeded.current || !themes) return;
     const active = themes.find((t) => t.is_active) ?? themes[0];
     if (active) {
       setName(active.name);
       setTokens(fromTokens(active.tokens as Record<string, unknown>));
     }
-    initialized.current = true;
+    themesSeeded.current = true;
   }, [themes]);
+
+  // Seed splash + pairing from the stored appearance config.
+  useEffect(() => {
+    if (splashSeeded.current || !config) return;
+    const appearance = (config.appearance ?? {}) as Record<string, Record<string, unknown>>;
+    setSplash(parseSplash(appearance.splash));
+    const pairing = (appearance.typography ?? {}).pairing;
+    if (typeof pairing === 'string') setTokens((t) => ({ ...t, pairing }));
+    splashSeeded.current = true;
+  }, [config]);
 
   const currentTheme = themes?.find((t) => t.is_active) ?? themes?.[0];
   const set = <K extends keyof BrandTokens>(key: K, value: BrandTokens[K]) =>
@@ -80,6 +78,11 @@ export function ThemeScreen() {
         id = created.id;
       }
       if (activate && id) {
+        // Publish = theme tokens + the appearance block (splash, pairing) in one action.
+        await updateAppearance({
+          splash: buildSplashPayload(splash),
+          typography_pairing: tokens.pairing,
+        }).unwrap();
         await activateTheme(id).unwrap();
         toast('Published — manifest version bumped');
       } else {
@@ -142,73 +145,73 @@ export function ThemeScreen() {
             </CardBody>
           </Card>
 
+          {/* P7.2 typography retrofit: a curated pairing GALLERY (bundled, open-license fonts).
+              No free-form family input, no uploads — sizes/weights stay token values. */}
           <Card>
-            <CardHeader title="Typography" />
-            <CardBody className="grid grid-cols-1 gap-4 pt-3 sm:grid-cols-2">
-              <Field label="Display font">
-                <Select
-                  value={tokens.fontDisplay}
-                  onChange={(e) => set('fontDisplay', e.target.value)}
-                >
-                  {DISPLAY_FONTS.map((f) => (
-                    <option key={f}>{f}</option>
-                  ))}
-                </Select>
-              </Field>
-              <Field label="Body font">
-                <Select value={tokens.fontBody} onChange={(e) => set('fontBody', e.target.value)}>
-                  {BODY_FONTS.map((f) => (
-                    <option key={f}>{f}</option>
-                  ))}
-                </Select>
-              </Field>
-            </CardBody>
-          </Card>
-
-          <Card>
-            <CardHeader title="Navigation Style" />
-            <CardBody className="grid grid-cols-1 gap-3 pt-3 sm:grid-cols-3">
-              {NAV_STYLES.map((s) => (
+            <CardHeader
+              title="Typography"
+              subtitle="Curated pairings bundled in the app — custom fonts are a later enterprise phase."
+            />
+            <CardBody className="grid grid-cols-1 gap-3 pt-3 sm:grid-cols-2">
+              {TYPOGRAPHY_PAIRINGS.map((pairing) => (
                 <button
-                  key={s.key}
-                  onClick={() => set('navStyle', s.key)}
-                  className={`rounded-card border p-3 text-left ${
-                    tokens.navStyle === s.key
+                  key={pairing.key}
+                  onClick={() => set('pairing', pairing.key)}
+                  data-testid={`pairing-${pairing.key}`}
+                  className={`rounded-card border p-4 text-left ${
+                    tokens.pairing === pairing.key
                       ? 'border-gold bg-gold-dim'
                       : 'border-border bg-panel2'
                   }`}
                 >
-                  <div className="text-[13px] font-semibold text-text">{s.label}</div>
-                  <div className="text-[11px] text-muted">{s.hint}</div>
+                  <div
+                    className="text-[20px] text-text"
+                    style={{ fontFamily: `'${pairing.display}', serif` }}
+                  >
+                    {brandName}
+                  </div>
+                  <div
+                    className="text-[12px] text-text2"
+                    style={{ fontFamily: `'${pairing.sans}', sans-serif` }}
+                  >
+                    Your rewards, dining and reservations.
+                  </div>
+                  <div className="mt-2 text-[12px] font-semibold text-text">{pairing.label}</div>
+                  <div className="text-[11px] text-muted">
+                    {pairing.display} + {pairing.sans} — {pairing.hint}
+                  </div>
                 </button>
               ))}
             </CardBody>
           </Card>
 
+          <SplashSection splash={splash} onChange={setSplash} gold={tokens.gold} />
+
           <Card>
-            <CardHeader title="Assets" subtitle="Referenced from the Media Library (P3.13)" />
+            <CardHeader title="Theme" />
             <CardBody className="pt-3">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Theme name</Label>
-                  <Input value={name} onChange={(e) => setName(e.target.value)} />
-                </div>
-                <div className="flex items-end gap-3">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-card border border-dashed border-border text-[11px] text-muted">
-                    Logo
-                  </div>
-                  <div className="flex h-16 w-16 items-center justify-center rounded-card border border-dashed border-border text-[11px] text-muted">
-                    Splash
-                  </div>
-                </div>
-              </div>
+              <Label>Theme name</Label>
+              <Input value={name} onChange={(e) => setName(e.target.value)} />
             </CardBody>
           </Card>
         </div>
 
         <div className="lg:sticky lg:top-4 lg:self-start">
-          <div className="mb-2 text-label uppercase text-muted">Live preview</div>
-          <MobilePreview tokens={tokens} brandName={brandName} />
+          <div className="mb-2">
+            <Tabs
+              items={[
+                { key: 'splash', label: 'Splash' },
+                { key: 'home', label: 'Home' },
+              ]}
+              value={previewMode}
+              onChange={setPreviewMode}
+            />
+          </div>
+          {previewMode === 'splash' ? (
+            <SplashPreview splash={splash} brandName={brandName} gold={tokens.gold} />
+          ) : (
+            <MobilePreview tokens={tokens} brandName={brandName} />
+          )}
           {currentTheme && (
             <p className="mt-3 text-center text-[11px] text-faint">
               Active theme: <span className="text-text2">{currentTheme.name}</span>

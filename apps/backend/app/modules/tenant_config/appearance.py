@@ -32,6 +32,18 @@ DEFAULT_ENVIRONMENT_THEME = "coast"
 DURATION_MIN_MS = 1800
 DURATION_MAX_MS = 3000
 
+# Curated, open-license font pairings bundled in the app binary (P3.4 scope constraint / P7.2).
+# NO free-form font families and NO uploads — arbitrary tenant fonts would need an app build +
+# store release + licensing check (roadmap §3.21). The pairing key is the manifest enum; the
+# family names resolve into the theme tokens' fontFamily so existing consumers just work.
+TYPOGRAPHY_PAIRINGS: dict[str, dict[str, str]] = {
+    "bodoniManrope": {"display": "Bodoni Moda", "sans": "Manrope"},  # tokens.json default
+    "marcellusManrope": {"display": "Marcellus", "sans": "Manrope"},  # splash handoff pairing
+    "playfairInter": {"display": "Playfair Display", "sans": "Inter"},  # modern luxury
+    "cormorantWorkSans": {"display": "Cormorant", "sans": "Work Sans"},  # editorial
+}
+DEFAULT_TYPOGRAPHY_PAIRING = "bodoniManrope"
+
 # The `journey` terrain catalog: two SVG path strings (back + front, 100×216 canvas) per theme,
 # from the design handoff. Themes are DATA — a new theme is a catalog entry served through the
 # manifest, no app release required.
@@ -180,6 +192,16 @@ def validate_nav_style_write(style: Any) -> str:
     return str(style)
 
 
+def validate_typography_pairing_write(pairing: Any) -> str:
+    if pairing not in TYPOGRAPHY_PAIRINGS:
+        raise ProblemException(
+            422,
+            "Unknown typography pairing",
+            detail=f"typography.pairing must be one of {', '.join(TYPOGRAPHY_PAIRINGS)}.",
+        )
+    return str(pairing)
+
+
 # --- read path: tolerant ---------------------------------------------------------------------
 def resolve_splash_read(raw: dict[str, Any] | None) -> dict[str, Any]:
     """Resolve the stored splash config for the manifest. NEVER raises: unknown/corrupt values
@@ -219,3 +241,29 @@ def resolve_nav_style_read(style: Any) -> str:
     if style is not None:
         logger.warning("appearance.unknown_nav_style_fallback", style=style)
     return DEFAULT_NAV_STYLE
+
+
+def resolve_typography_pairing_read(pairing: Any) -> str:
+    if pairing in TYPOGRAPHY_PAIRINGS:
+        return str(pairing)
+    if pairing is not None:
+        logger.warning("appearance.unknown_typography_pairing_fallback", pairing=pairing)
+    return DEFAULT_TYPOGRAPHY_PAIRING
+
+
+def apply_typography_pairing(theme_tokens: dict[str, Any], pairing: str) -> dict[str, Any]:
+    """Overlay the pairing's font families onto (a copy of) the theme tokens.
+
+    Existing consumers read `typography.fontFamily.{display,sans}` from the tokens, so
+    resolving the enum server-side means the pairing takes effect app-wide with no client
+    changes. Sizes/weights stay token values — pairings only swap families.
+    """
+    fonts = TYPOGRAPHY_PAIRINGS[pairing]
+    tokens = dict(theme_tokens)
+    typography = dict(tokens.get("typography") or {})
+    font_family = dict(typography.get("fontFamily") or {})
+    font_family["display"] = fonts["display"]
+    font_family["sans"] = fonts["sans"]
+    typography["fontFamily"] = font_family
+    tokens["typography"] = typography
+    return tokens

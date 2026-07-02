@@ -1,9 +1,12 @@
 import { Gift, Home, QrCode, User, Utensils } from 'lucide-react';
 
+import { pairingByKey } from './pairings';
+
 import type { BrandTokens } from './tokens';
 
 /** Live phone preview of the themed player home, rendered purely from the edited brand tokens. */
 export function MobilePreview({ tokens, brandName }: { tokens: BrandTokens; brandName: string }) {
+  const fonts = pairingByKey(tokens.pairing);
   return (
     <div
       className="mx-auto w-[280px] overflow-hidden rounded-[32px] border-4 shadow-md"
@@ -22,7 +25,7 @@ export function MobilePreview({ tokens, brandName }: { tokens: BrandTokens; bran
         >
           <div
             className="text-[16px] font-semibold"
-            style={{ fontFamily: `'${tokens.fontDisplay}', serif`, color: '#1a1408' }}
+            style={{ fontFamily: `'${fonts.display}', serif`, color: '#1a1408' }}
           >
             {brandName}
           </div>
@@ -41,7 +44,7 @@ export function MobilePreview({ tokens, brandName }: { tokens: BrandTokens; bran
           </div>
           <div
             className="text-[20px] font-semibold"
-            style={{ fontFamily: `'${tokens.fontDisplay}', serif` }}
+            style={{ fontFamily: `'${fonts.display}', serif` }}
           >
             12,480 pts
           </div>
@@ -60,23 +63,18 @@ export function MobilePreview({ tokens, brandName }: { tokens: BrandTokens; bran
               style={{ background: tokens.surface }}
             >
               <Icon size={18} style={{ color: tokens.gold }} />
-              <span
-                className="text-[10px]"
-                style={{ fontFamily: `'${tokens.fontBody}', sans-serif` }}
-              >
+              <span className="text-[10px]" style={{ fontFamily: `'${fonts.sans}', sans-serif` }}>
                 {label}
               </span>
             </div>
           ))}
         </div>
 
-        {/* Bottom nav (style variant) */}
+        {/* Bottom nav — bar STYLE now lives in the Navigation Builder (manifest
+            navigation.style); this preview shows the docked default. */}
         <div
           className="flex items-center justify-around rounded-2xl px-2 py-2"
-          style={{
-            background: tokens.navStyle === 'minimal' ? 'transparent' : tokens.surface,
-            border: tokens.navStyle === 'floating' ? `1px solid ${tokens.gold}` : 'none',
-          }}
+          style={{ background: tokens.surface }}
         >
           {[Home, Gift, QrCode, User].map((Icon, i) => (
             <Icon

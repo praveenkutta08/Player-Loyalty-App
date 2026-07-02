@@ -12,10 +12,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ...core.errors import ProblemException
 from ..tenants.models import Tenant
 from .appearance import (
+    apply_typography_pairing,
     resolve_nav_style_read,
     resolve_splash_read,
+    resolve_typography_pairing_read,
     validate_nav_style_write,
     validate_splash_write,
+    validate_typography_pairing_write,
 )
 from .models import TenantConfig, Theme
 from .schemas import AppearanceUpdate, ManifestOut, TenantConfigUpdate, ThemeCreate, ThemeUpdate
@@ -73,6 +76,10 @@ async def update_appearance(
     appearance = dict(config.appearance or {})
     if data.splash is not None:
         appearance["splash"] = validate_splash_write(data.splash, tenant_id)
+    if data.typography_pairing is not None:
+        appearance["typography"] = {
+            "pairing": validate_typography_pairing_write(data.typography_pairing)
+        }
     config.appearance = appearance
     if data.navigation_style is not None:
         config.navigation = {
@@ -172,7 +179,11 @@ async def resolve_manifest(session: AsyncSession, tenant: Tenant) -> ManifestOut
     # navigation.style + splash resolve tolerantly (P7.1): unknown/corrupt values fall back to
     # the documented defaults (editorial / silk) — the manifest endpoint never 500s on config.
     navigation["style"] = resolve_nav_style_read(navigation.get("style"))
-    splash = resolve_splash_read((config.appearance or {}).get("splash") if config else None)
+    appearance = (config.appearance or {}) if config else {}
+    splash = resolve_splash_read(appearance.get("splash"))
+    typography_pairing = resolve_typography_pairing_read(
+        (appearance.get("typography") or {}).get("pairing")
+    )
     endpoints: dict[str, Any] = dict(config.endpoints) if config else {}
     if config and config.api_base_url:
         endpoints.setdefault("api_base_url", config.api_base_url)
@@ -194,16 +205,23 @@ async def resolve_manifest(session: AsyncSession, tenant: Tenant) -> ManifestOut
             "accent_token": persona.get("accent_token", "gold"),
         }
 
+    # The pairing enum resolves into the theme tokens' fontFamily (P7.2) so every existing
+    # token consumer picks the curated fonts up with no client changes.
+    theme_tokens = apply_typography_pairing(
+        active_theme.tokens if active_theme else {}, typography_pairing
+    )
+
     return ManifestOut(
         version=version,
         tenant_id=tenant.id,
         tenant_slug=tenant.slug,
         name=tenant.name,
-        theme=active_theme.tokens if active_theme else {},
+        theme=theme_tokens,
         feature_flags=feature_flags,
         endpoints=endpoints,
         navigation=navigation,
         concierge=concierge,
         splash=splash,
+        typography_pairing=typography_pairing,
         updated_at=max(updated_candidates) if updated_candidates else None,
     )

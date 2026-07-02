@@ -43,6 +43,8 @@ class AppearanceUpdate(BaseModel):
 
     splash: dict[str, Any] | None = None
     navigation_style: str | None = None
+    # Curated open-license pairing key (P7.2) — never free-form families or uploads.
+    typography_pairing: str | None = None
 
 
 class ThemeOut(BaseModel):
@@ -90,4 +92,6 @@ class ManifestOut(BaseModel):
     # Resolved splash block (P7.1): always present with safe defaults (variant falls back to
     # "silk"); `journey` additionally carries its environment terrain paths from the catalog.
     splash: dict[str, Any]
+    # Curated pairing key (P7.2); its families are already resolved into theme.typography.
+    typography_pairing: str
     updated_at: datetime | None

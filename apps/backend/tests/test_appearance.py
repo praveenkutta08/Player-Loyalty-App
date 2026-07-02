@@ -179,6 +179,46 @@ async def test_appearance_requires_branding_permission(api: AsyncClient) -> None
     assert resp.status_code == 403  # marketer has branding:read, not branding:update
 
 
+async def test_typography_pairing_enum_and_font_resolution(api: AsyncClient) -> None:
+    tenant = await create_tenant(unique("appear"))
+    headers = await _admin(api, tenant.id)
+
+    # Default pairing resolves into the theme tokens' fontFamily (no client changes needed).
+    manifest = await _manifest(api, tenant.id)
+    assert manifest["typography_pairing"] == "bodoniManrope"
+    assert manifest["theme"]["typography"]["fontFamily"]["display"] == "Bodoni Moda"
+
+    # Curated pairing publish swaps the resolved families; free-form values are rejected.
+    resp = await api.put(
+        "/api/v1/config/appearance",
+        headers=headers,
+        json={"typography_pairing": "marcellusManrope"},
+    )
+    assert resp.status_code == 200
+    manifest = await _manifest(api, tenant.id)
+    assert manifest["typography_pairing"] == "marcellusManrope"
+    fonts = manifest["theme"]["typography"]["fontFamily"]
+    assert (fonts["display"], fonts["sans"]) == ("Marcellus", "Manrope")
+
+    rejected = await api.put(
+        "/api/v1/config/appearance",
+        headers=headers,
+        json={"typography_pairing": "comicSansPapyrus"},
+    )
+    assert rejected.status_code == 422
+
+    # Read-side fallback: corrupt stored pairing resolves to the default, never 500s.
+    async with SessionLocal() as session:
+        await session.execute(
+            update(TenantConfig)
+            .where(TenantConfig.tenant_id == tenant.id)
+            .values(appearance={"typography": {"pairing": "uploadedFont"}})
+        )
+        await session.commit()
+    manifest = await _manifest(api, tenant.id)
+    assert manifest["typography_pairing"] == "bodoniManrope"
+
+
 async def test_manifest_is_tenant_scoped(api: AsyncClient) -> None:
     tenant_a = await create_tenant(unique("appear-a"))
     tenant_b = await create_tenant(unique("appear-b"))

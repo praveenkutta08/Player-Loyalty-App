@@ -43,7 +43,8 @@ async def test_theme_offer_and_push_flow_admin_to_app(api: AsyncClient) -> None:
 
     # ---- 1. Theme: admin change re-themes the app via the manifest (no rebuild) --------------
     before = (await api.get("/api/v1/config/manifest", headers=public)).json()
-    assert before["theme"] == {}
+    # Since P7.2 the manifest always resolves the typography pairing into the theme.
+    assert "color" not in before["theme"]
     base_version = before["version"]
 
     theme = await api.post(
@@ -54,7 +55,7 @@ async def test_theme_offer_and_push_flow_admin_to_app(api: AsyncClient) -> None:
     assert theme.status_code == 201
 
     after = (await api.get("/api/v1/config/manifest", headers=public)).json()
-    assert after["theme"] == {"color": {"gold": "#E6B450"}}
+    assert after["theme"]["color"] == {"gold": "#E6B450"}
     assert after["version"] > base_version  # bumped -> the app cache-busts + re-themes live
 
     # ---- 2. Offer: admin publish -> appears + redeems in the app ------------------------------

@@ -1728,6 +1728,8 @@ export interface components {
             } | null;
             /** Navigation Style */
             navigation_style?: string | null;
+            /** Typography Pairing */
+            typography_pairing?: string | null;
         };
         /** AskIn */
         AskIn: {
@@ -2375,6 +2377,8 @@ export interface components {
             splash: {
                 [key: string]: unknown;
             };
+            /** Typography Pairing */
+            typography_pairing: string;
             /** Updated At */
             updated_at: string | null;
         };

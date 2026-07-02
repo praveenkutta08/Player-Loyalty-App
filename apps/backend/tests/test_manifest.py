@@ -23,7 +23,11 @@ async def test_manifest_reflects_edits_and_bumps_version(api: AsyncClient) -> No
     body = first.json()
     assert body["version"] == 1
     assert body["feature_flags"] == {}
-    assert body["theme"] == {}
+    # Since P7.2 the resolved manifest always carries the curated typography pairing's fonts —
+    # an otherwise-unthemed tenant gets exactly that overlay.
+    assert body["theme"] == {
+        "typography": {"fontFamily": {"display": "Bodoni Moda", "sans": "Manrope"}}
+    }
     assert body["navigation"]["tabs"]  # default navigation shipped
 
     token = await _admin_token(api, "super_admin")
@@ -51,7 +55,7 @@ async def test_manifest_reflects_edits_and_bumps_version(api: AsyncClient) -> No
     assert theme.status_code == 201
 
     after_theme = (await api.get("/api/v1/config/manifest", headers=headers_pub)).json()
-    assert after_theme["theme"] == {"color": {"gold": "#E6B450"}}
+    assert after_theme["theme"]["color"] == {"gold": "#E6B450"}
     assert after_theme["version"] == 3
 
 
