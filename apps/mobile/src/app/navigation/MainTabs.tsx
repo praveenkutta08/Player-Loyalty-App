@@ -8,6 +8,7 @@ import { MoreScreen } from '../../features/more/MoreScreen';
 import { OffersScreen } from '../../features/offers/OffersScreen';
 import { PlayScreen } from '../../features/wallet/PlayScreen';
 import { buildConfig } from '../../config/buildConfig';
+import { useManifest } from '../manifest/ManifestProvider';
 import { useTheme } from '../../theme/ThemeProvider';
 import { TopBar } from './TopBar';
 
@@ -30,10 +31,19 @@ const ICONS: Record<keyof MainTabParamList, LucideIcon> = {
  */
 export function MainTabs(): React.JSX.Element {
   const theme = useTheme();
+  const { manifest } = useManifest();
+  const title = manifest?.name ?? buildConfig.appName;
+  const globals = manifest?.navigation?.globals;
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        header: () => <TopBar title={buildConfig.appName} />,
+        header: () => (
+          <TopBar
+            title={title}
+            showNotifications={globals?.showNotifications !== false}
+            showSearch={globals?.showSearch !== false}
+          />
+        ),
         tabBarActiveTintColor: theme.colors.brand.gold,
         tabBarInactiveTintColor: theme.colors.text.muted,
         tabBarStyle: {

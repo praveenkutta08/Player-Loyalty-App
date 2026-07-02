@@ -56,9 +56,50 @@ export interface ManifestEndpoints {
   [key: string]: string;
 }
 
+/** A single bottom-nav tab in the manifest `navigation` block. */
+export interface ManifestNavTab {
+  key: string;
+  label: string;
+  icon: string;
+  /** Feature flag that must be enabled for this tab to show; absent = always on. */
+  requiresFlag?: string;
+}
+
+/** The prominent center action (Option B: Scan/Play). Falls back when its flag is off. */
+export interface ManifestNavCenterAction {
+  key: string;
+  label: string;
+  icon: string;
+  /** Feature flag gating the primary action (e.g. `cardless`). */
+  requiresFlag?: string;
+  /** Tab/route key to fall back to when `requiresFlag` is disabled (e.g. `wallet`). */
+  fallback?: string;
+}
+
+/** Global chrome toggles (notifications bell, search, support entry). */
+export interface ManifestNavGlobals {
+  showNotifications?: boolean;
+  showSearch?: boolean;
+  showSupport?: boolean;
+}
+
+/**
+ * The manifest `navigation` block that drives the mobile bottom nav (Option B). Consumed lightly
+ * from P4.2 and fully (config-driven tabs + center action) in P4.14.
+ */
+export interface ManifestNavigation {
+  tabs: ManifestNavTab[];
+  centerAction?: ManifestNavCenterAction;
+  globals?: ManifestNavGlobals;
+}
+
 /**
  * The full versioned tenant manifest served from `/config/manifest`. The `version` is bumped by
  * the CMS on every branding/flag/endpoint change so clients can cache-bust and re-hydrate.
+ *
+ * Note: the backend serves these fields in snake_case (`tenant_id`, `feature_flags`,
+ * `center_action`, …) and the `theme` may be partial; the mobile app normalizes to this camelCase
+ * shape and deep-merges the theme over its white-label defaults at the API boundary.
  */
 export interface TenantManifest {
   version: number;
@@ -68,6 +109,8 @@ export interface TenantManifest {
   theme: ThemeTokens;
   featureFlags: FeatureFlags;
   endpoints: ManifestEndpoints;
+  /** Bottom-nav configuration (tabs, center action, globals). */
+  navigation?: ManifestNavigation;
   /** ISO 8601 timestamp of when this manifest version was published. */
   updatedAt: string;
 }

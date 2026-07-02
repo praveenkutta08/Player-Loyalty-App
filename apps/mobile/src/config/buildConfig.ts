@@ -33,8 +33,9 @@ const DEV_API_HOST = Platform.select({ android: 'http://10.0.2.2:8000', default:
 
 export const buildConfig: BuildConfig = {
   appName: 'Casino Companion',
-  tenantSlug: 'demo',
-  tenantId: '',
+  tenantSlug: 'demo-casino',
+  // Seeded demo tenant (see backend seed). Injected per flavor/scheme in real white-label builds.
+  tenantId: '3e321b81-eae9-4ece-81a1-a6d4c9a3bcfd',
   apiBaseUrl: `${DEV_API_HOST}/api/v1`,
   appVersion: '0.0.1',
 };

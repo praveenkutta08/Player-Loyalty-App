@@ -1,8 +1,11 @@
 import React from 'react';
 
-import { ComingSoon } from '../../components/ComingSoon';
+import { ThemeSettingsScreen } from '../settings/ThemeSettingsScreen';
 
-/** More tab (M1). Settings, support chat, legal & about land in P4.14. */
+/**
+ * More tab (M1). Full menu (support chat, legal, about) lands in P4.14; for now it surfaces the
+ * appearance + manifest screen (M4) so theming and feature flags are demoable.
+ */
 export function MoreScreen(): React.JSX.Element {
-  return <ComingSoon title="More" subtitle="Settings & support land in P4.14." />;
+  return <ThemeSettingsScreen />;
 }

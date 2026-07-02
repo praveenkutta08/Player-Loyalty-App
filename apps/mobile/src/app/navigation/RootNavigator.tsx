@@ -3,7 +3,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { ForceUpdateScreen } from '../../features/splash/ForceUpdateScreen';
-import { SplashScreen } from '../../features/splash/SplashScreen';
 import { useTheme } from '../../theme/ThemeProvider';
 import { MainTabs } from './MainTabs';
 
@@ -12,7 +11,11 @@ import type { Theme as NavTheme } from '@react-navigation/native';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-/** Root navigation: Splash → Main tabs, with a Force-Update gate. Header handled per-tab (TopBar). */
+/**
+ * Root navigation: the main tabs, plus a Force-Update gate. The brand splash is owned by the
+ * manifest gate (App), which renders it until the manifest resolves — so the stack starts at Main.
+ * Header handled per-tab (TopBar).
+ */
 export function RootNavigator(): React.JSX.Element {
   const theme = useTheme();
 
@@ -32,8 +35,7 @@ export function RootNavigator(): React.JSX.Element {
 
   return (
     <NavigationContainer theme={navTheme}>
-      <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Splash" component={SplashScreen} />
+      <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Main" component={MainTabs} />
         <Stack.Screen name="ForceUpdate" component={ForceUpdateScreen} />
       </Stack.Navigator>

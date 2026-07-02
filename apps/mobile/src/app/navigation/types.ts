@@ -9,9 +9,8 @@ export type MainTabParamList = {
   More: undefined;
 };
 
-/** Root stack: splash → main tabs, plus the force-update gate. */
+/** Root stack: main tabs, plus the force-update gate (the splash is owned by the manifest gate). */
 export type RootStackParamList = {
-  Splash: undefined;
   ForceUpdate: undefined;
   Main: NavigatorScreenParams<MainTabParamList>;
 };
