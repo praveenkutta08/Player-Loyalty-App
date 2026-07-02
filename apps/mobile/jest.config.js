@@ -16,4 +16,13 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/\\.pnpm/(?!(@react-native|react-native|@react-navigation|@react-native-async-storage|@react-native-community|lucide-react-native|@repo|react-redux|@reduxjs|redux|immer|reselect|redux-thunk))',
   ],
+  // Coverage (opt-in via `pnpm test:coverage`) focuses on the logic units the suites exercise —
+  // slices, API builders, and pure helpers — not presentational screens/navigators.
+  collectCoverageFrom: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/*Screen.tsx',
+    '!src/**/*Navigator.tsx',
+    '!src/**/index.ts',
+  ],
+  coverageDirectory: '<rootDir>/coverage',
 };

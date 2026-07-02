@@ -12,6 +12,9 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
+    // The workspace hoists multiple React copies (admin 18 + mobile 19 via peers); dedupe so hooks
+    // share one dispatcher.
+    dedupe: ['react', 'react-dom'],
   },
   server: {
     port: 5173,
@@ -27,5 +30,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
     css: true,
+    // Keep Vitest's default excludes and also skip e2e/ (Playwright runs it under its own runner).
+    exclude: ['**/node_modules/**', '**/dist/**', 'e2e/**'],
   },
 });

@@ -14,6 +14,8 @@ export default [
       'ios/**',
       'vendor/**',
       'coverage/**',
+      'e2e/**',
+      '.detoxrc.js',
       'metro.config.js',
       'babel.config.js',
       'jest.config.js',
