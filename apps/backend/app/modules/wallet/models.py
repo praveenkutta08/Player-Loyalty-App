@@ -53,7 +53,14 @@ class Wallet(TenantOwnedMixin, BaseModel):
 class WalletTransaction(TenantOwnedMixin, BaseModel):
     __tablename__ = "wallet_transactions"
     __table_args__ = (
-        UniqueConstraint("tenant_id", "idempotency_key", name="uq_wallet_txn_tenant_id_idem"),
+        # Player-scoped (audit H1): one player's key can never collide with — or replay —
+        # another player's transaction. Cross-player reuse is rejected 409 in the service.
+        UniqueConstraint(
+            "tenant_id",
+            "player_id",
+            "idempotency_key",
+            name="uq_wallet_txn_tenant_player_idem",
+        ),
     )
 
     wallet_id: Mapped[uuid.UUID] = mapped_column(

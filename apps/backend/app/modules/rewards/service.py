@@ -92,16 +92,29 @@ async def list_my_redemptions(session: AsyncSession, player: Player) -> list[Rew
 async def redeem(
     session: AsyncSession, loyalty: LoyaltyPort, player: Player, item_id: UUID, idem: str
 ) -> RewardRedemption:
-    existing = (
-        await session.execute(
-            select(RewardRedemption).where(
-                RewardRedemption.tenant_id == player.tenant_id,
-                RewardRedemption.idempotency_key == idem,
+    # Idempotency is scoped to the acting player (audit H1): replaying another player's key is
+    # a 409 conflict, never their redemption.
+    rows = (
+        (
+            await session.execute(
+                select(RewardRedemption).where(
+                    RewardRedemption.tenant_id == player.tenant_id,
+                    RewardRedemption.idempotency_key == idem,
+                )
             )
         )
-    ).scalar_one_or_none()
+        .scalars()
+        .all()
+    )
+    existing = next((r for r in rows if r.player_id == player.id), None)
     if existing is not None:
         return existing  # idempotent
+    if rows:
+        raise ProblemException(
+            409,
+            "Idempotency key conflict",
+            detail="This Idempotency-Key was already used by another actor.",
+        )
 
     item = await get_item(session, player.tenant_id, item_id)
     if item.status != RewardStatus.published.value:

@@ -36,7 +36,13 @@ class RewardItem(TenantOwnedMixin, BaseModel):
 class RewardRedemption(TenantOwnedMixin, BaseModel):
     __tablename__ = "reward_redemptions"
     __table_args__ = (
-        UniqueConstraint("tenant_id", "idempotency_key", name="uq_reward_redemptions_idem"),
+        # Player-scoped (audit H1) — see wallet_transactions for the matching rationale.
+        UniqueConstraint(
+            "tenant_id",
+            "player_id",
+            "idempotency_key",
+            name="uq_reward_redemptions_tenant_player_idem",
+        ),
     )
 
     player_id: Mapped[uuid.UUID] = mapped_column(PgUUID(as_uuid=True), nullable=False, index=True)

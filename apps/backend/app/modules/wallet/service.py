@@ -113,15 +113,36 @@ async def available_balance(session: AsyncSession, wallet_id: UUID) -> int:
     return int(total)
 
 
-async def _existing(session: AsyncSession, tenant_id: UUID, idem: str) -> WalletTransaction | None:
-    return (
-        await session.execute(
-            select(WalletTransaction).where(
-                WalletTransaction.tenant_id == tenant_id,
-                WalletTransaction.idempotency_key == idem,
+async def _existing(
+    session: AsyncSession, tenant_id: UUID, player_id: UUID, idem: str
+) -> WalletTransaction | None:
+    """Idempotent-replay lookup scoped to the acting player (audit H1).
+
+    A key already used by a DIFFERENT player in the tenant is a 409 conflict — another
+    player's transaction is never returned.
+    """
+    rows = (
+        (
+            await session.execute(
+                select(WalletTransaction).where(
+                    WalletTransaction.tenant_id == tenant_id,
+                    WalletTransaction.idempotency_key == idem,
+                )
             )
         )
-    ).scalar_one_or_none()
+        .scalars()
+        .all()
+    )
+    own = next((t for t in rows if t.player_id == player_id), None)
+    if own is not None:
+        return own
+    if rows:
+        raise ProblemException(
+            409,
+            "Idempotency key conflict",
+            detail="This Idempotency-Key was already used by another actor.",
+        )
+    return None
 
 
 async def _settle(
@@ -170,7 +191,7 @@ async def _execute_money_flow(
     """Shared lock -> replay-check -> pending -> adapter -> settle skeleton for all money moves."""
     wallet = await get_or_create_wallet(session, player, for_update=True)
 
-    existing = await _existing(session, player.tenant_id, idem)
+    existing = await _existing(session, player.tenant_id, player.id, idem)
     if existing is not None:
         return existing  # idempotent replay — pending/completed/failed returned as-is
 
@@ -194,7 +215,7 @@ async def _execute_money_flow(
     except IntegrityError:
         # A concurrent same-key request won the insert (only reachable when the writer didn't
         # hold this wallet's lock) — return the winner instead of 500ing.
-        winner = await _existing(session, player.tenant_id, idem)
+        winner = await _existing(session, player.tenant_id, player.id, idem)
         if winner is not None:
             return winner
         raise
