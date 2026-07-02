@@ -1,3 +1,4 @@
+import type { AccountStackParamList } from '../../features/account/types';
 import type { OffersStackParamList } from '../../features/offers/types';
 import type { NavigatorScreenParams } from '@react-navigation/native';
 
@@ -6,7 +7,7 @@ export type MainTabParamList = {
   Home: undefined;
   Offers: NavigatorScreenParams<OffersStackParamList>;
   Play: undefined;
-  Account: undefined;
+  Account: NavigatorScreenParams<AccountStackParamList>;
   More: undefined;
 };
 

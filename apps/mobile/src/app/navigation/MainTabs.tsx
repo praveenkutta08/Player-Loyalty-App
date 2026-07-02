@@ -3,7 +3,7 @@ import { Gift, Home, Menu, ScanLine, User } from 'lucide-react-native';
 import React from 'react';
 
 import { buildConfig } from '../../config/buildConfig';
-import { AccountScreen } from '../../features/account/AccountScreen';
+import { AccountNavigator } from '../../features/account/AccountNavigator';
 import { HomeScreen } from '../../features/home/HomeScreen';
 import { MoreScreen } from '../../features/more/MoreScreen';
 import { OffersNavigator } from '../../features/offers/OffersNavigator';
@@ -71,7 +71,7 @@ export function MainTabs(): React.JSX.Element {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Offers" component={OffersNavigator} />
       <Tab.Screen name="Play" component={PlayScreen} options={{ tabBarLabel: 'Scan/Play' }} />
-      <Tab.Screen name="Account" component={AccountScreen} />
+      <Tab.Screen name="Account" component={AccountNavigator} />
       <Tab.Screen name="More" component={MoreScreen} />
     </Tab.Navigator>
   );
