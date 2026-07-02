@@ -1,5 +1,5 @@
 import { MapPin, Sparkles, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 
 import {
   useCreateBeaconMutation,
@@ -11,7 +11,12 @@ import {
   useListZonesQuery,
   type Trigger,
 } from './geoApi';
-import { MapView, type DraftPoint } from './MapView';
+
+import type { DraftPoint } from './MapView';
+
+// MapLibre GL is ~800 kB; load it (and its CSS) only when the geofence editor renders, keeping it
+// off the initial admin bundle. The DraftPoint type import above is erased at build time.
+const MapView = lazy(() => import('./MapView').then((m) => ({ default: m.MapView })));
 
 import { Can } from '@/auth/Can';
 import { PageHeader } from '@/components/PageHeader';
@@ -105,11 +110,19 @@ function ZonesTab() {
   return (
     <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_320px]">
       <div>
-        <MapView
-          zones={zones}
-          draft={draft}
-          onPick={(lng, lat) => setDraft({ lng, lat, radius: draft?.radius ?? 40 })}
-        />
+        <Suspense
+          fallback={
+            <div className="flex h-[420px] w-full items-center justify-center rounded-card border border-border text-[12px] text-muted">
+              Loading map…
+            </div>
+          }
+        >
+          <MapView
+            zones={zones}
+            draft={draft}
+            onPick={(lng, lat) => setDraft({ lng, lat, radius: draft?.radius ?? 40 })}
+          />
+        </Suspense>
         <p className="mt-2 text-[12px] text-muted">
           Click the map to drop a point, then set a radius and name to create a GPS zone.
         </p>

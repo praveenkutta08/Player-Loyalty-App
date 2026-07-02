@@ -20,7 +20,7 @@
     "@reduxjs/toolkit": "^2.2.7",
     "@repo/api-client": "workspace:*",
     "@repo/shared-types": "workspace:*",
-    "lucide-react-native": "^0.468.0",
+    "lucide-react-native": "^0.511.0",
     "react": "19.2.3",
     "react-native": "0.86.0",
     "react-native-keychain": "^9.2.2",

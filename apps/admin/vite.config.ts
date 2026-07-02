@@ -25,6 +25,25 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    // MapLibre is a single ~800 kB library, isolated into its own lazy chunk (loaded only by the
+    // geofence editor, see GeofencingScreen). It legitimately exceeds the 500 kB default, so lift
+    // the warning threshold rather than have it fire on an intentional, on-demand vendor chunk.
+    chunkSizeWarningLimit: 900,
+    rollupOptions: {
+      output: {
+        // Split heavy vendors out of the app chunk so the initial bundle stays lean and
+        // long-lived libs cache independently of app code.
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          router: ['@tanstack/react-router'],
+          redux: ['@reduxjs/toolkit', 'react-redux'],
+          maplibre: ['maplibre-gl'],
+          forms: ['react-hook-form', '@hookform/resolvers', 'zod'],
+        },
+      },
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom',
