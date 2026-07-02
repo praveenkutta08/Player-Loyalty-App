@@ -1,0 +1,40 @@
+# P5.5 — repo-wide pre-commit hooks.
+#
+# Install once (pre-commit ships in the backend dev group, so it is version-locked by uv.lock):
+#   cd apps/backend && uv sync && uv run python -m pre_commit install
+#
+# All hooks are local `system` hooks so they run the exact toolchain versions the repo pins
+# (uv.lock for ruff/mypy, pnpm-lock.yaml for eslint/prettier) instead of pre-commit's mirrors.
+# Entries deliberately spawn only real executables (`uv`, `node`) — no `bash -c`/`pnpm` shims —
+# because on Windows `bash` can resolve to WSL and .cmd shims can't be spawned directly.
+# `python -m <tool>` (not the tool's console-script exe) also keeps hooks working on machines
+# where Application Control policies block venv executables.
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff (backend lint)
+        entry: uv run --directory apps/backend python -m ruff check .
+        language: system
+        files: ^apps/backend/.*\.py$
+        pass_filenames: false
+
+      - id: mypy
+        name: mypy (backend types)
+        entry: uv run --directory apps/backend python -m mypy app
+        language: system
+        files: ^apps/backend/.*\.py$
+        pass_filenames: false
+
+      - id: eslint
+        name: eslint (all workspaces, turbo-cached)
+        entry: node node_modules/turbo/bin/turbo run lint --output-logs=errors-only
+        language: system
+        types_or: [ts, tsx, javascript, jsx]
+        pass_filenames: false
+
+      - id: prettier
+        name: prettier (staged files)
+        entry: node node_modules/prettier/bin/prettier.cjs --check --ignore-unknown
+        language: system
+        types_or: [ts, tsx, javascript, jsx, json, markdown, yaml]

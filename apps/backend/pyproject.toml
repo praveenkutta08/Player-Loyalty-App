@@ -26,6 +26,7 @@ dev = [
     "ruff>=0.6",
     "mypy>=1.11",
     "pytest-cov>=7.1.0",
+    "pre-commit>=4.0",
 ]
 
 # This is an application, not a distributable library — uv should not try to build/install it.

@@ -48,8 +48,25 @@ detox build -c ios.sim.debug        # native build (needs Xcode/Android Studio)
 detox test -c ios.sim.debug
 ```
 
-## CI shape
+## CI (implemented — `.github/workflows/ci.yml`)
 
-Default lane (fast, always): install → lint → typecheck → `pnpm test` (+ `pnpm check:api` drift
-check). Separate opt-in jobs run Playwright (spins up backend + admin) and Detox (macOS runner with a
-simulator). Keeping E2E in their own jobs keeps the core lane green without device/browser infra.
+Four jobs on every push to `main` / PR:
+
+| Job          | What it runs                                                                                             |
+| ------------ | -------------------------------------------------------------------------------------------------------- |
+| `web`        | `pnpm format:check` → `lint` → `typecheck` → `test` → `build`; uploads the admin `dist/` artifact         |
+| `backend`    | `ruff` → `mypy` → `alembic upgrade head` (clean `postgres:16` service) → `alembic check` → `pytest`       |
+| `api-client` | `scripts/check-api-client.sh` — OpenAPI ↔ generated client drift (GOLDEN RULE #7; no DB needed)          |
+| `android`    | Debug-APK artifact build (skipped on PRs — runs on `main` pushes + manual dispatch)                       |
+
+Playwright/Detox E2E stay opt-in per the section above (device/browser infra). Release/signing
+builds are a later phase — see `docs/MOBILE_RELEASE.md` (fastlane).
+
+## Pre-commit hooks (implemented — `.pre-commit-config.yaml`)
+
+`ruff` + `mypy` (backend, uv-locked) and `eslint` + `prettier` (workspaces, pnpm-locked) run on
+every commit. Install once:
+
+```bash
+cd apps/backend && uv sync && uv run python -m pre_commit install
+```

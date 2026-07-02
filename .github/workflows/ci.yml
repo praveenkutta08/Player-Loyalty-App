@@ -1,0 +1,124 @@
+name: CI
+
+# P5.5 — default lane on every push/PR: web workspaces (lint/typecheck/test/build), backend
+# (ruff/mypy/migrations/pytest against a real Postgres), and the OpenAPI ↔ api-client drift check.
+# The Android debug-APK artifact job is skipped on PRs to keep the PR lane fast (runs on main +
+# manual dispatch). E2E lanes (Playwright/Detox) stay opt-in per docs/TESTING.md.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: Web · lint / typecheck / test / build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4 # version comes from package.json "packageManager"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22 # apps/mobile engines requires >= 22.11
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - name: Upload admin bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: admin-dist
+          path: apps/admin/dist
+          retention-days: 7
+
+  backend:
+    name: Backend · ruff / mypy / migrations / pytest
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/backend
+    services:
+      db:
+        image: postgres:16
+        env:
+          POSTGRES_USER: player
+          POSTGRES_PASSWORD: player
+          POSTGRES_DB: player
+        ports:
+          - '5433:5432' # same host mapping as docker-compose, so the app's default DSN works
+        options: >-
+          --health-cmd "pg_isready -U player"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: apps/backend/uv.lock
+      # `python -m <tool>` (not the console-script exes) so the exact same commands work on
+      # Windows dev machines where Application Control policies block venv executables.
+      - run: uv sync --frozen
+      - run: uv run python -m ruff check .
+      - run: uv run python -m mypy app
+      - name: Migration check — clean database migrates to head
+        run: uv run python -m alembic upgrade head
+      - name: Migration drift — models match migrations
+        run: uv run python -m alembic check
+      - run: uv run python -m pytest
+
+  api-client:
+    name: Contract · OpenAPI ↔ api-client drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: apps/backend/uv.lock
+      - run: pnpm install --frozen-lockfile
+      - run: uv sync --frozen
+        working-directory: apps/backend
+      # Exports OpenAPI from the FastAPI app in-process (no server/DB), regenerates the typed
+      # client, and fails if it differs from what's committed (GOLDEN RULE #7).
+      - run: bash scripts/check-api-client.sh
+
+  android:
+    name: Artifact · Android debug APK
+    # Native builds are slow; keep them off the PR lane. Runs on main pushes + manual dispatch.
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - run: pnpm install --frozen-lockfile
+      - run: ./gradlew assembleDebug --no-daemon
+        working-directory: apps/mobile/android
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mobile-debug-apk
+          path: apps/mobile/android/app/build/outputs/apk/debug/*.apk
+          retention-days: 7

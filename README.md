@@ -49,3 +49,16 @@ All three apps share the backend at `http://localhost:8000/api/v1`. Run each in 
 - `pnpm gen:api` — regenerate the typed client from the FastAPI app (no running server needed).
 - `pnpm check:api` — CI drift check: regenerates and fails if the committed client is stale. Run
   `pnpm gen:api` and commit whenever the API changes.
+
+## CI & pre-commit hooks
+
+GitHub Actions (`.github/workflows/ci.yml`) runs web lint/typecheck/test/build, the backend
+lane (ruff · mypy · migration check · pytest against a clean Postgres), the OpenAPI ↔ api-client
+drift check, and an Android debug-APK artifact build — see `docs/TESTING.md` for the job table.
+Enable the local hooks (ruff/mypy + eslint/prettier) once:
+
+```bash
+cd apps/backend && uv sync && uv run python -m pre_commit install
+```
+
+Release/signing (fastlane) is documented in `docs/MOBILE_RELEASE.md`.
