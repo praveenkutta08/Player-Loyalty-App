@@ -94,9 +94,18 @@ async def wallet_transfer(
     cashless: CashlessDep,
     idem: IdemDep,
 ) -> TransactionOut:
-    return TransactionOut.model_validate(
-        await transfer_to_egm(session, cashless, player, body.amount_cents, body.egm_id, idem)
+    txn = await transfer_to_egm(session, cashless, player, body.amount_cents, body.egm_id, idem)
+    await write_audit(
+        session,
+        tenant_id=player.tenant_id,
+        actor_type=ActorType.player.value,
+        actor_id=player.id,
+        action="wallet:transfer_to_egm",
+        entity="wallet_transaction",
+        entity_id=txn.id,
+        meta={"amount_cents": body.amount_cents, "egm_id": body.egm_id},
     )
+    return TransactionOut.model_validate(txn)
 
 
 @router.post("/wallet/cashout", response_model=TransactionOut, tags=["wallet"])
@@ -107,14 +116,24 @@ async def wallet_cashout(
     cashless: CashlessDep,
     idem: IdemDep,
 ) -> TransactionOut:
-    return TransactionOut.model_validate(
-        await cashout(session, cashless, player, body.amount_cents, idem)
+    txn = await cashout(session, cashless, player, body.amount_cents, idem)
+    await write_audit(
+        session,
+        tenant_id=player.tenant_id,
+        actor_type=ActorType.player.value,
+        actor_id=player.id,
+        action="wallet:cashout",
+        entity="wallet_transaction",
+        entity_id=txn.id,
+        meta={"amount_cents": body.amount_cents},
     )
+    return TransactionOut.model_validate(txn)
 
 
 @router.post("/egm/pair", response_model=EgmPairOut, tags=["wallet"])
 async def egm_pair(body: EgmPairRequest, player: PlayerDep) -> EgmPairOut:
     """Return a simulated cardless-play pairing session for an EGM."""
+    # audit: exempt — mock-only pairing simulation, no persistence and no money movement.
     return EgmPairOut(
         session_id=uuid.uuid4(),
         egm_id=body.egm_id,

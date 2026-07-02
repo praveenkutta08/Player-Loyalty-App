@@ -119,6 +119,7 @@ async def plan_visit(
     llm: LlmDep,
 ) -> ConciergePlanOut:
     """Use case 3 — deterministic itinerary (leave time, first stop, offer order, dinner)."""
+    # audit: exempt — every answer persists to append-only concierge_answers (P6-mandated trail).
     envelope = await run_use_case(
         session,
         player,
@@ -142,6 +143,7 @@ async def ask(
     llm: LlmDep,
 ) -> ConciergeEnvelope:
     """Free-form question; answered from tool context, rendered as signal cards + sources."""
+    # audit: exempt — every answer persists to append-only concierge_answers (P6-mandated trail).
     envelope = await run_use_case(
         session,
         player,
@@ -223,6 +225,8 @@ async def preview(
     llm: LlmDep,
 ) -> ConciergeEnvelope:
     """What-if brief for a seed player with candidate weights — no cache, no audit row."""
+    # audit: exempt — read-only what-if simulation; persists nothing (weights apply for real
+    # via the audited PUT /config).
     query = select(Player).where(Player.tenant_id == tenant_id)
     if body.player_email:
         query = query.where(Player.email == body.player_email)

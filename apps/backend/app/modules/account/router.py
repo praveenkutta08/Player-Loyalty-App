@@ -12,6 +12,8 @@ from ...db.session import get_session
 from ...ports.kyc import KycPort
 from ...ports.loyalty import LoyaltyPort
 from ...ports.push import PushPort
+from ..audit.models import ActorType
+from ..audit.service import write_audit
 from ..players.deps import get_current_player
 from ..players.models import Player
 from .schemas import ActivityItem, DeviceOut, DeviceRegister, KycOut, MeOut, PointsOut
@@ -68,10 +70,22 @@ async def account_activity(player: PlayerDep, loyalty: LoyaltyDep) -> list[Activ
 async def register_my_device(
     body: DeviceRegister, player: PlayerDep, session: SessionDep, push: PushDep
 ) -> DeviceOut:
+    # audit: exempt — routine device/push-token registration, not privileged/financial.
     device = await register_device(session, push, player, body.platform, body.push_token)
     return DeviceOut.model_validate(device)
 
 
 @router.post("/account/kyc/start", response_model=KycOut, tags=["account"])
 async def start_my_kyc(player: PlayerDep, session: SessionDep, kyc: KycDep) -> KycOut:
-    return KycOut(kyc_status=await start_kyc(session, kyc, player))
+    kyc_status = await start_kyc(session, kyc, player)
+    await write_audit(
+        session,
+        tenant_id=player.tenant_id,
+        actor_type=ActorType.player.value,
+        actor_id=player.id,
+        action="kyc:start",
+        entity="player",
+        entity_id=player.id,
+        meta={"kyc_status": kyc_status},
+    )
+    return KycOut(kyc_status=kyc_status)

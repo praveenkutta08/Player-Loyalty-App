@@ -49,6 +49,7 @@ async def post_client_event(
 ) -> ClientEventOut:
     """Player-audience event sink (P2.9 sink, P6.7 metrics). Unknown types are dropped, not
     stored — the response says so instead of erroring, so clients can fire-and-forget."""
+    # audit: exempt — anonymous-grade UI telemetry (allowlisted types), not privileged/financial.
     if body.type not in CLIENT_EVENT_TYPES:
         return ClientEventOut(accepted=False)
     await record_event(

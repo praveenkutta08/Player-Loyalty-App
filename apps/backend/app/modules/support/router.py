@@ -11,8 +11,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ...adapters.factory import get_chat_port
 from ...db.session import get_session
 from ...ports.chat import ChatPort
-from ...rbac.deps import AdminTenantIdDep, AdminTenantSessionDep, require
+from ...rbac.deps import AdminContext, AdminTenantIdDep, AdminTenantSessionDep, require
 from ...rbac.matrix import Permission
+from ..audit.models import ActorType
+from ..audit.service import write_audit
 from ..players.deps import get_current_player
 from ..players.models import Player
 from .schemas import (
@@ -51,12 +53,24 @@ async def admin_list_faq(
     response_model=FaqOut,
     status_code=status.HTTP_201_CREATED,
     tags=["support"],
-    dependencies=[Depends(require(Permission.content_create.value))],
 )
 async def admin_create_faq(
-    body: FaqCreate, session: AdminTenantSessionDep, tenant_id: AdminTenantIdDep
+    body: FaqCreate,
+    session: AdminTenantSessionDep,
+    tenant_id: AdminTenantIdDep,
+    ctx: Annotated[AdminContext, Depends(require(Permission.content_create.value))],
 ) -> FaqOut:
-    return FaqOut.model_validate(await create_faq(session, tenant_id, body))
+    faq = await create_faq(session, tenant_id, body)
+    await write_audit(
+        session,
+        tenant_id=tenant_id,
+        actor_type=ActorType.admin.value,
+        actor_id=ctx.user.id,
+        action="faq:create",
+        entity="faq",
+        entity_id=faq.id,
+    )
+    return FaqOut.model_validate(faq)
 
 
 # ------------------------------------------------------------------ player chat
@@ -64,6 +78,8 @@ async def admin_create_faq(
 async def support_chat(
     body: ChatRequest, player: PlayerDep, session: SessionDep, port: ChatDep
 ) -> ChatResponse:
+    # audit: exempt — conversational support turn; the full transcript persists in
+    # support_messages, and escalation (the privileged transition) is audited in the service.
     chat, reply = await chat_turn(session, port, player, body.message, body.session_id)
     return ChatResponse(
         session_id=chat.id,
@@ -85,5 +101,6 @@ async def support_history(
 async def support_escalate(
     body: EscalateRequest, player: PlayerDep, session: SessionDep
 ) -> TicketOut:
+    # audit: exempt — escalate() writes the audit row in the service layer.
     ticket = await escalate(session, player, body.session_id, body.subject)
     return TicketOut.model_validate(ticket)

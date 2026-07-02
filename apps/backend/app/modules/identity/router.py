@@ -23,12 +23,14 @@ SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
 @router.post("/auth/admin/login", response_model=TokenPair, tags=["auth"])
 async def admin_login(body: AdminLoginRequest, session: SessionDep) -> TokenPair:
+    # audit: exempt — authentication flow, not a privileged mutation (rate-limited, H4).
     user = await authenticate_admin(session, body.email, body.password)
     return await issue_token_pair(session, user.id, AUDIENCE_ADMIN)
 
 
 @router.post("/auth/admin/refresh", response_model=TokenPair, tags=["auth"])
 async def admin_refresh(body: RefreshRequest, session: SessionDep) -> TokenPair:
+    # audit: exempt — authentication flow, not a privileged mutation (rate-limited, H4).
     return await rotate_refresh_token(session, body.refresh_token, AUDIENCE_ADMIN)
 
 

@@ -9,8 +9,10 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...db.session import get_session
-from ...rbac.deps import AdminTenantIdDep, AdminTenantSessionDep, require
+from ...rbac.deps import AdminContext, AdminTenantIdDep, AdminTenantSessionDep, require
 from ...rbac.matrix import Permission
+from ..audit.models import ActorType
+from ..audit.service import write_audit
 from ..players.deps import get_current_player
 from ..players.models import Player
 from .schemas import (
@@ -55,17 +57,26 @@ async def admin_list_reservations(
     "/reservations/{res_id}",
     response_model=ReservationOut,
     tags=["reservations"],
-    dependencies=[Depends(require(Permission.reservations_update.value))],
 )
 async def admin_update_reservation(
     res_id: uuid.UUID,
     body: ReservationStatusUpdate,
     session: AdminTenantSessionDep,
     tenant_id: AdminTenantIdDep,
+    ctx: Annotated[AdminContext, Depends(require(Permission.reservations_update.value))],
 ) -> ReservationOut:
-    return ReservationOut.model_validate(
-        await set_reservation_status(session, tenant_id, res_id, body.status)
+    reservation = await set_reservation_status(session, tenant_id, res_id, body.status)
+    await write_audit(
+        session,
+        tenant_id=tenant_id,
+        actor_type=ActorType.admin.value,
+        actor_id=ctx.user.id,
+        action="reservation:set_status",
+        entity="reservation",
+        entity_id=res_id,
+        meta={"status": body.status},
     )
+    return ReservationOut.model_validate(reservation)
 
 
 @router.get(
@@ -84,22 +95,32 @@ async def admin_list_valet(
     "/valet/{valet_id}",
     response_model=ValetOut,
     tags=["reservations"],
-    dependencies=[Depends(require(Permission.reservations_update.value))],
 )
 async def admin_update_valet(
     valet_id: uuid.UUID,
     body: ValetStatusUpdate,
     session: AdminTenantSessionDep,
     tenant_id: AdminTenantIdDep,
+    ctx: Annotated[AdminContext, Depends(require(Permission.reservations_update.value))],
 ) -> ValetOut:
-    return ValetOut.model_validate(
-        await set_valet_status(session, tenant_id, valet_id, body.status)
+    valet = await set_valet_status(session, tenant_id, valet_id, body.status)
+    await write_audit(
+        session,
+        tenant_id=tenant_id,
+        actor_type=ActorType.admin.value,
+        actor_id=ctx.user.id,
+        action="valet:set_status",
+        entity="valet_request",
+        entity_id=valet_id,
+        meta={"status": body.status},
     )
+    return ValetOut.model_validate(valet)
 
 
 # ------------------------------------------------------------------ player
 @router.post("/app/reservations", response_model=ReservationOut, tags=["reservations"])
 async def app_book(body: ReservationBook, player: PlayerDep, session: SessionDep) -> ReservationOut:
+    # audit: exempt — player self-service booking, not privileged/financial.
     return ReservationOut.model_validate(await book_reservation(session, player, body))
 
 
@@ -122,11 +143,13 @@ async def app_get_reservation(
 async def app_cancel_reservation(
     res_id: uuid.UUID, player: PlayerDep, session: SessionDep
 ) -> ReservationOut:
+    # audit: exempt — player cancelling their own booking, not privileged/financial.
     return ReservationOut.model_validate(await cancel_own_reservation(session, player, res_id))
 
 
 @router.post("/app/valet", response_model=ValetOut, tags=["reservations"])
 async def app_request_valet(player: PlayerDep, session: SessionDep) -> ValetOut:
+    # audit: exempt — player self-service request, not privileged/financial.
     return ValetOut.model_validate(await request_valet(session, player))
 
 

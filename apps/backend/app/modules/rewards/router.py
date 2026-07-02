@@ -12,8 +12,10 @@ from ...adapters.factory import get_loyalty_port
 from ...core.errors import ProblemException
 from ...db.session import get_session
 from ...ports.loyalty import LoyaltyPort
-from ...rbac.deps import AdminTenantIdDep, AdminTenantSessionDep, require
+from ...rbac.deps import AdminContext, AdminTenantIdDep, AdminTenantSessionDep, require
 from ...rbac.matrix import Permission
+from ..audit.models import ActorType
+from ..audit.service import write_audit
 from ..players.deps import get_current_player
 from ..players.models import Player
 from .schemas import RedemptionOut, RewardItemCreate, RewardItemOut, RewardItemUpdate
@@ -63,39 +65,72 @@ async def admin_list(
     response_model=RewardItemOut,
     status_code=status.HTTP_201_CREATED,
     tags=["rewards"],
-    dependencies=[Depends(require(Permission.content_create.value))],
 )
 async def admin_create(
-    body: RewardItemCreate, session: AdminTenantSessionDep, tenant_id: AdminTenantIdDep
+    body: RewardItemCreate,
+    session: AdminTenantSessionDep,
+    tenant_id: AdminTenantIdDep,
+    ctx: Annotated[AdminContext, Depends(require(Permission.content_create.value))],
 ) -> RewardItemOut:
-    return RewardItemOut.model_validate(await create_item(session, tenant_id, body))
+    item = await create_item(session, tenant_id, body)
+    await write_audit(
+        session,
+        tenant_id=tenant_id,
+        actor_type=ActorType.admin.value,
+        actor_id=ctx.user.id,
+        action="reward_item:create",
+        entity="reward_item",
+        entity_id=item.id,
+    )
+    return RewardItemOut.model_validate(item)
 
 
 @router.put(
     "/rewards/admin/{item_id}",
     response_model=RewardItemOut,
     tags=["rewards"],
-    dependencies=[Depends(require(Permission.content_update.value))],
 )
 async def admin_update(
     item_id: uuid.UUID,
     body: RewardItemUpdate,
     session: AdminTenantSessionDep,
     tenant_id: AdminTenantIdDep,
+    ctx: Annotated[AdminContext, Depends(require(Permission.content_update.value))],
 ) -> RewardItemOut:
-    return RewardItemOut.model_validate(await update_item(session, tenant_id, item_id, body))
+    item = await update_item(session, tenant_id, item_id, body)
+    await write_audit(
+        session,
+        tenant_id=tenant_id,
+        actor_type=ActorType.admin.value,
+        actor_id=ctx.user.id,
+        action="reward_item:update",
+        entity="reward_item",
+        entity_id=item_id,
+    )
+    return RewardItemOut.model_validate(item)
 
 
 @router.delete(
     "/rewards/admin/{item_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     tags=["rewards"],
-    dependencies=[Depends(require(Permission.content_delete.value))],
 )
 async def admin_delete(
-    item_id: uuid.UUID, session: AdminTenantSessionDep, tenant_id: AdminTenantIdDep
+    item_id: uuid.UUID,
+    session: AdminTenantSessionDep,
+    tenant_id: AdminTenantIdDep,
+    ctx: Annotated[AdminContext, Depends(require(Permission.content_delete.value))],
 ) -> None:
     await delete_item(session, tenant_id, item_id)
+    await write_audit(
+        session,
+        tenant_id=tenant_id,
+        actor_type=ActorType.admin.value,
+        actor_id=ctx.user.id,
+        action="reward_item:delete",
+        entity="reward_item",
+        entity_id=item_id,
+    )
 
 
 # ------------------------------------------------------------------ app
@@ -114,7 +149,18 @@ async def app_redeem(
     loyalty: LoyaltyDep,
     idem: IdemDep,
 ) -> RedemptionOut:
-    return RedemptionOut.model_validate(await redeem(session, loyalty, player, item_id, idem))
+    redemption = await redeem(session, loyalty, player, item_id, idem)
+    await write_audit(
+        session,
+        tenant_id=player.tenant_id,
+        actor_type=ActorType.player.value,
+        actor_id=player.id,
+        action="reward:redeem",
+        entity="reward_redemption",
+        entity_id=redemption.id,
+        meta={"reward_item_id": str(item_id), "points_spent": redemption.points_spent},
+    )
+    return RedemptionOut.model_validate(redemption)
 
 
 @router.get("/me/redemptions", response_model=list[RedemptionOut], tags=["rewards"])

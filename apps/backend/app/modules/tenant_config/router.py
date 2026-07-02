@@ -113,56 +113,83 @@ async def get_themes(session: AdminTenantSessionDep, tenant_id: AdminTenantIdDep
     return [ThemeOut.model_validate(t) for t in await list_themes(session, tenant_id)]
 
 
+async def write_audit_theme(
+    session: AsyncSession, tenant_id: UUID, ctx: AdminContext, verb: str, theme_id: UUID
+) -> None:
+    await write_audit(
+        session,
+        tenant_id=tenant_id,
+        actor_type=ActorType.admin.value,
+        actor_id=ctx.user.id,
+        action=f"theme:{verb}",
+        entity="theme",
+        entity_id=theme_id,
+    )
+
+
 @router.post(
     "/config/themes",
     response_model=ThemeOut,
     status_code=status.HTTP_201_CREATED,
     tags=["themes"],
-    dependencies=[Depends(require(Permission.branding_create.value))],
 )
 async def post_theme(
-    body: ThemeCreate, session: AdminTenantSessionDep, tenant_id: AdminTenantIdDep
+    body: ThemeCreate,
+    session: AdminTenantSessionDep,
+    tenant_id: AdminTenantIdDep,
+    ctx: Annotated[AdminContext, Depends(require(Permission.branding_create.value))],
 ) -> ThemeOut:
-    return ThemeOut.model_validate(await create_theme(session, tenant_id, body))
+    theme = await create_theme(session, tenant_id, body)
+    await write_audit_theme(session, tenant_id, ctx, "create", theme.id)
+    return ThemeOut.model_validate(theme)
 
 
 @router.put(
     "/config/themes/{theme_id}",
     response_model=ThemeOut,
     tags=["themes"],
-    dependencies=[Depends(require(Permission.branding_update.value))],
 )
 async def put_theme(
     theme_id: UUID,
     body: ThemeUpdate,
     session: AdminTenantSessionDep,
     tenant_id: AdminTenantIdDep,
+    ctx: Annotated[AdminContext, Depends(require(Permission.branding_update.value))],
 ) -> ThemeOut:
-    return ThemeOut.model_validate(await update_theme(session, tenant_id, theme_id, body))
+    theme = await update_theme(session, tenant_id, theme_id, body)
+    await write_audit_theme(session, tenant_id, ctx, "update", theme_id)
+    return ThemeOut.model_validate(theme)
 
 
 @router.post(
     "/config/themes/{theme_id}/activate",
     response_model=ThemeOut,
     tags=["themes"],
-    dependencies=[Depends(require(Permission.branding_update.value))],
 )
 async def activate_theme(
-    theme_id: UUID, session: AdminTenantSessionDep, tenant_id: AdminTenantIdDep
+    theme_id: UUID,
+    session: AdminTenantSessionDep,
+    tenant_id: AdminTenantIdDep,
+    ctx: Annotated[AdminContext, Depends(require(Permission.branding_update.value))],
 ) -> ThemeOut:
-    return ThemeOut.model_validate(await activate_theme_service(session, tenant_id, theme_id))
+    theme = await activate_theme_service(session, tenant_id, theme_id)
+    await write_audit_theme(session, tenant_id, ctx, "activate", theme_id)
+    return ThemeOut.model_validate(theme)
 
 
 @router.delete(
     "/config/themes/{theme_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     tags=["themes"],
-    dependencies=[Depends(require(Permission.branding_delete.value))],
 )
 async def remove_theme(
-    theme_id: UUID, session: AdminTenantSessionDep, tenant_id: AdminTenantIdDep
+    theme_id: UUID,
+    session: AdminTenantSessionDep,
+    tenant_id: AdminTenantIdDep,
+    ctx: Annotated[AdminContext, Depends(require(Permission.branding_delete.value))],
 ) -> None:
     await delete_theme(session, tenant_id, theme_id)
+    await write_audit_theme(session, tenant_id, ctx, "delete", theme_id)
 
 
 # --------------------------------------------------------------------------- manifest (public)
