@@ -11,6 +11,7 @@ import { WalletNavigator } from '../../features/wallet/WalletNavigator';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useManifest } from '../manifest/ManifestProvider';
 
+import { navigationRef } from './navigationRef';
 import { TopBar } from './TopBar';
 
 import type { MainTabParamList } from './types';
@@ -43,6 +44,7 @@ export function MainTabs(): React.JSX.Element {
             title={title}
             showNotifications={globals?.showNotifications !== false}
             showSearch={globals?.showSearch !== false}
+            onPressNotifications={() => navigationRef.navigate('Notifications')}
           />
         ),
         tabBarActiveTintColor: theme.colors.brand.gold,

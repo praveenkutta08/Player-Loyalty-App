@@ -10,4 +10,5 @@ export type MoreStackParamList = {
   ReservationDetail: { id: string };
   Valet: undefined;
   DigitalKey: undefined;
+  NotificationPreferences: undefined;
 };

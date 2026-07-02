@@ -1,4 +1,4 @@
-import { CalendarDays, Car, KeyRound, Palette } from 'lucide-react-native';
+import { Bell, CalendarDays, Car, KeyRound, Palette } from 'lucide-react-native';
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
@@ -60,6 +60,12 @@ export function MoreHomeScreen({ navigation }: Props): React.JSX.Element {
           Settings
         </ThemedText>
         <Card style={styles.card}>
+          <ListRow
+            icon={icon(Bell)}
+            title="Notifications"
+            subtitle="Channels, quiet hours & location"
+            onPress={() => navigation.navigate('NotificationPreferences')}
+          />
           <ListRow
             icon={icon(Palette)}
             title="Appearance"

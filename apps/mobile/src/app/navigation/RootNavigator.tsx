@@ -1,16 +1,20 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { buildConfig } from '../../config/buildConfig';
 import { AuthNavigator } from '../../features/auth/AuthNavigator';
+import { MessageDetailScreen } from '../../features/notifications/MessageDetailScreen';
+import { NotificationCenterScreen } from '../../features/notifications/NotificationCenterScreen';
+import { registerPushHandlers } from '../../features/notifications/pushBridge';
 import { BrandSplash } from '../../features/splash/BrandSplash';
 import { ForceUpdateScreen } from '../../features/splash/ForceUpdateScreen';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useManifest } from '../manifest/ManifestProvider';
-import { useAppSelector } from '../store';
+import { useAppDispatch, useAppSelector } from '../store';
 
 import { MainTabs } from './MainTabs';
+import { navigationRef } from './navigationRef';
 
 import type { RootStackParamList } from './types';
 import type { Theme as NavTheme } from '@react-navigation/native';
@@ -26,6 +30,13 @@ export function RootNavigator(): React.JSX.Element {
   const theme = useTheme();
   const { manifest } = useManifest();
   const status = useAppSelector((s) => s.auth.status);
+  const dispatch = useAppDispatch();
+
+  // Bridge native push handlers into the inbox store + deep-link routing (once authenticated).
+  useEffect(() => {
+    if (status !== 'authenticated') return undefined;
+    return registerPushHandlers(dispatch, () => new Date().toISOString());
+  }, [status, dispatch]);
 
   const navTheme: NavTheme = {
     dark: theme.scheme === 'dark',
@@ -45,17 +56,39 @@ export function RootNavigator(): React.JSX.Element {
   }
 
   return (
-    <NavigationContainer theme={navTheme}>
+    <NavigationContainer ref={navigationRef} theme={navTheme}>
       {status === 'authenticated' ? (
         <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Main" component={MainTabs} />
           <Stack.Screen name="ForceUpdate" component={ForceUpdateScreen} />
+          <Stack.Screen
+            name="Notifications"
+            component={NotificationCenterScreen}
+            options={{ ...detailHeader(theme), title: 'Notifications' }}
+          />
+          <Stack.Screen
+            name="MessageDetail"
+            component={MessageDetailScreen}
+            options={{ ...detailHeader(theme), title: 'Message' }}
+          />
         </Stack.Navigator>
       ) : (
         <AuthNavigator />
       )}
     </NavigationContainer>
   );
+}
+
+/** Themed native-stack header for the root-level detail screens (notification center + message). */
+function detailHeader(theme: ReturnType<typeof useTheme>) {
+  return {
+    headerShown: true,
+    headerStyle: { backgroundColor: theme.colors.bg.base },
+    headerTintColor: theme.colors.text.primary,
+    headerTitleStyle: { fontFamily: theme.fontFamily.sans },
+    headerShadowVisible: false,
+    contentStyle: { backgroundColor: theme.colors.bg.base },
+  } as const;
 }
 
 /** React Navigation 7 requires a `fonts` block on its theme; map to our UI font family. */
