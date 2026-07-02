@@ -33,6 +33,21 @@ class LoyaltyActivity:
     at: datetime
 
 
+@dataclass(frozen=True)
+class PlayerValue:
+    """Concierge value signals (P6.1) — worth band, theoretical, and visit cadence.
+
+    Mock returns three stable personas; the real CMP adapter is a Phase-2 swap.
+    """
+
+    player_ref: str
+    persona: str  # regional_commuter | weekend_destination | high_value_local
+    worth_band: str  # low | mid | high
+    adt_cents: int  # average daily theoretical
+    visit_frequency_per_month: float
+    recent_visit_gap_days: int
+
+
 @runtime_checkable
 class LoyaltyPort(Protocol):
     async def get_account(self, player_ref: str) -> LoyaltyAccount: ...
@@ -42,3 +57,5 @@ class LoyaltyPort(Protocol):
     async def redeem(self, player_ref: str, points: int, reason: str) -> LoyaltyTransaction: ...
 
     async def get_activity(self, player_ref: str, limit: int = 20) -> list[LoyaltyActivity]: ...
+
+    async def get_player_value(self, player_ref: str) -> PlayerValue: ...

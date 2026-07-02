@@ -11,6 +11,7 @@ from app.db.base import Base
 
 # Import model modules here so their tables register on Base.metadata for autogenerate.
 from app.modules.audit import models as _audit_models  # noqa: E402, F401
+from app.modules.concierge import models as _concierge_models  # noqa: E402, F401
 from app.modules.content import models as _content_models  # noqa: E402, F401
 from app.modules.digitalkey import models as _digitalkey_models  # noqa: E402, F401
 from app.modules.games import models as _games_models  # noqa: E402, F401

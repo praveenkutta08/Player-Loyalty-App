@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import UTC, datetime, timedelta
 
 from ...ports.errors import AdapterRejectedError
-from ...ports.loyalty import LoyaltyAccount, LoyaltyActivity, LoyaltyTransaction
+from ...ports.loyalty import LoyaltyAccount, LoyaltyActivity, LoyaltyTransaction, PlayerValue
 from .base import MockAdapterBase
 
 
@@ -17,6 +17,36 @@ def _tier_for(points: int) -> str:
     if points >= 500:
         return "silver"
     return "bronze"
+
+
+# The three demo personas (P6.1). A player maps to one deterministically by ref, so the same
+# player always scores the same way and the seed can pin specific players to specific personas.
+_PERSONAS = (
+    PlayerValue(
+        player_ref="",
+        persona="regional_commuter",
+        worth_band="mid",
+        adt_cents=180_00,
+        visit_frequency_per_month=3.0,
+        recent_visit_gap_days=6,
+    ),
+    PlayerValue(
+        player_ref="",
+        persona="weekend_destination",
+        worth_band="mid",
+        adt_cents=320_00,
+        visit_frequency_per_month=1.0,
+        recent_visit_gap_days=19,
+    ),
+    PlayerValue(
+        player_ref="",
+        persona="high_value_local",
+        worth_band="high",
+        adt_cents=940_00,
+        visit_frequency_per_month=6.5,
+        recent_visit_gap_days=11,
+    ),
+)
 
 
 class MockLoyaltyAdapter(MockAdapterBase):
@@ -57,6 +87,18 @@ class MockLoyaltyAdapter(MockAdapterBase):
             points_delta=-points,
             balance=balance,
             reason=reason,
+        )
+
+    async def get_player_value(self, player_ref: str) -> PlayerValue:
+        await self._simulate()
+        template = _PERSONAS[sum(player_ref.encode()) % len(_PERSONAS)]
+        return PlayerValue(
+            player_ref=player_ref,
+            persona=template.persona,
+            worth_band=template.worth_band,
+            adt_cents=template.adt_cents,
+            visit_frequency_per_month=template.visit_frequency_per_month,
+            recent_visit_gap_days=template.recent_visit_gap_days,
         )
 
     async def get_activity(self, player_ref: str, limit: int = 20) -> list[LoyaltyActivity]:

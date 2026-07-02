@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 
+from ..core.cache import get_cache
 from ..core.settings import get_settings
 from ..ports import (
     CashlessPort,
@@ -19,8 +20,11 @@ from ..ports import (
     LoyaltyPort,
     PaymentPort,
     PushPort,
+    TravelPort,
+    WeatherPort,
 )
 from ..ports.errors import AdapterError
+from .caching import CachingTravelAdapter, CachingWeatherAdapter
 from .mock.cashless import MockCashlessAdapter
 from .mock.chat import MockChatAdapter
 from .mock.digital_key import MockDigitalKeyAdapter
@@ -29,6 +33,10 @@ from .mock.kyc import MockKycAdapter
 from .mock.loyalty import MockLoyaltyAdapter
 from .mock.payment import MockPaymentAdapter
 from .mock.push import MockPushAdapter
+from .mock.travel import MockTravelAdapter
+from .mock.weather import MockWeatherAdapter
+from .real.travel import OsrmTravelAdapter
+from .real.weather import OpenMeteoWeatherAdapter
 
 
 def _resolve(port_name: str, provider: str | None) -> str:
@@ -104,3 +112,37 @@ def get_chat_port() -> ChatPort:
     if provider == "mock":
         return MockChatAdapter()
     raise _unsupported("chat", provider)
+
+
+@lru_cache
+def get_weather_port() -> WeatherPort:
+    """WeatherPort behind a 30-min cache; ``real`` = Open-Meteo (keyless)."""
+    settings = get_settings()
+    provider = _resolve("weather", settings.weather_provider)
+    inner: WeatherPort
+    if provider == "mock":
+        inner = MockWeatherAdapter()
+    elif provider in {"real", "open-meteo", "live", "sandbox"}:
+        inner = OpenMeteoWeatherAdapter()
+    else:
+        raise AdapterError(
+            f"No {provider!r} adapter for 'weather' port ('mock' and 'real' are available)"
+        )
+    return CachingWeatherAdapter(inner, cache=get_cache(), ttl_s=settings.weather_cache_ttl_s)
+
+
+@lru_cache
+def get_travel_port() -> TravelPort:
+    """TravelPort behind a 5-min cache; ``real`` = OSRM with haversine-model fallback."""
+    settings = get_settings()
+    provider = _resolve("travel", settings.travel_provider)
+    inner: TravelPort
+    if provider == "mock":
+        inner = MockTravelAdapter()
+    elif provider in {"real", "osrm", "live", "sandbox"}:
+        inner = OsrmTravelAdapter()
+    else:
+        raise AdapterError(
+            f"No {provider!r} adapter for 'travel' port ('mock' and 'real' are available)"
+        )
+    return CachingTravelAdapter(inner, cache=get_cache(), ttl_s=settings.travel_cache_ttl_s)

@@ -16,10 +16,18 @@ from .errors import (
 )
 from .geo import GeoPort, JurisdictionResult
 from .kyc import KycPort, KycSession, KycStatus
-from .loyalty import LoyaltyAccount, LoyaltyActivity, LoyaltyPort, LoyaltyTransaction
+from .loyalty import (
+    LoyaltyAccount,
+    LoyaltyActivity,
+    LoyaltyPort,
+    LoyaltyTransaction,
+    PlayerValue,
+)
 from .payment import PaymentIntent, PaymentPort, PaymentResult, PaymentStatus
 from .push import Platform, PushNotification, PushPort, PushReceipt
+from .travel import GeoPoint, TrafficOutlook, TrafficWindow, TravelEstimate, TravelPort
 from .types import Money
+from .weather import DailyForecast, Forecast, WeatherPort
 
 __all__ = [
     "Money",
@@ -32,6 +40,15 @@ __all__ = [
     "LoyaltyAccount",
     "LoyaltyActivity",
     "LoyaltyTransaction",
+    "PlayerValue",
+    "WeatherPort",
+    "Forecast",
+    "DailyForecast",
+    "TravelPort",
+    "GeoPoint",
+    "TravelEstimate",
+    "TrafficWindow",
+    "TrafficOutlook",
     "CashlessPort",
     "CashlessTransaction",
     "ChatPort",

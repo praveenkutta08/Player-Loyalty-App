@@ -45,9 +45,17 @@ class Settings(BaseSettings):
     payment_provider: str | None = None
     push_provider: str | None = None
     chat_provider: str | None = None
+    # Concierge external context (P6.1): "mock" or "real" (Open-Meteo / OSRM, both keyless).
+    weather_provider: str | None = None
+    travel_provider: str | None = None
     # Mock adapter behaviour (0 = deterministic; raise in dev to exercise resilience).
     mock_latency_ms: int = 0
     mock_failure_rate: float = 0.0
+
+    # Cache (P6.1) — redis (docker-compose) with graceful degradation, or in-process memory.
+    cache_backend: str = "redis"
+    weather_cache_ttl_s: int = 1800  # 30 min
+    travel_cache_ttl_s: int = 300  # 5 min
 
     # Object storage (MinIO in dev)
     s3_endpoint: str = "http://localhost:9000"

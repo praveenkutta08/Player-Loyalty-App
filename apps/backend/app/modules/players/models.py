@@ -9,8 +9,10 @@ from __future__ import annotations
 import enum
 import uuid
 from datetime import datetime
+from typing import Any
 
 from sqlalchemy import Boolean, DateTime, String, UniqueConstraint
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PgUUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -49,6 +51,12 @@ class Player(TenantOwnedMixin, BaseModel):
     )
     # Explicit opt-in for location features (GOLDEN RULE #8 — consent).
     location_consent: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=False, server_default="false"
+    )
+    # Concierge (P6.1): stored home/origin for drive-time math — {"lat", "lng", "label"}.
+    # Requires its own explicit consent, separate from location_consent.
+    home_origin: Mapped[dict[str, Any] | None] = mapped_column(JSONB, nullable=True)
+    concierge_consent: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False, server_default="false"
     )
 
