@@ -94,6 +94,20 @@ export interface ManifestNavigation {
 }
 
 /**
+ * Concierge persona (P6.4) — tenant-configured in Concierge Studio; never hardcoded in the app
+ * (golden rule #5). The `concierge` feature flag gates the concierge UI; scoring weights and
+ * guardrails stay server-side.
+ */
+export interface ManifestConcierge {
+  /** Display name of the AI concierge, e.g. "Aria" (seed default) or the tenant's own. */
+  personaName: string;
+  /** Tone preset: e.g. "warm" | "professional" | "playful". */
+  tone: string;
+  /** Theme token key the concierge accent color resolves from (e.g. "gold", "primary"). */
+  accentToken: string;
+}
+
+/**
  * The full versioned tenant manifest served from `/config/manifest`. The `version` is bumped by
  * the CMS on every branding/flag/endpoint change so clients can cache-bust and re-hydrate.
  *
@@ -111,6 +125,8 @@ export interface TenantManifest {
   endpoints: ManifestEndpoints;
   /** Bottom-nav configuration (tabs, center action, globals). */
   navigation?: ManifestNavigation;
+  /** Concierge persona; present when the tenant has configured the concierge (P6.4). */
+  concierge?: ManifestConcierge;
   /** ISO 8601 timestamp of when this manifest version was published. */
   updatedAt: string;
 }

@@ -146,6 +146,17 @@ async def resolve_manifest(session: AsyncSession, tenant: Tenant) -> ManifestOut
     if active_theme is not None:
         updated_candidates.append(active_theme.updated_at)
 
+    # Concierge persona block (P6.4) — snake_case like the rest of the manifest; the app's
+    # normalizer camelCases it. Only the persona is public; weights/guardrails stay server-side.
+    concierge: dict[str, Any] | None = None
+    if config is not None and config.concierge:
+        persona = config.concierge.get("persona") or {}
+        concierge = {
+            "persona_name": persona.get("name", "Concierge"),
+            "tone": persona.get("tone", "warm"),
+            "accent_token": persona.get("accent_token", "gold"),
+        }
+
     return ManifestOut(
         version=version,
         tenant_id=tenant.id,
@@ -155,5 +166,6 @@ async def resolve_manifest(session: AsyncSession, tenant: Tenant) -> ManifestOut
         feature_flags=feature_flags,
         endpoints=endpoints,
         navigation=navigation,
+        concierge=concierge,
         updated_at=max(updated_candidates) if updated_candidates else None,
     )

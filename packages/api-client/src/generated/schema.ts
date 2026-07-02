@@ -1429,6 +1429,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/concierge/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview
+         * @description What-if brief for a seed player with candidate weights — no cache, no audit row.
+         */
+        post: operations["preview_api_v1_concierge_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/concierge/answers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Recent Answers
+         * @description Recent concierge answers for the tenant (the studio's audit view).
+         */
+        get: operations["recent_answers_api_v1_concierge_answers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/support/faq": {
         parameters: {
             query?: never;
@@ -1536,6 +1576,32 @@ export interface components {
              * Format: date-time
              */
             at: string;
+        };
+        /** AdminAnswerOut */
+        AdminAnswerOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Player Id
+             * Format: uuid
+             */
+            player_id: string;
+            /** Use Case */
+            use_case: string;
+            /** Verdict */
+            verdict: string;
+            /** Fit Score */
+            fit_score: number | null;
+            /** Tools Called */
+            tools_called: string[];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
         };
         /** AdminLoginRequest */
         AdminLoginRequest: {
@@ -2179,6 +2245,10 @@ export interface components {
             navigation: {
                 [key: string]: unknown;
             };
+            /** Concierge */
+            concierge?: {
+                [key: string]: unknown;
+            } | null;
             /** Updated At */
             updated_at: string | null;
         };
@@ -2417,6 +2487,18 @@ export interface components {
             /** Media Url */
             media_url: string;
         };
+        /**
+         * PreviewIn
+         * @description Admin what-if preview (P6.4): run the brief for a seed player with candidate weights.
+         */
+        PreviewIn: {
+            /** Weights */
+            weights?: {
+                [key: string]: number;
+            } | null;
+            /** Player Email */
+            player_email?: string | null;
+        };
         /** RankedOfferOut */
         RankedOfferOut: {
             /** Offer Id */
@@ -2606,6 +2688,10 @@ export interface components {
             navigation: {
                 [key: string]: unknown;
             };
+            /** Concierge */
+            concierge: {
+                [key: string]: unknown;
+            };
             /** Version */
             version: number;
         };
@@ -2626,6 +2712,10 @@ export interface components {
             } | null;
             /** Navigation */
             navigation?: {
+                [key: string]: unknown;
+            } | null;
+            /** Concierge */
+            concierge?: {
                 [key: string]: unknown;
             } | null;
         };
@@ -6494,6 +6584,74 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AnswerSummaryOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_api_v1_concierge_preview_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+                "X-Tenant"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PreviewIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConciergeEnvelope"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    recent_answers_api_v1_concierge_answers_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+                "X-Tenant"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminAnswerOut"][];
                 };
             };
             /** @description Validation Error */

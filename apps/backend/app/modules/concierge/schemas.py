@@ -81,3 +81,20 @@ class AnswerSummaryOut(BaseModel):
     use_case: str
     verdict: str
     created_at: datetime
+
+
+class PreviewIn(BaseModel):
+    """Admin what-if preview (P6.4): run the brief for a seed player with candidate weights."""
+
+    weights: dict[str, float] | None = None
+    player_email: str | None = None
+
+
+class AdminAnswerOut(BaseModel):
+    id: UUID
+    player_id: UUID
+    use_case: str
+    verdict: str
+    fit_score: int | None
+    tools_called: list[str]
+    created_at: datetime

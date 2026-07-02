@@ -282,20 +282,26 @@ async def run_use_case(
     use_case: str,
     *,
     params: dict[str, Any] | None = None,
+    weights_override: ScoreWeights | None = None,
+    record: bool = True,
 ) -> dict[str, Any]:
-    """Answer one use case end-to-end; returns the envelope as a plain dict (cache-friendly)."""
+    """Answer one use case end-to-end; returns the envelope as a plain dict (cache-friendly).
+
+    ``record=False`` = admin preview mode (P6.4): no answer cache, no audit row — a what-if
+    computation with ``weights_override`` applied, never a real player answer.
+    """
     params = params or {}
     now = datetime.now(UTC)
     settings = get_settings()
     config = await get_concierge_config(session, player.tenant_id)
-    weights = ScoreWeights.from_config(config.get("weights"))
+    weights = weights_override or ScoreWeights.from_config(config.get("weights"))
     guardrails = config.get("guardrails", {})
 
     # Answer cache: (player, use_case, context_hash), ~5 min.
     inputs_hash = _context_hash(player, use_case, params, now)
     cache = get_cache()
     cache_key = f"concierge:answer:{player.tenant_id}:{player.id}:{use_case}:{inputs_hash}"
-    if (cached := await cache.get(cache_key)) is not None:
+    if record and (cached := await cache.get(cache_key)) is not None:
         return dict(json.loads(cached))
 
     # GUARDRAIL 1 — responsible gaming: restricted players get a NEUTRAL answer. No fit score,
@@ -448,6 +454,9 @@ async def run_use_case(
             envelope["itinerary"] = _build_itinerary(
                 tool_results, offer_items, travel, now
             )
+
+    if not record:  # preview: no audit row, no cache write
+        return envelope
 
     # Audit (golden rule #8): append-only row with inputs hash, tools called, scores, output.
     session.add(

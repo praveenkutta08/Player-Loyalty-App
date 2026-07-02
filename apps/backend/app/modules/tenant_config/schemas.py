@@ -18,6 +18,7 @@ class TenantConfigOut(BaseModel):
     feature_flags: dict[str, Any]
     endpoints: dict[str, Any]
     navigation: dict[str, Any]
+    concierge: dict[str, Any]
     version: int
 
 
@@ -28,6 +29,7 @@ class TenantConfigUpdate(BaseModel):
     feature_flags: dict[str, bool] | None = None
     endpoints: dict[str, Any] | None = None
     navigation: dict[str, Any] | None = None
+    concierge: dict[str, Any] | None = None
 
 
 class ThemeOut(BaseModel):
@@ -69,4 +71,7 @@ class ManifestOut(BaseModel):
     feature_flags: dict[str, Any]
     endpoints: dict[str, Any]
     navigation: dict[str, Any]
+    # Concierge persona for the app (P6.4): {"persona_name", "tone", "accent_token"}.
+    # The `concierge` feature flag gates the UI; persona is config, never hardcoded (rule #5).
+    concierge: dict[str, Any] | None = None
     updated_at: datetime | None

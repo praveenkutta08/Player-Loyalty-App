@@ -102,6 +102,7 @@ export const API_TAG_TYPES = [
   'Device',
   'Manifest',
   'AuditLog',
+  'Concierge',
 ] as const;
 
 export const baseApi = createApi({

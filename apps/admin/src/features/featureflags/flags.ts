@@ -51,4 +51,11 @@ export const FLAGS: FlagDef[] = [
     tag: 'Support',
     rollout: 40,
   },
+  {
+    key: 'concierge',
+    name: 'AI Concierge',
+    description: 'Visit-fit brief, ranked For You offers, and Ask AI.',
+    tag: 'Engagement',
+    rollout: 25,
+  },
 ];
