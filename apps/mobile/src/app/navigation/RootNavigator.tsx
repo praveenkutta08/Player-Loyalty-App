@@ -4,6 +4,8 @@ import React, { useEffect } from 'react';
 
 import { buildConfig } from '../../config/buildConfig';
 import { AuthNavigator } from '../../features/auth/AuthNavigator';
+import { BiometricEnrollScreen } from '../../features/auth/screens/BiometricEnrollScreen';
+import { LockScreen } from '../../features/auth/screens/LockScreen';
 import { GeoBootstrap } from '../../features/geofencing/GeoBootstrap';
 import { MessageDetailScreen } from '../../features/notifications/MessageDetailScreen';
 import { NotificationCenterScreen } from '../../features/notifications/NotificationCenterScreen';
@@ -31,6 +33,7 @@ export function RootNavigator(): React.JSX.Element {
   const theme = useTheme();
   const { manifest } = useManifest();
   const status = useAppSelector((s) => s.auth.status);
+  const biometric = useAppSelector((s) => s.biometric);
   const dispatch = useAppDispatch();
 
   // Bridge native push handlers into the inbox store + deep-link routing (once authenticated).
@@ -54,6 +57,20 @@ export function RootNavigator(): React.JSX.Element {
 
   if (status === 'restoring') {
     return <BrandSplash title={manifest?.name ?? buildConfig.appName} />;
+  }
+
+  // Biometric gates (only once authenticated): lock a restored session, or offer enrollment after
+  // the first login. Both stand in front of the app entirely.
+  if (status === 'authenticated' && biometric.enabled && biometric.locked) {
+    return <LockScreen />;
+  }
+  if (
+    status === 'authenticated' &&
+    biometric.available &&
+    !biometric.enabled &&
+    !biometric.enrollDismissed
+  ) {
+    return <BiometricEnrollScreen />;
   }
 
   return (

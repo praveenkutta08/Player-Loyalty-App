@@ -1,4 +1,4 @@
-import { Bell, CalendarDays, Car, Gamepad2, KeyRound, MapPin, Palette } from 'lucide-react-native';
+import { Bell, CalendarDays, Car, Gamepad2, KeyRound, MapPin, Palette, ShieldCheck } from 'lucide-react-native';
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
@@ -72,6 +72,12 @@ export function MoreHomeScreen({ navigation }: Props): React.JSX.Element {
           Settings
         </ThemedText>
         <Card style={styles.card}>
+          <ListRow
+            icon={icon(ShieldCheck)}
+            title="Security"
+            subtitle="Biometric unlock & passcode"
+            onPress={() => navigation.navigate('Security')}
+          />
           <ListRow
             icon={icon(Bell)}
             title="Notifications"

@@ -14,4 +14,5 @@ export type MoreStackParamList = {
   Nearby: undefined;
   LocationConsent: undefined;
   Games: undefined;
+  Security: undefined;
 };

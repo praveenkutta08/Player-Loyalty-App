@@ -3,6 +3,7 @@ import { baseApi } from '@repo/api-client';
 import { useDispatch, useSelector } from 'react-redux';
 
 import authReducer from '../features/auth/authSlice';
+import biometricReducer from '../features/auth/biometricSlice';
 import favoritesReducer from '../features/games/favoritesSlice';
 import notificationsReducer from '../features/notifications/notificationsSlice';
 import prefsReducer from '../features/notifications/prefsSlice';
@@ -20,6 +21,7 @@ export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     auth: authReducer,
+    biometric: biometricReducer,
     redeemed: redeemedReducer,
     paymentMethods: paymentMethodsReducer,
     notifications: notificationsReducer,

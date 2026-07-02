@@ -11,6 +11,7 @@ import { ReservationBookScreen } from '../reservations/ReservationBookScreen';
 import { ReservationDetailScreen } from '../reservations/ReservationDetailScreen';
 import { ReservationsListScreen } from '../reservations/ReservationsListScreen';
 import { ValetScreen } from '../reservations/ValetScreen';
+import { SecuritySettingsScreen } from '../settings/SecuritySettingsScreen';
 import { ThemeSettingsScreen } from '../settings/ThemeSettingsScreen';
 
 import { MoreHomeScreen } from './MoreHomeScreen';
@@ -37,6 +38,7 @@ export function MoreNavigator(): React.JSX.Element {
       }}
     >
       <Stack.Screen name="MoreHome" component={MoreHomeScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Security" component={SecuritySettingsScreen} options={{ title: 'Security' }} />
       <Stack.Screen name="Appearance" component={ThemeSettingsScreen} options={{ title: 'Appearance' }} />
       <Stack.Screen
         name="Reservations"
