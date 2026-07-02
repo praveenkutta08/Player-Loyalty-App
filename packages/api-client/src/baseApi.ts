@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
 import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
 
 /**
@@ -51,13 +52,13 @@ const rawBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError
 ) =>
   fetchBaseQuery({
     baseUrl: apiBaseUrl,
-    // Headers typed structurally so the shared package needn't pull in the DOM lib.
-    prepareHeaders: (headers: { set: (name: string, value: string) => void }) => {
+    // Headers typed structurally (mutated in place, returns void) so the shared package needn't
+    // pull in the DOM lib for the global `Headers` type.
+    prepareHeaders: (headers: { set: (name: string, value: string) => void }): void => {
       const token = apiAuth.getAccessToken();
       if (token) headers.set('authorization', `Bearer ${token}`);
       const tenant = apiAuth.getActingTenant?.();
       if (tenant) headers.set('X-Tenant', tenant);
-      return headers;
     },
   })(args, api, extraOptions);
 
