@@ -73,13 +73,21 @@ class ToolSpec:
     description: str
     args_schema: dict[str, Any]  # JSON Schema — the MCP tool contract
     handler: ToolHandler
+    # DB-backed tools share the request's AsyncSession and must run sequentially; port-only
+    # tools (network-bound) are safe to gather in parallel. The orchestrator honours this.
+    uses_db: bool = False
 
 
 TOOLS: dict[str, ToolSpec] = {}
 
 
 def _register(
-    name: str, source: str, description: str, args_schema: dict[str, Any] | None = None
+    name: str,
+    source: str,
+    description: str,
+    args_schema: dict[str, Any] | None = None,
+    *,
+    uses_db: bool = False,
 ) -> Any:
     def decorator(handler: ToolHandler) -> ToolHandler:
         TOOLS[name] = ToolSpec(
@@ -89,6 +97,7 @@ def _register(
             args_schema=args_schema
             or {"type": "object", "properties": {}, "additionalProperties": False},
             handler=handler,
+            uses_db=uses_db,
         )
         return handler
 
@@ -199,7 +208,12 @@ async def _get_recent_activity(ctx: ToolContext, args: dict[str, Any]) -> dict[s
     }
 
 
-@_register("get_preferences", SOURCE_PLAYER, "Favorite property, dining, and experiences.")
+@_register(
+    "get_preferences",
+    SOURCE_PLAYER,
+    "Favorite property, dining, and experiences.",
+    uses_db=True,
+)
 async def _get_preferences(ctx: ToolContext, args: dict[str, Any]) -> dict[str, Any]:
     pref = (
         await ctx.session.execute(
@@ -226,6 +240,7 @@ async def _get_preferences(ctx: ToolContext, args: dict[str, Any]) -> dict[str, 
         "properties": {"limit": {"type": "integer"}},
         "additionalProperties": False,
     },
+    uses_db=True,
 )
 async def _list_trip_history(ctx: ToolContext, args: dict[str, Any]) -> dict[str, Any]:
     limit = int(args.get("limit", 10))
@@ -260,6 +275,7 @@ async def _list_trip_history(ctx: ToolContext, args: dict[str, Any]) -> dict[str
         },
         "additionalProperties": False,
     },
+    uses_db=True,
 )
 async def _list_offers(ctx: ToolContext, args: dict[str, Any]) -> dict[str, Any]:
     kind = str(args.get("kind", "offer"))
@@ -315,6 +331,7 @@ async def _weather_forecast(ctx: ToolContext, args: dict[str, Any]) -> dict[str,
     "list_nearby_properties",
     SOURCE_MAPS,
     "Tenant properties, with drive distance from the player's stored origin when consented.",
+    uses_db=True,
 )
 async def _list_nearby_properties(ctx: ToolContext, args: dict[str, Any]) -> dict[str, Any]:
     from ...adapters.travel_model import road_distance_km

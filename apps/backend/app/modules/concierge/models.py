@@ -1,8 +1,10 @@
-"""Concierge data model (P6.1): properties and player preferences.
+"""Concierge data model: properties + player preferences (P6.1) and the append-only
+``concierge_answers`` audit/metrics table (P6.3).
 
-Both tenant-owned (RLS). ``properties`` enables drive-time math and the later multi-property
-comparison; ``player_preferences`` feeds recommendation reasons ("your favorite steakhouse").
-The append-only ``concierge_answers`` audit table lands with the orchestrator (P6.3).
+All tenant-owned (RLS). ``properties`` enables drive-time math and the later multi-property
+comparison; ``player_preferences`` feeds recommendation reasons ("your favorite steakhouse");
+``concierge_answers`` records every AI answer (inputs hash, tools called, scores, output) —
+golden rule #8, and the eval dataset later.
 """
 
 from __future__ import annotations
@@ -10,7 +12,7 @@ from __future__ import annotations
 import uuid
 from typing import Any
 
-from sqlalchemy import Float, ForeignKey, String, UniqueConstraint
+from sqlalchemy import Float, ForeignKey, String, UniqueConstraint, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.dialects.postgresql import UUID as PgUUID
 from sqlalchemy.orm import Mapped, mapped_column
@@ -54,4 +56,23 @@ class PlayerPreference(TenantOwnedMixin, BaseModel):
     # Ordered list of experience tags, e.g. ["slots", "steakhouse", "shows"].
     favorite_experiences: Mapped[list[Any]] = mapped_column(
         JSONB, nullable=False, default=list, server_default="[]"
+    )
+
+
+class ConciergeAnswer(TenantOwnedMixin, BaseModel):
+    """Append-only record of every concierge answer (immutability enforced by DB trigger)."""
+
+    __tablename__ = "concierge_answers"
+
+    player_id: Mapped[uuid.UUID] = mapped_column(PgUUID(as_uuid=True), nullable=False, index=True)
+    use_case: Mapped[str] = mapped_column(String(20), nullable=False)  # brief|offers|plan|ask
+    inputs_hash: Mapped[str] = mapped_column(String(64), nullable=False)
+    tools_called: Mapped[list[Any]] = mapped_column(
+        JSONB, nullable=False, default=list, server_default="[]"
+    )
+    scores: Mapped[dict[str, Any]] = mapped_column(
+        JSONB, nullable=False, default=dict, server_default=text("'{}'::jsonb")
+    )
+    output: Mapped[dict[str, Any]] = mapped_column(
+        JSONB, nullable=False, default=dict, server_default=text("'{}'::jsonb")
     )

@@ -1332,6 +1332,103 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/concierge/brief": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Brief
+         * @description Use case 1 — 'Should I visit?' Home-hero payload.
+         */
+        get: operations["brief_api_v1_concierge_brief_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/concierge/offers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Ranked Offers
+         * @description Use case 2 — top 5–10 ranked offers, each with machine-readable why_you reasons.
+         */
+        get: operations["ranked_offers_api_v1_concierge_offers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/concierge/plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Plan Visit
+         * @description Use case 3 — deterministic itinerary (leave time, first stop, offer order, dinner).
+         */
+        post: operations["plan_visit_api_v1_concierge_plan_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/concierge/ask": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Ask
+         * @description Free-form question; answered from tool context, rendered as signal cards + sources.
+         */
+        post: operations["ask_api_v1_concierge_ask_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/concierge/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** History */
+        get: operations["history_api_v1_concierge_history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/support/faq": {
         parameters: {
             query?: never;
@@ -1468,6 +1565,28 @@ export interface components {
             /** Allowed Tenant Ids */
             allowed_tenant_ids: string[] | null;
         };
+        /** AnswerSummaryOut */
+        AnswerSummaryOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Use Case */
+            use_case: string;
+            /** Verdict */
+            verdict: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** AskIn */
+        AskIn: {
+            /** Question */
+            question: string;
+        };
         /** AuditLogOut */
         AuditLogOut: {
             /**
@@ -1556,6 +1675,100 @@ export interface components {
             /** Refused */
             refused: boolean;
         };
+        /**
+         * ConciergeEnvelope
+         * @description Uniform envelope for every concierge answer, so mobile renders one way.
+         */
+        ConciergeEnvelope: {
+            /** Use Case */
+            use_case: string;
+            /** Verdict */
+            verdict: string;
+            /** Fit Score */
+            fit_score?: number | null;
+            /** Confidence */
+            confidence: string;
+            /** Reasons */
+            reasons: components["schemas"]["ReasonOut"][];
+            /** Signals */
+            signals: components["schemas"]["SignalOut"][];
+            /** Sources */
+            sources: string[];
+            /** Degraded */
+            degraded: string[];
+            cta?: components["schemas"]["CtaOut"] | null;
+            /** Disclaimer */
+            disclaimer: string;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Cache Ttl S */
+            cache_ttl_s: number;
+        };
+        /** ConciergeOffersOut */
+        ConciergeOffersOut: {
+            /** Use Case */
+            use_case: string;
+            /** Verdict */
+            verdict: string;
+            /** Fit Score */
+            fit_score?: number | null;
+            /** Confidence */
+            confidence: string;
+            /** Reasons */
+            reasons: components["schemas"]["ReasonOut"][];
+            /** Signals */
+            signals: components["schemas"]["SignalOut"][];
+            /** Sources */
+            sources: string[];
+            /** Degraded */
+            degraded: string[];
+            cta?: components["schemas"]["CtaOut"] | null;
+            /** Disclaimer */
+            disclaimer: string;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Cache Ttl S */
+            cache_ttl_s: number;
+            /** Items */
+            items: components["schemas"]["RankedOfferOut"][];
+        };
+        /** ConciergePlanOut */
+        ConciergePlanOut: {
+            /** Use Case */
+            use_case: string;
+            /** Verdict */
+            verdict: string;
+            /** Fit Score */
+            fit_score?: number | null;
+            /** Confidence */
+            confidence: string;
+            /** Reasons */
+            reasons: components["schemas"]["ReasonOut"][];
+            /** Signals */
+            signals: components["schemas"]["SignalOut"][];
+            /** Sources */
+            sources: string[];
+            /** Degraded */
+            degraded: string[];
+            cta?: components["schemas"]["CtaOut"] | null;
+            /** Disclaimer */
+            disclaimer: string;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Cache Ttl S */
+            cache_ttl_s: number;
+            /** Itinerary */
+            itinerary: components["schemas"]["ItineraryStepOut"][];
+        };
         /** ConsentIn */
         ConsentIn: {
             /** Granted */
@@ -1631,6 +1844,13 @@ export interface components {
             /** Publish At */
             publish_at?: string | null;
             status?: components["schemas"]["ContentStatus"] | null;
+        };
+        /** CtaOut */
+        CtaOut: {
+            /** Label */
+            label: string;
+            /** Action */
+            action: string;
         };
         /** DeliveryOut */
         DeliveryOut: {
@@ -1895,6 +2115,15 @@ export interface components {
             /** Room */
             room: string;
         };
+        /** ItineraryStepOut */
+        ItineraryStepOut: {
+            /** Time */
+            time: string;
+            /** Title */
+            title: string;
+            /** Detail */
+            detail: string;
+        };
         /** KycOut */
         KycOut: {
             /** Kyc Status */
@@ -2112,6 +2341,11 @@ export interface components {
             terms?: string | null;
             status?: components["schemas"]["OfferStatus"] | null;
         };
+        /** PlanIn */
+        PlanIn: {
+            /** Date */
+            date?: string | null;
+        };
         /** PlayerLoginRequest */
         PlayerLoginRequest: {
             /**
@@ -2182,6 +2416,32 @@ export interface components {
             upload_url: string;
             /** Media Url */
             media_url: string;
+        };
+        /** RankedOfferOut */
+        RankedOfferOut: {
+            /** Offer Id */
+            offer_id: string;
+            /** Title */
+            title: string;
+            /** Kind */
+            kind: string;
+            /** Score */
+            score: number;
+            /** Rank */
+            rank: number;
+            /** Why You */
+            why_you: components["schemas"]["ReasonOut"][];
+        };
+        /** ReasonOut */
+        ReasonOut: {
+            /** Code */
+            code: string;
+            /** Chip */
+            chip: string;
+            /** Detail */
+            detail: string;
+            /** Source */
+            source: string;
         };
         /** RefreshRequest */
         RefreshRequest: {
@@ -2308,6 +2568,17 @@ export interface components {
             delivered: number;
             /** Total */
             total: number;
+        };
+        /** SignalOut */
+        SignalOut: {
+            /** Label */
+            label: string;
+            /** Value */
+            value: string;
+            /** Delta */
+            delta?: string | null;
+            /** Source */
+            source: string;
         };
         /** TenantConfigOut */
         TenantConfigOut: {
@@ -6058,6 +6329,171 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["app__modules__rewards__schemas__RedemptionOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    brief_api_v1_concierge_brief_get: {
+        parameters: {
+            query?: {
+                horizon?: "today" | "weekend";
+            };
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConciergeEnvelope"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    ranked_offers_api_v1_concierge_offers_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConciergeOffersOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    plan_visit_api_v1_concierge_plan_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlanIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConciergePlanOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    ask_api_v1_concierge_ask_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AskIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConciergeEnvelope"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    history_api_v1_concierge_history_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AnswerSummaryOut"][];
                 };
             };
             /** @description Validation Error */

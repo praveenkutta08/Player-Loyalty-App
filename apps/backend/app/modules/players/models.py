@@ -59,6 +59,9 @@ class Player(TenantOwnedMixin, BaseModel):
     concierge_consent: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False, server_default="false"
     )
+    # Responsible gaming flags (P6.3): {"self_exclusion": bool, "cool_off_until": iso,
+    # "limits": {...}}. Any active flag → NO proactive visit nudges (neutral concierge).
+    rg_flags: Mapped[dict[str, Any] | None] = mapped_column(JSONB, nullable=True)
 
 
 class Device(TenantOwnedMixin, BaseModel):

@@ -17,6 +17,7 @@ from ..ports import (
     DigitalKeyPort,
     GeoPort,
     KycPort,
+    LlmPort,
     LoyaltyPort,
     PaymentPort,
     PushPort,
@@ -30,11 +31,13 @@ from .mock.chat import MockChatAdapter
 from .mock.digital_key import MockDigitalKeyAdapter
 from .mock.geo import MockGeoAdapter
 from .mock.kyc import MockKycAdapter
+from .mock.llm import MockLlmAdapter
 from .mock.loyalty import MockLoyaltyAdapter
 from .mock.payment import MockPaymentAdapter
 from .mock.push import MockPushAdapter
 from .mock.travel import MockTravelAdapter
 from .mock.weather import MockWeatherAdapter
+from .real.llm import AnthropicLlmAdapter
 from .real.travel import OsrmTravelAdapter
 from .real.weather import OpenMeteoWeatherAdapter
 
@@ -146,3 +149,14 @@ def get_travel_port() -> TravelPort:
             f"No {provider!r} adapter for 'travel' port ('mock' and 'real' are available)"
         )
     return CachingTravelAdapter(inner, cache=get_cache(), ttl_s=settings.travel_cache_ttl_s)
+
+
+@lru_cache
+def get_llm_port() -> LlmPort:
+    """Concierge narration LLM; ``real`` = Claude (needs ANTHROPIC_API_KEY)."""
+    provider = _resolve("llm", get_settings().llm_provider)
+    if provider == "mock":
+        return MockLlmAdapter()
+    if provider in {"real", "anthropic", "claude", "live", "sandbox"}:
+        return AnthropicLlmAdapter()
+    raise AdapterError(f"No {provider!r} adapter for 'llm' port ('mock' and 'real' are available)")

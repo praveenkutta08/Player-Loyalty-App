@@ -48,6 +48,10 @@ class Settings(BaseSettings):
     # Concierge external context (P6.1): "mock" or "real" (Open-Meteo / OSRM, both keyless).
     weather_provider: str | None = None
     travel_provider: str | None = None
+    # Concierge narration (P6.3): "mock" = scripted (offline demo), "real" = Claude by env.
+    llm_provider: str | None = None
+    anthropic_api_key: str | None = None
+    llm_model: str = "claude-sonnet-5"
     # Mock adapter behaviour (0 = deterministic; raise in dev to exercise resilience).
     mock_latency_ms: int = 0
     mock_failure_rate: float = 0.0
@@ -56,6 +60,7 @@ class Settings(BaseSettings):
     cache_backend: str = "redis"
     weather_cache_ttl_s: int = 1800  # 30 min
     travel_cache_ttl_s: int = 300  # 5 min
+    concierge_answer_cache_ttl_s: int = 300  # 5 min per (player, use_case, context_hash)
 
     # Object storage (MinIO in dev)
     s3_endpoint: str = "http://localhost:9000"

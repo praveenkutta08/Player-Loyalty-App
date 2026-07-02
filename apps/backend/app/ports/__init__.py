@@ -16,6 +16,7 @@ from .errors import (
 )
 from .geo import GeoPort, JurisdictionResult
 from .kyc import KycPort, KycSession, KycStatus
+from .llm import LlmCompletion, LlmMessage, LlmPort
 from .loyalty import (
     LoyaltyAccount,
     LoyaltyActivity,
@@ -49,6 +50,9 @@ __all__ = [
     "TravelEstimate",
     "TrafficWindow",
     "TrafficOutlook",
+    "LlmPort",
+    "LlmMessage",
+    "LlmCompletion",
     "CashlessPort",
     "CashlessTransaction",
     "ChatPort",
