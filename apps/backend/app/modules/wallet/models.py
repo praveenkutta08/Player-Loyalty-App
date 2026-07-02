@@ -24,6 +24,9 @@ class WalletTxnType(enum.StrEnum):
 
 
 class WalletTxnStatus(enum.StrEnum):
+    # pending rows are inserted (and committed) BEFORE the external cashless call; the only
+    # mutation the append-only trigger allows is the pending -> completed/failed settlement.
+    pending = "pending"
     completed = "completed"
     failed = "failed"
 
