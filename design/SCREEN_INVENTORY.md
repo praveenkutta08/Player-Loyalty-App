@@ -122,3 +122,21 @@ tenants get a tailored subset without a rebuild.
 
 ## Counts
 64 screens/states: Auth 9 · Home 3 · Offers 6 · Scan/Play 10 · Account 15 · More 13 · Global 8.
+
+---
+
+## X. AI Concierge additions (Phase 6 — appended 2026-07-02, no renumbering)
+Embedded in Option B per `docs/AI_CONCIERGE_INTEGRATION.md` §6; all gated by flag `concierge`.
+![Concierge architecture](concierge_architecture.png)
+
+| ID | Screen/state | Purpose & key elements | MVP | Builds in |
+|----|--------------|------------------------|-----|-----------|
+| X1 | Home concierge hero (H1 variant) | Visit-fit verdict + score + why-you chips + CTA; context strip (weather · drive · traffic); prefetched, no spinner; small-type advisory disclaimer | [real, LLM mock] | P6.5, P6.6 |
+| X2 | Plan my visit sheet | Bottom-sheet itinerary: leave time, first stop, offer order, dinner; deep-links into existing flows | [real, LLM mock] | P6.6 |
+| X3 | Offers ▸ For You | Ranked offers with WhyYouPill; full list one segment away | [real] | P6.6 |
+| X4 | Ask AI | Concierge Q&A from Home hero + global entry (NOT a tab); AIAnswerCard = headline + signal grid + source chips + follow-ups | [real, LLM mock] | P6.6 |
+| X5 | Concierge consent prompt | Explicit opt-in for stored home origin (travel math); graceful degrade on decline | [real] | P6.6 |
+| X6 | RG-neutral Home fallback | RG-flagged players / flag off → static recommendations, zero visit nudges | [real] | P6.6 |
+
+Flows: **Should I visit** A1 → X1 → X2 → O2. **Ask** X1 → X4 → (CTA) X2/O2. Support (M7/M8)
+remains a separate surface.

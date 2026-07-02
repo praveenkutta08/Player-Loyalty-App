@@ -2,6 +2,10 @@
 
 > Anchor document for Claude Code. Read this **first** and obey it in every prompt.
 > Full product/architecture reference: `docs/Casino_Player_App_MVP_Analysis.docx` (keep a copy in the repo root if useful).
+> AI Concierge (playbook Phase 6, P6.1–P6.7): read `docs/AI_CONCIERGE_INTEGRATION.md` before any
+> P6.x prompt. Concierge is additive — deterministic scoring + MCP-shaped tools behind ports
+> (WeatherPort/TravelPort/LlmPort); LLM narrates only; RG guardrails + consent + audit mandatory;
+> persona/branding is tenant manifest config (never hardcoded). Support chat (P2.13) stays separate.
 
 ## What we are building
 A white-label, multi-tenant platform. Casino operators (**tenants**) ship a fully branded

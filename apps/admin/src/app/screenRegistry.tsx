@@ -7,6 +7,7 @@ import { ContentScreen } from '@/features/content/ContentScreen';
 import { FeatureFlagsScreen } from '@/features/featureflags/FeatureFlagsScreen';
 import { GamesScreen } from '@/features/games/GamesScreen';
 import { GeofencingScreen } from '@/features/geofencing/GeofencingScreen';
+import { MediaLibraryScreen } from '@/features/media/MediaLibraryScreen';
 import { NotificationsScreen } from '@/features/notifications/NotificationsScreen';
 import { OffersScreen } from '@/features/offers/OffersScreen';
 import { DiningScreen } from '@/features/operations/DiningScreen';
@@ -29,6 +30,7 @@ export const SCREEN_REGISTRY: Record<string, ComponentType> = {
   '/homepage': HomepageBuilder,
   '/navigation': NavigationBuilder,
   '/content': ContentScreen,
+  '/media': MediaLibraryScreen,
   '/feature-flags': FeatureFlagsScreen,
   '/geofencing': GeofencingScreen,
   '/notifications': NotificationsScreen,
