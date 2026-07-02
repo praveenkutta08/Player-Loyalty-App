@@ -3,6 +3,7 @@ import { baseApi } from '@repo/api-client';
 import { useDispatch, useSelector } from 'react-redux';
 
 import authReducer from '../features/auth/authSlice';
+import favoritesReducer from '../features/games/favoritesSlice';
 import notificationsReducer from '../features/notifications/notificationsSlice';
 import prefsReducer from '../features/notifications/prefsSlice';
 import redeemedReducer from '../features/offers/redeemedSlice';
@@ -23,6 +24,7 @@ export const store = configureStore({
     paymentMethods: paymentMethodsReducer,
     notifications: notificationsReducer,
     notificationPrefs: prefsReducer,
+    gameFavorites: favoritesReducer,
   },
   middleware: (getDefault) => getDefault().concat(baseApi.middleware),
 });

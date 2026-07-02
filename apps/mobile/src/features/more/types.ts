@@ -13,4 +13,5 @@ export type MoreStackParamList = {
   NotificationPreferences: undefined;
   Nearby: undefined;
   LocationConsent: undefined;
+  Games: undefined;
 };

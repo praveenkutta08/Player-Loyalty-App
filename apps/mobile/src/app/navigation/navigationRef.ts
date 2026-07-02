@@ -35,3 +35,12 @@ export function navigateToTarget(target: DeepLinkTarget): void {
       nav('Main', { screen: 'Home' });
   }
 }
+
+/** Jump to the Scan/Play tab (cardless pairing entry) — used by a game's Play Now (P4.6/P4.11). */
+export function navigateToScanPlay(): void {
+  if (!navigationRef.isReady()) return;
+  (navigationRef.navigate as (name: string, params?: unknown) => void)('Main', {
+    screen: 'Play',
+    params: { screen: 'ScanPlay' },
+  });
+}

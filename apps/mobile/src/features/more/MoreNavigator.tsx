@@ -3,6 +3,7 @@ import React from 'react';
 
 import { useTheme } from '../../theme/ThemeProvider';
 import { DigitalKeyScreen } from '../digitalkey/DigitalKeyScreen';
+import { GamesNavigator } from '../games/GamesNavigator';
 import { LocationConsentScreen } from '../geofencing/LocationConsentScreen';
 import { NearbyScreen } from '../geofencing/NearbyScreen';
 import { NotificationPreferencesScreen } from '../notifications/NotificationPreferencesScreen';
@@ -59,6 +60,7 @@ export function MoreNavigator(): React.JSX.Element {
         component={NotificationPreferencesScreen}
         options={{ title: 'Notifications' }}
       />
+      <Stack.Screen name="Games" component={GamesNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="Nearby" component={NearbyScreen} options={{ title: 'Nearby' }} />
       <Stack.Screen
         name="LocationConsent"

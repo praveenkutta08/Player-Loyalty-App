@@ -1,4 +1,4 @@
-import { Bell, CalendarDays, Car, KeyRound, MapPin, Palette } from 'lucide-react-native';
+import { Bell, CalendarDays, Car, Gamepad2, KeyRound, MapPin, Palette } from 'lucide-react-native';
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
@@ -17,6 +17,7 @@ export function MoreHomeScreen({ navigation }: Props): React.JSX.Element {
   const reservations = useFeature('reservations');
   const valet = useFeature('valet');
   const digitalKey = useFeature('digitalKey');
+  const games = useFeature('games');
   const icon = (I: typeof CalendarDays) => <I size={20} color={theme.colors.text.secondary} />;
 
   return (
@@ -51,6 +52,14 @@ export function MoreHomeScreen({ navigation }: Props): React.JSX.Element {
                   onPress={() => navigation.navigate('DigitalKey')}
                 />
               ) : null}
+          {games ? (
+            <ListRow
+              icon={icon(Gamepad2)}
+              title="Games"
+              subtitle="Catalog, jackpots & leaderboard"
+              onPress={() => navigation.navigate('Games')}
+            />
+          ) : null}
           <ListRow
             icon={icon(MapPin)}
             title="Nearby"
