@@ -14,6 +14,7 @@ import { ReservationsScreen } from '@/features/operations/ReservationsScreen';
 import { ValetScreen } from '@/features/operations/ValetScreen';
 import { PromotionsScreen } from '@/features/promotions/PromotionsScreen';
 import { RewardsScreen } from '@/features/rewards/RewardsScreen';
+import { SupportScreen } from '@/features/support/SupportScreen';
 import { ThemeScreen } from '@/features/theme/ThemeScreen';
 import { UsersRolesScreen } from '@/features/users/UsersRolesScreen';
 
@@ -31,6 +32,7 @@ export const SCREEN_REGISTRY: Record<string, ComponentType> = {
   '/promotions': PromotionsScreen,
   '/rewards': RewardsScreen,
   '/games': GamesScreen,
+  '/support': SupportScreen,
   '/hotel': HotelScreen,
   '/dining': DiningScreen,
   '/entertainment': EntertainmentScreen,
