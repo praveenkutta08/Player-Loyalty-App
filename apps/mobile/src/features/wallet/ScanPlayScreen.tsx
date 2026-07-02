@@ -15,12 +15,12 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 type Props = NativeStackScreenProps<WalletStackParamList, 'ScanPlay'>;
 
 /**
- * S1 — Scan/Play entry. With the `cashless` flag on, the player pairs to a machine over BLE or by
+ * S1 — Scan/Play entry. With the `cardless` flag on, the player pairs to a machine over BLE or by
  * QR; with it off we fall back to the Wallet only (no cardless play for that tenant).
  */
 export function ScanPlayScreen({ navigation }: Props): React.JSX.Element {
   const theme = useTheme();
-  const cashless = useFeature('cashless');
+  const cashless = useFeature('cardless');
   const wallet = useGetWalletQuery();
   const balance = wallet.data?.balance_cents ?? 0;
 

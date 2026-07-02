@@ -69,7 +69,14 @@ async def seed() -> dict[str, Any]:
             TenantConfig,
             {
                 "api_base_url": "http://localhost:8000/api/v1",
-                "feature_flags": {"cardless": True, "digital_key": True, "geofencing": True},
+                "feature_flags": {
+                    "cardless": True,
+                    "digital_key": True,
+                    "geofencing": True,
+                    "games": True,
+                    "reservations": True,
+                    "valet": True,
+                },
             },
             tenant_id=tenant.id,
         )
@@ -86,8 +93,12 @@ async def seed() -> dict[str, Any]:
         await _seed_admin(
             session, tenant.id, "accountmgr@demo-casino.com", "account_manager", scoped=True
         )
-        await _seed_admin(session, tenant.id, "tenantadmin@demo-casino.com", "tenant_admin", scoped=True)
-        await _seed_admin(session, tenant.id, "marketer@demo-casino.com", "marketer_editor", scoped=True)
+        await _seed_admin(
+            session, tenant.id, "tenantadmin@demo-casino.com", "tenant_admin", scoped=True
+        )
+        await _seed_admin(
+            session, tenant.id, "marketer@demo-casino.com", "marketer_editor", scoped=True
+        )
 
         players = {}
         for email, segment in [

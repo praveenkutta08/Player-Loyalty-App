@@ -27,7 +27,7 @@ export function MoreHomeScreen({ navigation }: Props): React.JSX.Element {
   const theme = useTheme();
   const reservations = useFeature('reservations');
   const valet = useFeature('valet');
-  const digitalKey = useFeature('digitalKey');
+  const digitalKey = useFeature('digital_key');
   const games = useFeature('games');
   const { manifest } = useManifest();
   const showSupport = manifest?.navigation?.globals?.showSupport !== false;
