@@ -3,6 +3,7 @@ import type { ComponentType } from 'react';
 import { HomepageBuilder } from '@/features/builder/HomepageBuilder';
 import { NavigationBuilder } from '@/features/builder/NavigationBuilder';
 import { CasinosScreen } from '@/features/casinos/CasinosScreen';
+import { ComplianceScreen } from '@/features/compliance/ComplianceScreen';
 import { ContentScreen } from '@/features/content/ContentScreen';
 import { FeatureFlagsScreen } from '@/features/featureflags/FeatureFlagsScreen';
 import { GamesScreen } from '@/features/games/GamesScreen';
@@ -43,6 +44,7 @@ export const SCREEN_REGISTRY: Record<string, ComponentType> = {
   '/games': GamesScreen,
   '/support': SupportScreen,
   '/members': MembersScreen,
+  '/compliance': ComplianceScreen,
   '/hotel': HotelScreen,
   '/dining': DiningScreen,
   '/entertainment': EntertainmentScreen,
