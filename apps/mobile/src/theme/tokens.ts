@@ -1,0 +1,141 @@
+import type { ThemeTokens } from '@repo/shared-types';
+
+/**
+ * Default (white-label baseline) design tokens — a TS mirror of `design/tokens.json`, shared by
+ * name with the admin console and the tenant manifest schema (GOLDEN RULE #5). The app ships NO
+ * brand values of its own: at runtime the manifest's `theme` replaces these (see P4.2). These
+ * defaults are only used before the manifest resolves (splash) and as a safety fallback.
+ */
+export const DEFAULT_THEME: ThemeTokens = {
+  color: {
+    brand: {
+      primary: '#E7DFCD',
+      onPrimary: '#0C0C0E',
+      secondary: '#E6B450',
+      accent: '#E6B450',
+      gold: '#E6B450',
+      onGold: '#1A1408',
+    },
+    bg: {
+      base: '#0e0f13',
+      surface: '#16181d',
+      elevated: '#1b1e23',
+      sidebar: '#0a0b0e',
+      scrim: 'rgba(0,0,0,0.60)',
+    },
+    text: {
+      primary: '#f2f3f5',
+      secondary: '#c7ccd3',
+      muted: '#8b929c',
+      faint: '#5c636e',
+      inverse: '#1A1408',
+    },
+    state: {
+      success: '#5cc48f',
+      warning: '#E6B450',
+      error: '#e5736b',
+      info: '#6aa6e8',
+      purple: '#b08ae0',
+    },
+    border: {
+      default: '#23262d',
+      soft: '#1b1e24',
+      strong: '#2c3039',
+      focus: '#E6B450',
+    },
+  },
+  colorLight: {
+    brand: {
+      primary: '#E6B450',
+      onPrimary: '#1A1408',
+      secondary: '#9a6c15',
+      accent: '#9a6c15',
+      gold: '#E6B450',
+      onGold: '#1A1408',
+    },
+    bg: {
+      base: '#f5f4f0',
+      surface: '#ffffff',
+      elevated: '#faf9f5',
+      sidebar: '#fbfaf7',
+      scrim: 'rgba(20,22,28,0.40)',
+    },
+    text: {
+      primary: '#1a1c20',
+      secondary: '#454a52',
+      muted: '#767c85',
+      faint: '#a3a8b0',
+      inverse: '#ffffff',
+    },
+    state: {
+      success: '#1f9d5f',
+      warning: '#9a6c15',
+      error: '#d64d43',
+      info: '#2f74c8',
+      purple: '#7c4fd0',
+    },
+    border: {
+      default: '#e5e2da',
+      soft: '#edeae2',
+      strong: '#d9d5cb',
+      focus: '#9a6c15',
+    },
+  },
+  typography: {
+    fontFamily: { display: 'Bodoni Moda', sans: 'Manrope', mono: 'JetBrains Mono' },
+    scale: {
+      display: { font: 'display', size: 32, lineHeight: 40, weight: 500 },
+      h1: { font: 'display', size: 26, lineHeight: 32, weight: 600 },
+      h2: { font: 'display', size: 20, lineHeight: 26, weight: 600 },
+      title: { font: 'sans', size: 15, lineHeight: 22, weight: 700 },
+      body: { font: 'sans', size: 13, lineHeight: 20, weight: 400 },
+      label: {
+        font: 'sans',
+        size: 11,
+        lineHeight: 14,
+        weight: 600,
+        uppercase: true,
+        letterSpacing: '0.05em',
+      },
+      kicker: {
+        font: 'sans',
+        size: 10.5,
+        lineHeight: 13,
+        weight: 600,
+        uppercase: true,
+        letterSpacing: '0.16em',
+      },
+      mono: { font: 'mono', size: 12.5, lineHeight: 18, weight: 500 },
+    },
+  },
+  radius: { control: 9, card: 15, pill: 20, sm: 8, md: 14, lg: 20, xl: 28 },
+  spacing: { xs: 4, sm: 8, md: 16, lg: 24, xl: 32, '2xl': 48 },
+  shadow: {
+    sm: '0 1px 2px rgba(0,0,0,0.50)',
+    md: '0 8px 24px rgba(0,0,0,0.45)',
+    cardLight: '0 1px 2px rgba(20,22,28,.05), 0 1px 3px rgba(20,22,28,.05)',
+    goldGlow: '0 0 0 1px rgba(230,180,80,0.35)',
+  },
+  components: {
+    buttonPrimary: { bg: 'brand.gold', fg: 'brand.onGold', radius: 'pill', height: 40 },
+    buttonSecondary: {
+      bg: 'transparent',
+      fg: 'text.primary',
+      border: 'border.strong',
+      radius: 'control',
+      height: 36,
+    },
+    card: { bg: 'bg.surface', border: 'border.default', radius: 'card', shadow: 'sm' },
+    input: { bg: 'bg.surface', border: 'border.default', radius: 'control', placeholder: 'text.muted' },
+    statusPill: { radius: 'pill', dot: true },
+    toggle: {
+      onTrack: 'brand.gold',
+      onKnob: 'brand.onGold',
+      offTrack: 'border.soft',
+      offKnob: 'text.faint',
+    },
+  },
+};
+
+/** Theme color scheme selector. Dark is the design default. */
+export type ColorScheme = 'dark' | 'light';

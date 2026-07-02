@@ -1,0 +1,9 @@
+// Monorepo (pnpm + hoisted node_modules): the React Native Gradle plugin lives in the WORKSPACE
+// ROOT node_modules. From this settings dir (apps/mobile/android) that is ../../../node_modules
+// (the stock template assumes ../node_modules). String paths are resolved against the settings dir.
+pluginManagement { includeBuild("../../../node_modules/@react-native/gradle-plugin") }
+plugins { id("com.facebook.react.settings") }
+extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autolinkLibrariesFromCommand() }
+rootProject.name = 'mobile'
+include ':app'
+includeBuild("../../../node_modules/@react-native/gradle-plugin")
