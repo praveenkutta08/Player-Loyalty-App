@@ -6,6 +6,11 @@ import { FeatureFlagsScreen } from '@/features/featureflags/FeatureFlagsScreen';
 import { GeofencingScreen } from '@/features/geofencing/GeofencingScreen';
 import { NotificationsScreen } from '@/features/notifications/NotificationsScreen';
 import { OffersScreen } from '@/features/offers/OffersScreen';
+import { DiningScreen } from '@/features/operations/DiningScreen';
+import { EntertainmentScreen } from '@/features/operations/EntertainmentScreen';
+import { HotelScreen } from '@/features/operations/HotelScreen';
+import { ReservationsScreen } from '@/features/operations/ReservationsScreen';
+import { ValetScreen } from '@/features/operations/ValetScreen';
 import { PromotionsScreen } from '@/features/promotions/PromotionsScreen';
 import { ThemeScreen } from '@/features/theme/ThemeScreen';
 import { UsersRolesScreen } from '@/features/users/UsersRolesScreen';
@@ -22,7 +27,12 @@ export const SCREEN_REGISTRY: Record<string, ComponentType> = {
   '/notifications': NotificationsScreen,
   '/offers': OffersScreen,
   '/promotions': PromotionsScreen,
+  '/hotel': HotelScreen,
+  '/dining': DiningScreen,
+  '/entertainment': EntertainmentScreen,
+  '/valet': ValetScreen,
+  '/reservations': ReservationsScreen,
   '/theme': ThemeScreen,
   '/users': UsersRolesScreen,
-  // Remaining paths populated by P3.7–P3.19.
+  // Remaining paths populated by P3.10–P3.19.
 };
