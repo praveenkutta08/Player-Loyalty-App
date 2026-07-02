@@ -8,7 +8,7 @@
  *
  * @format
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -23,6 +23,7 @@ import { OfflineBanner } from './src/components/OfflineBanner';
 import { buildConfig } from './src/config/buildConfig';
 import { AuthProvider } from './src/features/auth/AuthProvider';
 import { BrandSplash } from './src/features/splash/BrandSplash';
+import { Splash } from './src/features/splash/Splash';
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
 import { DEFAULT_THEME } from './src/theme/tokens';
 
@@ -58,8 +59,34 @@ function ThemedRoot(): React.JSX.Element {
             <RootNavigator />
           </AuthProvider>
         )}
+        <AnimatedSplashGate />
       </FeatureProvider>
     </ThemeProvider>
+  );
+}
+
+// Plays ONCE per cold start (module flag survives re-renders/hot navigation, resets with the
+// process — the handoff's "no loops, no replay" rule).
+let splashPlayedThisLaunch = false;
+
+/**
+ * P7.3 — the manifest-driven animated splash, overlaid above the whole app on cold start. It
+ * never blocks on network: config comes from the cached manifest (or bundled silk defaults),
+ * and manifest/session/Home prefetch continue underneath while the timeline plays.
+ */
+function AnimatedSplashGate(): React.JSX.Element | null {
+  const { manifest } = useManifest();
+  const [visible, setVisible] = useState(!splashPlayedThisLaunch);
+  if (!visible) return null;
+  return (
+    <Splash
+      splash={manifest?.splash}
+      brandName={manifest?.name ?? buildConfig.appName}
+      onDone={() => {
+        splashPlayedThisLaunch = true;
+        setVisible(false);
+      }}
+    />
   );
 }
 

@@ -14,6 +14,7 @@ import { ReservationsListScreen } from '../reservations/ReservationsListScreen';
 import { ValetScreen } from '../reservations/ValetScreen';
 import { SecuritySettingsScreen } from '../settings/SecuritySettingsScreen';
 import { ThemeSettingsScreen } from '../settings/ThemeSettingsScreen';
+import { SplashGalleryScreen } from '../splash/SplashGalleryScreen';
 import { SupportChatScreen } from '../support/SupportChatScreen';
 
 import { MoreHomeScreen } from './MoreHomeScreen';
@@ -55,6 +56,11 @@ export function MoreNavigator(): React.JSX.Element {
         name="ConciergeKit"
         component={KitGalleryScreen}
         options={{ title: 'Concierge kit' }}
+      />
+      <Stack.Screen
+        name="SplashGallery"
+        component={SplashGalleryScreen}
+        options={{ title: 'Splash variants' }}
       />
       <Stack.Screen
         name="Reservations"

@@ -26,6 +26,8 @@ export interface ResolvedManifest {
   navigation?: ManifestNavigation;
   /** Concierge persona (P6.5); the `concierge` feature flag gates the UI. */
   concierge?: ManifestConcierge;
+  /** Raw manifest `splash` block (P7.3) — consumed by resolveSplashConfig (snake_case kept). */
+  splash?: Record<string, unknown>;
   apiBaseUrl: string;
   etag?: string;
   updatedAt?: string;
@@ -108,6 +110,7 @@ export function normalizeManifest(raw: ManifestOut, etag?: string): ResolvedMani
     featureFlags: coerceFlags(raw.feature_flags as Record<string, unknown>),
     navigation: normalizeNavigation(raw.navigation as Record<string, unknown>),
     concierge: normalizeConcierge(raw.concierge as Record<string, unknown> | null | undefined),
+    splash: (raw.splash as Record<string, unknown> | undefined) ?? undefined,
     apiBaseUrl: resolveApiBaseUrl(endpoints.api_base_url),
     etag,
     updatedAt: raw.updated_at ?? undefined,

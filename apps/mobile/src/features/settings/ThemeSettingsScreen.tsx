@@ -90,6 +90,11 @@ export function ThemeSettingsScreen(): React.JSX.Element {
                 subtitle="All components × states (dev only)"
                 onPress={() => navigation.navigate('ConciergeKit')}
               />
+              <ListRow
+                title="Splash variants"
+                subtitle="4 timelines × reduced-motion × member states (dev only)"
+                onPress={() => navigation.navigate('SplashGallery')}
+              />
             </Card>
           </>
         ) : null}

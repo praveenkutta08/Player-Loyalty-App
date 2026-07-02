@@ -18,4 +18,6 @@ export type MoreStackParamList = {
   Support: undefined;
   /** Dev-only concierge kit gallery (P6.5); the row is __DEV__-gated in Appearance. */
   ConciergeKit: undefined;
+  /** Dev-only splash variant gallery (P7.3); __DEV__-gated in Appearance. */
+  SplashGallery: undefined;
 };
