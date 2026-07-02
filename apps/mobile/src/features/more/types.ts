@@ -15,4 +15,5 @@ export type MoreStackParamList = {
   LocationConsent: undefined;
   Games: undefined;
   Security: undefined;
+  Support: undefined;
 };

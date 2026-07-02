@@ -1,44 +1,35 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Gift, Home, Menu, ScanLine, User } from 'lucide-react-native';
 import React from 'react';
 
 import { buildConfig } from '../../config/buildConfig';
-import { AccountNavigator } from '../../features/account/AccountNavigator';
-import { HomeScreen } from '../../features/home/HomeScreen';
-import { MoreNavigator } from '../../features/more/MoreNavigator';
-import { OffersNavigator } from '../../features/offers/OffersNavigator';
-import { WalletNavigator } from '../../features/wallet/WalletNavigator';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useManifest } from '../manifest/ManifestProvider';
+import { useFeatures } from '../providers/FeatureProvider';
 
+import { resolveTabs } from './navConfig';
 import { navigationRef } from './navigationRef';
 import { TopBar } from './TopBar';
 
 import type { MainTabParamList } from './types';
-import type { LucideIcon } from 'lucide-react-native';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
-const ICONS: Record<keyof MainTabParamList, LucideIcon> = {
-  Home,
-  Offers: Gift,
-  Play: ScanLine,
-  Account: User,
-  More: Menu,
-};
-
 /**
- * Bottom tab shell (G1) — Option B: Home · Offers · center Scan/Play · Account · More. Static here;
- * P4.14 makes the tab set, labels, and center action fully manifest-`navigation`-driven.
+ * Bottom tab shell (G1) — config-driven (P4.14). The tab set, labels (localized in the manifest),
+ * icons, per-tab feature gating, and the emphasized center action all come from the manifest
+ * `navigation` block (falling back to Option B when absent). Globals toggle the TopBar bell/search.
  */
 export function MainTabs(): React.JSX.Element {
   const theme = useTheme();
   const { manifest } = useManifest();
+  const { isEnabled } = useFeatures();
   const title = manifest?.name ?? buildConfig.appName;
   const globals = manifest?.navigation?.globals;
+  const tabs = resolveTabs(manifest?.navigation, isEnabled);
+
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={{
         header: () => (
           <TopBar
             title={title}
@@ -54,32 +45,28 @@ export function MainTabs(): React.JSX.Element {
           borderTopColor: theme.colors.border.soft,
         },
         tabBarLabelStyle: { fontFamily: theme.fontFamily.sans, fontSize: 10 },
-        tabBarIcon: ({ color, size, focused }) => {
-          const Icon = ICONS[route.name];
-          // The center Scan/Play action is emphasized (filled gold circle) per Option B.
-          if (route.name === 'Play') {
-            return (
-              <ScanLine
-                color={focused ? theme.colors.brand.onGold : theme.colors.brand.onGold}
-                size={size}
-              />
-            );
-          }
-          return <Icon color={color} size={size} />;
-        },
-        tabBarItemStyle: route.name === 'Play' ? styleCenterItem(theme.colors.brand.gold) : undefined,
-      })}
+      }}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Offers" component={OffersNavigator} />
-      <Tab.Screen name="Play" component={WalletNavigator} options={{ tabBarLabel: 'Scan/Play' }} />
-      <Tab.Screen name="Account" component={AccountNavigator} />
-      <Tab.Screen name="More" component={MoreNavigator} />
+      {tabs.map(({ route, label, icon: Icon, component, isCenter }) => (
+        <Tab.Screen
+          key={route}
+          name={route}
+          component={component}
+          options={{
+            tabBarLabel: label,
+            // The center action (Option B: Scan/Play) is emphasized with a filled gold pill.
+            tabBarItemStyle: isCenter ? styleCenterItem(theme.colors.brand.gold) : undefined,
+            tabBarIcon: ({ color, size }) => (
+              <Icon color={isCenter ? theme.colors.brand.onGold : color} size={size} />
+            ),
+          }}
+        />
+      ))}
     </Tab.Navigator>
   );
 }
 
-/** Center action styling: a gold pill drawing the eye to Scan/Play. */
+/** Center action styling: a gold pill drawing the eye to the primary action. */
 function styleCenterItem(gold: string) {
   return {
     backgroundColor: gold,

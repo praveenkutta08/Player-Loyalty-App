@@ -1,7 +1,18 @@
-import { Bell, CalendarDays, Car, Gamepad2, KeyRound, MapPin, Palette, ShieldCheck } from 'lucide-react-native';
+import {
+  Bell,
+  CalendarDays,
+  Car,
+  Gamepad2,
+  KeyRound,
+  LifeBuoy,
+  MapPin,
+  Palette,
+  ShieldCheck,
+} from 'lucide-react-native';
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
+import { useManifest } from '../../app/manifest/ManifestProvider';
 import { useFeature } from '../../app/providers/FeatureProvider';
 import { Card, ListRow, Screen, ThemedText } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
@@ -18,6 +29,8 @@ export function MoreHomeScreen({ navigation }: Props): React.JSX.Element {
   const valet = useFeature('valet');
   const digitalKey = useFeature('digitalKey');
   const games = useFeature('games');
+  const { manifest } = useManifest();
+  const showSupport = manifest?.navigation?.globals?.showSupport !== false;
   const icon = (I: typeof CalendarDays) => <I size={20} color={theme.colors.text.secondary} />;
 
   return (
@@ -67,6 +80,22 @@ export function MoreHomeScreen({ navigation }: Props): React.JSX.Element {
             onPress={() => navigation.navigate('Nearby')}
           />
         </Card>
+
+        {showSupport ? (
+          <>
+            <ThemedText variant="label" color="muted" style={styles.label}>
+              Help
+            </ThemedText>
+            <Card style={styles.card}>
+              <ListRow
+                icon={icon(LifeBuoy)}
+                title="Support"
+                subtitle="Need help? Chat with us"
+                onPress={() => navigation.navigate('Support')}
+              />
+            </Card>
+          </>
+        ) : null}
 
         <ThemedText variant="label" color="muted" style={styles.label}>
           Settings
