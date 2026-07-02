@@ -10,6 +10,7 @@ from __future__ import annotations
 from typing import Any
 
 from fastapi import FastAPI, Request
+from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -96,7 +97,8 @@ async def _validation_exception_handler(
         "Validation error",
         detail="The request parameters failed validation.",
         instance=str(request.url),
-        errors=exc.errors(),
+        # Pydantic v2 may embed raw exception objects in `ctx` — encode them to strings.
+        errors=jsonable_encoder(exc.errors(), custom_encoder={Exception: str}),
     )
 
 

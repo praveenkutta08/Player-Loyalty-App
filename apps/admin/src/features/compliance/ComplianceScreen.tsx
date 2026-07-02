@@ -1,5 +1,13 @@
-import { Check, Plus, Upload, X } from 'lucide-react';
+import { Check, Plus, X } from 'lucide-react';
 import { useState } from 'react';
+
+import {
+  useLazyLookupPlayerQuery,
+  useListRgFlaggedQuery,
+  useSetRgFlagsMutation,
+  type PlayerRg,
+  type RgFlagsUpdate,
+} from './playersApi';
 
 import { Can } from '@/auth/Can';
 import { PageHeader } from '@/components/PageHeader';
@@ -19,9 +27,9 @@ import {
   type Column,
 } from '@/components/ui';
 
-// KYC (KycPort), Responsible Gaming and geolocation/jurisdiction (GeoPort) config + review queues.
-// The P1–P2 backend exposes these via player-side adapters; admin config/queues have no dedicated
-// endpoints yet, so this is local + documented as pending. All actions are treated as audited.
+// KYC (KycPort) and geolocation/jurisdiction (GeoPort) queues still have no dedicated admin
+// endpoints — those tabs are local demo data, labelled as such. Responsible Gaming is REAL
+// (audit H2): it drives the permission-gated, audited /players/*/rg-flags endpoints.
 interface KycCase {
   id: string;
   player: string;
@@ -149,16 +157,68 @@ function KycTab() {
   );
 }
 
+type RgAction = 'self_exclusion' | 'cool_off_7' | 'cool_off_30';
+
+function rgFlagLabel(p: PlayerRg): { label: string; tone: 'red' | 'gold' | 'blue' } {
+  const flags = p.rg_flags ?? {};
+  if (flags['self_exclusion']) return { label: 'excluded', tone: 'red' };
+  if (flags['cool_off_until']) return { label: 'cool-off', tone: 'gold' };
+  return { label: 'limits', tone: 'blue' };
+}
+
 function RgTab() {
   const { toast } = useToast();
   const [limits, setLimits] = useState({ deposit: '5000', timeMinutes: '240', coolOff: '7' });
-  const [exclusions, setExclusions] = useState<string[]>(['g•••@demo-casino.com']);
   const [newEx, setNewEx] = useState('');
+  const [action, setAction] = useState<RgAction>('self_exclusion');
+
+  const { data: flagged = [], isLoading } = useListRgFlaggedQuery();
+  const [lookupPlayer] = useLazyLookupPlayerQuery();
+  const [setRgFlags, { isLoading: isSaving }] = useSetRgFlagsMutation();
+
+  const addFlag = async () => {
+    const email = newEx.trim().toLowerCase();
+    try {
+      const player = await lookupPlayer(email).unwrap();
+      const body: RgFlagsUpdate =
+        action === 'self_exclusion'
+          ? { self_exclusion: true }
+          : {
+              self_exclusion: false,
+              cool_off_until: new Date(
+                Date.now() + (action === 'cool_off_7' ? 7 : 30) * 24 * 60 * 60 * 1000,
+              ).toISOString(),
+            };
+      await setRgFlags({ playerId: player.id, body }).unwrap();
+      setNewEx('');
+      toast(
+        action === 'self_exclusion'
+          ? 'Added to self-exclusion — audit logged'
+          : 'Cool-off applied — audit logged',
+      );
+    } catch (err: unknown) {
+      const status = (err as { status?: number }).status;
+      toast(status === 404 ? `No player found for ${email}` : 'Could not update RG flags');
+    }
+  };
+
+  const clearFlags = async (p: PlayerRg) => {
+    try {
+      // All-clear body removes every flag server-side.
+      await setRgFlags({ playerId: p.id, body: { self_exclusion: false } }).unwrap();
+      toast('RG flags cleared — audit logged');
+    } catch {
+      toast('Could not clear RG flags');
+    }
+  };
 
   return (
     <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
       <Card>
-        <CardHeader title="Default Limits" />
+        <CardHeader
+          title="Default Limits"
+          subtitle="Demo — tenant-wide default limits have no backend yet; per-player flags are live."
+        />
         <CardBody className="space-y-3 pt-3">
           <Field label="Daily deposit limit ($)">
             <Input
@@ -181,25 +241,20 @@ function RgTab() {
               type="number"
             />
           </Field>
-          <Can permission="players:read">
-            <Button size="sm" className="w-full" onClick={() => toast('RG limits saved — audited')}>
-              Save limits
-            </Button>
-          </Can>
+          <Button
+            size="sm"
+            className="w-full"
+            onClick={() => toast('Demo only — tenant default limits are not persisted yet')}
+          >
+            Save limits
+          </Button>
         </CardBody>
       </Card>
 
       <Card>
         <CardHeader
-          title="Self-Exclusion List"
-          action={
-            <button
-              className="inline-flex items-center gap-1 text-[12px] text-gold"
-              onClick={() => toast('Exported')}
-            >
-              <Upload size={13} /> Export
-            </button>
-          }
+          title="Self-Exclusion & Cool-Off"
+          subtitle="Server-enforced: writes are permission-gated and audit-logged."
         />
         <CardBody className="space-y-2 pt-3">
           <div className="flex gap-2">
@@ -208,29 +263,48 @@ function RgTab() {
               onChange={(e) => setNewEx(e.target.value)}
               placeholder="player email"
             />
-            <Can permission="players:read">
+            <Select value={action} onChange={(e) => setAction(e.target.value as RgAction)}>
+              <option value="self_exclusion">Self-exclude</option>
+              <option value="cool_off_7">Cool-off 7d</option>
+              <option value="cool_off_30">Cool-off 30d</option>
+            </Select>
+            <Can permission="players:rg_update">
               <Button
                 icon={<Plus size={15} />}
-                disabled={!newEx}
-                onClick={() => {
-                  setExclusions((x) => [...x, newEx]);
-                  setNewEx('');
-                  toast('Added to self-exclusion — audited');
-                }}
+                disabled={!newEx || isSaving}
+                onClick={() => void addFlag()}
               >
                 Add
               </Button>
             </Can>
           </div>
-          {exclusions.map((e) => (
-            <div
-              key={e}
-              className="flex items-center justify-between rounded-control bg-panel2 px-3 py-2"
-            >
-              <span className="font-mono text-[12px] text-text2">{e}</span>
-              <StatusPill tone="red">excluded</StatusPill>
-            </div>
-          ))}
+          {isLoading && <div className="text-[12px] text-muted">Loading flagged players…</div>}
+          {!isLoading && flagged.length === 0 && (
+            <div className="text-[12px] text-muted">No players currently flagged.</div>
+          )}
+          {flagged.map((p) => {
+            const { label, tone } = rgFlagLabel(p);
+            return (
+              <div
+                key={p.id}
+                className="flex items-center justify-between rounded-control bg-panel2 px-3 py-2"
+              >
+                <span className="font-mono text-[12px] text-text2">{p.email}</span>
+                <div className="flex items-center gap-2">
+                  <StatusPill tone={tone}>{label}</StatusPill>
+                  <Can permission="players:rg_update">
+                    <button
+                      className="text-muted hover:text-red"
+                      onClick={() => void clearFlags(p)}
+                      aria-label={`Clear RG flags for ${p.email}`}
+                    >
+                      <X size={14} />
+                    </button>
+                  </Can>
+                </div>
+              </div>
+            );
+          })}
         </CardBody>
       </Card>
     </div>

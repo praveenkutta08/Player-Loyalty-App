@@ -135,6 +135,20 @@ async def _seed(session_factory: async_sessionmaker[AsyncSession]) -> dict[str, 
                 email=email,
             )
 
+        # RG-flagged persona (H2 demo): self-excluded — concierge answers the neutral brief
+        # and the admin Compliance ▸ RG tab lists them.
+        players["dave@demo-casino.com"] = await _get_or_create(
+            session,
+            Player,
+            {
+                "password_hash": hash_password(DEMO_PASSWORD),
+                "segment": None,
+                "rg_flags": {"self_exclusion": True},
+            },
+            tenant_id=tenant.id,
+            email="dave@demo-casino.com",
+        )
+
         welcome = await _get_or_create(
             session,
             Offer,

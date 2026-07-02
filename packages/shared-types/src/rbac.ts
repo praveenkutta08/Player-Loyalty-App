@@ -24,6 +24,8 @@ export enum Action {
   Delete = 'delete',
   Publish = 'publish',
   Assign = 'assign',
+  /** Compliance: audited responsible-gaming flag writes (audit H2). */
+  RgUpdate = 'rg_update',
 }
 
 /** Protected resources, matching the rows of the Permissions Matrix. */
@@ -131,6 +133,8 @@ export enum Permission {
 
   // Players / PII
   PlayersRead = 'players:read',
+  // Compliance: responsible-gaming flags (self-exclusion, cool-off, limits) — audited writes.
+  PlayersRgUpdate = 'players:rg_update',
 
   // Wallet & transactions (view)
   WalletRead = 'wallet:read',
@@ -205,6 +209,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     P.ReservationsUpdate,
     P.ReservationsDelete,
     P.PlayersRead,
+    P.PlayersRgUpdate,
     P.WalletRead,
     P.AnalyticsRead,
     P.AuditLogsRead,
@@ -306,6 +311,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     P.ReservationsUpdate,
     P.ReservationsDelete,
     P.PlayersRead,
+    P.PlayersRgUpdate,
     P.WalletRead,
     P.AnalyticsRead,
     P.AuditLogsRead,

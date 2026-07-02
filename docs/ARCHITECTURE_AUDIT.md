@@ -29,6 +29,7 @@
 - **Fix:** scope lookup + unique constraint to `(tenant_id, player_id, idempotency_key)`; 409 on reuse by a different actor.
 
 ### H2. Responsible Gaming write path doesn't exist — admin RG tab is a facade with a false "audited" claim
+> **RESOLVED (R6, 2026-07-03):** `PATCH /players/{id}/rg-flags` (+ lookup / rg-flagged list) gated by the new `players:rg_update` permission (super_admin + tenant_admin only), writes `audit_logs`, validated flag shapes; admin RG tab now drives it via the generated client with `<Can permission="players:rg_update">`; `dave@demo-casino.com` seeds self-excluded; concierge neutral-brief behavior covered by tests.
 - Backend enforcement is real (`concierge/service.py` short-circuits flagged players before any tool/LLM call, fail-safe, tested) — but `rg_flags` is **only ever read**. No endpoint sets it. The admin Compliance ▸ RG tab (`ComplianceScreen.tsx:155,218`) is client-side `useState` with a toast claiming "Added to self-exclusion — audited" while **nothing hits the server and no audit row is written**. An operator cannot actually self-exclude a player. CLAUDE.md calls RG guardrails mandatory; playbook P3.16 is therefore materially incomplete. KYC/limits tabs are similarly local-state.
 - **Fix:** permission-gated `PATCH /players/{id}/rg-flags` writing `audit_logs`; wire the tab to it; seed a flagged persona for demos.
 

@@ -98,6 +98,8 @@ class Permission(StrEnum):
     reservations_delete = "reservations:delete"
     # Players / PII
     players_read = "players:read"
+    # Compliance: responsible-gaming flags (self-exclusion, cool-off, limits) — audited writes.
+    players_rg_update = "players:rg_update"
     # Wallet & transactions (view)
     wallet_read = "wallet:read"
     # Analytics & reports
@@ -165,6 +167,7 @@ ROLE_PERMISSIONS: dict[Role, tuple[Permission, ...]] = {
         _P.reservations_update,
         _P.reservations_delete,
         _P.players_read,
+        _P.players_rg_update,
         _P.wallet_read,
         _P.analytics_read,
         _P.audit_logs_read,
@@ -266,6 +269,7 @@ ROLE_PERMISSIONS: dict[Role, tuple[Permission, ...]] = {
         _P.reservations_update,
         _P.reservations_delete,
         _P.players_read,
+        _P.players_rg_update,
         _P.wallet_read,
         _P.analytics_read,
         _P.audit_logs_read,

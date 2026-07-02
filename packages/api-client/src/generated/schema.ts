@@ -160,6 +160,69 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/players/rg-flagged": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Rg Flagged Players
+         * @description Players with any active RG flag — backs the Compliance ▸ Responsible Gaming tab.
+         */
+        get: operations["list_rg_flagged_players_api_v1_players_rg_flagged_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/players/lookup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lookup Player
+         * @description Find a player by email within the acting tenant (RG tab lookup).
+         */
+        get: operations["lookup_player_api_v1_players_lookup_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/players/{player_id}/rg-flags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Set Player Rg Flags
+         * @description Set/clear a player's responsible-gaming flags — permission-gated and audited (H2).
+         *
+         *     The concierge guardrail and player-facing flows read these flags; an all-clear body
+         *     removes them.
+         */
+        patch: operations["set_player_rg_flags_api_v1_players__player_id__rg_flags_patch"];
+        trace?: never;
+    };
     "/api/v1/config": {
         parameters: {
             query?: never;
@@ -2591,6 +2654,25 @@ export interface components {
             /** Code */
             code: string;
         };
+        /**
+         * PlayerRgOut
+         * @description Admin view of a player's responsible-gaming state.
+         */
+        PlayerRgOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Email */
+            email: string;
+            /** Status */
+            status: string;
+            /** Rg Flags */
+            rg_flags?: {
+                [key: string]: unknown;
+            } | null;
+        };
         /** PointsOut */
         PointsOut: {
             /** Points */
@@ -2767,6 +2849,27 @@ export interface components {
          * @enum {string}
          */
         RewardStatus: "draft" | "published";
+        /**
+         * RgFlagsUpdate
+         * @description Full desired RG state for a player (audit H2). An all-clear body removes every flag.
+         *
+         *     The stored shape matches what the concierge guardrail reads
+         *     (``concierge/service.py::rg_restriction``): ``self_exclusion`` bool, ``cool_off_until``
+         *     ISO datetime, ``limits`` mapping.
+         */
+        RgFlagsUpdate: {
+            /**
+             * Self Exclusion
+             * @default false
+             */
+            self_exclusion: boolean;
+            /** Cool Off Until */
+            cool_off_until?: string | null;
+            /** Limits */
+            limits?: {
+                [key: string]: number;
+            } | null;
+        };
         /** SendResult */
         SendResult: {
             /**
@@ -3604,6 +3707,110 @@ export interface operations {
             };
         };
     };
+    list_rg_flagged_players_api_v1_players_rg_flagged_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+                "X-Tenant"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlayerRgOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    lookup_player_api_v1_players_lookup_get: {
+        parameters: {
+            query: {
+                email: string;
+            };
+            header?: {
+                authorization?: string | null;
+                "X-Tenant"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlayerRgOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    set_player_rg_flags_api_v1_players__player_id__rg_flags_patch: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Tenant"?: string | null;
+                authorization?: string | null;
+            };
+            path: {
+                player_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RgFlagsUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlayerRgOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     read_config_api_v1_config_get: {
         parameters: {
             query?: never;
@@ -3744,8 +3951,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path?: never;
             cookie?: never;
@@ -3780,8 +3987,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 theme_id: string;
@@ -3818,8 +4025,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 theme_id: string;
@@ -3850,8 +4057,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 theme_id: string;
@@ -3947,8 +4154,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path?: never;
             cookie?: never;
@@ -3983,8 +4190,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 item_id: string;
@@ -4021,8 +4228,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 item_id: string;
@@ -4053,8 +4260,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 item_id: string;
@@ -4186,8 +4393,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path?: never;
             cookie?: never;
@@ -4222,8 +4429,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 offer_id: string;
@@ -4260,8 +4467,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 offer_id: string;
@@ -4292,8 +4499,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 offer_id: string;
@@ -4358,8 +4565,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path?: never;
             cookie?: never;
@@ -4394,8 +4601,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 offer_id: string;
@@ -4432,8 +4639,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 offer_id: string;
@@ -4464,8 +4671,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 offer_id: string;
@@ -4990,8 +5197,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 res_id: string;
@@ -5060,8 +5267,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 valet_id: string;
@@ -5462,8 +5669,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path?: never;
             cookie?: never;
@@ -5498,8 +5705,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 nid: string;
@@ -5598,8 +5805,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path?: never;
             cookie?: never;
@@ -5634,8 +5841,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 zone_id: string;
@@ -5672,8 +5879,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 zone_id: string;
@@ -5704,8 +5911,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path?: never;
             cookie?: never;
@@ -5772,8 +5979,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path?: never;
             cookie?: never;
@@ -5808,8 +6015,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 trigger_id: string;
@@ -5846,8 +6053,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 trigger_id: string;
@@ -6143,8 +6350,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path?: never;
             cookie?: never;
@@ -6179,8 +6386,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 game_id: string;
@@ -6217,8 +6424,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 game_id: string;
@@ -6439,8 +6646,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path?: never;
             cookie?: never;
@@ -6475,8 +6682,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 item_id: string;
@@ -6513,8 +6720,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path: {
                 item_id: string;
@@ -6941,8 +7148,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
-                authorization?: string | null;
                 "X-Tenant"?: string | null;
+                authorization?: string | null;
             };
             path?: never;
             cookie?: never;
