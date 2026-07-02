@@ -10,10 +10,15 @@ is **manifest-driven**: each tenant can enable, reorder, or relabel tabs/modules
 
 ## 1. Decision
 **Bottom nav (Option B):** `Home · Offers · ⦿ Scan/Play (center) · Account · More`
-- **Offers** absorbs Promotions via a segmented control: **Offers | Promotions | My Rewards**.
+- **Offers** absorbs Promotions via a segmented control: **Offers | Promotions | My Rewards** —
+  the concierge-ranked **"For You"** segment is intentionally prepended when the `concierge`
+  flag is on (P6.6), making the full order **For You | Offers | Promotions | My Rewards**.
 - **Scan/Play** is a prominent center action = cardless pairing (BLE/QR) + Wallet.
-- **AI Chat is support-only**, living under **More ▸ Support** (not a global concierge button).
-- Globals: Notifications bell + Search.
+- **Two deliberately separate AI surfaces** (M17 decision, recorded 2026-07-03; details §7):
+  **SUPPORT chat** stays under **More ▸ Support** only (P2.13) — never a global button;
+  the **concierge "Ask"** (P6.6) is a **GLOBAL** entry (TopBar on every tab + Home hero),
+  gated by the `concierge` feature flag.
+- Globals: Notifications bell + Search (+ concierge Ask when the flag is on).
 
 ## 2. Why Option B
 For a casino companion, the money-and-play action is the core utility, so making **Scan/Play** a

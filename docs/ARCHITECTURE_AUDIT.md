@@ -84,6 +84,7 @@
 - **M15. Center Scan/Play fallback is dead config** — `navConfig.ts` declares `requiresFlag: 'cashless', fallback: 'wallet'` but `resolveTabs` never reads either; comments claim otherwise; the test asserts only that the fields exist. A `tabs:[{key:'home'}]` manifest renders a one-tab app (no minimum-viable-tab enforcement).
 - **M16. Force-update gate (G8) unreachable** — `ForceUpdateScreen` registered, `min_app_version` never compared. A compliance kill switch that looks done and never fires.
 - **M17. AskAI placement conflicts with Option B** — locked decision: AI chat under More only. Support chat complies; concierge Ask is mounted globally (TopBar on every tab + Home hero), and More has no AskAI entry. P6.6 vs Option B was silently resolved in code. **Decision needed** — either amend the IA docs or move Ask under More. (Same for the "For You" segment prepended to Offers|Promotions|My Rewards.)
+  > **RESOLVED (R12, 2026-07-03):** decision recorded — concierge Ask stays GLOBAL (P6.6: TopBar + Home hero, `concierge`-flag-gated); SUPPORT chat stays under More ▸ Support only (P2.13); the "For You" prepended segment is intentional. `design/IA_NAVIGATION_PLAN.md` §1 amended (code already matched; no code change).
 - **M18. Splash variants hardcode brand-ish hexes** (`#FFF8EA`, `#2C2118`…) and nav headers hardcode Manrope regardless of manifest typography — a light-brand tenant still gets cream/dark-navy splash art.
 
 ---
