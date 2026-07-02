@@ -1106,6 +1106,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/analytics/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post Client Event
+         * @description Player-audience event sink (P2.9 sink, P6.7 metrics). Unknown types are dropped, not
+         *     stored — the response says so instead of erroring, so clients can fire-and-forget.
+         */
+        post: operations["post_client_event_api_v1_analytics_events_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/audit-logs": {
         parameters: {
             query?: never;
@@ -1763,6 +1784,22 @@ export interface components {
             escalate: boolean;
             /** Refused */
             refused: boolean;
+        };
+        /** ClientEventIn */
+        ClientEventIn: {
+            /** Type */
+            type: string;
+            /** Entity Id */
+            entity_id?: string | null;
+            /** Meta */
+            meta?: {
+                [key: string]: unknown;
+            } | null;
+        };
+        /** ClientEventOut */
+        ClientEventOut: {
+            /** Accepted */
+            accepted: boolean;
         };
         /**
          * ConciergeConsentIn
@@ -5871,6 +5908,41 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BeaconOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    post_client_event_api_v1_analytics_events_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClientEventIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ClientEventOut"];
                 };
             };
             /** @description Validation Error */

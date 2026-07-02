@@ -16,6 +16,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import hash_password
 from app.db.session import SessionLocal
+from app.modules.concierge.models import Property
 from app.modules.concierge.service import DEFAULT_CONCIERGE_CONFIG
 from app.modules.games.models import Game
 from app.modules.geofencing.models import GeofenceZone, LocationTrigger, TriggerEvent
@@ -77,14 +78,18 @@ async def seed() -> dict[str, Any]:
                     "games": True,
                     "reservations": True,
                     "valet": True,
+                    "concierge": True,
                 },
                 "concierge": DEFAULT_CONCIERGE_CONFIG,
             },
             tenant_id=tenant.id,
         )
-        # Defaults only apply on create — backfill the concierge block on pre-existing seeds.
+        # Defaults only apply on create — backfill concierge bits on pre-existing seeds.
+        # (The "Luminara" sample config: persona "Aria", warm tone, gold/amber accent.)
         if not config.concierge:
             config.concierge = DEFAULT_CONCIERGE_CONFIG
+        if not config.feature_flags.get("concierge"):
+            config.feature_flags = {**config.feature_flags, "concierge": True}
         await _get_or_create(
             session,
             Theme,
@@ -138,6 +143,61 @@ async def seed() -> dict[str, Any]:
             tenant_id=tenant.id,
             kind=OfferKind.promotion.value,
             title="Weekend Promo",
+        )
+
+        # ~10 hand-tuned offers for concierge ranking (P6.7): varied segments + expiry windows so
+        # `offer_score = relevance × urgency × feasibility` produces a visibly ordered For You.
+        now = datetime.now(UTC)
+        concierge_offers: list[tuple[str, str, str | None, int | None]] = [
+            ("Steakhouse Dinner Credit", "Complimentary $75 steakhouse credit", "vip", 1),
+            ("Weekend Free Play", "$50 free play, this weekend only", "vip", 3),
+            ("Spa Sunday", "2-for-1 spa treatments on Sundays", "all", 6),
+            ("Late-Night Slots Boost", "x3 points on slots after 10pm", "gold", 2),
+            ("Show Tickets Upgrade", "Free upgrade to premium seating", "all", 9),
+            ("Valet On Us", "Complimentary valet all month", "all", None),
+            ("Poker Room Freeroll", "Sunday freeroll entry for members", "gold", 4),
+            ("Birthday Bonus", "Double points during your birthday week", "all", None),
+            ("Suite Night Escape", "Members' midweek suite rate", "vip", 12),
+            ("Cafe Comp Breakfast", "Free breakfast with any hotel stay", "all", 20),
+        ]
+        for title, description, segment, days_left in concierge_offers:
+            await _get_or_create(
+                session,
+                Offer,
+                {
+                    "description": description,
+                    "status": OfferStatus.published.value,
+                    "segment": segment,
+                    "end_at": (now + timedelta(days=days_left)) if days_left else None,
+                },
+                tenant_id=tenant.id,
+                kind=OfferKind.offer.value,
+                title=title,
+            )
+
+        # Two properties with real coordinates (P6.7): weather/travel context anchors + the
+        # later multi-property comparison. Primary = first created (Cascade Resort).
+        await _get_or_create(
+            session,
+            Property,
+            {
+                "lat": 36.1147,
+                "lng": -115.1728,
+                "amenities": ["steakhouse", "spa", "poker_room", "pool", "theater"],
+            },
+            tenant_id=tenant.id,
+            name="Cascade Resort & Casino",
+        )
+        await _get_or_create(
+            session,
+            Property,
+            {
+                "lat": 38.9399,
+                "lng": -119.9772,
+                "amenities": ["lodge", "ski_shuttle", "steakhouse"],
+            },
+            tenant_id=tenant.id,
+            name="Cascade Summit Lodge",
         )
 
         # A confirmed hotel reservation for alice.

@@ -5,6 +5,7 @@ import { useFeature } from '../../app/providers/FeatureProvider';
 import { useAppSelector } from '../../app/store';
 import { Input, Screen, SegmentedControl, ThemedText } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
+import { useTrackEventMutation } from '../analytics/analyticsApi';
 import { ForYouPanel } from '../concierge/ForYouPanel';
 import { MyRewardsPanel } from '../rewards/MyRewardsPanel';
 
@@ -45,9 +46,16 @@ export function OffersScreen({ navigation, route }: Props): React.JSX.Element {
     return list;
   }, [active.data, query]);
 
+  const [trackEvent] = useTrackEventMutation();
+
   const openItem = (item: OfferOut): void => {
     if (item.kind === 'promotion') navigation.navigate('PromotionDetail', { promotion: item });
     else navigation.navigate('OfferDetail', { offer: item });
+  };
+  // The CTR-lift experiment pair (P6.7): ranked For You clicks vs plain-list clicks.
+  const openFromList = (item: OfferOut): void => {
+    void trackEvent({ type: 'list_offer_click', entity_id: item.id });
+    openItem(item);
   };
 
   return (
@@ -60,6 +68,11 @@ export function OffersScreen({ navigation, route }: Props): React.JSX.Element {
       {segment === 'foryou' ? (
         <ForYouPanel
           onOpenOffer={(ranked) => {
+            void trackEvent({
+              type: 'for_you_offer_click',
+              entity_id: ranked.offer_id,
+              meta: { rank: ranked.rank },
+            });
             // Ranked entries reference full offers by id; open from the loaded list.
             const full = offers.data?.find((o) => o.id === ranked.offer_id);
             if (full) openItem(full);
@@ -83,7 +96,7 @@ export function OffersScreen({ navigation, route }: Props): React.JSX.Element {
               <OfferCard
                 offer={item}
                 redeemed={redeemedIds.includes(item.id)}
-                onPress={() => openItem(item)}
+                onPress={() => openFromList(item)}
               />
             )}
             refreshControl={

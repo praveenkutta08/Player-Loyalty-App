@@ -8,6 +8,7 @@ import { useFeature } from '../../app/providers/FeatureProvider';
 import { Card, Screen, StatusPill, ThemedText } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useGetAccountMeQuery } from '../account/accountApi';
+import { useTrackEventMutation } from '../analytics/analyticsApi';
 import { ContextStrip, RecoHero } from '../concierge/components';
 import { useGetBriefQuery } from '../concierge/conciergeApi';
 import { PlanSheet } from '../concierge/PlanSheet';
@@ -38,17 +39,35 @@ export function HomeScreen({ navigation }: Props): React.JSX.Element {
   const { name: personaName } = useConciergePersona();
   const brief = useGetBriefQuery(undefined, { skip: !conciergeOn });
   const [planOpen, setPlanOpen] = useState(false);
+  const [trackEvent] = useTrackEventMutation();
+  const mountedAt = React.useRef(Date.now());
+  const renderTracked = React.useRef(false);
 
   const greetingName = me.data?.email?.split('@')[0] ?? 'there';
   const featured = offers.data?.[0];
   const showConciergeHero = conciergeOn && brief.data != null;
+
+  // brief_render_ms: perceived time-to-first-answer (target <1.5s; prefetch makes it ~0).
+  React.useEffect(() => {
+    if (showConciergeHero && !renderTracked.current) {
+      renderTracked.current = true;
+      void trackEvent({
+        type: 'brief_render_ms',
+        meta: { ms: Date.now() - mountedAt.current },
+      });
+    }
+  }, [showConciergeHero, trackEvent]);
 
   const openPromotion = (promotion: OfferOut): void =>
     navigation.navigate('Offers', { screen: 'PromotionDetail', params: { promotion } });
   const openOffer = (offer: OfferOut): void =>
     navigation.navigate('Offers', { screen: 'OfferDetail', params: { offer } });
   const onHeroCta = (action: string): void => {
-    if (action === 'concierge.plan') setPlanOpen(true);
+    if (action === 'concierge.plan') {
+      // answer_accepted: the headline concierge metric (mentor notes §9).
+      void trackEvent({ type: 'answer_accepted', meta: { fit_score: brief.data?.fit_score } });
+      setPlanOpen(true);
+    }
   };
 
   return (

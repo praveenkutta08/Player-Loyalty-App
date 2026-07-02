@@ -2,12 +2,14 @@ import { Send } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
-import { Input, Screen, ThemedText } from '../../components';
+import { Button, Input, Screen, ThemedText } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
+import { useTrackEventMutation } from '../analytics/analyticsApi';
 
 import { AIAnswerCard } from './components';
 import { useAskConciergeMutation, useGetBriefQuery } from './conciergeApi';
 import { ConsentPrompt } from './ConsentPrompt';
+import { PlanSheet } from './PlanSheet';
 import { useConciergePersona } from './useConciergePersona';
 
 import type { ConciergeEnvelope } from './types';
@@ -33,10 +35,12 @@ export function AskAIScreen(): React.JSX.Element {
   const theme = useTheme();
   const { name } = useConciergePersona();
   const [ask, askState] = useAskConciergeMutation();
+  const [trackEvent] = useTrackEventMutation();
   const brief = useGetBriefQuery();
   const [question, setQuestion] = useState('');
   const [exchanges, setExchanges] = useState<Exchange[]>([]);
   const [consentDismissed, setConsentDismissed] = useState(false);
+  const [planOpen, setPlanOpen] = useState(false);
 
   // The brief tells us whether travel context is degraded → surface the consent ask up front.
   const needsConsent =
@@ -81,6 +85,19 @@ export function AskAIScreen(): React.JSX.Element {
               {exchange.question}
             </ThemedText>
             <AIAnswerCard envelope={exchange.answer} />
+            {exchange.answer.cta ? (
+              <Button
+                label={exchange.answer.cta.label}
+                variant="secondary"
+                style={styles.answerCta}
+                testID="ask-answer-cta"
+                onPress={() => {
+                  // ask_to_action: an Ask answer converted into a plan (metric, P6.7).
+                  void trackEvent({ type: 'ask_to_action' });
+                  setPlanOpen(true);
+                }}
+              />
+            ) : null}
           </View>
         ))}
 
@@ -135,6 +152,7 @@ export function AskAIScreen(): React.JSX.Element {
           <Send size={18} color={theme.colors.brand.onGold} />
         </Pressable>
       </View>
+      <PlanSheet visible={planOpen} onClose={() => setPlanOpen(false)} />
     </Screen>
   );
 }
@@ -143,6 +161,7 @@ const styles = StyleSheet.create({
   content: { paddingVertical: 16, paddingBottom: 24, gap: 12 },
   consent: { marginTop: 4 },
   exchange: { gap: 8 },
+  answerCta: { alignSelf: 'flex-start' },
   question: { marginTop: 8 },
   thinking: { marginTop: 4 },
   suggestions: { gap: 8, marginTop: 8 },

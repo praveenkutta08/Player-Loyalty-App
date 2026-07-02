@@ -63,6 +63,17 @@ jest.mock('../src/features/offers/offersApi', () => ({
   useGetPromotionsQuery: () => ({ data: [] }),
 }));
 
+const mockTrackEvent = jest.fn();
+jest.mock('../src/features/analytics/analyticsApi', () => ({
+  useTrackEventMutation: () => [
+    (body: unknown) => {
+      mockTrackEvent(body);
+      return { unwrap: () => Promise.resolve({ accepted: true }) };
+    },
+    { isLoading: false },
+  ],
+}));
+
 // Safe as top-level imports: babel-jest hoists the jest.mock() factories above all imports.
 // eslint-disable-next-line import/order
 import { AskAIScreen } from '../src/features/concierge/AskAIScreen';
@@ -106,6 +117,19 @@ describe('Home concierge slot', () => {
     expect(screen.getByTestId('context-strip')).toBeOnTheScreen();
     expect(screen.getByTestId('ask-entry')).toBeOnTheScreen();
     expect(screen.queryByTestId('featured-offer')).toBeNull(); // never both surfaces
+    // brief_render_ms fired once when the hero landed (P6.7 metric).
+    expect(mockTrackEvent).toHaveBeenCalledWith(
+      expect.objectContaining({ type: 'brief_render_ms' }),
+    );
+  });
+
+  it('hero CTA fires the answer_accepted metric and opens the plan sheet', () => {
+    wrap(<HomeScreen navigation={nav} route={{ key: 'h', name: 'Home' } as never} />);
+    fireEvent.press(screen.getByTestId('hero-cta'));
+    expect(mockTrackEvent).toHaveBeenCalledWith(
+      expect.objectContaining({ type: 'answer_accepted', meta: { fit_score: 82 } }),
+    );
+    expect(screen.getByTestId('plan-sheet')).toBeOnTheScreen();
   });
 
   it('falls back to the static featured offer when the flag is off (no dead ends)', () => {

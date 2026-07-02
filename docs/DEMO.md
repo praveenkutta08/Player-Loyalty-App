@@ -91,6 +91,37 @@ tier"). Try **Steakhouse Dinner** (500 pts) to see the *insufficient points* sta
 3. **Expect:** an **"Offer sent"** confirmation and **exactly one** promo in the **Notifications**
    center — honoring consent, quiet hours, and the frequency cap.
 
+## Act 6 — The AI concierge, in 90 seconds (P6.x, mock mode — no keys)
+
+The seed enables the `concierge` flag and configures the "Luminara" sample persona (**Aria**,
+warm tone, gold accent), two properties with real coordinates (Cascade Resort — the Strip;
+Cascade Summit Lodge — Tahoe), and ~10 hand-tuned offers with varied segments/expiry so the
+ranking is visibly ordered. Weather/travel/LLM all run on mock adapters (deterministic, offline).
+
+1. **Home verdict (0:00–0:25)** — open Home as **alice**. The hero is Aria's brief, rendered
+   instantly from the prefetched cache (no spinner): a fit score, a one-line verdict, "why you"
+   chips (visit gap, weather, tier), and the weather · drive context strip. Tap
+   **Plan my visit** → the bottom sheet shows the deterministic itinerary (leave time → dinner →
+   top offers). Note the small advisory disclaimer under the hero.
+2. **For You offers (0:25–0:50)** — Offers tab now leads with **For You**: server-ranked offers,
+   each with why-you pills ("Picked for vip members", "Expiring soon"). The full list is one
+   segment away — tapping in each view feeds the `for_you_offer_click` vs `list_offer_click`
+   CTR-lift metric.
+3. **Ask Aria (0:50–1:30)** — tap the ✨ in the top bar (or "Ask Aria" under the hero) and ask
+   **"Is it worth driving in this weekend?"**. First use offers the separate drive-time consent
+   (grant it → the Drive signal appears; decline → answers still work, flagged as degraded). The
+   answer renders as a signal grid + source chips (Profile · Offers · Weather · Maps) — never a
+   prose wall.
+
+**Guardrails cameo (optional, 15s):** set `rg_flags = {"self_exclusion": true}` on a player row
+and refresh Home — the hero turns neutral: no score, no chips, no visit nudge. That's the
+server-enforced RG policy the Concierge Studio displays as non-configurable.
+
+**Metrics:** every step above wrote events (`answer_accepted`, `for_you_offer_click`,
+`list_offer_click`, `ask_to_action`, `brief_render_ms`) into the P2.9 analytics sink — see
+**Analytics → summary** in the admin, and the append-only `concierge_answers` audit in
+**Concierge Studio**.
+
 ---
 
 ## What this proves
