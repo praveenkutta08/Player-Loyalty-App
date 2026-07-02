@@ -19,6 +19,27 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..core.errors import ProblemException
 from ..db.rls import APP_RLS_ROLE, TENANT_GUC
 from ..db.session import get_session
+from ..modules.tenants.models import Tenant
+
+
+async def require_active_tenant(session: AsyncSession, tenant_id: UUID) -> Tenant:
+    """404 for unknown tenants, 403 for suspended ones (audit M4).
+
+    Player auth and the player session dependency call this so a suspended tenant's players
+    can neither authenticate nor keep using existing tokens. (The public manifest endpoint
+    performs the same check.)
+    """
+    tenant = await session.get(Tenant, tenant_id)
+    if tenant is None:
+        raise ProblemException(404, "Tenant not found")
+    if tenant.status != "active":
+        raise ProblemException(
+            403,
+            "Tenant suspended",
+            detail="This casino is not currently active.",
+            type_="urn:problem:tenant_suspended",
+        )
+    return tenant
 
 
 async def set_tenant_context(session: AsyncSession, tenant_id: UUID) -> None:

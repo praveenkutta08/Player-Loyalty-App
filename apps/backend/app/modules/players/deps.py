@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ...core.errors import ProblemException
 from ...core.security import AUDIENCE_PLAYER, TOKEN_ACCESS, decode_token
 from ...db.session import get_session
-from ...tenancy.deps import set_tenant_context
+from ...tenancy.deps import require_active_tenant, set_tenant_context
 from .models import Player
 
 
@@ -26,6 +26,9 @@ async def get_current_player(
     payload = decode_token(token, audience=AUDIENCE_PLAYER, token_type=TOKEN_ACCESS)
     tenant_id = UUID(payload["tenant"])
     player_id = UUID(payload["sub"])
+
+    # Suspended tenants lose access immediately, existing tokens included (audit M4).
+    await require_active_tenant(session, tenant_id)
 
     # Bind the tenant so the lookup is RLS-scoped, then load the player.
     await set_tenant_context(session, tenant_id)

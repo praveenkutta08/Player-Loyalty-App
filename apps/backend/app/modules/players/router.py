@@ -16,7 +16,7 @@ from ...core.security import AUDIENCE_PLAYER
 from ...db.session import get_session
 from ...rbac.deps import AdminContext, AdminTenantIdDep, AdminTenantSessionDep, require
 from ...rbac.matrix import Permission
-from ...tenancy.deps import TenantSessionDep, get_current_tenant_id
+from ...tenancy.deps import TenantSessionDep, get_current_tenant_id, require_active_tenant
 from ..audit.models import ActorType
 from ..audit.service import write_audit
 from ..identity.schemas import RefreshRequest, TokenPair
@@ -50,6 +50,7 @@ async def player_login(
 ) -> TokenPair:
     # audit: exempt — authentication flow, not a privileged mutation (rate-limited, H4).
     await enforce_auth_rate_limit(request, "player_login", f"{tenant_id}:{body.email}")
+    await require_active_tenant(session, tenant_id)  # M4: suspended tenants cannot auth
     player = await authenticate_player_password(session, body.email, body.password)
     return await issue_token_pair(session, player.id, AUDIENCE_PLAYER, {"tenant": str(tenant_id)})
 
@@ -76,6 +77,7 @@ async def player_otp_request(
 ) -> dict[str, str]:
     # audit: exempt — authentication flow, not a privileged mutation (rate-limited, H4).
     await enforce_auth_rate_limit(request, "player_otp_request", f"{tenant_id}:{body.email}")
+    await require_active_tenant(session, tenant_id)  # M4: suspended tenants cannot auth
     # Do not reveal whether the email exists; only issue a code if it does.
     player = await get_player_by_email(session, body.email)
     if player is not None:
@@ -91,6 +93,7 @@ async def player_otp_verify(
 ) -> TokenPair:
     # audit: exempt — authentication flow, not a privileged mutation (rate-limited, H4).
     await enforce_auth_rate_limit(request, "player_otp_verify", f"{tenant_id}:{body.email}")
+    await require_active_tenant(session, tenant_id)  # M4: suspended tenants cannot auth
     player = await verify_player_otp(session, body.email, body.code)
     return await issue_token_pair(session, player.id, AUDIENCE_PLAYER, {"tenant": str(tenant_id)})
 
