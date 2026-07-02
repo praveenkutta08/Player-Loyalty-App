@@ -1,5 +1,7 @@
 import type { ComponentType } from 'react';
 
+import { AnalyticsScreen } from '@/features/analytics/AnalyticsScreen';
+import { DashboardScreen } from '@/features/analytics/DashboardScreen';
 import { AuditScreen } from '@/features/audit/AuditScreen';
 import { HomepageBuilder } from '@/features/builder/HomepageBuilder';
 import { NavigationBuilder } from '@/features/builder/NavigationBuilder';
@@ -32,6 +34,8 @@ import { UsersRolesScreen } from '@/features/users/UsersRolesScreen';
  * builds them; any path without an entry falls back to the <Placeholder> in the router.
  */
 export const SCREEN_REGISTRY: Record<string, ComponentType> = {
+  '/dashboard': DashboardScreen,
+  '/analytics': AnalyticsScreen,
   '/casinos': CasinosScreen,
   '/homepage': HomepageBuilder,
   '/navigation': NavigationBuilder,
