@@ -6,6 +6,8 @@ import { buildConfig } from '../../config/buildConfig';
 import { AuthNavigator } from '../../features/auth/AuthNavigator';
 import { BiometricEnrollScreen } from '../../features/auth/screens/BiometricEnrollScreen';
 import { LockScreen } from '../../features/auth/screens/LockScreen';
+import { AskAIScreen } from '../../features/concierge/AskAIScreen';
+import { prefetchConciergeBrief } from '../../features/concierge/prefetch';
 import { GeoBootstrap } from '../../features/geofencing/GeoBootstrap';
 import { MessageDetailScreen } from '../../features/notifications/MessageDetailScreen';
 import { NotificationCenterScreen } from '../../features/notifications/NotificationCenterScreen';
@@ -14,6 +16,7 @@ import { BrandSplash } from '../../features/splash/BrandSplash';
 import { ForceUpdateScreen } from '../../features/splash/ForceUpdateScreen';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useManifest } from '../manifest/ManifestProvider';
+import { useFeature } from '../providers/FeatureProvider';
 import { useAppDispatch, useAppSelector } from '../store';
 
 import { MainTabs } from './MainTabs';
@@ -35,12 +38,20 @@ export function RootNavigator(): React.JSX.Element {
   const status = useAppSelector((s) => s.auth.status);
   const biometric = useAppSelector((s) => s.biometric);
   const dispatch = useAppDispatch();
+  const conciergeOn = useFeature('concierge');
 
   // Bridge native push handlers into the inbox store + deep-link routing (once authenticated).
   useEffect(() => {
     if (status !== 'authenticated') return undefined;
     return registerPushHandlers(dispatch, () => new Date().toISOString());
   }, [status, dispatch]);
+
+  // Prefetch the concierge brief as soon as we're authenticated (still behind the biometric
+  // gates) so Home renders the hero straight from cache — no spinner on Home (P6.6).
+  useEffect(() => {
+    if (status !== 'authenticated') return;
+    prefetchConciergeBrief(dispatch, conciergeOn);
+  }, [status, dispatch, conciergeOn]);
 
   const navTheme: NavTheme = {
     dark: theme.scheme === 'dark',
@@ -90,6 +101,11 @@ export function RootNavigator(): React.JSX.Element {
               name="MessageDetail"
               component={MessageDetailScreen}
               options={{ ...detailHeader(theme), title: 'Message' }}
+            />
+            <Stack.Screen
+              name="AskAI"
+              component={AskAIScreen}
+              options={{ ...detailHeader(theme), title: 'Ask AI' }}
             />
           </Stack.Navigator>
         ) : (

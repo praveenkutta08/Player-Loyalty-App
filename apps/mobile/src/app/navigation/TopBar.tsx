@@ -1,4 +1,4 @@
-import { Bell, Search } from 'lucide-react-native';
+import { Bell, Search, Sparkles } from 'lucide-react-native';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,17 +12,22 @@ export interface TopBarProps {
   /** Whether the global notifications bell + search are shown (manifest `globals`). */
   showNotifications?: boolean;
   showSearch?: boolean;
+  /** Global Ask-AI entry (P6.6) — shown only when the `concierge` flag is on. */
+  showAsk?: boolean;
   onPressNotifications?: () => void;
   onPressSearch?: () => void;
+  onPressAsk?: () => void;
 }
 
-/** Global top chrome (G1): brand lockup + notifications bell + search, all token-driven. */
+/** Global top chrome (G1): brand lockup + Ask AI + notifications bell + search, token-driven. */
 export function TopBar({
   title,
   showNotifications = true,
   showSearch = true,
+  showAsk = false,
   onPressNotifications,
   onPressSearch,
+  onPressAsk,
 }: TopBarProps): React.JSX.Element {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
@@ -42,6 +47,18 @@ export function TopBar({
         {title}
       </ThemedText>
       <View style={styles.actions}>
+        {showAsk ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Ask AI"
+            hitSlop={8}
+            onPress={onPressAsk}
+            style={styles.action}
+            testID="topbar-ask"
+          >
+            <Sparkles size={20} color={theme.colors.brand.gold} />
+          </Pressable>
+        ) : null}
         {showSearch ? (
           <Pressable
             accessibilityRole="button"

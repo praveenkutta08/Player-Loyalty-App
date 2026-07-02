@@ -267,6 +267,33 @@ async def test_offers_plan_ask_history(api: AsyncClient) -> None:
     assert all(h["verdict"] for h in history)
 
 
+async def test_consent_endpoint_grants_and_revokes(api: AsyncClient) -> None:
+    tenant_id, _ = await _setup_tenant()
+    auth, _email = await _auth(api, tenant_id)
+
+    granted = await api.post(
+        "/api/v1/concierge/consent",
+        headers=auth,
+        json={"granted": True, "home_origin": {"lat": 36.0, "lng": -115.0, "label": "Home"}},
+    )
+    assert granted.status_code == 200
+    assert granted.json() == {"concierge_consent": True, "has_home_origin": True}
+
+    # Revoking consent also clears the stored origin.
+    revoked = await api.post(
+        "/api/v1/concierge/consent", headers=auth, json={"granted": False}
+    )
+    assert revoked.json() == {"concierge_consent": False, "has_home_origin": False}
+
+    # Bad coordinates rejected by validation.
+    bad = await api.post(
+        "/api/v1/concierge/consent",
+        headers=auth,
+        json={"granted": True, "home_origin": {"lat": 999, "lng": 0}},
+    )
+    assert bad.status_code == 422
+
+
 async def test_endpoints_require_player_auth(api: AsyncClient) -> None:
     resp = await api.get("/api/v1/concierge/brief")
     assert resp.status_code == 401

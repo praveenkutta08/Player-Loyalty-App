@@ -1429,6 +1429,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/concierge/consent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set Consent
+         * @description Explicit opt-in for stored-origin travel math (GOLDEN RULE #8 — consent + audit).
+         *
+         *     Revoking consent also clears the stored origin — we never keep location data the player
+         *     hasn't consented to using.
+         */
+        post: operations["set_consent_api_v1_concierge_consent_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/concierge/preview": {
         parameters: {
             query?: never;
@@ -1740,6 +1763,22 @@ export interface components {
             escalate: boolean;
             /** Refused */
             refused: boolean;
+        };
+        /**
+         * ConciergeConsentIn
+         * @description Concierge consent (separate from location_consent): stored origin for drive-time math.
+         */
+        ConciergeConsentIn: {
+            /** Granted */
+            granted: boolean;
+            home_origin?: components["schemas"]["HomeOriginIn"] | null;
+        };
+        /** ConciergeConsentOut */
+        ConciergeConsentOut: {
+            /** Concierge Consent */
+            concierge_consent: boolean;
+            /** Has Home Origin */
+            has_home_origin: boolean;
         };
         /**
          * ConciergeEnvelope
@@ -2170,6 +2209,15 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** HomeOriginIn */
+        HomeOriginIn: {
+            /** Lat */
+            lat: number;
+            /** Lng */
+            lng: number;
+            /** Label */
+            label?: string | null;
         };
         /** IssueKeyRequest */
         IssueKeyRequest: {
@@ -6584,6 +6632,41 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AnswerSummaryOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    set_consent_api_v1_concierge_consent_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConciergeConsentIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConciergeConsentOut"];
                 };
             };
             /** @description Validation Error */

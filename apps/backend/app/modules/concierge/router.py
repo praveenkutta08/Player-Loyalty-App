@@ -35,6 +35,8 @@ from .schemas import (
     AdminAnswerOut,
     AnswerSummaryOut,
     AskIn,
+    ConciergeConsentIn,
+    ConciergeConsentOut,
     ConciergeEnvelope,
     ConciergeOffersOut,
     ConciergePlanOut,
@@ -163,6 +165,45 @@ async def history(session: SessionDep, player: PlayerDep) -> list[AnswerSummaryO
         )
         for a in answers
     ]
+
+
+@router.post("/concierge/consent", response_model=ConciergeConsentOut, tags=["concierge"])
+async def set_consent(
+    body: ConciergeConsentIn, session: SessionDep, player: PlayerDep
+) -> ConciergeConsentOut:
+    """Explicit opt-in for stored-origin travel math (GOLDEN RULE #8 — consent + audit).
+
+    Revoking consent also clears the stored origin — we never keep location data the player
+    hasn't consented to using.
+    """
+    player.concierge_consent = body.granted
+    if not body.granted:
+        player.home_origin = None
+    elif body.home_origin is not None:
+        player.home_origin = {
+            "lat": body.home_origin.lat,
+            "lng": body.home_origin.lng,
+            "label": body.home_origin.label,
+        }
+    await session.flush()
+
+    from ..audit.models import ActorType
+    from ..audit.service import write_audit
+
+    await write_audit(
+        session,
+        tenant_id=player.tenant_id,
+        actor_type=ActorType.player.value,
+        actor_id=player.id,
+        action="concierge:consent",
+        entity="player",
+        entity_id=player.id,
+        meta={"granted": body.granted, "has_home_origin": player.home_origin is not None},
+    )
+    return ConciergeConsentOut(
+        concierge_consent=player.concierge_consent,
+        has_home_origin=player.home_origin is not None,
+    )
 
 
 # ------------------------------------------------------------------ admin (Concierge Studio)

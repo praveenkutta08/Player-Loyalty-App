@@ -1,32 +1,37 @@
 import React, { useMemo, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet } from 'react-native';
 
+import { useFeature } from '../../app/providers/FeatureProvider';
 import { useAppSelector } from '../../app/store';
 import { Input, Screen, SegmentedControl, ThemedText } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
+import { ForYouPanel } from '../concierge/ForYouPanel';
 import { MyRewardsPanel } from '../rewards/MyRewardsPanel';
 
 import { OfferCard } from './OfferCard';
 import { useGetOffersQuery, useGetPromotionsQuery } from './offersApi';
+import { buildSegments, initialSegment } from './segments';
 
 import type { OfferOut } from './offersApi';
+import type { OffersSegment } from './segments';
 import type { OffersStackParamList } from './types';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type Props = NativeStackScreenProps<OffersStackParamList, 'OffersHome'>;
-type Segment = 'offers' | 'promotions' | 'rewards';
 
-const SEGMENTS = [
-  { key: 'offers' as const, label: 'Offers' },
-  { key: 'promotions' as const, label: 'Promotions' },
-  { key: 'rewards' as const, label: 'My Rewards' },
-];
-
-/** O1/O3 — segmented Offers | Promotions | My Rewards with search (G3). Targeted from the API. */
+/**
+ * O1/O3 — segmented Offers tab. With the `concierge` flag on, a ranked "For You" view leads
+ * (why-you pills, P6.6) and the full list stays one segment away; flag off keeps the classic
+ * Offers | Promotions | My Rewards.
+ */
 export function OffersScreen({ navigation, route }: Props): React.JSX.Element {
   const theme = useTheme();
-  const [segment, setSegment] = useState<Segment>(route.params?.tab ?? 'offers');
+  const conciergeOn = useFeature('concierge');
+  const [segment, setSegment] = useState<OffersSegment>(
+    initialSegment(route.params?.tab, conciergeOn),
+  );
   const [query, setQuery] = useState('');
+  const segments = buildSegments(conciergeOn);
 
   const offers = useGetOffersQuery();
   const promotions = useGetPromotionsQuery();
@@ -50,9 +55,17 @@ export function OffersScreen({ navigation, route }: Props): React.JSX.Element {
       <ThemedText variant="h1" style={styles.title}>
         Offers
       </ThemedText>
-      <SegmentedControl segments={SEGMENTS} value={segment} onChange={setSegment} />
+      <SegmentedControl segments={segments} value={segment} onChange={setSegment} />
 
-      {segment === 'rewards' ? (
+      {segment === 'foryou' ? (
+        <ForYouPanel
+          onOpenOffer={(ranked) => {
+            // Ranked entries reference full offers by id; open from the loaded list.
+            const full = offers.data?.find((o) => o.id === ranked.offer_id);
+            if (full) openItem(full);
+          }}
+        />
+      ) : segment === 'rewards' ? (
         <MyRewardsPanel onBrowse={() => navigation.navigate('RewardsMarketplace')} />
       ) : (
         <>

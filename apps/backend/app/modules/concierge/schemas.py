@@ -76,6 +76,24 @@ class PlanIn(BaseModel):
     date: str | None = None
 
 
+class HomeOriginIn(BaseModel):
+    lat: float = Field(ge=-90, le=90)
+    lng: float = Field(ge=-180, le=180)
+    label: str | None = Field(default=None, max_length=120)
+
+
+class ConciergeConsentIn(BaseModel):
+    """Concierge consent (separate from location_consent): stored origin for drive-time math."""
+
+    granted: bool
+    home_origin: HomeOriginIn | None = None
+
+
+class ConciergeConsentOut(BaseModel):
+    concierge_consent: bool
+    has_home_origin: bool
+
+
 class AnswerSummaryOut(BaseModel):
     id: UUID
     use_case: str

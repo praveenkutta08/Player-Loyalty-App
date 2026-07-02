@@ -1,12 +1,17 @@
-import { ScanLine, Wallet } from 'lucide-react-native';
-import React from 'react';
+import { ScanLine, Sparkles, Wallet } from 'lucide-react-native';
+import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { useManifest } from '../../app/manifest/ManifestProvider';
+import { navigationRef } from '../../app/navigation/navigationRef';
 import { useFeature } from '../../app/providers/FeatureProvider';
 import { Card, Screen, StatusPill, ThemedText } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useGetAccountMeQuery } from '../account/accountApi';
+import { ContextStrip, RecoHero } from '../concierge/components';
+import { useGetBriefQuery } from '../concierge/conciergeApi';
+import { PlanSheet } from '../concierge/PlanSheet';
+import { useConciergePersona } from '../concierge/useConciergePersona';
 import { OfferCard } from '../offers/OfferCard';
 import { useGetOffersQuery, useGetPromotionsQuery } from '../offers/offersApi';
 
@@ -16,7 +21,12 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
 type Props = BottomTabScreenProps<MainTabParamList, 'Home'>;
 
-/** H1 — Home: brandable hero + tier/points, promotions carousel, quick actions, featured offer. */
+/**
+ * H1 — Home: brandable hero + tier/points, promotions carousel, quick actions. With the
+ * `concierge` flag on, the recommendations slot becomes the concierge hero (prefetched during
+ * splash — rendered from cache, never a spinner); flag off (or brief not yet cached) falls back
+ * to the static featured offer, so there are no dead ends either way.
+ */
 export function HomeScreen({ navigation }: Props): React.JSX.Element {
   const theme = useTheme();
   const { manifest } = useManifest();
@@ -24,14 +34,22 @@ export function HomeScreen({ navigation }: Props): React.JSX.Element {
   const promotions = useGetPromotionsQuery();
   const offers = useGetOffersQuery();
   const cashless = useFeature('cardless');
+  const conciergeOn = useFeature('concierge');
+  const { name: personaName } = useConciergePersona();
+  const brief = useGetBriefQuery(undefined, { skip: !conciergeOn });
+  const [planOpen, setPlanOpen] = useState(false);
 
   const greetingName = me.data?.email?.split('@')[0] ?? 'there';
   const featured = offers.data?.[0];
+  const showConciergeHero = conciergeOn && brief.data != null;
 
   const openPromotion = (promotion: OfferOut): void =>
     navigation.navigate('Offers', { screen: 'PromotionDetail', params: { promotion } });
   const openOffer = (offer: OfferOut): void =>
     navigation.navigate('Offers', { screen: 'OfferDetail', params: { offer } });
+  const onHeroCta = (action: string): void => {
+    if (action === 'concierge.plan') setPlanOpen(true);
+  };
 
   return (
     <Screen>
@@ -43,6 +61,27 @@ export function HomeScreen({ navigation }: Props): React.JSX.Element {
         <ThemedText variant="display" style={{ color: theme.colors.brand.gold }}>
           Hi {greetingName}
         </ThemedText>
+
+        {/* Concierge hero (H1 recommendations slot) — pre-fetched brief, advisory only. */}
+        {showConciergeHero && brief.data ? (
+          <View style={styles.conciergeSlot}>
+            <RecoHero envelope={brief.data} onCta={onHeroCta} />
+            <View style={styles.contextStrip}>
+              <ContextStrip signals={brief.data.signals} />
+            </View>
+            <Pressable
+              accessibilityRole="button"
+              testID="ask-entry"
+              onPress={() => navigationRef.navigate('AskAI')}
+              style={styles.askRow}
+            >
+              <Sparkles size={14} color={theme.colors.text.muted} />
+              <ThemedText variant="label" color="muted" style={styles.askLabel}>
+                Ask {personaName} about your visit
+              </ThemedText>
+            </Pressable>
+          </View>
+        ) : null}
 
         {/* Tier + points snapshot */}
         <Card style={styles.tierCard}>
@@ -101,16 +140,18 @@ export function HomeScreen({ navigation }: Props): React.JSX.Element {
           </>
         ) : null}
 
-        {/* Featured offer */}
-        {featured ? (
+        {/* Featured offer — the static fallback recommendation when the concierge is off
+            (or its brief hasn't landed yet). Never both surfaces at once. */}
+        {!showConciergeHero && featured ? (
           <>
-            <ThemedText variant="title" style={styles.sectionTitle}>
+            <ThemedText variant="title" style={styles.sectionTitle} testID="featured-offer">
               Featured offer
             </ThemedText>
             <OfferCard offer={featured} onPress={() => openOffer(featured)} />
           </>
         ) : null}
       </ScrollView>
+      <PlanSheet visible={planOpen} onClose={() => setPlanOpen(false)} />
     </Screen>
   );
 }
@@ -137,6 +178,10 @@ function QuickAction({
 
 const styles = StyleSheet.create({
   content: { paddingVertical: 16, paddingBottom: 32 },
+  conciergeSlot: { marginTop: 20 },
+  contextStrip: { marginTop: 10 },
+  askRow: { flexDirection: 'row', alignItems: 'center', marginTop: 10 },
+  askLabel: { marginLeft: 6 },
   tierCard: { marginTop: 20 },
   tierRow: { flexDirection: 'row', justifyContent: 'space-between' },
   segmentPill: { marginTop: 12 },

@@ -11,11 +11,13 @@ export type MainTabParamList = {
   More: undefined;
 };
 
-/** Root stack: main tabs, notification center/detail (reachable from any tab's bell), plus the
- * force-update gate (the splash is owned by the manifest gate). */
+/** Root stack: main tabs, notification center/detail (reachable from any tab's bell), the
+ * Ask AI concierge screen (Home hero + top-bar entry — NOT a tab), plus the force-update gate
+ * (the splash is owned by the manifest gate). */
 export type RootStackParamList = {
   ForceUpdate: undefined;
   Main: NavigatorScreenParams<MainTabParamList>;
   Notifications: undefined;
   MessageDetail: { id: string };
+  AskAI: undefined;
 };

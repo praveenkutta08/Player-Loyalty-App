@@ -26,6 +26,7 @@ export function MainTabs(): React.JSX.Element {
   const title = manifest?.name ?? buildConfig.appName;
   const globals = manifest?.navigation?.globals;
   const tabs = resolveTabs(manifest?.navigation, isEnabled);
+  const conciergeOn = isEnabled('concierge');
 
   return (
     <Tab.Navigator
@@ -35,7 +36,9 @@ export function MainTabs(): React.JSX.Element {
             title={title}
             showNotifications={globals?.showNotifications !== false}
             showSearch={globals?.showSearch !== false}
+            showAsk={conciergeOn}
             onPressNotifications={() => navigationRef.navigate('Notifications')}
+            onPressAsk={() => navigationRef.navigate('AskAI')}
           />
         ),
         tabBarActiveTintColor: theme.colors.brand.gold,
