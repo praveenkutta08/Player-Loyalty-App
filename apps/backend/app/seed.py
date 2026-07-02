@@ -16,6 +16,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import hash_password
 from app.db.session import SessionLocal
+from app.modules.concierge.service import DEFAULT_CONCIERGE_CONFIG
 from app.modules.games.models import Game
 from app.modules.geofencing.models import GeofenceZone, LocationTrigger, TriggerEvent
 from app.modules.identity.models import AdminUser, AdminUserTenant, Role, UserRole
@@ -64,7 +65,7 @@ async def seed() -> dict[str, Any]:
             session, Tenant, {"name": "Demo Casino", "status": "active"}, slug=DEMO_SLUG
         )
 
-        await _get_or_create(
+        config = await _get_or_create(
             session,
             TenantConfig,
             {
@@ -77,9 +78,13 @@ async def seed() -> dict[str, Any]:
                     "reservations": True,
                     "valet": True,
                 },
+                "concierge": DEFAULT_CONCIERGE_CONFIG,
             },
             tenant_id=tenant.id,
         )
+        # Defaults only apply on create — backfill the concierge block on pre-existing seeds.
+        if not config.concierge:
+            config.concierge = DEFAULT_CONCIERGE_CONFIG
         await _get_or_create(
             session,
             Theme,

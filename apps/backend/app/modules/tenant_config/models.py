@@ -30,6 +30,10 @@ class TenantConfig(TenantOwnedMixin, BaseModel):
     navigation: Mapped[dict[str, Any]] = mapped_column(
         JSONB, nullable=False, default=dict, server_default=text("'{}'::jsonb")
     )
+    # Concierge config (P6.2/P6.4): scoring weights, persona, guardrails — tenant-tunable.
+    concierge: Mapped[dict[str, Any]] = mapped_column(
+        JSONB, nullable=False, default=dict, server_default=text("'{}'::jsonb")
+    )
     version: Mapped[int] = mapped_column(Integer, nullable=False, default=1, server_default="1")
 
 
