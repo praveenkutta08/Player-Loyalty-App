@@ -25,8 +25,16 @@ from .schemas import (
     TransactionOut,
     TransferRequest,
     WalletOut,
+    WalletTransactionOut,
 )
-from .service import cashout, derived_balance, fund, get_or_create_wallet, transfer_to_egm
+from .service import (
+    cashout,
+    derived_balance,
+    fund,
+    get_or_create_wallet,
+    list_transactions,
+    transfer_to_egm,
+)
 
 router = APIRouter()
 
@@ -51,6 +59,13 @@ async def get_wallet(player: PlayerDep, session: SessionDep) -> WalletOut:
     wallet = await get_or_create_wallet(session, player)
     wallet.balance_cents = await derived_balance(session, wallet.id)
     return WalletOut.model_validate(wallet)
+
+
+@router.get("/wallet/transactions", response_model=list[WalletTransactionOut], tags=["wallet"])
+async def wallet_transactions(player: PlayerDep, session: SessionDep) -> list[WalletTransactionOut]:
+    """The player's append-only ledger, newest first (history view)."""
+    txns = await list_transactions(session, player)
+    return [WalletTransactionOut.model_validate(txn) for txn in txns]
 
 
 @router.post("/wallet/fund", response_model=TransactionOut, tags=["wallet"])

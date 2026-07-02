@@ -26,6 +26,22 @@ async def get_or_create_wallet(session: AsyncSession, player: Player) -> Wallet:
     return wallet
 
 
+async def list_transactions(
+    session: AsyncSession, player: Player, limit: int = 100
+) -> list[WalletTransaction]:
+    """Player's ledger, newest first — backs the Wallet history view (S5/S9)."""
+    wallet = await get_or_create_wallet(session, player)
+    rows = (
+        await session.execute(
+            select(WalletTransaction)
+            .where(WalletTransaction.wallet_id == wallet.id)
+            .order_by(WalletTransaction.created_at.desc())
+            .limit(limit)
+        )
+    ).scalars().all()
+    return list(rows)
+
+
 async def derived_balance(session: AsyncSession, wallet_id: UUID) -> int:
     """Authoritative balance = sum of completed ledger entries."""
     total = (

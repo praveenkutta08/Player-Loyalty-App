@@ -45,6 +45,39 @@ async def test_balance_math_and_idempotency(api: AsyncClient) -> None:
     assert wallet.json()["balance_cents"] == 5000  # 10000 - 3000 - 2000
 
 
+async def test_transaction_history(api: AsyncClient) -> None:
+    tenant = await create_tenant()
+    auth = {"Authorization": f"Bearer {await player_token(api, tenant.id)}"}
+
+    # Empty ledger to start.
+    empty = await api.get("/api/v1/wallet/transactions", headers=auth)
+    assert empty.status_code == 200
+    assert empty.json() == []
+
+    await api.post(
+        "/api/v1/wallet/fund",
+        headers={**auth, "Idempotency-Key": "h-fund"},
+        json={"amount_cents": 8000},
+    )
+    await api.post(
+        "/api/v1/wallet/transfer",
+        headers={**auth, "Idempotency-Key": "h-xfer"},
+        json={"amount_cents": 2500, "egm_id": "EGM-9"},
+    )
+
+    history = await api.get("/api/v1/wallet/transactions", headers=auth)
+    assert history.status_code == 200
+    rows = history.json()
+    assert len(rows) == 2
+    # Newest first: the transfer precedes the fund; each carries a timestamp + signed amount.
+    assert rows[0]["type"] == "transfer_to_egm"
+    assert rows[0]["amount_cents"] == -2500
+    assert rows[0]["egm_id"] == "EGM-9"
+    assert rows[1]["type"] == "fund"
+    assert rows[1]["amount_cents"] == 8000
+    assert "created_at" in rows[0]
+
+
 async def test_insufficient_funds_and_missing_key(api: AsyncClient) -> None:
     tenant = await create_tenant()
     auth = {"Authorization": f"Bearer {await player_token(api, tenant.id)}"}

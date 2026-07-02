@@ -7,7 +7,7 @@ import { AccountNavigator } from '../../features/account/AccountNavigator';
 import { HomeScreen } from '../../features/home/HomeScreen';
 import { MoreScreen } from '../../features/more/MoreScreen';
 import { OffersNavigator } from '../../features/offers/OffersNavigator';
-import { PlayScreen } from '../../features/wallet/PlayScreen';
+import { WalletNavigator } from '../../features/wallet/WalletNavigator';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useManifest } from '../manifest/ManifestProvider';
 
@@ -70,7 +70,7 @@ export function MainTabs(): React.JSX.Element {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Offers" component={OffersNavigator} />
-      <Tab.Screen name="Play" component={PlayScreen} options={{ tabBarLabel: 'Scan/Play' }} />
+      <Tab.Screen name="Play" component={WalletNavigator} options={{ tabBarLabel: 'Scan/Play' }} />
       <Tab.Screen name="Account" component={AccountNavigator} />
       <Tab.Screen name="More" component={MoreScreen} />
     </Tab.Navigator>

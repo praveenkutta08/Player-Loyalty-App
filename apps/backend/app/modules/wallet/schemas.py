@@ -29,6 +29,12 @@ class TransactionOut(BaseModel):
     status: str
 
 
+class WalletTransactionOut(TransactionOut):
+    """Ledger row for the history view (adds the DB-managed timestamp)."""
+
+    created_at: datetime
+
+
 class FundRequest(BaseModel):
     amount_cents: int = Field(gt=0)
 

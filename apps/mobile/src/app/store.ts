@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import authReducer from '../features/auth/authSlice';
 import redeemedReducer from '../features/offers/redeemedSlice';
+import paymentMethodsReducer from '../features/wallet/paymentMethodsSlice';
 
 import type { TypedUseSelectorHook } from 'react-redux';
 
@@ -17,6 +18,7 @@ export const store = configureStore({
     [baseApi.reducerPath]: baseApi.reducer,
     auth: authReducer,
     redeemed: redeemedReducer,
+    paymentMethods: paymentMethodsReducer,
   },
   middleware: (getDefault) => getDefault().concat(baseApi.middleware),
 });

@@ -600,6 +600,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/wallet/transactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Wallet Transactions
+         * @description The player's append-only ledger, newest first (history view).
+         */
+        get: operations["wallet_transactions_api_v1_wallet_transactions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/wallet/fund": {
         parameters: {
             query?: never;
@@ -2629,6 +2649,32 @@ export interface components {
             /** Balance Cents */
             balance_cents: number;
         };
+        /**
+         * WalletTransactionOut
+         * @description Ledger row for the history view (adds the DB-managed timestamp).
+         */
+        WalletTransactionOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Type */
+            type: string;
+            /** Amount Cents */
+            amount_cents: number;
+            /** Egm Id */
+            egm_id: string | null;
+            /** External Ref */
+            external_ref: string | null;
+            /** Status */
+            status: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
         /** ZoneCreate */
         ZoneCreate: {
             /** Name */
@@ -4173,6 +4219,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WalletOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    wallet_transactions_api_v1_wallet_transactions_get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WalletTransactionOut"][];
                 };
             };
             /** @description Validation Error */
