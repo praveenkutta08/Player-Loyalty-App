@@ -3,6 +3,7 @@ import { baseApi } from '@repo/api-client';
 import { useDispatch, useSelector } from 'react-redux';
 
 import authReducer from '../features/auth/authSlice';
+import redeemedReducer from '../features/offers/redeemedSlice';
 
 import type { TypedUseSelectorHook } from 'react-redux';
 
@@ -15,6 +16,7 @@ export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     auth: authReducer,
+    redeemed: redeemedReducer,
   },
   middleware: (getDefault) => getDefault().concat(baseApi.middleware),
 });

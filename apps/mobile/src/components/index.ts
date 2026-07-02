@@ -12,3 +12,5 @@ export { StatusPill } from './StatusPill';
 export type { StatusPillProps, StatusTone } from './StatusPill';
 export { Toggle } from './Toggle';
 export type { ToggleProps } from './Toggle';
+export { SegmentedControl } from './SegmentedControl';
+export type { Segment } from './SegmentedControl';
