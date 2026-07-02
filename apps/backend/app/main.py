@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -10,11 +13,19 @@ from .core.errors import register_exception_handlers
 from .core.logging import configure_logging, get_logger
 from .core.middleware import AccessLogMiddleware
 from .core.settings import get_settings
+from .db.guards import assert_rls_bound_role
 
 # OpenAPI tag metadata — one entry per domain, populated as modules land.
 OPENAPI_TAGS = [
     {"name": "health", "description": "Liveness/readiness checks."},
 ]
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    # Fail-closed isolation (audit C1): never serve traffic on a role that bypasses RLS.
+    await assert_rls_bound_role()
+    yield
 
 
 def create_app() -> FastAPI:
@@ -31,6 +42,7 @@ def create_app() -> FastAPI:
         openapi_url=f"{settings.api_base_path}/openapi.json",
         docs_url="/docs",
         redoc_url="/redoc",
+        lifespan=lifespan,
     )
 
     app.add_middleware(

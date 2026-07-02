@@ -12,10 +12,10 @@ from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.core.security import hash_password
-from app.db.session import SessionLocal
+from app.core.settings import get_settings
 from app.modules.concierge.models import Property
 from app.modules.concierge.service import DEFAULT_CONCIERGE_CONFIG
 from app.modules.games.models import Game
@@ -61,7 +61,18 @@ async def _seed_admin(
 
 
 async def seed() -> dict[str, Any]:
-    async with SessionLocal() as session:
+    # Seeding bypasses RLS by design — always connect with the owner/migration DSN, not the
+    # app_runtime engine (audit C1). Engine is per-call so pytest event loops don't share pools.
+    engine = create_async_engine(get_settings().database_url)
+    try:
+        session_factory = async_sessionmaker(engine, expire_on_commit=False, autoflush=False)
+        return await _seed(session_factory)
+    finally:
+        await engine.dispose()
+
+
+async def _seed(session_factory: async_sessionmaker[AsyncSession]) -> dict[str, Any]:
+    async with session_factory() as session:
         tenant = await _get_or_create(
             session, Tenant, {"name": "Demo Casino", "status": "active"}, slug=DEMO_SLUG
         )

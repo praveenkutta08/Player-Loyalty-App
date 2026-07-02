@@ -2,6 +2,9 @@ services:
   db:
     image: postgres:16
     environment:
+      # `player` is the OWNER/MIGRATION role (the official image makes it a superuser).
+      # The API connects as the RLS-bound `app_runtime` role created by alembic — see
+      # PG_APP_USER / PG_APP_PASSWORD in .env.example (audit C1).
       POSTGRES_USER: player
       POSTGRES_PASSWORD: player
       POSTGRES_DB: player

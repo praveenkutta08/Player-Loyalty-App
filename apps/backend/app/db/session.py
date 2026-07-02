@@ -15,8 +15,10 @@ from ..core.settings import get_settings
 
 _settings = get_settings()
 
+# Runtime engine: connects as the RLS-bound app role when PG_APP_USER is set (audit C1).
+# Migrations and app.seed use the owner DSN (settings.database_url) directly.
 engine: AsyncEngine = create_async_engine(
-    _settings.database_url,
+    _settings.runtime_database_url,
     pool_pre_ping=True,
     echo=False,
     future=True,

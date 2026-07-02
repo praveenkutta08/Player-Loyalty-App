@@ -2,15 +2,24 @@
 
 from __future__ import annotations
 
-from collections.abc import AsyncIterator, Iterator
+import os
 
-import pytest
-import pytest_asyncio
-from app.db.session import engine
-from app.main import app
-from fastapi.testclient import TestClient
-from httpx import ASGITransport, AsyncClient
-from sqlalchemy.ext.asyncio import AsyncEngine
+# Tests seed fixture data as the DB owner (bypassing RLS), so force the owner engine regardless
+# of any local PG_APP_USER override, and permit the superuser connection the app otherwise
+# refuses at boot (audit C1). Must happen before any `app.*` import caches Settings.
+os.environ["ALLOW_SUPERUSER_DB"] = "1"
+os.environ["PG_APP_USER"] = ""
+os.environ["PG_APP_PASSWORD"] = ""
+
+from collections.abc import AsyncIterator, Iterator  # noqa: E402
+
+import pytest  # noqa: E402
+import pytest_asyncio  # noqa: E402
+from app.db.session import engine  # noqa: E402
+from app.main import app  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
+from httpx import ASGITransport, AsyncClient  # noqa: E402
+from sqlalchemy.ext.asyncio import AsyncEngine  # noqa: E402
 
 
 @pytest.fixture

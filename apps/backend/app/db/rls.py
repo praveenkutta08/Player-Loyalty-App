@@ -1,9 +1,15 @@
 """Row-Level Security helpers (GOLDEN RULE #1 — tenant isolation via Postgres RLS).
 
-Because the app connects as a superuser/owner in dev (which would *bypass* RLS), the runtime path
-switches to a dedicated non-privileged role (``app_rls``) per request via ``SET LOCAL ROLE`` before
-running tenant-scoped queries. Migrations create that role and call :func:`enable_rls_statements`
-on every tenant-owned table.
+Isolation is enforced at two levels (audit C1):
+
+1. The app's engine logs in as ``app_runtime`` — a LOGIN role with NOSUPERUSER/NOBYPASSRLS that
+   does not own any table, so every query it runs is subject to RLS policies (fail-closed even if
+   a code path forgets the tenancy dependency). The app lifespan refuses to boot on a
+   SUPERUSER/BYPASSRLS connection outside dev.
+2. Each tenant-scoped request additionally switches into the non-login ``app_rls`` role via
+   ``SET LOCAL ROLE`` and sets the tenant GUC (defense-in-depth; ``app_runtime`` is a member).
+
+Migrations create both roles and call :func:`enable_rls_statements` on every tenant-owned table.
 
 These return lists of single statements because the async driver (asyncpg) executes one command
 per call — callers loop and ``op.execute`` / ``session.execute`` each one.
@@ -13,6 +19,9 @@ from __future__ import annotations
 
 # Non-login role the request switches into so RLS is actually enforced.
 APP_RLS_ROLE = "app_rls"
+
+# Login role the app's engine connects as (created by migration; NOSUPERUSER NOBYPASSRLS).
+APP_RUNTIME_ROLE = "app_runtime"
 
 # Transaction-local GUC holding the current tenant id; policies compare against it.
 TENANT_GUC = "app.current_tenant"

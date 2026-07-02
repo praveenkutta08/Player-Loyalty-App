@@ -35,7 +35,9 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Inject the application's database URL (async driver) into the Alembic config.
+# Inject the OWNER/MIGRATION database URL (async driver) into the Alembic config.
+# Migrations always run as the owner role — the API runtime uses settings.runtime_database_url
+# (the RLS-bound app_runtime role) instead; see audit C1.
 config.set_main_option("sqlalchemy.url", get_settings().database_url)
 
 target_metadata = Base.metadata

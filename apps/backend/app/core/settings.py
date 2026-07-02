@@ -5,6 +5,7 @@ from __future__ import annotations
 from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from sqlalchemy.engine import make_url
 
 
 class Settings(BaseSettings):
@@ -26,7 +27,15 @@ class Settings(BaseSettings):
     api_base_path: str = "/api/v1"
 
     # Infra (used from later phases; declared now so config is complete)
+    # DATABASE_URL is the OWNER/MIGRATION DSN (alembic, app.seed). The API itself must connect as
+    # the RLS-bound, non-superuser role created by migrations (audit C1) — set PG_APP_USER /
+    # PG_APP_PASSWORD and the runtime engine swaps those credentials into the same DSN.
     database_url: str = "postgresql+asyncpg://player:player@localhost:5433/player"
+    pg_app_user: str | None = None
+    pg_app_password: str | None = None
+    # Dev-only escape hatch: boot on a SUPERUSER/BYPASSRLS connection anyway (tests seed as the
+    # owner and set this themselves). Ignored outside dev — the app refuses to start.
+    allow_superuser_db: bool = False
     redis_url: str = "redis://localhost:6379/0"
 
     # Auth
@@ -75,6 +84,20 @@ class Settings(BaseSettings):
     @property
     def is_dev(self) -> bool:
         return self.app_env.lower() in {"dev", "development", "local"}
+
+    @property
+    def runtime_database_url(self) -> str:
+        """DSN the app engine connects with: DATABASE_URL with PG_APP_USER credentials swapped in.
+
+        Falls back to DATABASE_URL itself when PG_APP_USER is unset/empty (dev/tests, where the
+        superuser guard in the app lifespan is the backstop).
+        """
+        if not self.pg_app_user:
+            return self.database_url
+        url = make_url(self.database_url).set(
+            username=self.pg_app_user, password=self.pg_app_password or ""
+        )
+        return url.render_as_string(hide_password=False)
 
 
 @lru_cache
