@@ -1,9 +1,10 @@
+import { CloudOff } from 'lucide-react-native';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { CloudOff } from 'lucide-react-native';
+
+import { useTheme } from '../theme/ThemeProvider';
 
 import { ThemedText } from './ThemedText';
-import { useTheme } from '../theme/ThemeProvider';
 
 /**
  * G6 — offline banner. Shown when the app is running from a cached manifest because the latest

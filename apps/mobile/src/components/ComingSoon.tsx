@@ -1,9 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
 
+import { useTheme } from '../theme/ThemeProvider';
+
 import { Screen } from './Screen';
 import { ThemedText } from './ThemedText';
-import { useTheme } from '../theme/ThemeProvider';
 
 /**
  * Placeholder body for tabs whose feature lands in a later Phase-4 prompt. Keeps the app shell

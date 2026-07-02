@@ -10,21 +10,21 @@
  */
 import React from 'react';
 import { StatusBar } from 'react-native';
-import { Provider as ReduxProvider } from 'react-redux';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider as ReduxProvider } from 'react-redux';
 
 import './src/app/apiConfig'; // side effect: set the initial API base URL before any request
 import './src/features/auth/session'; // side effect: wire configureApiAuth (token/refresh)
 import { ManifestProvider, useManifest } from './src/app/manifest/ManifestProvider';
-import { AuthProvider } from './src/features/auth/AuthProvider';
-import { FeatureProvider } from './src/app/providers/FeatureProvider';
 import { RootNavigator } from './src/app/navigation/RootNavigator';
+import { FeatureProvider } from './src/app/providers/FeatureProvider';
 import { store } from './src/app/store';
-import { buildConfig } from './src/config/buildConfig';
-import { BrandSplash } from './src/features/splash/BrandSplash';
 import { OfflineBanner } from './src/components/OfflineBanner';
-import { DEFAULT_THEME } from './src/theme/tokens';
+import { buildConfig } from './src/config/buildConfig';
+import { AuthProvider } from './src/features/auth/AuthProvider';
+import { BrandSplash } from './src/features/splash/BrandSplash';
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
+import { DEFAULT_THEME } from './src/theme/tokens';
 
 function ThemedStatusBar(): React.JSX.Element {
   const theme = useTheme();

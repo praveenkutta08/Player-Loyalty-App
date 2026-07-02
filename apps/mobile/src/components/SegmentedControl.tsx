@@ -1,8 +1,9 @@
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { ThemedText } from './ThemedText';
 import { useTheme } from '../theme/ThemeProvider';
+
+import { ThemedText } from './ThemedText';
 
 export interface Segment<T extends string> {
   key: T;

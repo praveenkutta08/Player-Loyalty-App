@@ -7,8 +7,8 @@ import { useRequestOtpMutation, useVerifyOtpMutation } from '../authApi';
 import { errorMessage } from '../errors';
 import { persistTokens, registerDevice } from '../session';
 
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Otp'>;
 

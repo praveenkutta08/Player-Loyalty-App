@@ -2,15 +2,16 @@ import React, { useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import uuid from 'react-native-uuid';
 
-import { Button, Card, Screen, StatusPill, ThemedText } from '../../components';
 import { useAppDispatch, useAppSelector } from '../../app/store';
+import { Button, Card, Screen, StatusPill, ThemedText } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
 import { errorMessage } from '../auth/errors';
-import { markRedeemed } from './redeemedSlice';
-import { useRedeemOfferMutation } from './offersApi';
 
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useRedeemOfferMutation } from './offersApi';
+import { markRedeemed } from './redeemedSlice';
+
 import type { OffersStackParamList } from './types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type Props = NativeStackScreenProps<OffersStackParamList, 'OfferDetail'>;
 

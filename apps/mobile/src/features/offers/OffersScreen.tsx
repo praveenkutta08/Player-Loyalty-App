@@ -1,15 +1,16 @@
 import React, { useMemo, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 
-import { Input, Screen, SegmentedControl, ThemedText } from '../../components';
 import { useAppSelector } from '../../app/store';
+import { Input, Screen, SegmentedControl, ThemedText } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
+
 import { OfferCard } from './OfferCard';
 import { useGetOffersQuery, useGetPromotionsQuery } from './offersApi';
 
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { OfferOut } from './offersApi';
 import type { OffersStackParamList } from './types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type Props = NativeStackScreenProps<OffersStackParamList, 'OffersHome'>;
 type Segment = 'offers' | 'promotions' | 'rewards';

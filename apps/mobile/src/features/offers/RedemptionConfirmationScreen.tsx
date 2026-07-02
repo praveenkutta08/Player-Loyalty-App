@@ -1,12 +1,12 @@
+import { CheckCircle2 } from 'lucide-react-native';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { CheckCircle2 } from 'lucide-react-native';
 
 import { Button, Card, Screen, ThemedText } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
 
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { OffersStackParamList } from './types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type Props = NativeStackScreenProps<OffersStackParamList, 'RedemptionConfirmation'>;
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../theme/ThemeProvider';
+
 import { ThemedText } from './ThemedText';
 
 export type StatusTone = 'success' | 'warning' | 'error' | 'info' | 'purple' | 'muted';

@@ -1,9 +1,9 @@
+import { render, screen } from '@testing-library/react-native';
 import React from 'react';
 import { Text } from 'react-native';
-import { render, screen } from '@testing-library/react-native';
 
-import { DEFAULT_THEME } from '../src/theme/tokens';
 import { ThemeProvider, useTheme } from '../src/theme/ThemeProvider';
+import { DEFAULT_THEME } from '../src/theme/tokens';
 
 function Probe(): React.JSX.Element {
   const theme = useTheme();

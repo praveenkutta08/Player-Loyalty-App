@@ -2,6 +2,7 @@ import React from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../theme/ThemeProvider';
+
 import { ThemedText } from './ThemedText';
 
 import type { StyleProp, ViewStyle } from 'react-native';

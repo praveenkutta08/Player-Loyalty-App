@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from 'react-native';
 
-import { Button, Input, Screen, ThemedText } from '../../../components';
 import { useManifest } from '../../../app/manifest/ManifestProvider';
+import { Button, Input, Screen, ThemedText } from '../../../components';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { usePlayerLoginMutation } from '../authApi';
 import { errorMessage } from '../errors';
 import { persistTokens, registerDevice } from '../session';
 
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 

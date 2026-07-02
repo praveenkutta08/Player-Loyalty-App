@@ -1,12 +1,12 @@
 import Keychain from 'react-native-keychain';
 
+import { store } from '../src/app/store';
 import authReducer, {
   clearSession,
   setAccessToken,
   setUnauthenticated,
 } from '../src/features/auth/authSlice';
 import { errorMessage } from '../src/features/auth/errors';
-import { store } from '../src/app/store';
 import { logout, persistTokens } from '../src/features/auth/session';
 
 describe('authSlice', () => {

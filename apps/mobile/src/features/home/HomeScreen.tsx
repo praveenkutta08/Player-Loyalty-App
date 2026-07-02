@@ -1,18 +1,18 @@
+import { ScanLine, Wallet } from 'lucide-react-native';
 import React from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { ScanLine, Wallet } from 'lucide-react-native';
 
-import { Card, Screen, StatusPill, ThemedText } from '../../components';
-import { useFeature } from '../../app/providers/FeatureProvider';
 import { useManifest } from '../../app/manifest/ManifestProvider';
+import { useFeature } from '../../app/providers/FeatureProvider';
+import { Card, Screen, StatusPill, ThemedText } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
-import { OfferCard } from '../offers/OfferCard';
 import { useGetAccountMeQuery } from '../account/accountApi';
+import { OfferCard } from '../offers/OfferCard';
 import { useGetOffersQuery, useGetPromotionsQuery } from '../offers/offersApi';
 
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import type { MainTabParamList } from '../../app/navigation/types';
 import type { OfferOut } from '../offers/offersApi';
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
 type Props = BottomTabScreenProps<MainTabParamList, 'Home'>;
 

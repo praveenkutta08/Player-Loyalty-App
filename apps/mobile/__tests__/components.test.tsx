@@ -1,5 +1,5 @@
-import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
+import React from 'react';
 
 import { Button, ThemedText } from '../src/components';
 import { ThemeProvider } from '../src/theme/ThemeProvider';

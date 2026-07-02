@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 import { useTheme } from '../theme/ThemeProvider';
+
 import { ThemedText } from './ThemedText';
 
 import type { StyleProp, TextInputProps, ViewStyle } from 'react-native';

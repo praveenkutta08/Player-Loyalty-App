@@ -1,11 +1,11 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { Button, Card, Screen, StatusPill, ThemedText, Toggle } from '../../components';
-import { useFeatures } from '../../app/providers/FeatureProvider';
 import { useManifest } from '../../app/manifest/ManifestProvider';
-import { logout } from '../auth/session';
+import { useFeatures } from '../../app/providers/FeatureProvider';
+import { Button, Card, Screen, StatusPill, ThemedText, Toggle } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
+import { logout } from '../auth/session';
 
 /**
  * M4 — theme / appearance. Lets the player switch light/dark (tenant-permitted) and surfaces the

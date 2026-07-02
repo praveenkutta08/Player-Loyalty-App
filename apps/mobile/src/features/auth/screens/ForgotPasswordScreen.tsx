@@ -6,8 +6,8 @@ import { useTheme } from '../../../theme/ThemeProvider';
 import { useRequestOtpMutation } from '../authApi';
 import { errorMessage } from '../errors';
 
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { AuthStackParamList } from '../types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Forgot'>;
 

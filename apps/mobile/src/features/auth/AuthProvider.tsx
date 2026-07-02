@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { useAppDispatch } from '../../app/store';
+
 import { setUnauthenticated } from './authSlice';
 import { restoreSession } from './session';
 

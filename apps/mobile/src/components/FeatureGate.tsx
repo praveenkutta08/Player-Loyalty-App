@@ -1,11 +1,12 @@
+import { Lock } from 'lucide-react-native';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Lock } from 'lucide-react-native';
+
+import { useFeature } from '../app/providers/FeatureProvider';
+import { useTheme } from '../theme/ThemeProvider';
 
 import { Screen } from './Screen';
 import { ThemedText } from './ThemedText';
-import { useFeature } from '../app/providers/FeatureProvider';
-import { useTheme } from '../theme/ThemeProvider';
 
 /**
  * G7 — feature-unavailable placeholder, shown when a module is gated off by a manifest feature flag.

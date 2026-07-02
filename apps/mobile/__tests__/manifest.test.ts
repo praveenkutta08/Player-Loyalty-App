@@ -1,6 +1,6 @@
 import { normalizeManifest, resolveApiBaseUrl } from '../src/app/manifest/normalize';
-import { DEFAULT_THEME } from '../src/theme/tokens';
 import { deepMerge } from '../src/lib/deepMerge';
+import { DEFAULT_THEME } from '../src/theme/tokens';
 
 // A representative raw manifest (snake_case, partial theme) like the backend returns.
 const RAW = {

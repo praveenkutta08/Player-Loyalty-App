@@ -1,8 +1,8 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react-native';
+import React from 'react';
 
-import redeemedReducer, { markRedeemed } from '../src/features/offers/redeemedSlice';
 import { OfferCard } from '../src/features/offers/OfferCard';
+import redeemedReducer, { markRedeemed } from '../src/features/offers/redeemedSlice';
 import { ThemeProvider } from '../src/theme/ThemeProvider';
 
 import type { OfferOut } from '../src/features/offers/offersApi';

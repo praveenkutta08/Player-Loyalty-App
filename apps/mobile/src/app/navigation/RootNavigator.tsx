@@ -1,14 +1,15 @@
-import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react';
 
 import { buildConfig } from '../../config/buildConfig';
 import { AuthNavigator } from '../../features/auth/AuthNavigator';
 import { BrandSplash } from '../../features/splash/BrandSplash';
 import { ForceUpdateScreen } from '../../features/splash/ForceUpdateScreen';
+import { useTheme } from '../../theme/ThemeProvider';
 import { useManifest } from '../manifest/ManifestProvider';
 import { useAppSelector } from '../store';
-import { useTheme } from '../../theme/ThemeProvider';
+
 import { MainTabs } from './MainTabs';
 
 import type { RootStackParamList } from './types';

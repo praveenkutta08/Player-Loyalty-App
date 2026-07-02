@@ -1,11 +1,12 @@
-import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react';
+
+import { useTheme } from '../../theme/ThemeProvider';
 
 import { OfferDetailScreen } from './OfferDetailScreen';
 import { OffersScreen } from './OffersScreen';
 import { PromotionDetailScreen } from './PromotionDetailScreen';
 import { RedemptionConfirmationScreen } from './RedemptionConfirmationScreen';
-import { useTheme } from '../../theme/ThemeProvider';
 
 import type { OffersStackParamList } from './types';
 

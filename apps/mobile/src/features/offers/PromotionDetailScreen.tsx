@@ -4,8 +4,8 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { Card, Screen, StatusPill, ThemedText } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
 
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { OffersStackParamList } from './types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type Props = NativeStackScreenProps<OffersStackParamList, 'PromotionDetail'>;
 

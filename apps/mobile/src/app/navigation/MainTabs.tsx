@@ -1,15 +1,16 @@
-import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Gift, Home, Menu, ScanLine, User } from 'lucide-react-native';
+import React from 'react';
 
+import { buildConfig } from '../../config/buildConfig';
 import { AccountScreen } from '../../features/account/AccountScreen';
 import { HomeScreen } from '../../features/home/HomeScreen';
 import { MoreScreen } from '../../features/more/MoreScreen';
 import { OffersNavigator } from '../../features/offers/OffersNavigator';
 import { PlayScreen } from '../../features/wallet/PlayScreen';
-import { buildConfig } from '../../config/buildConfig';
-import { useManifest } from '../manifest/ManifestProvider';
 import { useTheme } from '../../theme/ThemeProvider';
+import { useManifest } from '../manifest/ManifestProvider';
+
 import { TopBar } from './TopBar';
 
 import type { MainTabParamList } from './types';
