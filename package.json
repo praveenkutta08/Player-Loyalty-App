@@ -12,7 +12,9 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,md,yml,yaml}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mjs,cjs,json,md,yml,yaml}\"",
     "infra:up": "docker compose up -d",
-    "infra:down": "docker compose down"
+    "infra:down": "docker compose down",
+    "gen:api": "bash scripts/regen-api-client.sh",
+    "check:api": "bash scripts/check-api-client.sh"
   },
   "devDependencies": {
     "@repo/config": "workspace:*",
