@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 
+import { AuditScreen } from '@/features/audit/AuditScreen';
 import { HomepageBuilder } from '@/features/builder/HomepageBuilder';
 import { NavigationBuilder } from '@/features/builder/NavigationBuilder';
 import { CasinosScreen } from '@/features/casinos/CasinosScreen';
@@ -45,6 +46,7 @@ export const SCREEN_REGISTRY: Record<string, ComponentType> = {
   '/support': SupportScreen,
   '/members': MembersScreen,
   '/compliance': ComplianceScreen,
+  '/audit': AuditScreen,
   '/hotel': HotelScreen,
   '/dining': DiningScreen,
   '/entertainment': EntertainmentScreen,
