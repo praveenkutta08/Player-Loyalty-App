@@ -20,4 +20,6 @@ export type MoreStackParamList = {
   ConciergeKit: undefined;
   /** Dev-only splash variant gallery (P7.3); __DEV__-gated in Appearance. */
   SplashGallery: undefined;
+  /** Dev-only nav bar style gallery + spec (P7.4); __DEV__-gated in Appearance. */
+  NavStylesGallery: undefined;
 };

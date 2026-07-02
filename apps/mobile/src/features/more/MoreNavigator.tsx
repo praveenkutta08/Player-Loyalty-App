@@ -12,6 +12,7 @@ import { ReservationBookScreen } from '../reservations/ReservationBookScreen';
 import { ReservationDetailScreen } from '../reservations/ReservationDetailScreen';
 import { ReservationsListScreen } from '../reservations/ReservationsListScreen';
 import { ValetScreen } from '../reservations/ValetScreen';
+import { NavStylesGalleryScreen } from '../settings/NavStylesGalleryScreen';
 import { SecuritySettingsScreen } from '../settings/SecuritySettingsScreen';
 import { ThemeSettingsScreen } from '../settings/ThemeSettingsScreen';
 import { SplashGalleryScreen } from '../splash/SplashGalleryScreen';
@@ -61,6 +62,11 @@ export function MoreNavigator(): React.JSX.Element {
         name="SplashGallery"
         component={SplashGalleryScreen}
         options={{ title: 'Splash variants' }}
+      />
+      <Stack.Screen
+        name="NavStylesGallery"
+        component={NavStylesGalleryScreen}
+        options={{ title: 'Nav bar styles' }}
       />
       <Stack.Screen
         name="Reservations"

@@ -1,0 +1,1573 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshots per style × theme editorial × dark 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "stretch",
+        "borderTopWidth": 0.5,
+        "flexDirection": "row",
+        "height": 56,
+      },
+      {
+        "backgroundColor": "#0e0f13",
+        "borderTopColor": "#1b1e24",
+        "paddingBottom": 34,
+      },
+    ]
+  }
+  testID="navbar-editorial"
+>
+  <View
+    accessibilityLabel="Home"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": true,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "flex": 1,
+        "gap": 3,
+        "justifyContent": "center",
+      }
+    }
+    testID="nav-Home"
+  >
+    <View
+      color="#E6B450"
+      size={22}
+    />
+    <Text
+      style={
+        [
+          {
+            "fontFamily": "Manrope",
+            "fontSize": 11,
+            "fontWeight": "600",
+            "letterSpacing": 0.55,
+            "lineHeight": 14,
+            "textTransform": "uppercase",
+          },
+          {
+            "color": "#f2f3f5",
+          },
+          [
+            {
+              "fontSize": 11,
+              "letterSpacing": 0.4,
+            },
+            {
+              "color": "#E6B450",
+              "fontWeight": "600",
+            },
+          ],
+        ]
+      }
+    >
+      Home
+    </Text>
+  </View>
+  <View
+    accessibilityLabel="Offers"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "flex": 1,
+        "gap": 3,
+        "justifyContent": "center",
+      }
+    }
+    testID="nav-Offers"
+  >
+    <View
+      color="#8b929c"
+      size={22}
+    />
+    <Text
+      style={
+        [
+          {
+            "fontFamily": "Manrope",
+            "fontSize": 11,
+            "fontWeight": "600",
+            "letterSpacing": 0.55,
+            "lineHeight": 14,
+            "textTransform": "uppercase",
+          },
+          {
+            "color": "#f2f3f5",
+          },
+          [
+            {
+              "fontSize": 11,
+              "letterSpacing": 0.4,
+            },
+            {
+              "color": "#8b929c",
+              "fontWeight": "400",
+            },
+          ],
+        ]
+      }
+    >
+      Offers
+    </Text>
+  </View>
+  <View
+    accessibilityLabel="Scan/Play"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "flex": 1,
+        "gap": 3,
+        "justifyContent": "center",
+      }
+    }
+    testID="nav-Play"
+  >
+    <View
+      style={
+        [
+          {
+            "alignItems": "center",
+            "backgroundColor": "#E6B450",
+            "borderRadius": 20,
+            "height": 40,
+            "justifyContent": "center",
+            "width": 40,
+          },
+          null,
+        ]
+      }
+      testID="nav-center-badge"
+    >
+      <View
+        color="#1A1408"
+        size={22}
+      />
+    </View>
+    <Text
+      style={
+        [
+          {
+            "fontFamily": "Manrope",
+            "fontSize": 11,
+            "fontWeight": "600",
+            "letterSpacing": 0.55,
+            "lineHeight": 14,
+            "textTransform": "uppercase",
+          },
+          {
+            "color": "#f2f3f5",
+          },
+          [
+            {
+              "fontSize": 11,
+              "letterSpacing": 0.4,
+            },
+            {
+              "color": "#E6B450",
+            },
+          ],
+        ]
+      }
+    >
+      Scan/Play
+    </Text>
+  </View>
+  <View
+    accessibilityLabel="Account"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "flex": 1,
+        "gap": 3,
+        "justifyContent": "center",
+      }
+    }
+    testID="nav-Account"
+  >
+    <View
+      color="#8b929c"
+      size={22}
+    />
+    <Text
+      style={
+        [
+          {
+            "fontFamily": "Manrope",
+            "fontSize": 11,
+            "fontWeight": "600",
+            "letterSpacing": 0.55,
+            "lineHeight": 14,
+            "textTransform": "uppercase",
+          },
+          {
+            "color": "#f2f3f5",
+          },
+          [
+            {
+              "fontSize": 11,
+              "letterSpacing": 0.4,
+            },
+            {
+              "color": "#8b929c",
+              "fontWeight": "400",
+            },
+          ],
+        ]
+      }
+    >
+      Account
+    </Text>
+  </View>
+  <View
+    accessibilityLabel="More"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "flex": 1,
+        "gap": 3,
+        "justifyContent": "center",
+      }
+    }
+    testID="nav-More"
+  >
+    <View
+      color="#8b929c"
+      size={22}
+    />
+    <Text
+      style={
+        [
+          {
+            "fontFamily": "Manrope",
+            "fontSize": 11,
+            "fontWeight": "600",
+            "letterSpacing": 0.55,
+            "lineHeight": 14,
+            "textTransform": "uppercase",
+          },
+          {
+            "color": "#f2f3f5",
+          },
+          [
+            {
+              "fontSize": 11,
+              "letterSpacing": 0.4,
+            },
+            {
+              "color": "#8b929c",
+              "fontWeight": "400",
+            },
+          ],
+        ]
+      }
+    >
+      More
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`snapshots per style × theme editorial × light 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "stretch",
+        "borderTopWidth": 0.5,
+        "flexDirection": "row",
+        "height": 56,
+      },
+      {
+        "backgroundColor": "#f5f4f0",
+        "borderTopColor": "#edeae2",
+        "paddingBottom": 34,
+      },
+    ]
+  }
+  testID="navbar-editorial"
+>
+  <View
+    accessibilityLabel="Home"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": true,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "flex": 1,
+        "gap": 3,
+        "justifyContent": "center",
+      }
+    }
+    testID="nav-Home"
+  >
+    <View
+      color="#E6B450"
+      size={22}
+    />
+    <Text
+      style={
+        [
+          {
+            "fontFamily": "Manrope",
+            "fontSize": 11,
+            "fontWeight": "600",
+            "letterSpacing": 0.55,
+            "lineHeight": 14,
+            "textTransform": "uppercase",
+          },
+          {
+            "color": "#1a1c20",
+          },
+          [
+            {
+              "fontSize": 11,
+              "letterSpacing": 0.4,
+            },
+            {
+              "color": "#E6B450",
+              "fontWeight": "600",
+            },
+          ],
+        ]
+      }
+    >
+      Home
+    </Text>
+  </View>
+  <View
+    accessibilityLabel="Offers"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "flex": 1,
+        "gap": 3,
+        "justifyContent": "center",
+      }
+    }
+    testID="nav-Offers"
+  >
+    <View
+      color="#767c85"
+      size={22}
+    />
+    <Text
+      style={
+        [
+          {
+            "fontFamily": "Manrope",
+            "fontSize": 11,
+            "fontWeight": "600",
+            "letterSpacing": 0.55,
+            "lineHeight": 14,
+            "textTransform": "uppercase",
+          },
+          {
+            "color": "#1a1c20",
+          },
+          [
+            {
+              "fontSize": 11,
+              "letterSpacing": 0.4,
+            },
+            {
+              "color": "#767c85",
+              "fontWeight": "400",
+            },
+          ],
+        ]
+      }
+    >
+      Offers
+    </Text>
+  </View>
+  <View
+    accessibilityLabel="Scan/Play"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "flex": 1,
+        "gap": 3,
+        "justifyContent": "center",
+      }
+    }
+    testID="nav-Play"
+  >
+    <View
+      style={
+        [
+          {
+            "alignItems": "center",
+            "backgroundColor": "#E6B450",
+            "borderRadius": 20,
+            "height": 40,
+            "justifyContent": "center",
+            "width": 40,
+          },
+          null,
+        ]
+      }
+      testID="nav-center-badge"
+    >
+      <View
+        color="#1A1408"
+        size={22}
+      />
+    </View>
+    <Text
+      style={
+        [
+          {
+            "fontFamily": "Manrope",
+            "fontSize": 11,
+            "fontWeight": "600",
+            "letterSpacing": 0.55,
+            "lineHeight": 14,
+            "textTransform": "uppercase",
+          },
+          {
+            "color": "#1a1c20",
+          },
+          [
+            {
+              "fontSize": 11,
+              "letterSpacing": 0.4,
+            },
+            {
+              "color": "#E6B450",
+            },
+          ],
+        ]
+      }
+    >
+      Scan/Play
+    </Text>
+  </View>
+  <View
+    accessibilityLabel="Account"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "flex": 1,
+        "gap": 3,
+        "justifyContent": "center",
+      }
+    }
+    testID="nav-Account"
+  >
+    <View
+      color="#767c85"
+      size={22}
+    />
+    <Text
+      style={
+        [
+          {
+            "fontFamily": "Manrope",
+            "fontSize": 11,
+            "fontWeight": "600",
+            "letterSpacing": 0.55,
+            "lineHeight": 14,
+            "textTransform": "uppercase",
+          },
+          {
+            "color": "#1a1c20",
+          },
+          [
+            {
+              "fontSize": 11,
+              "letterSpacing": 0.4,
+            },
+            {
+              "color": "#767c85",
+              "fontWeight": "400",
+            },
+          ],
+        ]
+      }
+    >
+      Account
+    </Text>
+  </View>
+  <View
+    accessibilityLabel="More"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": false,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "flex": 1,
+        "gap": 3,
+        "justifyContent": "center",
+      }
+    }
+    testID="nav-More"
+  >
+    <View
+      color="#767c85"
+      size={22}
+    />
+    <Text
+      style={
+        [
+          {
+            "fontFamily": "Manrope",
+            "fontSize": 11,
+            "fontWeight": "600",
+            "letterSpacing": 0.55,
+            "lineHeight": 14,
+            "textTransform": "uppercase",
+          },
+          {
+            "color": "#1a1c20",
+          },
+          [
+            {
+              "fontSize": 11,
+              "letterSpacing": 0.4,
+            },
+            {
+              "color": "#767c85",
+              "fontWeight": "400",
+            },
+          ],
+        ]
+      }
+    >
+      More
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`snapshots per style × theme floatingPill × dark 1`] = `
+<View
+  pointerEvents="box-none"
+  style={
+    [
+      {
+        "left": 16,
+        "position": "absolute",
+        "right": 16,
+      },
+      {
+        "bottom": 42,
+      },
+    ]
+  }
+  testID="navbar-floatingPill"
+>
+  <View
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "borderRadius": 32,
+          "borderWidth": 0.5,
+          "elevation": 12,
+          "flexDirection": "row",
+          "height": 64,
+          "shadowColor": "#000",
+          "shadowOffset": {
+            "height": 8,
+            "width": 0,
+          },
+          "shadowOpacity": 0.3,
+          "shadowRadius": 16,
+        },
+        {
+          "backgroundColor": "#1b1e23EB",
+          "borderColor": "#1b1e24",
+        },
+      ]
+    }
+  >
+    <View
+      accessibilityLabel="Home"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": true,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "gap": 3,
+          "justifyContent": "center",
+        }
+      }
+      testID="nav-Home"
+    >
+      <View
+        color="#E6B450"
+        size={22}
+      />
+      <View
+        style={
+          [
+            {
+              "borderRadius": 2,
+              "height": 4,
+              "marginTop": 4,
+              "width": 4,
+            },
+            {
+              "backgroundColor": "#E6B450",
+            },
+          ]
+        }
+      />
+    </View>
+    <View
+      accessibilityLabel="Offers"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "gap": 3,
+          "justifyContent": "center",
+        }
+      }
+      testID="nav-Offers"
+    >
+      <View
+        color="#8b929c"
+        size={22}
+      />
+      <View
+        style={
+          [
+            {
+              "borderRadius": 2,
+              "height": 4,
+              "marginTop": 4,
+              "width": 4,
+            },
+            {
+              "backgroundColor": "transparent",
+            },
+          ]
+        }
+      />
+    </View>
+    <View
+      accessibilityLabel="Scan/Play"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "gap": 3,
+          "justifyContent": "center",
+        }
+      }
+      testID="nav-Play"
+    >
+      <View
+        style={
+          [
+            {
+              "alignItems": "center",
+              "backgroundColor": "#E6B450",
+              "borderRadius": 24,
+              "height": 48,
+              "justifyContent": "center",
+              "width": 48,
+            },
+            {
+              "elevation": 8,
+              "marginTop": -14,
+              "shadowColor": "#E6B450",
+              "shadowOffset": {
+                "height": 4,
+                "width": 0,
+              },
+              "shadowOpacity": 0.45,
+              "shadowRadius": 12,
+            },
+          ]
+        }
+        testID="nav-center-badge"
+      >
+        <View
+          color="#1A1408"
+          size={24}
+        />
+      </View>
+    </View>
+    <View
+      accessibilityLabel="Account"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "gap": 3,
+          "justifyContent": "center",
+        }
+      }
+      testID="nav-Account"
+    >
+      <View
+        color="#8b929c"
+        size={22}
+      />
+      <View
+        style={
+          [
+            {
+              "borderRadius": 2,
+              "height": 4,
+              "marginTop": 4,
+              "width": 4,
+            },
+            {
+              "backgroundColor": "transparent",
+            },
+          ]
+        }
+      />
+    </View>
+    <View
+      accessibilityLabel="More"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "gap": 3,
+          "justifyContent": "center",
+        }
+      }
+      testID="nav-More"
+    >
+      <View
+        color="#8b929c"
+        size={22}
+      />
+      <View
+        style={
+          [
+            {
+              "borderRadius": 2,
+              "height": 4,
+              "marginTop": 4,
+              "width": 4,
+            },
+            {
+              "backgroundColor": "transparent",
+            },
+          ]
+        }
+      />
+    </View>
+  </View>
+</View>
+`;
+
+exports[`snapshots per style × theme floatingPill × light 1`] = `
+<View
+  pointerEvents="box-none"
+  style={
+    [
+      {
+        "left": 16,
+        "position": "absolute",
+        "right": 16,
+      },
+      {
+        "bottom": 42,
+      },
+    ]
+  }
+  testID="navbar-floatingPill"
+>
+  <View
+    style={
+      [
+        {
+          "alignItems": "stretch",
+          "borderRadius": 32,
+          "borderWidth": 0.5,
+          "elevation": 12,
+          "flexDirection": "row",
+          "height": 64,
+          "shadowColor": "#000",
+          "shadowOffset": {
+            "height": 8,
+            "width": 0,
+          },
+          "shadowOpacity": 0.3,
+          "shadowRadius": 16,
+        },
+        {
+          "backgroundColor": "#faf9f5EB",
+          "borderColor": "#edeae2",
+        },
+      ]
+    }
+  >
+    <View
+      accessibilityLabel="Home"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": true,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "gap": 3,
+          "justifyContent": "center",
+        }
+      }
+      testID="nav-Home"
+    >
+      <View
+        color="#E6B450"
+        size={22}
+      />
+      <View
+        style={
+          [
+            {
+              "borderRadius": 2,
+              "height": 4,
+              "marginTop": 4,
+              "width": 4,
+            },
+            {
+              "backgroundColor": "#E6B450",
+            },
+          ]
+        }
+      />
+    </View>
+    <View
+      accessibilityLabel="Offers"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "gap": 3,
+          "justifyContent": "center",
+        }
+      }
+      testID="nav-Offers"
+    >
+      <View
+        color="#767c85"
+        size={22}
+      />
+      <View
+        style={
+          [
+            {
+              "borderRadius": 2,
+              "height": 4,
+              "marginTop": 4,
+              "width": 4,
+            },
+            {
+              "backgroundColor": "transparent",
+            },
+          ]
+        }
+      />
+    </View>
+    <View
+      accessibilityLabel="Scan/Play"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "gap": 3,
+          "justifyContent": "center",
+        }
+      }
+      testID="nav-Play"
+    >
+      <View
+        style={
+          [
+            {
+              "alignItems": "center",
+              "backgroundColor": "#E6B450",
+              "borderRadius": 24,
+              "height": 48,
+              "justifyContent": "center",
+              "width": 48,
+            },
+            {
+              "elevation": 8,
+              "marginTop": -14,
+              "shadowColor": "#E6B450",
+              "shadowOffset": {
+                "height": 4,
+                "width": 0,
+              },
+              "shadowOpacity": 0.45,
+              "shadowRadius": 12,
+            },
+          ]
+        }
+        testID="nav-center-badge"
+      >
+        <View
+          color="#1A1408"
+          size={24}
+        />
+      </View>
+    </View>
+    <View
+      accessibilityLabel="Account"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "gap": 3,
+          "justifyContent": "center",
+        }
+      }
+      testID="nav-Account"
+    >
+      <View
+        color="#767c85"
+        size={22}
+      />
+      <View
+        style={
+          [
+            {
+              "borderRadius": 2,
+              "height": 4,
+              "marginTop": 4,
+              "width": 4,
+            },
+            {
+              "backgroundColor": "transparent",
+            },
+          ]
+        }
+      />
+    </View>
+    <View
+      accessibilityLabel="More"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": false,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "gap": 3,
+          "justifyContent": "center",
+        }
+      }
+      testID="nav-More"
+    >
+      <View
+        color="#767c85"
+        size={22}
+      />
+      <View
+        style={
+          [
+            {
+              "borderRadius": 2,
+              "height": 4,
+              "marginTop": 4,
+              "width": 4,
+            },
+            {
+              "backgroundColor": "transparent",
+            },
+          ]
+        }
+      />
+    </View>
+  </View>
+</View>
+`;

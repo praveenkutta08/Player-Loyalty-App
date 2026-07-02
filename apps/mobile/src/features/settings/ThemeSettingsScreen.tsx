@@ -95,6 +95,11 @@ export function ThemeSettingsScreen(): React.JSX.Element {
                 subtitle="4 timelines × reduced-motion × member states (dev only)"
                 onPress={() => navigation.navigate('SplashGallery')}
               />
+              <ListRow
+                title="Nav bar styles"
+                subtitle="Editorial vs Floating Pill + dp specs (dev only)"
+                onPress={() => navigation.navigate('NavStylesGallery')}
+              />
             </Card>
           </>
         ) : null}

@@ -83,6 +83,12 @@ function normalizeNavigation(
           showSupport: globals.show_support === true,
         }
       : undefined,
+    // Passed through as-served; resolveNavStyle (P7.4) applies the editorial fallback + warn
+    // for values this binary doesn't know (older app, newer manifest).
+    style:
+      typeof raw.style === 'string'
+        ? (raw.style as NonNullable<ManifestNavigation['style']>)
+        : undefined,
   };
 }
 
