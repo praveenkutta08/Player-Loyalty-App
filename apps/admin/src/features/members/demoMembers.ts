@@ -20,7 +20,7 @@ export const MEMBERS: Member[] = [
   {
     id: 'p-alice',
     name: 'Alice Nguyen',
-    email: 'alice@demo.test',
+    email: 'alice@demo-casino.com',
     dob: '1988-04-12',
     govId: 'A1234567',
     tier: 'Gold',
@@ -34,7 +34,7 @@ export const MEMBERS: Member[] = [
   {
     id: 'p-bob',
     name: 'Bob Carter',
-    email: 'bob@demo.test',
+    email: 'bob@demo-casino.com',
     dob: '1975-11-30',
     govId: 'B7654321',
     tier: 'Silver',
@@ -48,7 +48,7 @@ export const MEMBERS: Member[] = [
   {
     id: 'p-carol',
     name: 'Carol Diaz',
-    email: 'carol@demo.test',
+    email: 'carol@demo-casino.com',
     dob: '1992-07-08',
     govId: 'C2468013',
     tier: 'Bronze',
@@ -62,7 +62,7 @@ export const MEMBERS: Member[] = [
   {
     id: 'p-dan',
     name: 'Dan Lewis',
-    email: 'dan@demo.test',
+    email: 'dan@demo-casino.com',
     dob: '1969-01-22',
     govId: 'D1357924',
     tier: 'Diamond',

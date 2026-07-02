@@ -30,9 +30,9 @@ interface KycCase {
 }
 
 const INITIAL_CASES: KycCase[] = [
-  { id: 'k1', player: 'c•••@demo.test', submitted: '2h ago', status: 'pending' },
-  { id: 'k2', player: 'd•••@demo.test', submitted: '5h ago', status: 'pending' },
-  { id: 'k3', player: 'e•••@demo.test', submitted: 'Yesterday', status: 'approved' },
+  { id: 'k1', player: 'c•••@demo-casino.com', submitted: '2h ago', status: 'pending' },
+  { id: 'k2', player: 'd•••@demo-casino.com', submitted: '5h ago', status: 'pending' },
+  { id: 'k3', player: 'e•••@demo-casino.com', submitted: 'Yesterday', status: 'approved' },
 ];
 
 export function ComplianceScreen() {
@@ -152,7 +152,7 @@ function KycTab() {
 function RgTab() {
   const { toast } = useToast();
   const [limits, setLimits] = useState({ deposit: '5000', timeMinutes: '240', coolOff: '7' });
-  const [exclusions, setExclusions] = useState<string[]>(['g•••@demo.test']);
+  const [exclusions, setExclusions] = useState<string[]>(['g•••@demo-casino.com']);
   const [newEx, setNewEx] = useState('');
 
   return (

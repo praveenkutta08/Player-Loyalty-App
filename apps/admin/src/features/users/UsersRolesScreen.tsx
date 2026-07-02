@@ -39,7 +39,7 @@ const INITIAL_USERS: AdminUserRow[] = [
   {
     id: 'u1',
     name: 'Sridhar K',
-    email: 'super@demo.test',
+    email: 'super@demo-casino.com',
     role: Role.SuperAdmin,
     tenantScope: [],
     active: true,
@@ -48,7 +48,7 @@ const INITIAL_USERS: AdminUserRow[] = [
   {
     id: 'u2',
     name: 'Alex Morgan',
-    email: 'accountmgr@demo.test',
+    email: 'accountmgr@demo-casino.com',
     role: Role.AccountManager,
     tenantScope: ['demo-casino', 'aurora-bay'],
     active: true,
@@ -57,7 +57,7 @@ const INITIAL_USERS: AdminUserRow[] = [
   {
     id: 'u3',
     name: 'Jordan Lee',
-    email: 'tenantadmin@demo.test',
+    email: 'tenantadmin@demo-casino.com',
     role: Role.TenantAdmin,
     tenantScope: ['demo-casino'],
     active: true,
@@ -66,7 +66,7 @@ const INITIAL_USERS: AdminUserRow[] = [
   {
     id: 'u4',
     name: 'Riley Chen',
-    email: 'marketer@demo.test',
+    email: 'marketer@demo-casino.com',
     role: Role.MarketerEditor,
     tenantScope: ['demo-casino'],
     active: false,

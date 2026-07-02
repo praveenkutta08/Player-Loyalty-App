@@ -94,8 +94,8 @@ export function LoginScreen() {
         </form>
 
         <p className="mt-6 text-center text-[11px] text-faint">
-          Demo: super@demo.test · accountmgr@demo.test · marketer@demo.test — password{' '}
-          <span className="font-mono">demo-pass</span>
+          Demo: super@demo-casino.com · accountmgr@demo-casino.com · marketer@demo-casino.com —
+          password <span className="font-mono">demo-pass</span>
         </p>
       </div>
     </div>

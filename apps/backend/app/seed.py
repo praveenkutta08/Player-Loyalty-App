@@ -82,18 +82,18 @@ async def seed() -> dict[str, Any]:
         )
 
         # Admins for each role; global super-admin is unscoped, the rest are scoped to the tenant.
-        await _seed_admin(session, tenant.id, "super@demo.test", "super_admin", scoped=False)
+        await _seed_admin(session, tenant.id, "super@demo-casino.com", "super_admin", scoped=False)
         await _seed_admin(
-            session, tenant.id, "accountmgr@demo.test", "account_manager", scoped=True
+            session, tenant.id, "accountmgr@demo-casino.com", "account_manager", scoped=True
         )
-        await _seed_admin(session, tenant.id, "tenantadmin@demo.test", "tenant_admin", scoped=True)
-        await _seed_admin(session, tenant.id, "marketer@demo.test", "marketer_editor", scoped=True)
+        await _seed_admin(session, tenant.id, "tenantadmin@demo-casino.com", "tenant_admin", scoped=True)
+        await _seed_admin(session, tenant.id, "marketer@demo-casino.com", "marketer_editor", scoped=True)
 
         players = {}
         for email, segment in [
-            ("alice@demo.test", "vip"),
-            ("bob@demo.test", "gold"),
-            ("carol@demo.test", None),
+            ("alice@demo-casino.com", "vip"),
+            ("bob@demo-casino.com", "gold"),
+            ("carol@demo-casino.com", None),
         ]:
             players[email] = await _get_or_create(
                 session,
@@ -128,7 +128,7 @@ async def seed() -> dict[str, Any]:
         if not (
             await session.execute(
                 select(Reservation).where(
-                    Reservation.player_id == players["alice@demo.test"].id,
+                    Reservation.player_id == players["alice@demo-casino.com"].id,
                     Reservation.type == ReservationType.hotel.value,
                 )
             )
@@ -136,7 +136,7 @@ async def seed() -> dict[str, Any]:
             session.add(
                 Reservation(
                     tenant_id=tenant.id,
-                    player_id=players["alice@demo.test"].id,
+                    player_id=players["alice@demo-casino.com"].id,
                     type=ReservationType.hotel.value,
                     status=ReservationStatus.confirmed.value,
                     start_at=datetime.now(UTC),
