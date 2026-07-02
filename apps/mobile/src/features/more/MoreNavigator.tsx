@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
 import { useTheme } from '../../theme/ThemeProvider';
+import { DigitalKeyScreen } from '../digitalkey/DigitalKeyScreen';
 import { ReservationBookScreen } from '../reservations/ReservationBookScreen';
 import { ReservationDetailScreen } from '../reservations/ReservationDetailScreen';
 import { ReservationsListScreen } from '../reservations/ReservationsListScreen';
@@ -49,6 +50,7 @@ export function MoreNavigator(): React.JSX.Element {
         options={{ title: 'Reservation' }}
       />
       <Stack.Screen name="Valet" component={ValetScreen} options={{ title: 'Valet' }} />
+      <Stack.Screen name="DigitalKey" component={DigitalKeyScreen} options={{ title: 'Digital key' }} />
     </Stack.Navigator>
   );
 }

@@ -1,4 +1,4 @@
-import { CalendarDays, Car, Palette } from 'lucide-react-native';
+import { CalendarDays, Car, KeyRound, Palette } from 'lucide-react-native';
 import React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 
@@ -16,12 +16,13 @@ export function MoreHomeScreen({ navigation }: Props): React.JSX.Element {
   const theme = useTheme();
   const reservations = useFeature('reservations');
   const valet = useFeature('valet');
+  const digitalKey = useFeature('digitalKey');
   const icon = (I: typeof CalendarDays) => <I size={20} color={theme.colors.text.secondary} />;
 
   return (
     <Screen>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        {reservations || valet ? (
+        {reservations || valet || digitalKey ? (
           <>
             <ThemedText variant="label" color="muted" style={styles.label}>
               Concierge
@@ -41,6 +42,14 @@ export function MoreHomeScreen({ navigation }: Props): React.JSX.Element {
                   title="Valet"
                   subtitle="Request & track your car"
                   onPress={() => navigation.navigate('Valet')}
+                />
+              ) : null}
+              {digitalKey ? (
+                <ListRow
+                  icon={icon(KeyRound)}
+                  title="Digital key"
+                  subtitle="Unlock your room"
+                  onPress={() => navigation.navigate('DigitalKey')}
                 />
               ) : null}
             </Card>

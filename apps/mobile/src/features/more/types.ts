@@ -9,4 +9,5 @@ export type MoreStackParamList = {
   ReservationBook: undefined;
   ReservationDetail: { id: string };
   Valet: undefined;
+  DigitalKey: undefined;
 };

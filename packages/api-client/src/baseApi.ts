@@ -93,6 +93,13 @@ export const API_TAG_TYPES = [
   'Reservation',
   'Player',
   'Wallet',
+  'DigitalKey',
+  'Game',
+  'Leaderboard',
+  'Reward',
+  'Redemption',
+  'Support',
+  'Device',
   'Manifest',
   'AuditLog',
 ] as const;
