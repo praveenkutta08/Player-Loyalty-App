@@ -32,6 +32,7 @@ class ProblemException(Exception):
         detail: str | None = None,
         type_: str = "about:blank",
         instance: str | None = None,
+        headers: dict[str, str] | None = None,
         **extensions: Any,
     ) -> None:
         self.status = status
@@ -39,6 +40,7 @@ class ProblemException(Exception):
         self.detail = detail
         self.type = type_
         self.instance = instance
+        self.headers = headers
         self.extensions = extensions
         super().__init__(title)
 
@@ -50,6 +52,7 @@ def _problem(
     detail: str | None = None,
     type_: str = "about:blank",
     instance: str | None = None,
+    headers: dict[str, str] | None = None,
     **extensions: Any,
 ) -> JSONResponse:
     body: dict[str, Any] = {"type": type_, "title": title, "status": status}
@@ -58,7 +61,9 @@ def _problem(
     if instance is not None:
         body["instance"] = instance
     body.update(extensions)
-    return JSONResponse(status_code=status, content=body, media_type=PROBLEM_JSON)
+    return JSONResponse(
+        status_code=status, content=body, media_type=PROBLEM_JSON, headers=headers
+    )
 
 
 async def _problem_exception_handler(request: Request, exc: ProblemException) -> JSONResponse:
@@ -68,6 +73,7 @@ async def _problem_exception_handler(request: Request, exc: ProblemException) ->
         detail=exc.detail,
         type_=exc.type,
         instance=exc.instance or str(request.url),
+        headers=exc.headers,
         **exc.extensions,
     )
 

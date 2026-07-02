@@ -5,10 +5,11 @@ from __future__ import annotations
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.logging import get_logger
+from ...core.ratelimit import enforce_auth_rate_limit
 from ...core.security import AUDIENCE_PLAYER
 from ...db.session import get_session
 from ...tenancy.deps import TenantSessionDep, get_current_tenant_id
@@ -32,9 +33,10 @@ TenantIdDep = Annotated[UUID, Depends(get_current_tenant_id)]
 
 @router.post("/auth/player/login", response_model=TokenPair, tags=["auth"])
 async def player_login(
-    body: PlayerLoginRequest, session: TenantSessionDep, tenant_id: TenantIdDep
+    request: Request, body: PlayerLoginRequest, session: TenantSessionDep, tenant_id: TenantIdDep
 ) -> TokenPair:
     # audit: exempt — authentication flow, not a privileged mutation (rate-limited, H4).
+    await enforce_auth_rate_limit(request, "player_login", f"{tenant_id}:{body.email}")
     player = await authenticate_player_password(session, body.email, body.password)
     return await issue_token_pair(session, player.id, AUDIENCE_PLAYER, {"tenant": str(tenant_id)})
 
@@ -57,9 +59,10 @@ async def player_refresh(
 
 @router.post("/auth/player/otp/request", status_code=status.HTTP_202_ACCEPTED, tags=["auth"])
 async def player_otp_request(
-    body: PlayerOtpRequest, session: TenantSessionDep, tenant_id: TenantIdDep
+    request: Request, body: PlayerOtpRequest, session: TenantSessionDep, tenant_id: TenantIdDep
 ) -> dict[str, str]:
     # audit: exempt — authentication flow, not a privileged mutation (rate-limited, H4).
+    await enforce_auth_rate_limit(request, "player_otp_request", f"{tenant_id}:{body.email}")
     # Do not reveal whether the email exists; only issue a code if it does.
     player = await get_player_by_email(session, body.email)
     if player is not None:
@@ -71,9 +74,10 @@ async def player_otp_request(
 
 @router.post("/auth/player/otp/verify", response_model=TokenPair, tags=["auth"])
 async def player_otp_verify(
-    body: PlayerOtpVerify, session: TenantSessionDep, tenant_id: TenantIdDep
+    request: Request, body: PlayerOtpVerify, session: TenantSessionDep, tenant_id: TenantIdDep
 ) -> TokenPair:
     # audit: exempt — authentication flow, not a privileged mutation (rate-limited, H4).
+    await enforce_auth_rate_limit(request, "player_otp_verify", f"{tenant_id}:{body.email}")
     player = await verify_player_otp(session, body.email, body.code)
     return await issue_token_pair(session, player.id, AUDIENCE_PLAYER, {"tenant": str(tenant_id)})
 

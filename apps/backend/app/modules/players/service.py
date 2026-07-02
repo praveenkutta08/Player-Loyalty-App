@@ -11,6 +11,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.errors import ProblemException
 from ...core.security import hash_password, verify_password
+from ...core.settings import get_settings
 from .models import Player, PlayerOtp
 
 OTP_TTL_MINUTES = 10
@@ -70,7 +71,17 @@ async def verify_player_otp(session: AsyncSession, email: str, code: str) -> Pla
         .first()
     )
 
-    if otp is None or not verify_password(code, otp.code_hash):
+    if otp is None:
+        raise ProblemException(401, "Invalid or expired code")
+
+    if not verify_password(code, otp.code_hash):
+        # Brute-force cap (audit H4): count the miss; after N misses the code is dead and a
+        # fresh one must be requested. Commit before raising — the 401 rolls the request back.
+        otp.attempts += 1
+        if otp.attempts >= get_settings().otp_max_attempts:
+            otp.consumed_at = now
+        await session.flush()
+        await session.commit()
         raise ProblemException(401, "Invalid or expired code")
 
     otp.consumed_at = now

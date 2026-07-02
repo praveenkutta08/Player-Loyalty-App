@@ -4,10 +4,16 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ...core.errors import ProblemException
+from ...core.ratelimit import (
+    enforce_auth_rate_limit,
+    enforce_login_backoff,
+    record_login_failure,
+)
 from ...core.security import AUDIENCE_ADMIN
 from ...db.session import get_session
 from ...rbac.deps import AdminContext, AdminContextDep, require
@@ -22,9 +28,19 @@ SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
 
 @router.post("/auth/admin/login", response_model=TokenPair, tags=["auth"])
-async def admin_login(body: AdminLoginRequest, session: SessionDep) -> TokenPair:
+async def admin_login(
+    request: Request, body: AdminLoginRequest, session: SessionDep
+) -> TokenPair:
     # audit: exempt — authentication flow, not a privileged mutation (rate-limited, H4).
-    user = await authenticate_admin(session, body.email, body.password)
+    await enforce_auth_rate_limit(request, "admin_login", body.email)
+    # Lockout backoff: repeated failed credentials for the same account get a 429 window.
+    await enforce_login_backoff(body.email, scope="admin_login_fail")
+    try:
+        user = await authenticate_admin(session, body.email, body.password)
+    except ProblemException as exc:
+        if exc.status == 401:
+            await record_login_failure(body.email, scope="admin_login_fail")
+        raise
     return await issue_token_pair(session, user.id, AUDIENCE_ADMIN)
 
 

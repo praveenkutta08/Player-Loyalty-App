@@ -43,6 +43,15 @@ class Settings(BaseSettings):
     jwt_access_ttl_min: int = 15
     jwt_refresh_ttl_days: int = 30
 
+    # Rate limiting (audit H4) — Redis-backed fixed windows on the auth endpoints.
+    rate_limit_enabled: bool = True
+    rate_limit_auth_per_ip: int = 30  # attempts per window per client IP per endpoint
+    rate_limit_auth_per_identifier: int = 10  # attempts per window per email (tenant-scoped)
+    rate_limit_auth_window_s: int = 60
+    otp_max_attempts: int = 5  # wrong codes before the OTP is invalidated (re-request needed)
+    login_max_failures: int = 5  # failed logins per identifier before temporary lockout
+    login_lockout_s: int = 300
+
     # Adapters (mock | sandbox | live) — MVP default = mock
     adapter_mode: str = "mock"
     # Per-port provider overrides; fall back to adapter_mode when unset.

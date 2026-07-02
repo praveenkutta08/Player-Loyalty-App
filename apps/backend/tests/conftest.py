@@ -10,6 +10,9 @@ import os
 os.environ["ALLOW_SUPERUSER_DB"] = "1"
 os.environ["PG_APP_USER"] = ""
 os.environ["PG_APP_PASSWORD"] = ""
+# The suite hammers the auth endpoints from one client IP; the dedicated rate-limit tests
+# re-enable enforcement explicitly on the settings singleton.
+os.environ["RATE_LIMIT_ENABLED"] = "0"
 
 from collections.abc import AsyncIterator, Iterator  # noqa: E402
 
