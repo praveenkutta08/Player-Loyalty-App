@@ -21,6 +21,8 @@ import { ReservationsScreen } from '@/features/operations/ReservationsScreen';
 import { ValetScreen } from '@/features/operations/ValetScreen';
 import { PromotionsScreen } from '@/features/promotions/PromotionsScreen';
 import { RewardsScreen } from '@/features/rewards/RewardsScreen';
+import { PaymentsScreen } from '@/features/settings/PaymentsScreen';
+import { SettingsScreen } from '@/features/settings/SettingsScreen';
 import { SupportScreen } from '@/features/support/SupportScreen';
 import { ThemeScreen } from '@/features/theme/ThemeScreen';
 import { UsersRolesScreen } from '@/features/users/UsersRolesScreen';
@@ -46,7 +48,9 @@ export const SCREEN_REGISTRY: Record<string, ComponentType> = {
   '/support': SupportScreen,
   '/members': MembersScreen,
   '/compliance': ComplianceScreen,
+  '/payments': PaymentsScreen,
   '/audit': AuditScreen,
+  '/settings': SettingsScreen,
   '/hotel': HotelScreen,
   '/dining': DiningScreen,
   '/entertainment': EntertainmentScreen,
