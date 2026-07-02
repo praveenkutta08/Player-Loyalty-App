@@ -2442,6 +2442,8 @@ export interface components {
             };
             /** Typography Pairing */
             typography_pairing: string;
+            /** Min App Version */
+            min_app_version?: string | null;
             /** Updated At */
             updated_at: string | null;
         };
@@ -2635,6 +2637,11 @@ export interface components {
             email: string;
             /** Status */
             status: string;
+            /**
+             * Location Consent
+             * @default false
+             */
+            location_consent: boolean;
         };
         /** PlayerOtpRequest */
         PlayerOtpRequest: {
@@ -2929,6 +2936,8 @@ export interface components {
             appearance: {
                 [key: string]: unknown;
             };
+            /** Min App Version */
+            min_app_version?: string | null;
             /** Version */
             version: number;
         };
@@ -2955,6 +2964,8 @@ export interface components {
             concierge?: {
                 [key: string]: unknown;
             } | null;
+            /** Min App Version */
+            min_app_version?: string | null;
         };
         /** TenantOut */
         TenantOut: {

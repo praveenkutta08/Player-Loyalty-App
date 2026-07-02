@@ -29,6 +29,8 @@ class PlayerMeOut(BaseModel):
     tenant_id: UUID
     email: str
     status: str
+    # Server-persisted consents — the app hydrates its local toggles from these on launch (H7).
+    location_consent: bool = False
 
 
 class RgFlagsUpdate(BaseModel):

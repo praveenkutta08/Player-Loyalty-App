@@ -6,14 +6,18 @@ import { buildConfig } from '../../config/buildConfig';
 import { AuthNavigator } from '../../features/auth/AuthNavigator';
 import { BiometricEnrollScreen } from '../../features/auth/screens/BiometricEnrollScreen';
 import { LockScreen } from '../../features/auth/screens/LockScreen';
+import { registerDevice } from '../../features/auth/session';
 import { AskAIScreen } from '../../features/concierge/AskAIScreen';
 import { prefetchConciergeBrief } from '../../features/concierge/prefetch';
 import { GeoBootstrap } from '../../features/geofencing/GeoBootstrap';
+import { ServerConsentSync } from '../../features/geofencing/ServerConsentSync';
 import { MessageDetailScreen } from '../../features/notifications/MessageDetailScreen';
 import { NotificationCenterScreen } from '../../features/notifications/NotificationCenterScreen';
 import { registerPushHandlers } from '../../features/notifications/pushBridge';
+import { PushPermissionScreen } from '../../features/notifications/PushPermissionScreen';
 import { BrandSplash } from '../../features/splash/BrandSplash';
 import { ForceUpdateScreen } from '../../features/splash/ForceUpdateScreen';
+import { needsForceUpdate } from '../../lib/version';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useManifest } from '../manifest/ManifestProvider';
 import { useFeature } from '../providers/FeatureProvider';
@@ -37,14 +41,23 @@ export function RootNavigator(): React.JSX.Element {
   const { manifest } = useManifest();
   const status = useAppSelector((s) => s.auth.status);
   const biometric = useAppSelector((s) => s.biometric);
+  const prefs = useAppSelector((s) => s.notificationPrefs);
   const dispatch = useAppDispatch();
   const conciergeOn = useFeature('concierge');
+  const forceUpdate = needsForceUpdate(buildConfig.appVersion, manifest?.minAppVersion);
 
   // Bridge native push handlers into the inbox store + deep-link routing (once authenticated).
   useEffect(() => {
     if (status !== 'authenticated') return undefined;
     return registerPushHandlers(dispatch, () => new Date().toISOString());
   }, [status, dispatch]);
+
+  // H7: the device token is registered only after the player granted the push prompt; when
+  // they already have, re-register on each session so token rotation reaches the server.
+  useEffect(() => {
+    if (status !== 'authenticated' || !prefs.hydrated || prefs.pushPrompt !== 'enabled') return;
+    void registerDevice();
+  }, [status, prefs.hydrated, prefs.pushPrompt]);
 
   // Prefetch the concierge brief as soon as we're authenticated (still behind the biometric
   // gates) so Home renders the hero straight from cache — no spinner on Home (P6.6).
@@ -70,6 +83,12 @@ export function RootNavigator(): React.JSX.Element {
     return <BrandSplash title={manifest?.name ?? buildConfig.appName} />;
   }
 
+  // G8/M16 — force-update gate: below the manifest's floor nothing else renders. Checked
+  // before auth so an outdated build can't even reach the login flow.
+  if (forceUpdate) {
+    return <ForceUpdateScreen />;
+  }
+
   // Biometric gates (only once authenticated): lock a restored session, or offer enrollment after
   // the first login. Both stand in front of the app entirely.
   if (status === 'authenticated' && biometric.enabled && biometric.locked) {
@@ -84,9 +103,15 @@ export function RootNavigator(): React.JSX.Element {
     return <BiometricEnrollScreen />;
   }
 
+  // H7 — push pre-permission: asked once, after the biometric gates, before the app renders.
+  if (status === 'authenticated' && prefs.hydrated && prefs.pushPrompt === 'unasked') {
+    return <PushPermissionScreen />;
+  }
+
   return (
     <>
       {status === 'authenticated' ? <GeoBootstrap /> : null}
+      {status === 'authenticated' ? <ServerConsentSync /> : null}
       <NavigationContainer ref={navigationRef} theme={navTheme}>
         {status === 'authenticated' ? (
           <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false }}>

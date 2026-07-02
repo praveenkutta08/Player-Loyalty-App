@@ -5,7 +5,7 @@ import { Button, Input, Screen, ThemedText } from '../../../components';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { useRequestOtpMutation, useVerifyOtpMutation } from '../authApi';
 import { errorMessage } from '../errors';
-import { persistTokens, registerDevice } from '../session';
+import { persistTokens } from '../session';
 
 import type { AuthStackParamList } from '../types';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -24,7 +24,8 @@ export function OtpScreen({ route }: Props): React.JSX.Element {
     try {
       const tokens = await verifyOtp({ email, code: code.trim() }).unwrap();
       await persistTokens(tokens);
-      void registerDevice();
+      // H7: device registration now happens AFTER the push pre-permission flow
+      // (PushPermissionScreen) — never unconditionally at login.
     } catch {
       // surfaced below
     }

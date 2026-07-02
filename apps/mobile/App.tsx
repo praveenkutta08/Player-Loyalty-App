@@ -8,7 +8,7 @@
  *
  * @format
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -22,6 +22,10 @@ import { store } from './src/app/store';
 import { OfflineBanner } from './src/components/OfflineBanner';
 import { buildConfig } from './src/config/buildConfig';
 import { AuthProvider } from './src/features/auth/AuthProvider';
+import {
+  hydrateNotificationPrefs,
+  persistNotificationPrefs,
+} from './src/features/notifications/prefsPersistence';
 import { BrandSplash } from './src/features/splash/BrandSplash';
 import { Splash } from './src/features/splash/Splash';
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
@@ -91,6 +95,12 @@ function AnimatedSplashGate(): React.JSX.Element | null {
 }
 
 function App(): React.JSX.Element {
+  // Notification prefs survive cold starts (H7): hydrate once, then persist every change.
+  useEffect(() => {
+    void hydrateNotificationPrefs(store);
+    return persistNotificationPrefs(store);
+  }, []);
+
   return (
     <ReduxProvider store={store}>
       <SafeAreaProvider>

@@ -2,12 +2,11 @@ import { MapPin, ShieldCheck } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { useAppDispatch, useAppSelector } from '../../app/store';
+import { useAppSelector } from '../../app/store';
 import { Button, Card, Screen, ThemedText, Toggle } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
-import { setLocationOptIn } from '../notifications/prefsSlice';
 
-import { useSetGeoConsentMutation } from './geoApi';
+import { useLocationConsent } from './useLocationConsent';
 
 import type { MoreStackParamList } from '../more/types';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -16,24 +15,18 @@ type Props = NativeStackScreenProps<MoreStackParamList, 'LocationConsent'>;
 
 /**
  * A7 — Location consent. Explicit, purpose-first opt-in for location + background location, required
- * before any location-triggered offer (consent + GOLDEN RULE #8). Grant records server-side consent
- * and flips the local opt-in that gates the geofence bootstrap; deny clears both.
+ * before any location-triggered offer (consent + GOLDEN RULE #8). The local toggle only flips when
+ * the server records the consent (H7); a failed opt-out still tears down locally and queues a retry.
  */
 export function LocationConsentScreen({ navigation }: Props): React.JSX.Element {
   const theme = useTheme();
-  const dispatch = useAppDispatch();
   const optedIn = useAppSelector((s) => s.notificationPrefs.locationOptIn);
-  const [setConsent, { isLoading }] = useSetGeoConsentMutation();
+  const { decide: decideConsent, isLoading } = useLocationConsent();
   const [background, setBackground] = useState(true);
 
   async function decide(granted: boolean): Promise<void> {
-    try {
-      await setConsent(granted).unwrap();
-    } catch {
-      /* keep local mirror in sync regardless; server is retried on next toggle */
-    }
-    dispatch(setLocationOptIn(granted));
-    if (granted) navigation.goBack();
+    const ok = await decideConsent(granted);
+    if (ok && granted) navigation.goBack();
   }
 
   return (

@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import re
 from datetime import datetime
 from typing import Any
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, field_validator
+
+_VERSION_RE = re.compile(r"^\d+\.\d+(\.\d+)?$")
 
 
 class TenantConfigOut(BaseModel):
@@ -20,6 +23,7 @@ class TenantConfigOut(BaseModel):
     navigation: dict[str, Any]
     concierge: dict[str, Any]
     appearance: dict[str, Any]
+    min_app_version: str | None = None
     version: int
 
 
@@ -31,6 +35,15 @@ class TenantConfigUpdate(BaseModel):
     endpoints: dict[str, Any] | None = None
     navigation: dict[str, Any] | None = None
     concierge: dict[str, Any] | None = None
+    # Force-update floor (G8/M16), e.g. "1.2.0". None leaves it unchanged; "" clears it.
+    min_app_version: str | None = None
+
+    @field_validator("min_app_version")
+    @classmethod
+    def _valid_version(cls, value: str | None) -> str | None:
+        if value is not None and value != "" and not _VERSION_RE.match(value):
+            raise ValueError("min_app_version must look like MAJOR.MINOR[.PATCH]")
+        return value
 
 
 class AppearanceUpdate(BaseModel):
@@ -94,4 +107,6 @@ class ManifestOut(BaseModel):
     splash: dict[str, Any]
     # Curated pairing key (P7.2); its families are already resolved into theme.typography.
     typography_pairing: str
+    # Force-update floor (G8/M16): builds below this route to ForceUpdateScreen.
+    min_app_version: str | None = None
     updated_at: datetime | None

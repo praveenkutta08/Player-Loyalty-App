@@ -40,6 +40,8 @@ class TenantConfig(TenantOwnedMixin, BaseModel):
     appearance: Mapped[dict[str, Any]] = mapped_column(
         JSONB, nullable=False, default=dict, server_default=text("'{}'::jsonb")
     )
+    # Compliance kill switch (G8/M16): app builds below this version must force-update.
+    min_app_version: Mapped[str | None] = mapped_column(String(20), nullable=True)
     version: Mapped[int] = mapped_column(Integer, nullable=False, default=1, server_default="1")
 
 

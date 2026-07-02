@@ -4,8 +4,9 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../../app/store';
 import { Card, Screen, ThemedText, Toggle } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
+import { useLocationConsent } from '../geofencing/useLocationConsent';
 
-import { setLocationOptIn, setQuietHoursEnabled, toggleChannel } from './prefsSlice';
+import { setQuietHoursEnabled, toggleChannel } from './prefsSlice';
 
 import type { NotificationChannel } from './prefsSlice';
 
@@ -20,6 +21,8 @@ const CHANNELS: { key: NotificationChannel; label: string; blurb: string }[] = [
 export function NotificationPreferencesScreen(): React.JSX.Element {
   const dispatch = useAppDispatch();
   const prefs = useAppSelector((s) => s.notificationPrefs);
+  // Location consent goes through the server (H7) — never a bare local flip.
+  const { decide: decideLocationConsent } = useLocationConsent();
 
   return (
     <Screen>
@@ -62,7 +65,7 @@ export function NotificationPreferencesScreen(): React.JSX.Element {
           <Row title="Location-based offers" blurb="Nearby & on-property notifications">
             <Toggle
               value={prefs.locationOptIn}
-              onValueChange={(v) => dispatch(setLocationOptIn(v))}
+              onValueChange={(v) => void decideLocationConsent(v)}
               testID="location-optin"
             />
           </Row>

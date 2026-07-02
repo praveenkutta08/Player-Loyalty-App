@@ -61,6 +61,9 @@ async def update_config(
     navigation = fields.get("navigation")
     if isinstance(navigation, dict) and "style" in navigation:
         navigation["style"] = validate_nav_style_write(navigation["style"])
+    # Empty string clears the force-update floor (None means "leave unchanged").
+    if fields.get("min_app_version") == "":
+        fields["min_app_version"] = None
     for key, value in fields.items():
         setattr(config, key, value)
     config.version += 1
@@ -223,5 +226,6 @@ async def resolve_manifest(session: AsyncSession, tenant: Tenant) -> ManifestOut
         concierge=concierge,
         splash=splash,
         typography_pairing=typography_pairing,
+        min_app_version=config.min_app_version if config else None,
         updated_at=max(updated_candidates) if updated_candidates else None,
     )
