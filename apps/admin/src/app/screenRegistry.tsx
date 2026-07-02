@@ -3,6 +3,7 @@ import type { ComponentType } from 'react';
 import { CasinosScreen } from '@/features/casinos/CasinosScreen';
 import { ContentScreen } from '@/features/content/ContentScreen';
 import { FeatureFlagsScreen } from '@/features/featureflags/FeatureFlagsScreen';
+import { GamesScreen } from '@/features/games/GamesScreen';
 import { GeofencingScreen } from '@/features/geofencing/GeofencingScreen';
 import { NotificationsScreen } from '@/features/notifications/NotificationsScreen';
 import { OffersScreen } from '@/features/offers/OffersScreen';
@@ -12,6 +13,7 @@ import { HotelScreen } from '@/features/operations/HotelScreen';
 import { ReservationsScreen } from '@/features/operations/ReservationsScreen';
 import { ValetScreen } from '@/features/operations/ValetScreen';
 import { PromotionsScreen } from '@/features/promotions/PromotionsScreen';
+import { RewardsScreen } from '@/features/rewards/RewardsScreen';
 import { ThemeScreen } from '@/features/theme/ThemeScreen';
 import { UsersRolesScreen } from '@/features/users/UsersRolesScreen';
 
@@ -27,6 +29,8 @@ export const SCREEN_REGISTRY: Record<string, ComponentType> = {
   '/notifications': NotificationsScreen,
   '/offers': OffersScreen,
   '/promotions': PromotionsScreen,
+  '/rewards': RewardsScreen,
+  '/games': GamesScreen,
   '/hotel': HotelScreen,
   '/dining': DiningScreen,
   '/entertainment': EntertainmentScreen,
