@@ -2,6 +2,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
 import { useTheme } from '../../theme/ThemeProvider';
+import { RewardDetailScreen } from '../rewards/RewardDetailScreen';
+import { RewardsMarketplaceScreen } from '../rewards/RewardsMarketplaceScreen';
 
 import { OfferDetailScreen } from './OfferDetailScreen';
 import { OffersScreen } from './OffersScreen';
@@ -37,6 +39,12 @@ export function OffersNavigator(): React.JSX.Element {
         component={RedemptionConfirmationScreen}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="RewardsMarketplace"
+        component={RewardsMarketplaceScreen}
+        options={{ title: 'Rewards' }}
+      />
+      <Stack.Screen name="RewardDetail" component={RewardDetailScreen} options={{ title: 'Reward' }} />
     </Stack.Navigator>
   );
 }

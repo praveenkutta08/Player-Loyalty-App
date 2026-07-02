@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from 'react';
-import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet } from 'react-native';
 
 import { useAppSelector } from '../../app/store';
 import { Input, Screen, SegmentedControl, ThemedText } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
+import { MyRewardsPanel } from '../rewards/MyRewardsPanel';
 
 import { OfferCard } from './OfferCard';
 import { useGetOffersQuery, useGetPromotionsQuery } from './offersApi';
@@ -52,11 +53,7 @@ export function OffersScreen({ navigation, route }: Props): React.JSX.Element {
       <SegmentedControl segments={SEGMENTS} value={segment} onChange={setSegment} />
 
       {segment === 'rewards' ? (
-        <View style={styles.empty}>
-          <ThemedText variant="body" color="muted">
-            Your redeemed rewards appear here (P4.12).
-          </ThemedText>
-        </View>
+        <MyRewardsPanel onBrowse={() => navigation.navigate('RewardsMarketplace')} />
       ) : (
         <>
           <Input
@@ -103,6 +100,5 @@ const styles = StyleSheet.create({
   title: { marginBottom: 16 },
   search: { marginTop: 16, marginBottom: 8 },
   list: { paddingTop: 8, paddingBottom: 24 },
-  empty: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   emptyText: { textAlign: 'center', marginTop: 40 },
 });
