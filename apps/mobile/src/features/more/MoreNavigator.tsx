@@ -40,8 +40,16 @@ export function MoreNavigator(): React.JSX.Element {
     >
       <Stack.Screen name="MoreHome" component={MoreHomeScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Support" component={SupportChatScreen} options={{ title: 'Support' }} />
-      <Stack.Screen name="Security" component={SecuritySettingsScreen} options={{ title: 'Security' }} />
-      <Stack.Screen name="Appearance" component={ThemeSettingsScreen} options={{ title: 'Appearance' }} />
+      <Stack.Screen
+        name="Security"
+        component={SecuritySettingsScreen}
+        options={{ title: 'Security' }}
+      />
+      <Stack.Screen
+        name="Appearance"
+        component={ThemeSettingsScreen}
+        options={{ title: 'Appearance' }}
+      />
       <Stack.Screen
         name="Reservations"
         component={ReservationsListScreen}
@@ -58,7 +66,11 @@ export function MoreNavigator(): React.JSX.Element {
         options={{ title: 'Reservation' }}
       />
       <Stack.Screen name="Valet" component={ValetScreen} options={{ title: 'Valet' }} />
-      <Stack.Screen name="DigitalKey" component={DigitalKeyScreen} options={{ title: 'Digital key' }} />
+      <Stack.Screen
+        name="DigitalKey"
+        component={DigitalKeyScreen}
+        options={{ title: 'Digital key' }}
+      />
       <Stack.Screen
         name="NotificationPreferences"
         component={NotificationPreferencesScreen}

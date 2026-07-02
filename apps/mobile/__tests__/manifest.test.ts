@@ -13,7 +13,13 @@ const RAW = {
   endpoints: { api_base_url: 'http://localhost:8000/api/v1' },
   navigation: {
     tabs: [{ key: 'home', label: 'Home', icon: 'home' }],
-    center_action: { key: 'play', label: 'Play', icon: 'dice', requires_flag: 'cardless', fallback: 'wallet' },
+    center_action: {
+      key: 'play',
+      label: 'Play',
+      icon: 'dice',
+      requires_flag: 'cardless',
+      fallback: 'wallet',
+    },
     globals: { show_notifications: true, show_support: false },
   },
   updated_at: '2026-07-02T00:00:00Z',
@@ -21,10 +27,7 @@ const RAW = {
 
 describe('deepMerge', () => {
   it('overlays partial values without dropping the base tree', () => {
-    const merged = deepMerge<Record<string, unknown>>(
-      { a: { x: 1, y: 2 }, b: 3 },
-      { a: { y: 9 } },
-    );
+    const merged = deepMerge<Record<string, unknown>>({ a: { x: 1, y: 2 }, b: 3 }, { a: { y: 9 } });
     expect(merged).toEqual({ a: { x: 1, y: 9 }, b: 3 });
   });
 });
@@ -44,14 +47,29 @@ describe('normalizeManifest', () => {
   });
 
   it('normalizes the navigation block', () => {
-    expect(m.navigation?.tabs[0]).toEqual({ key: 'home', label: 'Home', icon: 'home', requiresFlag: undefined });
-    expect(m.navigation?.centerAction).toMatchObject({ key: 'play', requiresFlag: 'cardless', fallback: 'wallet' });
-    expect(m.navigation?.globals).toEqual({ showNotifications: true, showSearch: false, showSupport: false });
+    expect(m.navigation?.tabs[0]).toEqual({
+      key: 'home',
+      label: 'Home',
+      icon: 'home',
+      requiresFlag: undefined,
+    });
+    expect(m.navigation?.centerAction).toMatchObject({
+      key: 'play',
+      requiresFlag: 'cardless',
+      fallback: 'wallet',
+    });
+    expect(m.navigation?.globals).toEqual({
+      showNotifications: true,
+      showSearch: false,
+      showSupport: false,
+    });
   });
 });
 
 describe('resolveApiBaseUrl', () => {
   it('passes through non-localhost urls', () => {
-    expect(resolveApiBaseUrl('https://api.example.com/api/v1')).toBe('https://api.example.com/api/v1');
+    expect(resolveApiBaseUrl('https://api.example.com/api/v1')).toBe(
+      'https://api.example.com/api/v1',
+    );
   });
 });

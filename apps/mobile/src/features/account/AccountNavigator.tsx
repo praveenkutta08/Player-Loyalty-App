@@ -37,8 +37,16 @@ export function AccountNavigator(): React.JSX.Element {
         component={AccountHomeScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="MemberCard" component={MemberCardScreen} options={{ title: 'Member Card' }} />
-      <Stack.Screen name="TierBenefits" component={TierBenefitsScreen} options={{ title: 'Tier & Benefits' }} />
+      <Stack.Screen
+        name="MemberCard"
+        component={MemberCardScreen}
+        options={{ title: 'Member Card' }}
+      />
+      <Stack.Screen
+        name="TierBenefits"
+        component={TierBenefitsScreen}
+        options={{ title: 'Tier & Benefits' }}
+      />
       <Stack.Screen name="Activity" component={ActivityScreen} options={{ title: 'Activity' }} />
       <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Profile' }} />
       <Stack.Screen name="Kyc" component={KycScreen} options={{ title: 'Verification' }} />

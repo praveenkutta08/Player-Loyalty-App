@@ -78,20 +78,20 @@ export function RootNavigator(): React.JSX.Element {
       {status === 'authenticated' ? <GeoBootstrap /> : null}
       <NavigationContainer ref={navigationRef} theme={navTheme}>
         {status === 'authenticated' ? (
-        <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Main" component={MainTabs} />
-          <Stack.Screen name="ForceUpdate" component={ForceUpdateScreen} />
-          <Stack.Screen
-            name="Notifications"
-            component={NotificationCenterScreen}
-            options={{ ...detailHeader(theme), title: 'Notifications' }}
-          />
-          <Stack.Screen
-            name="MessageDetail"
-            component={MessageDetailScreen}
-            options={{ ...detailHeader(theme), title: 'Message' }}
-          />
-        </Stack.Navigator>
+          <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Main" component={MainTabs} />
+            <Stack.Screen name="ForceUpdate" component={ForceUpdateScreen} />
+            <Stack.Screen
+              name="Notifications"
+              component={NotificationCenterScreen}
+              options={{ ...detailHeader(theme), title: 'Notifications' }}
+            />
+            <Stack.Screen
+              name="MessageDetail"
+              component={MessageDetailScreen}
+              options={{ ...detailHeader(theme), title: 'Message' }}
+            />
+          </Stack.Navigator>
         ) : (
           <AuthNavigator />
         )}

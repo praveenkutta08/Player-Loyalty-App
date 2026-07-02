@@ -44,7 +44,11 @@ export function OffersNavigator(): React.JSX.Element {
         component={RewardsMarketplaceScreen}
         options={{ title: 'Rewards' }}
       />
-      <Stack.Screen name="RewardDetail" component={RewardDetailScreen} options={{ title: 'Reward' }} />
+      <Stack.Screen
+        name="RewardDetail"
+        component={RewardDetailScreen}
+        options={{ title: 'Reward' }}
+      />
     </Stack.Navigator>
   );
 }

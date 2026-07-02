@@ -11,7 +11,12 @@ import { useTheme } from '../../theme/ThemeProvider';
 export function ForceUpdateScreen(): React.JSX.Element {
   const theme = useTheme();
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.bg.base, padding: theme.spacing.xl }]}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.bg.base, padding: theme.spacing.xl },
+      ]}
+    >
       <ThemedText variant="h1" style={styles.centered}>
         Update required
       </ThemedText>
@@ -22,7 +27,10 @@ export function ForceUpdateScreen(): React.JSX.Element {
       >
         A newer version of the app is required to continue. Please update to keep playing.
       </ThemedText>
-      <Button label="Update now" onPress={() => Linking.openURL('https://example.com/app-update')} />
+      <Button
+        label="Update now"
+        onPress={() => Linking.openURL('https://example.com/app-update')}
+      />
     </View>
   );
 }

@@ -22,7 +22,12 @@ export const reservationsApi = baseApi.injectEndpoints({
     }),
     bookReservation: build.mutation<
       ReservationOut,
-      { type: ReservationType; start_at?: string | null; end_at?: string | null; notes?: string | null }
+      {
+        type: ReservationType;
+        start_at?: string | null;
+        end_at?: string | null;
+        notes?: string | null;
+      }
     >({
       query: (body) => ({ url: '/app/reservations', method: 'POST', body }),
       invalidatesTags: ['Reservation'],

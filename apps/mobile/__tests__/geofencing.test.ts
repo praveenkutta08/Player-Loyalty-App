@@ -1,4 +1,9 @@
-import { DwellTracker, haversineMeters, MAX_MONITORED_ZONES, nearestZones } from '../src/features/geofencing/geo';
+import {
+  DwellTracker,
+  haversineMeters,
+  MAX_MONITORED_ZONES,
+  nearestZones,
+} from '../src/features/geofencing/geo';
 
 import type { Zone } from '../src/features/geofencing/geo';
 
@@ -21,11 +26,7 @@ describe('nearestZones', () => {
   const origin = { lat: 40, lng: -74 };
 
   it('sorts by distance and drops zones without coordinates', () => {
-    const zones = [
-      zone('far', 41, -74),
-      zone('near', 40.001, -74),
-      zone('nocoord', null, null),
-    ];
+    const zones = [zone('far', 41, -74), zone('near', 40.001, -74), zone('nocoord', null, null)];
     const result = nearestZones(zones, origin);
     expect(result.map((z) => z.id)).toEqual(['near', 'far']);
   });

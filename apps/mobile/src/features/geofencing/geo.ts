@@ -27,8 +27,7 @@ export function haversineMeters(a: GeoPoint, b: GeoPoint): number {
   const dLng = toRad(b.lng - a.lng);
   const lat1 = toRad(a.lat);
   const lat2 = toRad(b.lat);
-  const h =
-    Math.sin(dLat / 2) ** 2 + Math.sin(dLng / 2) ** 2 * Math.cos(lat1) * Math.cos(lat2);
+  const h = Math.sin(dLat / 2) ** 2 + Math.sin(dLng / 2) ** 2 * Math.cos(lat1) * Math.cos(lat2);
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
@@ -45,7 +44,10 @@ export function nearestZones<T extends Zone>(
     .filter((z): z is T => z.center_lat != null && z.center_lng != null)
     .map((z) => ({
       zone: z,
-      distance: haversineMeters(origin, { lat: z.center_lat as number, lng: z.center_lng as number }),
+      distance: haversineMeters(origin, {
+        lat: z.center_lat as number,
+        lng: z.center_lng as number,
+      }),
     }))
     .sort((a, b) => a.distance - b.distance)
     .slice(0, limit)

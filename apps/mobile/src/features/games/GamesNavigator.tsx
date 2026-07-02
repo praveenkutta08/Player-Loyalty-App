@@ -24,9 +24,17 @@ export function GamesNavigator(): React.JSX.Element {
         contentStyle: { backgroundColor: theme.colors.bg.base },
       }}
     >
-      <Stack.Screen name="GamesCatalog" component={GamesCatalogScreen} options={{ title: 'Games' }} />
+      <Stack.Screen
+        name="GamesCatalog"
+        component={GamesCatalogScreen}
+        options={{ title: 'Games' }}
+      />
       <Stack.Screen name="GameDetail" component={GameDetailScreen} options={{ title: 'Game' }} />
-      <Stack.Screen name="Leaderboard" component={LeaderboardScreen} options={{ title: 'Leaderboard' }} />
+      <Stack.Screen
+        name="Leaderboard"
+        component={LeaderboardScreen}
+        options={{ title: 'Leaderboard' }}
+      />
     </Stack.Navigator>
   );
 }

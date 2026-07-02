@@ -27,7 +27,13 @@ function volatility(v: string | null | undefined): { label: string; tone: Status
 }
 
 /** A catalog game row: thumbnail, title/provider, volatility badge, and a favorite toggle. */
-export function GameTile({ game, onPress }: { game: GameOut; onPress: () => void }): React.JSX.Element {
+export function GameTile({
+  game,
+  onPress,
+}: {
+  game: GameOut;
+  onPress: () => void;
+}): React.JSX.Element {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const favorited = useAppSelector((s) => isFavorite(s.gameFavorites, game.id));

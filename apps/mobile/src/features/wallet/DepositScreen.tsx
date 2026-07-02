@@ -30,9 +30,7 @@ export function DepositScreen({ navigation }: Props): React.JSX.Element {
           successMessage="Deposit complete"
           balanceCents={wallet.data?.balance_cents ?? 0}
           disabled={!method}
-          perform={(amountCents, idempotencyKey) =>
-            fund({ amountCents, idempotencyKey }).unwrap()
-          }
+          perform={(amountCents, idempotencyKey) => fund({ amountCents, idempotencyKey }).unwrap()}
           onDone={() => navigation.navigate('WalletHome')}
           extra={
             <Card style={styles.method}>

@@ -92,7 +92,13 @@ export function PaymentMethodsScreen(): React.JSX.Element {
               onChangeText={setExp}
               containerStyle={styles.exp}
             />
-            <Button label="Save card" disabled={!valid} style={styles.save} onPress={add} testID="save-card" />
+            <Button
+              label="Save card"
+              disabled={!valid}
+              style={styles.save}
+              onPress={add}
+              testID="save-card"
+            />
             <Button
               label="Cancel"
               variant="secondary"

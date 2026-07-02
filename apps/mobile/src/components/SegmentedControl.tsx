@@ -38,7 +38,10 @@ export function SegmentedControl<T extends string>({
             accessibilityState={{ selected: active }}
             style={[
               styles.segment,
-              active && { backgroundColor: theme.colors.brand.gold, borderRadius: theme.radius.control },
+              active && {
+                backgroundColor: theme.colors.brand.gold,
+                borderRadius: theme.radius.control,
+              },
             ]}
           >
             <ThemedText

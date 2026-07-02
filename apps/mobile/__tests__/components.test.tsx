@@ -16,9 +16,7 @@ describe('base components', () => {
 
   it('fires Button onPress and respects disabled', () => {
     const onPress = jest.fn();
-    const { rerender } = render(
-      wrap(<Button label="Play" onPress={onPress} testID="btn" />),
-    );
+    const { rerender } = render(wrap(<Button label="Play" onPress={onPress} testID="btn" />));
     fireEvent.press(screen.getByTestId('btn'));
     expect(onPress).toHaveBeenCalledTimes(1);
 

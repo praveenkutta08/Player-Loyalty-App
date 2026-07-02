@@ -1,4 +1,11 @@
-import { ChevronRight, CreditCard, ScrollText, ShieldCheck, TrendingUp, User } from 'lucide-react-native';
+import {
+  ChevronRight,
+  CreditCard,
+  ScrollText,
+  ShieldCheck,
+  TrendingUp,
+  User,
+} from 'lucide-react-native';
 import React from 'react';
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 

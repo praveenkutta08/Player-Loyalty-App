@@ -77,7 +77,13 @@ export function ReservationsListScreen({ navigation }: Props): React.JSX.Element
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }): React.JSX.Element {
+function Section({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}): React.JSX.Element {
   return (
     <View style={styles.section}>
       <ThemedText variant="label" color="muted" style={styles.sectionLabel}>
@@ -88,7 +94,13 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function ReservationRow({ res, onPress }: { res: ReservationOut; onPress: () => void }): React.JSX.Element {
+function ReservationRow({
+  res,
+  onPress,
+}: {
+  res: ReservationOut;
+  onPress: () => void;
+}): React.JSX.Element {
   const theme = useTheme();
   const Icon = TYPE_ICON[res.type] ?? Hotel;
   return (

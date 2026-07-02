@@ -59,7 +59,13 @@ export function NotificationCenterScreen({ navigation }: Props): React.JSX.Eleme
   );
 }
 
-function MessageRow({ message, onPress }: { message: InboxMessage; onPress: () => void }): React.JSX.Element {
+function MessageRow({
+  message,
+  onPress,
+}: {
+  message: InboxMessage;
+  onPress: () => void;
+}): React.JSX.Element {
   const theme = useTheme();
   const Icon = message.read ? MailOpen : Mail;
   return (
@@ -75,7 +81,9 @@ function MessageRow({ message, onPress }: { message: InboxMessage; onPress: () =
           {message.body}
         </ThemedText>
       </View>
-      {!message.read ? <View style={[styles.dot, { backgroundColor: theme.colors.brand.gold }]} /> : null}
+      {!message.read ? (
+        <View style={[styles.dot, { backgroundColor: theme.colors.brand.gold }]} />
+      ) : null}
     </Pressable>
   );
 }

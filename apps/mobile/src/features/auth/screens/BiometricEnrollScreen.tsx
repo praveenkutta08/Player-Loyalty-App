@@ -73,7 +73,12 @@ export function BiometricEnrollScreen(): React.JSX.Element {
           error={error ?? undefined}
         />
 
-        <Button label="Enable Face ID" style={styles.action} onPress={() => void enable()} testID="enable-biometric" />
+        <Button
+          label="Enable Face ID"
+          style={styles.action}
+          onPress={() => void enable()}
+          testID="enable-biometric"
+        />
         <Button
           label="Not now"
           variant="secondary"

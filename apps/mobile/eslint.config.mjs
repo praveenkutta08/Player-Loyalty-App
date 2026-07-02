@@ -21,7 +21,6 @@ export default [
       'jest.config.js',
       'jest.setup.js',
       'react-native.config.js',
-      '.prettierrc.js',
       '.eslintrc.js',
     ],
   },

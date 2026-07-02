@@ -34,9 +34,5 @@ export const accountApi = baseApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const {
-  useGetAccountMeQuery,
-  useGetPointsQuery,
-  useGetActivityQuery,
-  useStartKycMutation,
-} = accountApi;
+export const { useGetAccountMeQuery, useGetPointsQuery, useGetActivityQuery, useStartKycMutation } =
+  accountApi;

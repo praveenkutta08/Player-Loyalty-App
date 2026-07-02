@@ -24,7 +24,8 @@ function matchesFilter(item: ActivityItem, filter: FilterKey): boolean {
   const type = item.type.toLowerCase();
   if (filter === 'earn') return item.points > 0 || type.includes('earn');
   if (filter === 'redeem') return type.includes('redeem') || type.includes('reward');
-  if (filter === 'play') return type.includes('play') || type.includes('bet') || type.includes('win');
+  if (filter === 'play')
+    return type.includes('play') || type.includes('bet') || type.includes('win');
   return true;
 }
 

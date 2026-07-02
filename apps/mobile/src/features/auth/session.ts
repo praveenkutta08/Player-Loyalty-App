@@ -38,7 +38,12 @@ export async function registerDevice(): Promise<void> {
   try {
     const pushToken = await push.getDeviceToken();
     await store
-      .dispatch(authApi.endpoints.registerDevice.initiate({ platform: push.platform(), push_token: pushToken }))
+      .dispatch(
+        authApi.endpoints.registerDevice.initiate({
+          platform: push.platform(),
+          push_token: pushToken,
+        }),
+      )
       .unwrap();
   } catch {
     // ignore — device registration is not critical to the session

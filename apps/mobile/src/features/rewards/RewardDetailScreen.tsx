@@ -104,7 +104,10 @@ export function RewardDetailScreen({ route, navigation }: Props): React.JSX.Elem
         {failure ? (
           <View style={styles.failure}>
             <XCircle size={18} color={theme.colors.state.error} />
-            <ThemedText variant="body" style={[styles.failureText, { color: theme.colors.state.error }]}>
+            <ThemedText
+              variant="body"
+              style={[styles.failureText, { color: theme.colors.state.error }]}
+            >
               {redeemOutcomeMessage(failure)}
             </ThemedText>
           </View>

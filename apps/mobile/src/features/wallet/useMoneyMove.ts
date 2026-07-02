@@ -14,7 +14,9 @@ function moveErrorMessage(err: unknown): string {
  * once per attempt and reused across retries (GOLDEN RULE #4) so a retry of a timed-out request can
  * never double-move funds; `reset` mints a fresh key for the next distinct move.
  */
-export function useMoneyMove(perform: (amountCents: number, idempotencyKey: string) => Promise<unknown>) {
+export function useMoneyMove(
+  perform: (amountCents: number, idempotencyKey: string) => Promise<unknown>,
+) {
   const [key, setKey] = useState<string>(() => String(uuid.v4()));
   const [state, setState] = useState<MoveState>('idle');
   const [error, setError] = useState<string | null>(null);

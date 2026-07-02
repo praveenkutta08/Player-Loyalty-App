@@ -19,7 +19,10 @@ describe('authSlice', () => {
 
   it('clears on clearSession and marks unauthenticated', () => {
     const authed = { status: 'authenticated' as const, accessToken: 'abc' };
-    expect(authReducer(authed, clearSession())).toEqual({ status: 'unauthenticated', accessToken: null });
+    expect(authReducer(authed, clearSession())).toEqual({
+      status: 'unauthenticated',
+      accessToken: null,
+    });
     expect(authReducer(authed, setUnauthenticated()).status).toBe('unauthenticated');
   });
 });

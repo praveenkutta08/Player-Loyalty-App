@@ -68,9 +68,7 @@ export function AmountMoveForm({
         keyboardType="decimal-pad"
         value={raw}
         onChangeText={(t) => setRaw(t)}
-        error={
-          overCap ? `Exceeds available ${formatMoney(maxCents ?? 0)}` : undefined
-        }
+        error={overCap ? `Exceeds available ${formatMoney(maxCents ?? 0)}` : undefined}
       />
 
       <View style={styles.chips}>
@@ -92,7 +90,10 @@ export function AmountMoveForm({
       {state === 'failure' ? (
         <View style={styles.failure}>
           <XCircle size={18} color={theme.colors.state.error} />
-          <ThemedText variant="body" style={{ color: theme.colors.state.error, marginLeft: 8, flex: 1 }}>
+          <ThemedText
+            variant="body"
+            style={{ color: theme.colors.state.error, marginLeft: 8, flex: 1 }}
+          >
             {error}
           </ThemedText>
         </View>

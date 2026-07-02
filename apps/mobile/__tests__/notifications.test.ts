@@ -16,7 +16,10 @@ import type { InboxMessage } from '../src/features/notifications/notificationsSl
 
 describe('resolveDeepLink', () => {
   it('routes structured offer/promotion payloads to the right segment', () => {
-    expect(resolveDeepLink({ type: 'offer', id: 'o1' })).toEqual({ kind: 'offers', segment: 'offers' });
+    expect(resolveDeepLink({ type: 'offer', id: 'o1' })).toEqual({
+      kind: 'offers',
+      segment: 'offers',
+    });
     expect(resolveDeepLink({ type: 'promotion', id: 'p1' })).toEqual({
       kind: 'offers',
       segment: 'promotions',
@@ -24,7 +27,10 @@ describe('resolveDeepLink', () => {
   });
 
   it('routes reservations + messages by id', () => {
-    expect(resolveDeepLink({ type: 'reservation', id: 'r1' })).toEqual({ kind: 'reservation', id: 'r1' });
+    expect(resolveDeepLink({ type: 'reservation', id: 'r1' })).toEqual({
+      kind: 'reservation',
+      id: 'r1',
+    });
     expect(resolveDeepLink({ type: 'message', id: 'm1' })).toEqual({ kind: 'message', id: 'm1' });
   });
 

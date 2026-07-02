@@ -42,7 +42,9 @@ function coerceFlags(raw: Record<string, unknown> | undefined): FeatureFlags {
   return out;
 }
 
-function normalizeNavigation(raw: Record<string, unknown> | undefined): ManifestNavigation | undefined {
+function normalizeNavigation(
+  raw: Record<string, unknown> | undefined,
+): ManifestNavigation | undefined {
   if (!raw) return undefined;
   const tabs = Array.isArray(raw.tabs)
     ? (raw.tabs as Array<Record<string, unknown>>).map((t) => ({

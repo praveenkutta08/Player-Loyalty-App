@@ -44,7 +44,11 @@ export function SupportChatScreen(): React.JSX.Element {
     } catch {
       setTurns((t) => [
         ...t,
-        { id: `e-${t.length}`, role: 'assistant', text: 'Sorry — I couldn’t reach support just now.' },
+        {
+          id: `e-${t.length}`,
+          role: 'assistant',
+          text: 'Sorry — I couldn’t reach support just now.',
+        },
       ]);
     }
   }

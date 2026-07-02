@@ -70,7 +70,15 @@ export function ReservationDetailScreen({ route, navigation }: Props): React.JSX
   );
 }
 
-function Detail({ label, value, last }: { label: string; value: string; last?: boolean }): React.JSX.Element {
+function Detail({
+  label,
+  value,
+  last,
+}: {
+  label: string;
+  value: string;
+  last?: boolean;
+}): React.JSX.Element {
   const theme = useTheme();
   return (
     <View

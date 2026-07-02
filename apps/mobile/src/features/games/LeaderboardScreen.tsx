@@ -43,7 +43,9 @@ export function LeaderboardScreen(): React.JSX.Element {
               {q.isFetching ? 'Loading…' : 'No ranked players yet.'}
             </ThemedText>
           ) : (
-            entries.map((e) => <Row key={e.player_id} entry={e} isMe={me?.player_id === e.player_id} />)
+            entries.map((e) => (
+              <Row key={e.player_id} entry={e} isMe={me?.player_id === e.player_id} />
+            ))
           )}
         </Card>
       </ScrollView>

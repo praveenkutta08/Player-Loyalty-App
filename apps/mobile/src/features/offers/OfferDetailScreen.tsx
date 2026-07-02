@@ -75,12 +75,7 @@ export function OfferDetailScreen({ navigation, route }: Props): React.JSX.Eleme
               <StatusPill label="Redeemed" tone="success" />
             </View>
           ) : (
-            <Button
-              label="Redeem offer"
-              onPress={onRedeem}
-              loading={isLoading}
-              testID="redeem"
-            />
+            <Button label="Redeem offer" onPress={onRedeem} loading={isLoading} testID="redeem" />
           )}
         </View>
       </ScrollView>

@@ -9,7 +9,9 @@ jest.mock('react-native-keychain', () => {
       store[(opts && opts.service) || 'default'] = { username, password };
       return true;
     }),
-    getGenericPassword: jest.fn(async (opts) => store[(opts && opts.service) || 'default'] || false),
+    getGenericPassword: jest.fn(
+      async (opts) => store[(opts && opts.service) || 'default'] || false,
+    ),
     resetGenericPassword: jest.fn(async (opts) => {
       delete store[(opts && opts.service) || 'default'];
       return true;

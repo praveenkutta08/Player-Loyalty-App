@@ -5,11 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../app/store';
 import { Card, Screen, ThemedText, Toggle } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
 
-import {
-  setLocationOptIn,
-  setQuietHoursEnabled,
-  toggleChannel,
-} from './prefsSlice';
+import { setLocationOptIn, setQuietHoursEnabled, toggleChannel } from './prefsSlice';
 
 import type { NotificationChannel } from './prefsSlice';
 

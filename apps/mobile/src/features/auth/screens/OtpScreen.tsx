@@ -66,11 +66,7 @@ export function OtpScreen({ route }: Props): React.JSX.Element {
         />
 
         <View style={styles.links}>
-          <Pressable
-            onPress={() => void requestOtp({ email })}
-            hitSlop={8}
-            disabled={resending}
-          >
+          <Pressable onPress={() => void requestOtp({ email })} hitSlop={8} disabled={resending}>
             <ThemedText variant="label" style={{ color: theme.colors.brand.gold }}>
               {resending ? 'Sending…' : 'Resend code'}
             </ThemedText>

@@ -30,7 +30,10 @@ export function Toggle({
       style={[styles.track, { backgroundColor: trackColor, opacity: disabled ? 0.5 : 1 }]}
     >
       <View
-        style={[styles.knob, { backgroundColor: knobColor, alignSelf: value ? 'flex-end' : 'flex-start' }]}
+        style={[
+          styles.knob,
+          { backgroundColor: knobColor, alignSelf: value ? 'flex-end' : 'flex-start' },
+        ]}
       />
     </Pressable>
   );

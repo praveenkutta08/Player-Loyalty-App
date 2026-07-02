@@ -29,7 +29,10 @@ export function Screen({
   return (
     <SafeAreaView
       edges={edges}
-      style={[styles.fill, { backgroundColor: theme.colors.bg[background] ?? theme.colors.bg.base }]}
+      style={[
+        styles.fill,
+        { backgroundColor: theme.colors.bg[background] ?? theme.colors.bg.base },
+      ]}
     >
       <View style={[styles.fill, padded && { paddingHorizontal: theme.spacing.lg }, style]}>
         {children}

@@ -28,13 +28,19 @@ export function RewardsMarketplaceScreen({ navigation }: Props): React.JSX.Eleme
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}
         refreshControl={
-          <RefreshControl refreshing={rewards.isFetching} onRefresh={() => void rewards.refetch()} />
+          <RefreshControl
+            refreshing={rewards.isFetching}
+            onRefresh={() => void rewards.refetch()}
+          />
         }
       >
         <Card style={[styles.balance, { backgroundColor: theme.colors.brand.gold }]}>
           <View style={styles.balanceHead}>
             <Coins size={18} color={theme.colors.brand.onGold} />
-            <ThemedText variant="label" style={[styles.balanceLabel, { color: theme.colors.brand.onGold }]}>
+            <ThemedText
+              variant="label"
+              style={[styles.balanceLabel, { color: theme.colors.brand.onGold }]}
+            >
               Points balance
             </ThemedText>
           </View>

@@ -126,7 +126,12 @@ export const DEFAULT_THEME: ThemeTokens = {
       height: 36,
     },
     card: { bg: 'bg.surface', border: 'border.default', radius: 'card', shadow: 'sm' },
-    input: { bg: 'bg.surface', border: 'border.default', radius: 'control', placeholder: 'text.muted' },
+    input: {
+      bg: 'bg.surface',
+      border: 'border.default',
+      radius: 'control',
+      placeholder: 'text.muted',
+    },
     statusPill: { radius: 'pill', dot: true },
     toggle: {
       onTrack: 'brand.gold',

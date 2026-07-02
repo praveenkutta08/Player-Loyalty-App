@@ -24,11 +24,7 @@ export function DigitalKeyScreen(): React.JSX.Element {
   return (
     <Screen>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        {active.length > 0 ? (
-          active.map((k) => <KeyCard key={k.id} keyItem={k} />)
-        ) : (
-          <IssueKey />
-        )}
+        {active.length > 0 ? active.map((k) => <KeyCard key={k.id} keyItem={k} />) : <IssueKey />}
       </ScrollView>
     </Screen>
   );
@@ -60,13 +56,23 @@ function KeyCard({ keyItem }: { keyItem: DigitalKeyOut }): React.JSX.Element {
   );
 }
 
-function UnlockButton({ state, onPress }: { state: UnlockState; onPress: () => void }): React.JSX.Element {
+function UnlockButton({
+  state,
+  onPress,
+}: {
+  state: UnlockState;
+  onPress: () => void;
+}): React.JSX.Element {
   const theme = useTheme();
   const unlocking = state === 'unlocking';
   return (
     <Button
       label={state === 'unlocked' ? 'Unlocked' : 'Hold near door to unlock'}
-      icon={state === 'unlocked' ? undefined : <LockKeyhole size={18} color={theme.colors.brand.onGold} />}
+      icon={
+        state === 'unlocked' ? undefined : (
+          <LockKeyhole size={18} color={theme.colors.brand.onGold} />
+        )
+      }
       loading={unlocking}
       disabled={unlocking}
       style={styles.unlock}
@@ -82,7 +88,10 @@ function UnlockFeedback({ state }: { state: UnlockState }): React.JSX.Element | 
     return (
       <View style={styles.feedback}>
         <DoorOpen size={18} color={theme.colors.brand.onGold} />
-        <ThemedText variant="label" style={[styles.feedbackText, { color: theme.colors.brand.onGold }]}>
+        <ThemedText
+          variant="label"
+          style={[styles.feedbackText, { color: theme.colors.brand.onGold }]}
+        >
           Door unlocked — welcome back.
         </ThemedText>
       </View>
@@ -92,8 +101,13 @@ function UnlockFeedback({ state }: { state: UnlockState }): React.JSX.Element | 
     return (
       <View style={styles.feedback}>
         <Lock size={18} color={theme.colors.brand.onGold} />
-        <ThemedText variant="label" style={[styles.feedbackText, { color: theme.colors.brand.onGold }]}>
-          {state === 'denied' ? 'Access denied — check your reservation.' : 'Couldn’t reach the lock. Try again.'}
+        <ThemedText
+          variant="label"
+          style={[styles.feedbackText, { color: theme.colors.brand.onGold }]}
+        >
+          {state === 'denied'
+            ? 'Access denied — check your reservation.'
+            : 'Couldn’t reach the lock. Try again.'}
         </ThemedText>
       </View>
     );

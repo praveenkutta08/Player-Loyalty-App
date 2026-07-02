@@ -40,7 +40,10 @@ export function GamesCatalogScreen({ navigation }: Props): React.JSX.Element {
           <Card style={[styles.jackpot, { backgroundColor: theme.colors.brand.gold }]}>
             <View style={styles.jackpotHead}>
               <Trophy size={20} color={theme.colors.brand.onGold} />
-              <ThemedText variant="kicker" style={[styles.jackpotKicker, { color: theme.colors.brand.onGold }]}>
+              <ThemedText
+                variant="kicker"
+                style={[styles.jackpotKicker, { color: theme.colors.brand.onGold }]}
+              >
                 Jackpot of the day
               </ThemedText>
             </View>
@@ -96,7 +99,11 @@ export function GamesCatalogScreen({ navigation }: Props): React.JSX.Element {
             </ThemedText>
           ) : (
             (games.data ?? []).map((g) => (
-              <GameTile key={g.id} game={g} onPress={() => navigation.navigate('GameDetail', { game: g })} />
+              <GameTile
+                key={g.id}
+                game={g}
+                onPress={() => navigation.navigate('GameDetail', { game: g })}
+              />
             ))
           )}
         </Card>

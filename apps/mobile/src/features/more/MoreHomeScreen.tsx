@@ -41,30 +41,30 @@ export function MoreHomeScreen({ navigation }: Props): React.JSX.Element {
           Concierge
         </ThemedText>
         <Card style={styles.card}>
-              {reservations ? (
-                <ListRow
-                  icon={icon(CalendarDays)}
-                  title="Reservations"
-                  subtitle="Hotel, dining & nightlife"
-                  onPress={() => navigation.navigate('Reservations')}
-                />
-              ) : null}
-              {valet ? (
-                <ListRow
-                  icon={icon(Car)}
-                  title="Valet"
-                  subtitle="Request & track your car"
-                  onPress={() => navigation.navigate('Valet')}
-                />
-              ) : null}
-              {digitalKey ? (
-                <ListRow
-                  icon={icon(KeyRound)}
-                  title="Digital key"
-                  subtitle="Unlock your room"
-                  onPress={() => navigation.navigate('DigitalKey')}
-                />
-              ) : null}
+          {reservations ? (
+            <ListRow
+              icon={icon(CalendarDays)}
+              title="Reservations"
+              subtitle="Hotel, dining & nightlife"
+              onPress={() => navigation.navigate('Reservations')}
+            />
+          ) : null}
+          {valet ? (
+            <ListRow
+              icon={icon(Car)}
+              title="Valet"
+              subtitle="Request & track your car"
+              onPress={() => navigation.navigate('Valet')}
+            />
+          ) : null}
+          {digitalKey ? (
+            <ListRow
+              icon={icon(KeyRound)}
+              title="Digital key"
+              subtitle="Unlock your room"
+              onPress={() => navigation.navigate('DigitalKey')}
+            />
+          ) : null}
           {games ? (
             <ListRow
               icon={icon(Gamepad2)}

@@ -29,7 +29,10 @@ export interface BuildConfig {
  * Android emulators reach the host machine at 10.0.2.2; iOS simulators use localhost. Physical
  * devices need the host LAN IP (set per build). Defaults target the local dev backend on :8000.
  */
-const DEV_API_HOST = Platform.select({ android: 'http://10.0.2.2:8000', default: 'http://localhost:8000' });
+const DEV_API_HOST = Platform.select({
+  android: 'http://10.0.2.2:8000',
+  default: 'http://localhost:8000',
+});
 
 export const buildConfig: BuildConfig = {
   appName: 'Casino Companion',

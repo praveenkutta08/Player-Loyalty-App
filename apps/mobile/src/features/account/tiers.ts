@@ -12,10 +12,30 @@ export interface Tier {
 
 export const TIER_LADDER: Tier[] = [
   { key: 'bronze', label: 'Bronze', threshold: 0, benefits: ['Member offers', 'Birthday reward'] },
-  { key: 'silver', label: 'Silver', threshold: 1000, benefits: ['Priority support', '5% bonus points'] },
-  { key: 'gold', label: 'Gold', threshold: 5000, benefits: ['Free valet', '10% bonus points', 'Lounge access'] },
-  { key: 'platinum', label: 'Platinum', threshold: 15000, benefits: ['Host line', 'Suite upgrades', '15% bonus points'] },
-  { key: 'diamond', label: 'Diamond', threshold: 50000, benefits: ['Dedicated host', 'Private events', '20% bonus points'] },
+  {
+    key: 'silver',
+    label: 'Silver',
+    threshold: 1000,
+    benefits: ['Priority support', '5% bonus points'],
+  },
+  {
+    key: 'gold',
+    label: 'Gold',
+    threshold: 5000,
+    benefits: ['Free valet', '10% bonus points', 'Lounge access'],
+  },
+  {
+    key: 'platinum',
+    label: 'Platinum',
+    threshold: 15000,
+    benefits: ['Host line', 'Suite upgrades', '15% bonus points'],
+  },
+  {
+    key: 'diamond',
+    label: 'Diamond',
+    threshold: 50000,
+    benefits: ['Dedicated host', 'Private events', '20% bonus points'],
+  },
 ];
 
 export interface TierProgress {

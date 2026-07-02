@@ -61,13 +61,24 @@ export function TransactionDetailScreen({ route }: Props): React.JSX.Element {
   );
 }
 
-function Detail({ label, value, last }: { label: string; value: string; last?: boolean }): React.JSX.Element {
+function Detail({
+  label,
+  value,
+  last,
+}: {
+  label: string;
+  value: string;
+  last?: boolean;
+}): React.JSX.Element {
   const theme = useTheme();
   return (
     <View
       style={[
         styles.detail,
-        !last && { borderBottomColor: theme.colors.border.soft, borderBottomWidth: StyleSheet.hairlineWidth },
+        !last && {
+          borderBottomColor: theme.colors.border.soft,
+          borderBottomWidth: StyleSheet.hairlineWidth,
+        },
       ]}
     >
       <ThemedText variant="label" color="muted">

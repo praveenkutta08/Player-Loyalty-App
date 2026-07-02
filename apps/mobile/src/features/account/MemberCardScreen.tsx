@@ -72,7 +72,12 @@ function barcodeBars(seed: string): number[] {
 
 /** Group the member id into readable blocks (e.g. UUID → 4-char groups). */
 function formatMemberId(id: string): string {
-  return id.replace(/-/g, '').slice(0, 16).toUpperCase().replace(/(.{4})/g, '$1 ').trim();
+  return id
+    .replace(/-/g, '')
+    .slice(0, 16)
+    .toUpperCase()
+    .replace(/(.{4})/g, '$1 ')
+    .trim();
 }
 
 const styles = StyleSheet.create({

@@ -142,7 +142,13 @@ const styles = StyleSheet.create({
   segmentPill: { marginTop: 12 },
   actions: { flexDirection: 'row', marginTop: 24 },
   action: { alignItems: 'center', marginRight: 28 },
-  actionIcon: { width: 52, height: 52, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+  actionIcon: {
+    width: 52,
+    height: 52,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   sectionTitle: { marginTop: 28, marginBottom: 12 },
   carouselItem: { width: 260, marginRight: 12 },
 });

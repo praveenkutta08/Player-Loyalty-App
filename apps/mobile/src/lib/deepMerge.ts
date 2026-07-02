@@ -10,13 +10,11 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
  */
 export function deepMerge<T>(base: T, source: unknown): T {
   if (!isPlainObject(base) || !isPlainObject(source)) {
-    return (source === undefined ? base : (source as T));
+    return source === undefined ? base : (source as T);
   }
   const out: Record<string, unknown> = { ...base };
   for (const [key, value] of Object.entries(source)) {
-    out[key] = isPlainObject(value) && isPlainObject(out[key])
-      ? deepMerge(out[key], value)
-      : value;
+    out[key] = isPlainObject(value) && isPlainObject(out[key]) ? deepMerge(out[key], value) : value;
   }
   return out as T;
 }

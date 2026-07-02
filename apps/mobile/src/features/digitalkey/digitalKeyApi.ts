@@ -35,9 +35,5 @@ export const digitalKeyApi = baseApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const {
-  useGetKeysQuery,
-  useIssueKeyMutation,
-  useUnlockKeyMutation,
-  useRevokeKeyMutation,
-} = digitalKeyApi;
+export const { useGetKeysQuery, useIssueKeyMutation, useUnlockKeyMutation, useRevokeKeyMutation } =
+  digitalKeyApi;

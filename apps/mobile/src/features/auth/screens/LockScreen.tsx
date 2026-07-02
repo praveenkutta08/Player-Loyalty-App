@@ -68,11 +68,19 @@ export function LockScreen(): React.JSX.Element {
               Use Face ID to unlock your account.
             </ThemedText>
             {error ? (
-              <ThemedText variant="label" style={[styles.error, { color: theme.colors.state.error }]}>
+              <ThemedText
+                variant="label"
+                style={[styles.error, { color: theme.colors.state.error }]}
+              >
                 {error}
               </ThemedText>
             ) : null}
-            <Button label="Try Face ID" style={styles.action} onPress={() => void runBiometric()} testID="try-biometric" />
+            <Button
+              label="Try Face ID"
+              style={styles.action}
+              onPress={() => void runBiometric()}
+              testID="try-biometric"
+            />
             <Button
               label="Use passcode"
               variant="secondary"

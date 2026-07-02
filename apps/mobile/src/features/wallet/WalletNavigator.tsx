@@ -37,9 +37,17 @@ export function WalletNavigator(): React.JSX.Element {
       }}
     >
       <Stack.Screen name="ScanPlay" component={ScanPlayScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="BlePairing" component={BlePairingScreen} options={{ title: 'Nearby machines' }} />
+      <Stack.Screen
+        name="BlePairing"
+        component={BlePairingScreen}
+        options={{ title: 'Nearby machines' }}
+      />
       <Stack.Screen name="QrScan" component={QrScanScreen} options={{ title: 'Scan QR' }} />
-      <Stack.Screen name="MachineSession" component={MachineSessionScreen} options={{ title: 'Machine' }} />
+      <Stack.Screen
+        name="MachineSession"
+        component={MachineSessionScreen}
+        options={{ title: 'Machine' }}
+      />
       <Stack.Screen name="WalletHome" component={WalletHomeScreen} options={{ title: 'Wallet' }} />
       <Stack.Screen name="Deposit" component={DepositScreen} options={{ title: 'Deposit' }} />
       <Stack.Screen name="Withdraw" component={WithdrawScreen} options={{ title: 'Cash out' }} />
