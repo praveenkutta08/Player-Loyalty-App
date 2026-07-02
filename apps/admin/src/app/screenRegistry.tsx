@@ -9,6 +9,7 @@ import { GamesScreen } from '@/features/games/GamesScreen';
 import { GeofencingScreen } from '@/features/geofencing/GeofencingScreen';
 import { LocalizationScreen } from '@/features/localization/LocalizationScreen';
 import { MediaLibraryScreen } from '@/features/media/MediaLibraryScreen';
+import { MembersScreen } from '@/features/members/MembersScreen';
 import { NotificationsScreen } from '@/features/notifications/NotificationsScreen';
 import { OffersScreen } from '@/features/offers/OffersScreen';
 import { DiningScreen } from '@/features/operations/DiningScreen';
@@ -41,6 +42,7 @@ export const SCREEN_REGISTRY: Record<string, ComponentType> = {
   '/rewards': RewardsScreen,
   '/games': GamesScreen,
   '/support': SupportScreen,
+  '/members': MembersScreen,
   '/hotel': HotelScreen,
   '/dining': DiningScreen,
   '/entertainment': EntertainmentScreen,
