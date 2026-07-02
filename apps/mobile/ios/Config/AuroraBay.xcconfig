@@ -1,0 +1,7 @@
+// Aurora Bay tenant scheme (H6 white-label packaging) — template for real tenants.
+// Replace TENANT_ID/API URL when provisioning; attach to a duplicated `mobile-AuroraBay` scheme.
+TENANT_ID = 11111111-1111-4111-8111-111111111111
+TENANT_SLUG = aurora-bay
+TENANT_API_BASE_URL = https:/$()/api.aurorabay.example.com/api/v1
+TENANT_APP_NAME = Aurora Bay Casino
+PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.mobile.aurorabay

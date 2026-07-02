@@ -207,3 +207,38 @@ Every key: versioned enum, documented default, read-side fallback. Additive only
 | 2026-07-02 | `seal` deferred (per-tenant Lottie logo production); `golden` + `pulse` + `horizon` = next adds (§3.1). |
 | 2026-07-02 | Nav bar styles: no design file will be provided — Claude Code designs both styles in P7.4 from existing tokens + the splash handoff's visual language, with an approval gate before implementation. |
 | 2026-07-02 | Fonts in MVP = curated bundled pairing set only (`typography.pairing` enum, open-license fonts); NO free-form font input or uploads. Custom per-tenant fonts = gated later phase (§3.21). Constraint noted on P3.4 in the playbook. |
+
+## 6. Shipping a new tenant binary (H6 runbook)
+
+Runtime branding is manifest-driven; a NEW tenant binary only needs a native identity shell.
+The JS bundle is identical across tenants.
+
+### Android (product flavor)
+1. In `apps/mobile/android/app/build.gradle` ▸ `productFlavors`, copy the `auroraBay` block:
+   set `applicationIdSuffix`, `resValue "string", "app_name"`, and the three
+   `buildConfigField`s (`TENANT_ID` = tenant UUID from the console, `TENANT_SLUG`,
+   `API_BASE_URL` = the tenant's API origin + `/api/v1`).
+2. Add the two debug variants to `react { debuggableVariants = [...] }` (e.g. `"acmeDebug"`).
+3. Optional per-tenant launcher icon/splash: `android/app/src/acme/res/…` (flavor source set).
+4. Build: `cd apps/mobile/android && ./gradlew assembleAcmeRelease` (or `run-android --mode acmeDebug`).
+
+JS reads these via the `TenantBuildConfig` native module
+(`android/.../TenantBuildConfigModule.kt` → `src/config/buildConfig.ts`); blank fields fall
+back to `apps/mobile/.env`, then the committed demo values, so the `demo` flavor stays the dev loop.
+
+### iOS (scheme + xcconfig) — requires a Mac
+1. Copy `ios/Config/AuroraBay.xcconfig` → `ios/Config/Acme.xcconfig`; fill `TENANT_ID`,
+   `TENANT_SLUG`, `TENANT_API_BASE_URL`, `TENANT_APP_NAME`, `PRODUCT_BUNDLE_IDENTIFIER`.
+2. In Xcode: add duplicate Debug/Release configurations based on the xcconfig, duplicate the
+   `mobile` scheme as `mobile-Acme`, and set `CFBundleDisplayName = $(TENANT_APP_NAME)` plus
+   `TenantId/TenantSlug/TenantApiBaseUrl = $(TENANT_ID)/$(TENANT_SLUG)/$(TENANT_API_BASE_URL)`
+   in Info.plist.
+3. Add `ios/mobile/TenantBuildConfig.swift` + `.m` to the target once (first tenant only) —
+   they expose the Info.plist values to JS; until then iOS uses the `.env`/dev fallbacks.
+
+### Fonts
+Manifest typography tokens must name a font bundled in `assets/fonts/` (see
+`assets/fonts/OFL-ATTRIBUTION.md`). The default pairing (Manrope / Bodoni Moda /
+JetBrains Mono) ships in the repo and in `android/app/src/main/assets/fonts/`; per-tenant
+additions go into the flavor source set (`android/app/src/<flavor>/assets/fonts/`) and the
+Xcode target on iOS.

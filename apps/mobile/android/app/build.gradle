@@ -19,10 +19,9 @@ react {
     cliFile = new File(rootNodeModules, "react-native/cli.js")
 
     /* Variants */
-    //   The list of variants to that are debuggable. For those we're going to
-    //   skip the bundling of the JS bundle and the assets. Default is "debug", "debugOptimized".
-    //   If you add flavors like lite, prod, etc. you'll have to list your debuggableVariants.
-    // debuggableVariants = ["liteDebug", "liteDebugOptimized", "prodDebug", "prodDebugOptimized"]
+    //   With tenant product flavors the debuggable variants must be listed explicitly so the
+    //   RN plugin skips JS bundling for them (H6 white-label packaging).
+    debuggableVariants = ["demoDebug", "auroraBayDebug"]
 
     /* Bundling */
     //   A list containing the node command and its flags. Default is just 'node'.
@@ -79,12 +78,43 @@ android {
     compileSdk rootProject.ext.compileSdkVersion
 
     namespace "com.mobile"
+    // TenantBuildConfigModule reads the per-flavor fields below (H6).
+    buildFeatures {
+        buildConfig true
+    }
     defaultConfig {
         applicationId "com.mobile"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "0.0.1"
+    }
+
+    // ---------------------------------------------------------------- white-label (H6)
+    // One flavor per tenant. Each flavor is a complete brand shell: its own applicationId,
+    // launcher name and compiled tenant identity/API host. JS reads these via the
+    // TenantBuildConfig native module — src/config/buildConfig.ts falls back to .env/dev
+    // values when a field is blank (demo) or the module is absent (tests).
+    // To add a tenant: copy a block, then follow docs/WHITE_LABEL_CUSTOMIZATION_ROADMAP.md.
+    flavorDimensions += "tenant"
+    productFlavors {
+        demo {
+            dimension "tenant"
+            // Default demo shell: keeps the base applicationId so existing installs survive.
+            resValue "string", "app_name", "Casino Companion"
+            buildConfigField "String", "TENANT_ID", "\"\""     // blank -> .env / dev fallback
+            buildConfigField "String", "TENANT_SLUG", "\"demo-casino\""
+            buildConfigField "String", "API_BASE_URL", "\"\""  // blank -> dev host fallback
+        }
+        auroraBay {
+            dimension "tenant"
+            applicationIdSuffix ".aurorabay"
+            resValue "string", "app_name", "Aurora Bay Casino"
+            // Replace with the tenant's real UUID + API host when provisioning the tenant.
+            buildConfigField "String", "TENANT_ID", "\"11111111-1111-4111-8111-111111111111\""
+            buildConfigField "String", "TENANT_SLUG", "\"aurora-bay\""
+            buildConfigField "String", "API_BASE_URL", "\"https://api.aurorabay.example.com/api/v1\""
+        }
     }
     signingConfigs {
         debug {

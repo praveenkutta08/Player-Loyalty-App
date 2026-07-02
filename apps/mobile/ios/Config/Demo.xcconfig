@@ -1,0 +1,8 @@
+// Demo tenant scheme (H6 white-label packaging).
+// Attach per configuration in Xcode: Project ▸ Info ▸ Configurations, then duplicate the
+// `mobile` scheme as `mobile-Demo` selecting these. See docs/WHITE_LABEL_CUSTOMIZATION_ROADMAP.md.
+TENANT_ID =
+TENANT_SLUG = demo-casino
+TENANT_API_BASE_URL =
+TENANT_APP_NAME = Casino Companion
+PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.mobile

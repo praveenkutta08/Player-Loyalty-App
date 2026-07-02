@@ -14,8 +14,8 @@ class MainApplication : Application(), ReactApplication {
       context = applicationContext,
       packageList =
         PackageList(this).packages.apply {
-          // Packages that cannot be autolinked yet can be added manually here, for example:
-          // add(MyReactNativePackage())
+          // Per-flavor tenant identity for the white-label shell (H6).
+          add(TenantBuildConfigPackage())
         },
     )
   }

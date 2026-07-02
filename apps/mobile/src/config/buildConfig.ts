@@ -1,5 +1,5 @@
 import { API_HOST, TENANT_ID } from '@env';
-import { Platform } from 'react-native';
+import { NativeModules, Platform } from 'react-native';
 
 /**
  * Per-tenant build configuration — the ONLY brand-adjacent values compiled into a white-label
@@ -7,28 +7,36 @@ import { Platform } from 'react-native';
  * (GOLDEN RULE #5); this just tells the app which tenant it is and where its API lives so it can
  * fetch that manifest on first launch (the manifest endpoint requires an `X-Tenant` id).
  *
- * In real white-label builds these are injected per iOS scheme / Android product flavor. For dev,
- * `TENANT_ID` / `API_HOST` come from `apps/mobile/.env` (see .env.example + docs/RUNNING.md) so a
- * new developer sets their seeded tenant id there rather than editing this tracked file. When
- * unset, the committed demo fallbacks below apply.
+ * Resolution order (H6):
+ *  1. The TenantBuildConfig NATIVE module — per Android product flavor / iOS scheme, injected at
+ *     native build time (android/app/build.gradle productFlavors, ios/Config/<Tenant>.xcconfig).
+ *  2. `apps/mobile/.env` (`TENANT_ID` / `API_HOST`) — the dev loop; see docs/RUNNING.md.
+ *  3. Committed demo fallbacks — a fresh checkout still boots against the seeded demo tenant.
  */
 
 /** Committed demo fallbacks (used when apps/mobile/.env is absent or a key is blank). */
 const DEMO_TENANT_ID = '3e321b81-eae9-4ece-81a1-a6d4c9a3bcfd';
+
 export interface BuildConfig {
   /** Display name used for the native app shell (overridden per flavor/scheme). */
   appName: string;
   /** Tenant slug (human-readable). */
   tenantSlug: string;
-  /**
-   * Tenant UUID sent as `X-Tenant` when fetching the manifest. Filled from the seeded demo tenant
-   * in P4.2; empty here because P4.1 does not yet fetch the manifest.
-   */
+  /** Tenant UUID sent as `X-Tenant` when fetching the manifest. */
   tenantId: string;
   /** Base API URL used until the manifest supplies the tenant's own `endpoints.apiBaseUrl`. */
   apiBaseUrl: string;
-  /** Minimum app version this build supports; below the manifest's floor we show force-update (G8). */
+  /** Running app version; below the manifest's `min_app_version` we show force-update (G8). */
   appVersion: string;
+}
+
+/** Shape of the constants exported by the TenantBuildConfig native module (blank = unset). */
+export interface NativeTenantBuildConfig {
+  tenantId?: string;
+  tenantSlug?: string;
+  apiBaseUrl?: string;
+  appName?: string;
+  appVersion?: string;
 }
 
 /**
@@ -42,12 +50,24 @@ const DEV_API_HOST =
     default: 'http://localhost:8000',
   });
 
-export const buildConfig: BuildConfig = {
-  appName: 'Casino Companion',
-  tenantSlug: 'demo-casino',
-  // Seeded demo tenant — from apps/mobile/.env (TENANT_ID) or the committed demo fallback.
-  // Injected per flavor/scheme in real white-label builds.
-  tenantId: TENANT_ID || DEMO_TENANT_ID,
-  apiBaseUrl: `${DEV_API_HOST}/api/v1`,
-  appVersion: '0.0.1',
-};
+/** Pure resolution (exported for tests): native flavor values win; blanks fall through. */
+export function resolveBuildConfig(
+  native: NativeTenantBuildConfig,
+  env: { tenantId?: string; devApiHost?: string },
+): BuildConfig {
+  return {
+    appName: native.appName || 'Casino Companion',
+    tenantSlug: native.tenantSlug || 'demo-casino',
+    tenantId: native.tenantId || env.tenantId || DEMO_TENANT_ID,
+    apiBaseUrl: native.apiBaseUrl || `${env.devApiHost ?? 'http://localhost:8000'}/api/v1`,
+    appVersion: native.appVersion || '0.0.1',
+  };
+}
+
+const nativeTenantConfig: NativeTenantBuildConfig =
+  (NativeModules as { TenantBuildConfig?: NativeTenantBuildConfig }).TenantBuildConfig ?? {};
+
+export const buildConfig: BuildConfig = resolveBuildConfig(nativeTenantConfig, {
+  tenantId: TENANT_ID,
+  devApiHost: DEV_API_HOST,
+});

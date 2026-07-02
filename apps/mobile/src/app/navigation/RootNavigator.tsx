@@ -76,7 +76,7 @@ export function RootNavigator(): React.JSX.Element {
       border: theme.colors.border.soft,
       notification: theme.colors.state.error,
     },
-    fonts: DEFAULT_NAV_FONTS,
+    fonts: navFontsFromTheme(theme.fontFamily.sans),
   };
 
   if (status === 'restoring') {
@@ -153,10 +153,15 @@ function detailHeader(theme: ReturnType<typeof useTheme>) {
   } as const;
 }
 
-/** React Navigation 7 requires a `fonts` block on its theme; map to our UI font family. */
-const DEFAULT_NAV_FONTS: NavTheme['fonts'] = {
-  regular: { fontFamily: 'Manrope', fontWeight: '400' },
-  medium: { fontFamily: 'Manrope', fontWeight: '500' },
-  bold: { fontFamily: 'Manrope', fontWeight: '700' },
-  heavy: { fontFamily: 'Manrope', fontWeight: '800' },
-};
+/**
+ * React Navigation 7 requires a `fonts` block on its theme. Derived from the RESOLVED theme's
+ * sans family (manifest typography tokens), never a hardcoded brand font (H6/M18).
+ */
+function navFontsFromTheme(sans: string): NavTheme['fonts'] {
+  return {
+    regular: { fontFamily: sans, fontWeight: '400' },
+    medium: { fontFamily: sans, fontWeight: '500' },
+    bold: { fontFamily: sans, fontWeight: '700' },
+    heavy: { fontFamily: sans, fontWeight: '800' },
+  };
+}
