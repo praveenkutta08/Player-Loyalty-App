@@ -1,0 +1,28 @@
+digraph concierge {
+  rankdir=LR; fontname="Helvetica"; bgcolor="white";
+  node [fontname="Helvetica", fontsize=11, shape=box, style="rounded,filled", fillcolor="#F4EFE6", color="#8a7a5c"];
+  edge [fontname="Helvetica", fontsize=9, color="#555555"];
+
+  subgraph cluster_mobile { label="Mobile (Option B, flag: concierge)"; style="rounded"; color="#C8703C";
+    hero [label="Home hero\nverdict + why-you chips"]; foryou [label="Offers ▸ For You\nranked + reasons"];
+    ask [label="Ask AI screen\nsignal cards + source chips"]; plan [label="Plan-my-visit sheet"];
+  }
+  api [label="/api/v1/concierge/*\nbrief · offers · plan · ask\n(player JWT → RLS tenant ctx)", fillcolor="#EAE2D3"];
+  orch [label="Orchestrator\nplan tools → parallel calls →\nscore → narrate → envelope", fillcolor="#E4A853"];
+  guard [label="Guardrails\nRG flags · consent ·\nquiet hours · audit row", fillcolor="#f6d7d2"];
+  subgraph cluster_tools { label="MCP-shaped tool registry (internal, RLS)"; style="rounded"; color="#666666";
+    pmcp [label="player-mcp\nprofile · value · tier ·\ntrips · preferences"];
+    omcp [label="offers-mcp\neligible + pre-ranked\n(scoring service)"];
+  }
+  subgraph cluster_ports { label="Ports (ADAPTER_MODE: real | mock)"; style="rounded"; color="#666666";
+    wport [label="WeatherPort\nOpen-Meteo / mock"]; tport [label="TravelPort\nOSRM·haversine / mock"];
+    lport [label="LlmPort\nClaude / scripted mock"]; loy [label="LoyaltyPort (+get_player_value)\nmock personas → CMP later"];
+  }
+  redis [label="Redis cache\nweather 30m · travel 5m ·\nanswers 5m", shape=cylinder, fillcolor="#EAE2D3"];
+  studio [label="Admin: Concierge Studio\npersona · weights · guardrails\n→ manifest version bump", fillcolor="#dde7dd"];
+
+  hero -> api; foryou -> api; ask -> api; plan -> api;
+  api -> orch; orch -> guard [dir=both, label="enforce"];
+  orch -> pmcp; orch -> omcp; orch -> wport; orch -> tport; orch -> lport [label="narrate only"];
+  pmcp -> loy; orch -> redis [dir=both]; studio -> api [style=dashed, label="config/weights"];
+}

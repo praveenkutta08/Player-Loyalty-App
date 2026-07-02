@@ -808,12 +808,132 @@ eslint/prettier for JS). Document RN build/signing steps (fastlane) for later st
 
 ---
 
+# PHASE 6 — AI Concierge (agentic recommendations, MCP-style)
+
+> Added 2026-07-02, **append-only** — nothing above changes. Full rationale + architecture:
+> `docs/AI_CONCIERGE_INTEGRATION.md`. Concierge = answers-first recommendations (visit-fit, ranked
+> offers, plan-my-visit) built as an orchestrator over MCP-shaped internal tools + WeatherPort /
+> TravelPort / LlmPort. Persona/branding is tenant-configurable ("Aria" is only the seed default).
+> Dependencies: P6.1–P6.3 need only Phase 2 (done); P6.4 needs P3.2; P6.5–P6.6 need P4.4; P6.7 last.
+> Zero-risk default: run after P5.5. RG guardrails + consent + audit are non-negotiable throughout.
+
+### P6.1 — WeatherPort, TravelPort & concierge data model
+```
+Read CLAUDE.md golden rule #3 and docs/AI_CONCIERGE_INTEGRATION.md §4. Backend only.
+- Ports: WeatherPort.get_forecast(lat,lng,days); TravelPort.get_travel_time(origin,dest,depart_at)
+  + get_traffic_window(origin,dest,date_range). Adapters: real = Open-Meteo (keyless) and
+  OSRM/haversine speed model; mock = deterministic (seeded by date) for offline demos/tests.
+  Select by ADAPTER_MODE; Redis cache (weather 30min, travel 5min); contract tests for both modes.
+- Migrations: properties (tenant-scoped: name, lat/lng, amenities jsonb, status);
+  players.home_origin (nullable) + players.concierge_consent (bool default false);
+  player_preferences (favorite property/dining/experiences).
+- Extend LoyaltyPort: get_player_value() -> worth band, ADT, visit_frequency, recent_visit_gap;
+  mock returns 3 personas (regional commuter, weekend destination, high-value local).
+Tests: adapter contracts (real skipped offline), cache TTLs, RLS on new tables.
+```
+**Acceptance:** forecast + travel time work in mock and real modes; new tables RLS-scoped.
+**Commit:** `feat(backend): WeatherPort/TravelPort + concierge data model`
+
+### P6.2 — Concierge tool registry + scoring service
+```
+Build app/modules/concierge/ tools + scoring (NO LLM yet — deterministic and unit-tested).
+- Tool registry: MCP-shaped tools (name, JSON-schema args, typed result) wrapping existing
+  services under the caller's RLS context: get_player_profile, get_player_value, get_tier_progress,
+  list_offers(ranked), list_trip_history, get_preferences, get_recent_activity,
+  list_nearby_properties, weather.get_forecast, maps.get_travel_time. Each result carries its
+  source id (player-mcp | offers-mcp | weather-mcp | maps-mcp) for UI source chips.
+- Scoring: visit_fit(0-100) = w·(value_at_risk, weather_fit, travel_fit, tier_urgency);
+  offer_score = relevance × urgency × feasibility_today -> top 5-10 with machine-readable
+  why_you reasons. Weights from tenant config (defaults seeded).
+Tests: scoring is pure/deterministic; ranking stable; missing inputs degrade (no origin -> no
+travel_fit, flagged in reasons); tenant isolation on every tool.
+```
+**Acceptance:** tools return sourced, tenant-scoped data; scores deterministic and explainable.
+**Commit:** `feat(backend): concierge tool registry + scoring`
+
+### P6.3 — Concierge orchestrator, LlmPort & endpoints
+```
+Use Plan mode. Read AI_CONCIERGE_INTEGRATION.md §3-4 (guardrails + envelope).
+- LlmPort (separate from support ChatPort): mock = scripted narration from structured scores
+  (offline demo); real = Claude by env. One system prompt PER use case (verdict/evidence/CTA
+  schema; temp 0.3 verdicts, 0.7 chat). LLM narrates — it never computes numbers or invents
+  offers/terms; failed tool -> "couldn't reach X, here's what I know without it".
+- Orchestrator: plan tools per use case -> call in parallel -> score -> narrate -> return the
+  uniform envelope {verdict, fit_score, confidence, reasons[], signals[], sources[], cta,
+  disclaimer} + answer cache (player, use_case, context_hash) ~5min.
+- Endpoints: GET /concierge/brief?horizon=today|weekend; GET /concierge/offers;
+  POST /concierge/plan; POST /concierge/ask + GET /concierge/history.
+- GUARDRAILS: players with RG flags (self-exclusion/cool-off/limits) get NO proactive visit
+  nudges (neutral brief); concierge_consent required for stored-origin travel math; quiet hours +
+  frequency caps; every answer -> append-only concierge_answers audit row (inputs hash, tools
+  called, scores, output). Regenerate packages/api-client (additive).
+Tests: envelope shape; RG-flagged player gets neutral brief; consent gating; cache hits; audit rows.
+```
+**Acceptance:** three use cases answer end-to-end in mock mode with sources + guardrails enforced.
+**Commit:** `feat(backend): concierge orchestrator + LlmPort + endpoints`
+
+### P6.4 — Admin: Concierge Studio
+```
+One admin screen (existing P3 patterns, permission-gated, tenant-scoped).
+- Enable/disable concierge (writes the manifest feature flag; publish bumps manifest version).
+- Persona: name, tone preset, orb accent token. Scoring weights with a live preview panel that
+  calls /concierge/brief for a seed player. Guardrails: quiet hours, frequency cap; RG policy is
+  displayed as enforced (not disable-able). Audit view of recent concierge_answers.
+Tests: RBAC gating; weight change reflects in preview; publish bumps manifest.
+```
+**Acceptance:** tenant can configure persona/weights/flag; RG enforcement visible; audited.
+**Commit:** `feat(admin): concierge studio`
+
+### P6.5 — Mobile: concierge UI kit
+```
+Manifest-token-driven RN components (no hardcoded brand values — golden rule #5):
+<RecoHero> (verdict + fit score + reason chips + CTA), <WhyYouPill>, <OfferCard rank/why-you>,
+<AriaOrb> (persona accent from manifest; reanimated drift/pulse), <AIAnswerCard> (headline +
+signal grid + source chips), <SignalTile>, <SourceChip>, <ContextStrip> (weather · drive · traffic).
+Motion: hero entrance stagger + orb only. Storybook/dev screen with all states incl. degraded
+(missing source) and RG-neutral variants.
+```
+**Acceptance:** kit renders from manifest tokens in light/dark; degraded + neutral states covered.
+**Commit:** `feat(mobile): concierge UI kit`
+
+### P6.6 — Mobile: Home hero, For You offers & Ask AI
+```
+Wire the kit to /concierge/* (generated client). Feature-flag `concierge` everywhere; flag off ->
+today's static Home recommendations (no dead ends).
+- Home: recommendations slot becomes the concierge hero (prefetch during splash/manifest resolve —
+  NO spinner on Home) + context strip; CTA -> plan bottom-sheet (POST /concierge/plan).
+- Offers tab: add "For You" ranked view with why-you pills; full list stays a segment away.
+- Ask AI screen: opened from the Home hero + global entry (NOT a tab; More ▸ Support unchanged).
+  Streamed answers rendered as AIAnswerCard with source chips + suggested follow-ups; consent
+  prompt on first use if home_origin is needed; small-type advisory disclaimer under the hero.
+Tests: flag fallback; prefetch path; consent flow; RG-neutral rendering.
+```
+**Acceptance:** brief pre-rendered on Home; ranked offers show reasons; Ask AI answers with sources.
+**Commit:** `feat(mobile): concierge home hero + for-you offers + ask screen`
+
+### P6.7 — Seed, metrics & demo
+```
+- Seed: "Luminara" sample concierge config on the demo tenant (persona "Aria", amber accent
+  token), 3 player-value personas, ~10 hand-tuned scored offers, 2 properties with real lat/lng.
+- Analytics events via the P2.9 sink: answer_accepted (hero CTA), for_you_offer_click vs
+  list_offer_click, ask_to_action, brief_render_ms. Extend docs/DEMO.md with the 90-second
+  concierge demo: Home verdict -> For You why-you offer -> Ask "is it worth driving in this
+  weekend?" -> signal grid + source chips.
+Tests: seed idempotent; events written.
+```
+**Acceptance:** demo runs end-to-end from docs/DEMO.md in mock mode with no keys.
+**Commit:** `feat: concierge seed + metrics + demo script`
+
+---
+
 # Appendix
 
 ## Suggested build order & dependencies
 Phase 0 -> 1 -> 2 unlock the backend contract; generate the api-client (P2.10, re-run after P2.11-P2.13) **before** starting
 the UIs. Phase 3 (admin) and Phase 4 (mobile) can then proceed in parallel by different people.
 Phase 5 wires + hardens. Within a phase, keep prompts in order — later ones assume earlier models.
+Phase 6 (concierge) is append-only: default is after P5.5; optionally interleave P6.1–P6.3 at any
+Phase-3 pause (backend-only, additive), P6.4 after P3.11, P6.5–P6.6 after P4.4.
 
 ## Definition of done (per prompt)
 Acceptance checks pass; new code has tests; `lint + typecheck + test` green; OpenAPI + api-client

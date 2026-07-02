@@ -71,7 +71,8 @@ for me."
     { "id": "account", "label": "Account", "icon": "user",         "enabled": true },
     { "id": "more",    "label": "More",    "icon": "menu",         "enabled": true }
   ],
-  "globals": { "notifications": true, "search": true, "aiChat": false },
+  "globals": { "notifications": true, "search": true, "aiChat": false, "concierge": true },
+  "concierge": { "personaName": "Aria", "accentToken": "accent.amber", "entry": "home" },
   "more": { "items": ["settings","language","theme","notifications","messages",
                        "support","responsibleGaming","legal","logout"] }
 }
@@ -79,12 +80,24 @@ for me."
 Tabs/modules also respect **feature flags** (hide Digital Key without a hotel; swap the center
 action when cashless is off). Labels are localizable.
 
-## 7. AI Chat — support-only scope
-An in-app **support assistant** (not a concierge): answers help/FAQ questions from a per-tenant
-knowledge base, and **escalates to a human / support ticket** when needed. **No transactional
-actions** (no booking, redeeming, or moving money). Behind a `ChatPort` adapter (mock in MVP, real
-provider by env), tenant-scoped, Responsible-Gaming/consent aware, conversations audited.
-Lives under **More ▸ Support** + contextual "Need help?" entry points.
+## 7. AI surfaces — two, deliberately separate (updated 2026-07-02)
+**7a. Support chat (unchanged):** an in-app **support assistant** answering help/FAQ questions from
+a per-tenant knowledge base, escalating to a human when needed. **No transactional actions.**
+Behind `ChatPort` (mock in MVP), tenant-scoped, RG/consent aware, audited. Lives under
+**More ▸ Support** + contextual "Need help?" entry points.
+
+**7b. AI Concierge (new — Phase 6, see `docs/AI_CONCIERGE_INTEGRATION.md`):** an answers-first
+recommendation layer **embedded in Option B**, not a new tab:
+- **Home hero** = the concierge: visit-fit verdict + reason chips + context strip (prefetched;
+  feature-flag `concierge`, off → static recommendations).
+- **Offers ▸ For You**: ranked offers with "why you" reasons.
+- **Ask AI screen**: opens from the Home hero + global entry; answers render as signal cards +
+  source chips (player-mcp · offers-mcp · weather-mcp · maps-mcp).
+Backed by a server-side orchestrator over MCP-shaped tools + WeatherPort/TravelPort/LlmPort.
+Read-only in MVP (recommends; CTAs deep-link to existing flows — it never books/redeems/moves
+money itself). RG-flagged players receive no proactive visit nudges; stored-origin travel math
+requires explicit `concierge_consent`; every answer audited. Persona (name, accent) is
+tenant-configured; "Aria"/Luminara is only the sample.
 
 ## 8. Folded into the build
 - **P1.5** manifest now includes the `navigation` block.
@@ -92,3 +105,5 @@ Lives under **More ▸ Support** + contextual "Need help?" entry points.
 - **P3.11** (admin) support-assistant configuration (FAQ/knowledge, guardrails, escalation).
 - **P4.14** (mobile) support chat UI + **config-driven bottom navigation** (Option B tabs, center
   Scan/Play with feature-flag fallback, globals).
+- **P6.1–P6.7** (all layers) AI Concierge: backend orchestrator/ports, admin Concierge Studio,
+  mobile Home hero + For You + Ask AI (append-only phase; §7b).
