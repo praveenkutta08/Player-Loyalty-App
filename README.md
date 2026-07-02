@@ -27,6 +27,9 @@ regulated integrations mocked (the MVP default).
 
 ## Running the full stack locally
 
+> **New here?** See **[docs/RUNNING.md](docs/RUNNING.md)** for the full local run runbook
+> (prereqs → infra → backend → admin → mobile, cross-platform + Android/iOS, with troubleshooting).
+
 All three apps share the backend at `http://localhost:8000/api/v1`. Run each in its own terminal:
 
 1. **Infra** — `pnpm infra:up` (Postgres :5433, Redis :6379, MinIO :9000, Mailhog :8025).
