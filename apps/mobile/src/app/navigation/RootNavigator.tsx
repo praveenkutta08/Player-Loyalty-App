@@ -2,7 +2,12 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { buildConfig } from '../../config/buildConfig';
+import { AuthNavigator } from '../../features/auth/AuthNavigator';
+import { BrandSplash } from '../../features/splash/BrandSplash';
 import { ForceUpdateScreen } from '../../features/splash/ForceUpdateScreen';
+import { useManifest } from '../manifest/ManifestProvider';
+import { useAppSelector } from '../store';
 import { useTheme } from '../../theme/ThemeProvider';
 import { MainTabs } from './MainTabs';
 
@@ -12,14 +17,15 @@ import type { Theme as NavTheme } from '@react-navigation/native';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 /**
- * Root navigation: the main tabs, plus a Force-Update gate. The brand splash is owned by the
- * manifest gate (App), which renders it until the manifest resolves — so the stack starts at Main.
- * Header handled per-tab (TopBar).
+ * Root navigation, gated on auth status: `restoring` shows the brand splash; `authenticated` shows
+ * the main tabs (+ force-update gate); otherwise the auth stack. The manifest splash is handled a
+ * level up (App); this handles the session-restore splash. Header is per-tab (TopBar).
  */
 export function RootNavigator(): React.JSX.Element {
   const theme = useTheme();
+  const { manifest } = useManifest();
+  const status = useAppSelector((s) => s.auth.status);
 
-  // Feed React Navigation's container theme from our tokens so native transitions match the brand.
   const navTheme: NavTheme = {
     dark: theme.scheme === 'dark',
     colors: {
@@ -33,12 +39,20 @@ export function RootNavigator(): React.JSX.Element {
     fonts: DEFAULT_NAV_FONTS,
   };
 
+  if (status === 'restoring') {
+    return <BrandSplash title={manifest?.name ?? buildConfig.appName} />;
+  }
+
   return (
     <NavigationContainer theme={navTheme}>
-      <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Main" component={MainTabs} />
-        <Stack.Screen name="ForceUpdate" component={ForceUpdateScreen} />
-      </Stack.Navigator>
+      {status === 'authenticated' ? (
+        <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Main" component={MainTabs} />
+          <Stack.Screen name="ForceUpdate" component={ForceUpdateScreen} />
+        </Stack.Navigator>
+      ) : (
+        <AuthNavigator />
+      )}
     </NavigationContainer>
   );
 }

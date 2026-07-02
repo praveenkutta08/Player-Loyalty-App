@@ -3,8 +3,21 @@ import { setApiBaseUrl } from '@repo/api-client';
 import { buildConfig } from '../config/buildConfig';
 
 /**
- * Set the initial API base URL used for the very first manifest fetch (before the manifest supplies
- * the tenant's own `endpoints.apiBaseUrl`). Imported for its side effect at app startup. Player auth
- * (`configureApiAuth`) is wired in P4.3.
+ * Owns the active API base URL. The very first manifest fetch uses the build-config default; once
+ * the manifest resolves, `updateApiBaseUrl` points both the RTK Query client and any direct fetches
+ * (e.g. the token refresh in features/auth/session) at the tenant's base URL. Player auth
+ * (`configureApiAuth`) is wired in features/auth/session.
  */
-setApiBaseUrl(buildConfig.apiBaseUrl);
+let activeBaseUrl = buildConfig.apiBaseUrl;
+
+export function getApiBaseUrl(): string {
+  return activeBaseUrl;
+}
+
+export function updateApiBaseUrl(url: string): void {
+  activeBaseUrl = url;
+  setApiBaseUrl(url);
+}
+
+// Initialize before any request is made.
+updateApiBaseUrl(buildConfig.apiBaseUrl);

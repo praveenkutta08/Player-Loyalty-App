@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { setApiBaseUrl } from '@repo/api-client';
 
+import { updateApiBaseUrl } from '../apiConfig';
 import { buildConfig } from '../../config/buildConfig';
 import { useGetManifestQuery } from './manifestApi';
 import { normalizeManifest } from './normalize';
@@ -40,7 +40,7 @@ export function ManifestProvider({ children }: { children: React.ReactNode }): R
         if (active && raw) {
           const parsed = JSON.parse(raw) as ResolvedManifest;
           setCached(parsed);
-          setApiBaseUrl(parsed.apiBaseUrl);
+          updateApiBaseUrl(parsed.apiBaseUrl);
         }
       })
       .catch(() => undefined)
@@ -57,7 +57,7 @@ export function ManifestProvider({ children }: { children: React.ReactNode }): R
     if (!data) return;
     const resolved = normalizeManifest(data);
     setFresh(resolved);
-    setApiBaseUrl(resolved.apiBaseUrl);
+    updateApiBaseUrl(resolved.apiBaseUrl);
     AsyncStorage.setItem(cacheKey(tenantId), JSON.stringify(resolved)).catch(() => undefined);
   }, [data, tenantId]);
 

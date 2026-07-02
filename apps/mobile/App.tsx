@@ -14,7 +14,9 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import './src/app/apiConfig'; // side effect: set the initial API base URL before any request
+import './src/features/auth/session'; // side effect: wire configureApiAuth (token/refresh)
 import { ManifestProvider, useManifest } from './src/app/manifest/ManifestProvider';
+import { AuthProvider } from './src/features/auth/AuthProvider';
 import { FeatureProvider } from './src/app/providers/FeatureProvider';
 import { RootNavigator } from './src/app/navigation/RootNavigator';
 import { store } from './src/app/store';
@@ -51,10 +53,10 @@ function ThemedRoot(): React.JSX.Element {
         {status === 'loading' && !manifest ? (
           <BrandSplash title={title} />
         ) : (
-          <>
+          <AuthProvider>
             {status === 'offline' ? <OfflineBanner /> : null}
             <RootNavigator />
-          </>
+          </AuthProvider>
         )}
       </FeatureProvider>
     </ThemeProvider>

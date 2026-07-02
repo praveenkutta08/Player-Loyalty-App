@@ -1,9 +1,10 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { Card, Screen, StatusPill, ThemedText, Toggle } from '../../components';
+import { Button, Card, Screen, StatusPill, ThemedText, Toggle } from '../../components';
 import { useFeatures } from '../../app/providers/FeatureProvider';
 import { useManifest } from '../../app/manifest/ManifestProvider';
+import { logout } from '../auth/session';
 import { useTheme } from '../../theme/ThemeProvider';
 
 /**
@@ -72,6 +73,14 @@ export function ThemeSettingsScreen(): React.JSX.Element {
             </View>
           )}
         </Card>
+
+        <Button
+          label="Log out"
+          variant="secondary"
+          onPress={() => void logout()}
+          testID="logout"
+          style={styles.logout}
+        />
       </ScrollView>
     </Screen>
   );
@@ -83,4 +92,5 @@ const styles = StyleSheet.create({
   pillRow: { marginTop: 12, flexDirection: 'row' },
   pillWrap: { flexDirection: 'row', flexWrap: 'wrap' },
   pillItem: { marginRight: 8, marginBottom: 8 },
+  logout: { marginTop: 32 },
 });
