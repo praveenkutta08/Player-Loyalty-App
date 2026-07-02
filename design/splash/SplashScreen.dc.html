@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="{{ rootStyle }}">
+  <!-- environment -->
+  <div style="{{ envStyle }}"></div>
+  <!-- status scrim for legibility -->
+  <div style="{{ scrimStyle }}"></div>
+  <!-- rising light bloom -->
+  <div style="{{ bloomStyle }}"></div>
+  <!-- signature horizon seam (horizon variant) -->
+  <div style="{{ horizonStyle }}"></div>
+  <!-- concierge rings (pulse variant) -->
+  <div style="{{ ring1Style }}"></div>
+  <div style="{{ ring2Style }}"></div>
+  <!-- silk ribbons (silk variant) -->
+  <div style="{{ ribbon1Style }}"></div>
+  <div style="{{ ribbon2Style }}"></div>
+  <div style="{{ ribbon3Style }}"></div>
+  <!-- journey environment (journey variant) -->
+  <svg viewBox="0 0 100 216" preserveAspectRatio="none" style="{{ journeySvgStyle }}">
+    <path d="{{ terrainBackD }}" fill="{{ terrainBackFill }}" style="{{ terrainBackStyle }}"></path>
+    <path d="{{ terrainFrontD }}" fill="{{ terrainFrontFill }}" style="{{ terrainFrontStyle }}"></path>
+    <path d="{{ journeyPathD }}" fill="none" stroke="{{ journeyStroke }}" stroke-width="1.4" stroke-linecap="round" vector-effect="non-scaling-stroke" style="{{ journeyPathStyle }}"></path>
+  </svg>
+  <div style="{{ travelerStyle }}"></div>
+
+  <!-- status bar -->
+  <div style="{{ statusStyle }}">
+    <span>9:41</span>
+    <span style="{{ dotsStyle }}">● ● ●</span>
+  </div>
+  <!-- dynamic island -->
+  <div style="{{ islandStyle }}"></div>
+
+  <!-- membership cards (collection variant) -->
+  <div style="{{ card1Style }}"></div>
+  <div style="{{ card2Style }}"></div>
+  <div style="{{ card3Style }}">
+    <div style="{{ cardEmblemStyle }}">
+      <svg viewBox="0 0 120 120" width="100%" fill="none" style="display:block">
+        <circle cx="60" cy="60" r="55" stroke="currentColor" stroke-width="3" opacity="0.5"></circle>
+        <path d="M60 8 L70.5 49.5 L112 60 L70.5 70.5 L60 112 L49.5 70.5 L8 60 L49.5 49.5 Z" fill="currentColor"></path>
+      </svg>
+    </div>
+    <div style="{{ cardTierStyle }}">{{ tier }}</div>
+    <div style="{{ cardNumStyle }}">•••• 4417</div>
+  </div>
+
+  <!-- emblem -->
+  <div style="{{ emblemStyle }}">
+    <svg viewBox="0 0 120 120" width="100%" fill="none" style="display:block">
+      <circle cx="60" cy="60" r="55" stroke="currentColor" stroke-width="2" style="{{ ringSvgStyle }}"></circle>
+      <path d="M60 8 L70.5 49.5 L112 60 L70.5 70.5 L60 112 L49.5 70.5 L8 60 L49.5 49.5 Z" stroke="currentColor" stroke-width="2" fill="none" style="{{ starDrawStyle }}"></path>
+      <path d="M60 8 L70.5 49.5 L112 60 L70.5 70.5 L60 112 L49.5 70.5 L8 60 L49.5 49.5 Z" fill="currentColor" style="{{ starFillStyle }}"></path>
+    </svg>
+    <div style="{{ shimmerStyle }}"></div>
+  </div>
+
+  <!-- wordmark block -->
+  <div style="{{ blockStyle }}">
+    <div style="{{ wordStyle }}">{{ brandName }}</div>
+    <div style="{{ ruleStyle }}"></div>
+    <div style="{{ tagStyle }}">{{ tagline }}</div>
+  </div>
+
+  <!-- personalized greeting (golden variant) -->
+  <div style="{{ greetStyle }}">
+    <div style="{{ greet1Style }}">Good evening,</div>
+    <div style="{{ greet2Style }}">{{ memberName }}</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 300, &quot;height&quot;: 650 },
+  &quot;variant&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;horizon&quot;, &quot;options&quot;: [&quot;horizon&quot;, &quot;journey&quot;, &quot;portal&quot;, &quot;silk&quot;, &quot;seal&quot;, &quot;golden&quot;, &quot;collection&quot;, &quot;pulse&quot;], &quot;tsType&quot;: &quot;'horizon' | 'journey' | 'portal' | 'silk' | 'seal' | 'golden' | 'collection' | 'pulse'&quot;, &quot;section&quot;: &quot;Variant&quot; },
+  &quot;environment&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;coast&quot;, &quot;options&quot;: [&quot;coast&quot;, &quot;mountain&quot;, &quot;desert&quot;, &quot;skyline&quot;, &quot;forest&quot;], &quot;tsType&quot;: &quot;'coast' | 'mountain' | 'desert' | 'skyline' | 'forest'&quot;, &quot;section&quot;: &quot;Variant&quot; },
+  &quot;brandName&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;MERIDIAN&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;tagline&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;GRAND RESORT &amp; CLUB&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;memberName&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;Alexander&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;tier&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;PLATINUM MEMBER&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;brand&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#D8B979&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;bg1&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#241626&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;bg2&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#0A0710&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;mode&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;dark&quot;, &quot;options&quot;: [&quot;dark&quot;, &quot;light&quot;], &quot;tsType&quot;: &quot;'dark' | 'light'&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;phase&quot;: { &quot;editor&quot;: &quot;int&quot;, &quot;default&quot;: 4, &quot;min&quot;: 0, &quot;max&quot;: 4, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Preview&quot; },
+  &quot;animate&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Preview&quot; },
+  &quot;progress&quot;: { &quot;editor&quot;: null, &quot;default&quot;: null, &quot;tsType&quot;: &quot;number | null&quot; }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    const p = this.props;
+    const brand = p.brand || '#D8B979';
+    const bg1 = p.bg1 || '#241626';
+    const bg2 = p.bg2 || '#0A0710';
+    const mode = p.mode || 'dark';
+    const brandName = p.brandName || 'MERIDIAN';
+    const tagline = p.tagline || 'GRAND RESORT & CLUB';
+    const memberName = p.memberName || 'Alexander';
+    const tier = p.tier || 'PLATINUM MEMBER';
+    const variant = p.variant || 'horizon';
+    const animate = !!p.animate;
+    const phase = (p.phase == null) ? 4 : Number(p.phase);
+    const light = mode === 'light';
+
+    let progress = p.progress;
+    if (progress == null && variant !== 'horizon') progress = 0.92; // non-horizon variants render settled by default
+
+    const text = light ? '#2C2118' : '#F3ECDD';
+    const sub = light ? '#6E5C48' : '#B9AE98';
+    const statusColor = light ? '#2C2118' : '#F0E7D6';
+    const mix = (pct) => `color-mix(in srgb, ${brand} ${pct}%, transparent)`;
+    const dur = '5.2s';
+    const anim = (name, ease) => animate ? `${name} ${dur} ${ease} infinite` : 'none';
+    const show = (from) => (phase >= from) ? 1 : 0;
+
+    const rootStyle = {
+      position: 'relative', width: '100%', height: '100%', overflow: 'hidden',
+      containerType: 'size', background: bg2, borderRadius: 'inherit',
+      fontFamily: "'Manrope', sans-serif"
+    };
+    const envStyle = {
+      position: 'absolute', inset: 0,
+      background: `linear-gradient(178deg, ${bg1} 0%, ${bg2} 72%)`
+    };
+    const scrimStyle = {
+      position: 'absolute', top: 0, left: 0, right: 0, height: '16%',
+      background: light
+        ? 'linear-gradient(180deg, rgba(255,255,255,.28), transparent)'
+        : 'linear-gradient(180deg, rgba(0,0,0,.42), transparent)'
+    };
+    const bloomStyle = {
+      position: 'absolute', left: '50%', top: '50%', width: '132%', height: '66%',
+      transform: 'translate(-50%,-80%)',
+      background: `radial-gradient(ellipse at 50% 100%, ${mix(light ? 42 : 58)}, transparent 68%)`,
+      opacity: animate ? undefined : show(1),
+      animation: anim('th-bloom', 'ease')
+    };
+    const horizonStyle = {
+      position: 'absolute', top: '50%', left: '6%', right: '6%', height: '2px',
+      transform: 'translateY(-50%)', transformOrigin: 'center',
+      background: `linear-gradient(90deg, transparent, ${brand} 22%, #ffffff 50%, ${brand} 78%, transparent)`,
+      boxShadow: `0 0 26px 5px ${mix(72)}`,
+      opacity: animate ? undefined : (phase >= 1 ? 1 : 0.5),
+      animation: anim('th-horizon', 'ease')
+    };
+    const statusStyle = {
+      position: 'absolute', top: 0, left: 0, right: 0, height: '6.2cqh', zIndex: 8,
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      padding: '2.6cqh 7cqw 0', fontSize: '3.5cqw', fontWeight: 600, color: statusColor
+    };
+    const dotsStyle = { opacity: 0.82, fontSize: '2.6cqw', letterSpacing: '.1em' };
+    const islandStyle = {
+      position: 'absolute', top: '2cqh', left: '50%', transform: 'translateX(-50%)',
+      width: '30cqw', height: '4.1cqh', background: '#000', borderRadius: '3cqh', zIndex: 9
+    };
+
+    let emblemTransform = 'translate(-50%,-50%)';
+    let emblemFilter = 'blur(0)';
+    let emblemOpacity = show(2);
+    if (progress == null && !animate && phase === 1) { emblemTransform = 'translate(-50%,-44%)'; emblemFilter = 'blur(4px)'; emblemOpacity = 0.5; }
+    if (progress == null && !animate && phase === 0) { emblemFilter = 'blur(8px)'; }
+    const emblemStyle = {
+      position: 'absolute', left: '50%', top: '50%', width: '27cqw', lineHeight: 0, zIndex: 6,
+      color: brand, transform: emblemTransform, filter: emblemFilter,
+      opacity: animate ? undefined : emblemOpacity,
+      animation: anim('th-emblem', 'cubic-bezier(.2,.75,.25,1)')
+    };
+    const blockStyle = {
+      position: 'absolute', left: 0, right: 0, top: '60%', zIndex: 6,
+      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3.2cqh',
+      padding: '0 8cqw'
+    };
+    const wordStyle = {
+      fontFamily: "'Marcellus', serif", fontSize: '7cqw', letterSpacing: '.3em',
+      color: text, paddingLeft: '.3em', textAlign: 'center', whiteSpace: 'nowrap', margin: 0,
+      opacity: animate ? undefined : show(3),
+      animation: anim('th-word', 'cubic-bezier(.2,.7,.2,1)')
+    };
+    const ruleStyle = {
+      width: '15cqw', height: '1px', background: brand, transformOrigin: 'center',
+      opacity: animate ? undefined : show(4),
+      transform: (progress == null && !animate && phase < 4) ? 'scaleX(0)' : 'scaleX(1)',
+      animation: anim('th-rule', 'cubic-bezier(.2,.7,.2,1)')
+    };
+    const tagStyle = {
+      fontSize: '2.7cqw', letterSpacing: '.34em', paddingLeft: '.34em',
+      textTransform: 'uppercase', color: brand, textAlign: 'center', whiteSpace: 'nowrap',
+      opacity: animate ? undefined : show(4),
+      animation: anim('th-tag', 'ease')
+    };
+
+    // variant-only elements, hidden by default
+    let shimmerStyle = { display: 'none' };
+    let ring1Style = { display: 'none' }, ring2Style = { display: 'none' };
+    let ribbon1Style = { display: 'none' }, ribbon2Style = { display: 'none' }, ribbon3Style = { display: 'none' };
+    const THEMES = {
+      coast:    { back: 'M0 172 Q25 164 50 172 Q75 179 100 168 L100 216 L0 216 Z', front: 'M0 186 Q30 180 58 187 Q80 192 100 184 L100 216 L0 216 Z' },
+      mountain: { back: 'M0 178 L18 148 L34 172 L52 142 L70 170 L86 154 L100 174 L100 216 L0 216 Z', front: 'M0 192 L22 176 L44 190 L68 174 L88 188 L100 182 L100 216 L0 216 Z' },
+      desert:   { back: 'M0 176 Q30 154 60 174 Q80 184 100 166 L100 216 L0 216 Z', front: 'M0 190 Q35 200 65 186 Q85 178 100 190 L100 216 L0 216 Z' },
+      skyline:  { back: 'M0 180 L0 168 L10 168 L10 154 L20 154 L20 172 L32 172 L32 146 L42 146 L42 166 L54 166 L54 152 L64 152 L64 170 L76 170 L76 158 L88 158 L88 174 L100 174 L100 216 L0 216 Z', front: 'M0 196 L14 196 L14 186 L26 186 L26 194 L44 194 L44 182 L58 182 L58 192 L76 192 L76 186 L90 186 L90 196 L100 196 L100 216 L0 216 Z' },
+      forest:   { back: 'M0 178 Q8 156 16 178 Q24 158 32 178 Q40 152 50 178 Q58 160 66 178 Q74 154 84 178 Q92 162 100 178 L100 216 L0 216 Z', front: 'M0 194 Q10 180 20 194 Q30 178 40 194 Q50 180 60 194 Q70 178 80 194 Q90 182 100 194 L100 216 L0 216 Z' }
+    };
+    const env = THEMES[p.environment] ? p.environment : 'coast';
+    let journeySvgStyle = { display: 'none' };
+    let terrainBackStyle = {}, terrainFrontStyle = {}, journeyPathStyle = {};
+    let travelerStyle = { display: 'none' };
+    const terrainBackD = THEMES[env].back;
+    const terrainFrontD = THEMES[env].front;
+    const journeyPathD = 'M14 196 Q70 164 50 108';
+    const journeyStroke = brand;
+    const terrainBackFill = light ? `color-mix(in srgb, ${brand} 30%, #C9B896)` : `color-mix(in srgb, ${brand} 18%, #0D0D14)`;
+    const terrainFrontFill = light ? `color-mix(in srgb, ${brand} 24%, #B9A47F)` : `color-mix(in srgb, ${brand} 10%, #07070C)`;
+    let card1Style = { display: 'none' }, card2Style = { display: 'none' }, card3Style = { display: 'none' };
+    let greetStyle = { display: 'none' }, greet1Style = {}, greet2Style = {};
+    let ringSvgStyle = { opacity: 0.42 };
+    let starDrawStyle = { display: 'none' };
+    let starFillStyle = {};
+    const cardEmblemStyle = { position: 'absolute', top: '9%', left: '7%', width: '17%', lineHeight: 0, color: 'color-mix(in srgb, ' + brand + ' 34%, #101520)' };
+    const cardTierStyle = { position: 'absolute', bottom: '10%', left: '7%', fontSize: '2.2cqw', letterSpacing: '.24em', fontWeight: 700, color: 'color-mix(in srgb, ' + brand + ' 34%, #101520)' };
+    const cardNumStyle = { position: 'absolute', bottom: '10%', right: '7%', fontSize: '2.2cqw', letterSpacing: '.14em', fontFamily: "'Marcellus', serif", color: 'color-mix(in srgb, ' + brand + ' 24%, #3a4356)' };
+
+    // ---------- continuous scrub mode ----------
+    if (progress != null) {
+      const clamp = (x) => Math.max(0, Math.min(1, x));
+      const seg = (t, a, b) => clamp((t - a) / (b - a));
+      const eo = (x) => 1 - Math.pow(1 - x, 3);
+      const eio = (x) => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+      const expo = (x) => x >= 1 ? 1 : 1 - Math.pow(2, -10 * x);
+      const back = (x) => { const c1 = 1.3, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+      const lerp = (a, b, x) => a + (b - a) * x;
+      const DUR = { horizon: 2.4, seal: 2.4, golden: 2.4, collection: 2.4, pulse: 2.2, silk: 2.2, portal: 2.4, journey: 2.6 };
+      const T = DUR[variant] || 2.4;
+      const t = clamp(Number(progress)) * T;
+
+      // shared: scene hand-off in the last 200ms
+      const h = seg(t, T - 0.2, T), he = eio(h);
+      const hy = -190 * he, hs = lerp(1, 0.42, he);
+      rootStyle.opacity = 1 - he;
+      envStyle.opacity = eo(seg(t, 0, 0.4));
+      scrimStyle.opacity = eo(seg(t, 0, 0.4));
+
+      const glint = (from, to) => {
+        const sh = seg(t, from, to);
+        return {
+          position: 'absolute', top: 0, bottom: 0, left: 0, width: '34%',
+          background: `linear-gradient(90deg, transparent, ${light ? 'rgba(255,250,235,.85)' : 'rgba(255,255,255,.9)'}, transparent)`,
+          transform: `translateX(${lerp(-150, 320, sh).toFixed(1)}%) skewX(-12deg)`,
+          opacity: (sh > 0 && sh < 1) ? Number((Math.sin(sh * Math.PI) * 0.85).toFixed(3)) : 0,
+          pointerEvents: 'none'
+        };
+      };
+
+      if (variant === 'horizon') {
+        const bo = eo(seg(t, 0.25, 0.7));
+        bloomStyle.opacity = bo; bloomStyle.animation = 'none';
+        bloomStyle.transform = `translate(-50%,-80%) scale(${lerp(0.9, 1, bo).toFixed(3)})`;
+        horizonStyle.opacity = eo(seg(t, 0.32, 0.62)); horizonStyle.animation = 'none';
+        horizonStyle.transform = `translateY(-50%) scaleX(${expo(seg(t, 0.35, 0.75)).toFixed(3)})`;
+        const e = seg(t, 0.65, 1.15), eoe = eo(e);
+        const es = lerp(0.92, 1, back(e)), ety = lerp(14, 0, eoe), eb = lerp(8, 0, eoe);
+        emblemStyle.opacity = eoe; emblemStyle.animation = 'none';
+        emblemStyle.filter = `blur(${eb.toFixed(2)}px)`;
+        emblemStyle.transform = `translate(-50%, calc(-50% + ${(ety + hy).toFixed(1)}px)) scale(${(es * hs).toFixed(3)})`;
+        emblemStyle.overflow = 'hidden';
+        shimmerStyle = glint(0.95, 1.32);
+        const w = seg(t, 1.2, 1.65), woe = eo(w);
+        wordStyle.opacity = woe; wordStyle.animation = 'none';
+        wordStyle.letterSpacing = `${lerp(0.62, 0.3, woe).toFixed(3)}em`;
+        wordStyle.transform = `translateY(${lerp(8, 0, woe).toFixed(1)}px)`;
+        ruleStyle.opacity = seg(t, 1.55, 1.7); ruleStyle.animation = 'none';
+        ruleStyle.transform = `scaleX(${eio(seg(t, 1.55, 1.9)).toFixed(3)})`;
+        const tg = seg(t, 1.65, 2.05), tge = eo(tg);
+        tagStyle.opacity = tge; tagStyle.animation = 'none';
+        tagStyle.transform = `translateY(${lerp(6, 0, tge).toFixed(1)}px)`;
+      }
+
+      else if (variant === 'seal') {
+        horizonStyle.display = 'none';
+        bloomStyle.width = '96%'; bloomStyle.height = '52%';
+        bloomStyle.transform = 'translate(-50%,-50%)';
+        bloomStyle.background = `radial-gradient(closest-side at 50% 50%, ${mix(light ? 26 : 34)}, transparent 72%)`;
+        bloomStyle.opacity = 0.9 * eo(seg(t, 0.15, 0.7));
+        bloomStyle.animation = 'none';
+        emblemStyle.opacity = 1; emblemStyle.animation = 'none';
+        emblemStyle.transform = `translate(-50%, calc(-50% + ${hy.toFixed(1)}px)) scale(${hs.toFixed(3)})`;
+        emblemStyle.overflow = 'hidden';
+        const dr = eio(seg(t, 0.05, 0.95));
+        ringSvgStyle = { opacity: t > 0.02 ? 1 : 0, strokeDasharray: 346, strokeDashoffset: (346 * (1 - dr)).toFixed(1) };
+        const ds = eio(seg(t, 0.25, 1.05));
+        starDrawStyle = { display: 'block', strokeDasharray: 350, strokeDashoffset: (350 * (1 - ds)).toFixed(1), opacity: t > 0.22 ? 1 : 0 };
+        starFillStyle = { opacity: eo(seg(t, 0.95, 1.3)) };
+        shimmerStyle = glint(1.1, 1.45);
+        const w = seg(t, 1.35, 1.8), woe = eo(w);
+        wordStyle.opacity = woe; wordStyle.animation = 'none';
+        wordStyle.transform = `translateY(${lerp(10, 0, woe).toFixed(1)}px)`;
+        ruleStyle.opacity = seg(t, 1.55, 1.7); ruleStyle.animation = 'none';
+        ruleStyle.transform = `scaleX(${eio(seg(t, 1.55, 1.9)).toFixed(3)})`;
+        const tg = seg(t, 1.6, 2.0), tge = eo(tg);
+        tagStyle.opacity = tge; tagStyle.animation = 'none';
+        tagStyle.transform = `translateY(${lerp(6, 0, tge).toFixed(1)}px)`;
+      }
+
+      else if (variant === 'golden') {
+        horizonStyle.display = 'none';
+        blockStyle.display = 'none';
+        const bo = eo(seg(t, 0.1, 0.6));
+        const breathe = lerp(0.92, 1, eo(seg(t, 0.1, 0.9))) + 0.02 * Math.sin(t * 2.6);
+        bloomStyle.width = '150%'; bloomStyle.height = '92%';
+        bloomStyle.transform = `translate(-50%,-56%) scale(${breathe.toFixed(3)})`;
+        bloomStyle.background = `radial-gradient(closest-side at 50% 46%, ${mix(light ? 46 : 44)}, transparent 70%)`;
+        bloomStyle.opacity = bo; bloomStyle.animation = 'none';
+        emblemStyle.width = '20cqw';
+        const e = seg(t, 0.3, 0.8), eoe = eo(e);
+        emblemStyle.opacity = eoe; emblemStyle.animation = 'none';
+        emblemStyle.filter = `blur(${lerp(4, 0, eoe).toFixed(2)}px)`;
+        emblemStyle.transform = `translate(-50%, calc(-50% + ${(lerp(12, 0, eoe) + hy).toFixed(1)}px)) scale(${hs.toFixed(3)})`;
+        greetStyle = { position: 'absolute', left: 0, right: 0, top: '57%', zIndex: 6, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.6cqh', padding: '0 8cqw' };
+        const g1 = eo(seg(t, 0.8, 1.25));
+        greet1Style = { fontSize: '4.4cqw', letterSpacing: '.04em', color: sub, opacity: g1, transform: `translateY(${lerp(8, 0, g1).toFixed(1)}px)` };
+        const g2 = eo(seg(t, 1.1, 1.6));
+        greet2Style = { fontFamily: "'Marcellus', serif", fontSize: '9.5cqw', color: text, opacity: g2, transform: `translateY(${lerp(10, 0, g2).toFixed(1)}px)` };
+      }
+
+      else if (variant === 'collection') {
+        horizonStyle.display = 'none';
+        emblemStyle.display = 'none';
+        bloomStyle.width = '130%'; bloomStyle.height = '70%';
+        bloomStyle.transform = 'translate(-50%,-62%)';
+        bloomStyle.background = `radial-gradient(closest-side at 50% 40%, ${mix(20)}, transparent 70%)`;
+        bloomStyle.opacity = eo(seg(t, 0.1, 0.6)); bloomStyle.animation = 'none';
+        const mkCard = (start, rotFrom, rotTo, bgCss, z, extra) => {
+          const cp = seg(t, start, start + 0.55);
+          const y = lerp(-230, 0, eio(cp));
+          const rot = lerp(rotFrom, rotTo, back(cp));
+          return Object.assign({
+            display: 'block', position: 'absolute', left: '50%', top: '40%',
+            width: '60cqw', height: '38cqw', borderRadius: '4cqw', zIndex: z,
+            transform: `translate(-50%,-50%) translateY(${(y - 8 * he).toFixed(1)}%) rotate(${rot.toFixed(2)}deg) scale(${(1 - 0.08 * he).toFixed(3)})`,
+            opacity: Math.min(1, seg(t, start, start + 0.2) * 1.4),
+            background: bgCss,
+            boxShadow: '0 3cqw 6cqw -2.4cqw rgba(0,0,0,.75)'
+          }, extra || {});
+        };
+        card1Style = mkCard(0.0, -15, -8, `linear-gradient(135deg, color-mix(in srgb, ${brand} 22%, #141824), color-mix(in srgb, ${brand} 10%, #0d1019))`, 3, { border: '1px solid rgba(255,255,255,.12)' });
+        card2Style = mkCard(0.15, 11, 4, `linear-gradient(135deg, color-mix(in srgb, ${brand} 36%, #171c2a), color-mix(in srgb, ${brand} 16%, #10141f))`, 4, { border: '1px solid rgba(255,255,255,.16)' });
+        card3Style = mkCard(0.3, -3, -1, `linear-gradient(135deg, color-mix(in srgb, ${brand} 20%, #ECEDF1), color-mix(in srgb, ${brand} 32%, #C7CBD6))`, 5, { border: '1px solid rgba(255,255,255,.5)' });
+        blockStyle.top = '62%';
+        const w = seg(t, 1.0, 1.45), woe = eo(w);
+        wordStyle.opacity = woe; wordStyle.animation = 'none';
+        wordStyle.transform = `translateY(${lerp(8, 0, woe).toFixed(1)}px)`;
+        ruleStyle.opacity = seg(t, 1.25, 1.4); ruleStyle.animation = 'none';
+        ruleStyle.transform = `scaleX(${eio(seg(t, 1.25, 1.55)).toFixed(3)})`;
+        const tg = seg(t, 1.4, 1.8), tge = eo(tg);
+        tagStyle.opacity = tge; tagStyle.animation = 'none';
+        tagStyle.transform = `translateY(${lerp(6, 0, tge).toFixed(1)}px)`;
+      }
+
+      else if (variant === 'journey') {
+        horizonStyle.display = 'none';
+        // sunrise glow low over the land
+        const bo = eo(seg(t, 0.1, 0.7));
+        bloomStyle.width = '130%'; bloomStyle.height = '52%';
+        bloomStyle.top = '72%';
+        bloomStyle.transform = `translate(-50%,-50%) scale(${lerp(0.7, 1, bo).toFixed(3)})`;
+        bloomStyle.background = `radial-gradient(ellipse at 50% 58%, ${mix(light ? 40 : 46)}, transparent 70%)`;
+        bloomStyle.opacity = 0.9 * bo; bloomStyle.animation = 'none';
+        // abstract land, two parallax layers
+        journeySvgStyle = { display: 'block', position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 3, overflow: 'visible' };
+        const tb = eo(seg(t, 0.2, 0.9));
+        terrainBackStyle = { opacity: 0.92 * tb, transform: `translate(${(1.2 * Math.sin(t * 0.9)).toFixed(2)}px, ${((1 - tb) * 10).toFixed(2)}px)` };
+        const tf = eo(seg(t, 0.35, 1.05));
+        terrainFrontStyle = { opacity: tf, transform: `translate(${(-1.5 * Math.sin(t * 0.8 + 1)).toFixed(2)}px, ${((1 - tf) * 14).toFixed(2)}px)` };
+        // the journey: a path of light draws toward the destination
+        const bez = (s) => { const u = 1 - s; return { x: u * u * 14 + 2 * u * s * 70 + s * s * 50, y: u * u * 196 + 2 * u * s * 164 + s * s * 108 }; };
+        let L = 0; let prev = bez(0);
+        for (let i = 1; i <= 32; i++) { const pt = bez(i / 32); L += Math.hypot(pt.x - prev.x, pt.y - prev.y); prev = pt; }
+        const js = eio(seg(t, 0.5, 1.45));
+        const pathFade = (1 - eo(seg(t, 1.5, 1.9))) * Math.min(1, seg(t, 0.5, 0.7) * 2);
+        journeyPathStyle = { strokeDasharray: L.toFixed(1), strokeDashoffset: ((1 - js) * L).toFixed(1), opacity: Number((0.85 * pathFade).toFixed(3)) };
+        const dot = bez(js);
+        travelerStyle = {
+          display: 'block', position: 'absolute', width: '2.6cqw', height: '2.6cqw', borderRadius: '50%',
+          left: dot.x + '%', top: (dot.y / 216 * 100).toFixed(2) + '%', zIndex: 5,
+          transform: 'translate(-50%,-50%)', background: light ? '#fffdf6' : '#FFF8EA',
+          boxShadow: `0 0 12px 4px ${mix(80)}`,
+          opacity: Number((Math.min(1, seg(t, 0.55, 0.7) * 2) * (1 - seg(t, 1.38, 1.55))).toFixed(3))
+        };
+        // arrival pulse at the destination
+        const ap = seg(t, 1.35, 1.75);
+        ring1Style = {
+          display: 'block', position: 'absolute', left: '50%', top: '50%',
+          width: '30cqw', height: '30cqw', borderRadius: '50%', zIndex: 5,
+          border: `1px solid ${brand}`,
+          transform: `translate(-50%,-50%) scale(${lerp(0.3, 1.6, eo(ap)).toFixed(3)})`,
+          opacity: Number((Math.min(1, ap * 5) * (1 - ap) * 0.6).toFixed(3))
+        };
+        // emblem appears where the journey ends
+        const e = seg(t, 1.35, 1.85), eoe = eo(e);
+        emblemStyle.opacity = eoe; emblemStyle.animation = 'none';
+        emblemStyle.filter = `blur(${lerp(5, 0, eoe).toFixed(2)}px)`;
+        emblemStyle.transform = `translate(-50%, calc(-50% + ${hy.toFixed(1)}px)) scale(${(lerp(0.6, 1, eoe) * hs).toFixed(3)})`;
+        const w = seg(t, 1.7, 2.1), woe = eo(w);
+        wordStyle.opacity = woe; wordStyle.animation = 'none';
+        wordStyle.letterSpacing = `${lerp(0.5, 0.3, woe).toFixed(3)}em`;
+        wordStyle.transform = `translateY(${lerp(8, 0, woe).toFixed(1)}px)`;
+        ruleStyle.opacity = seg(t, 1.9, 2.05); ruleStyle.animation = 'none';
+        ruleStyle.transform = `scaleX(${eio(seg(t, 1.9, 2.2)).toFixed(3)})`;
+        const tg = seg(t, 2.0, 2.3), tge = eo(tg);
+        tagStyle.opacity = tge; tagStyle.animation = 'none';
+        tagStyle.transform = `translateY(${lerp(6, 0, tge).toFixed(1)}px)`;
+      }
+
+      else if (variant === 'portal') {
+        horizonStyle.display = 'none';
+        // interior light — the warm glow beyond the opening
+        const bo = eo(seg(t, 0.2, 0.7));
+        bloomStyle.width = '52cqw'; bloomStyle.height = '52cqw'; bloomStyle.borderRadius = '50%';
+        bloomStyle.transform = `translate(-50%,-50%) scale(${lerp(0.35, 1, bo).toFixed(3)})`;
+        bloomStyle.background = `radial-gradient(closest-side at 50% 50%, ${mix(light ? 34 : 44)}, transparent 72%)`;
+        bloomStyle.opacity = bo; bloomStyle.animation = 'none';
+        // aperture ring — the architectural opening
+        const ap = expo(seg(t, 0.4, 1.0));
+        ring1Style = {
+          display: 'block', position: 'absolute', left: '50%', top: '50%',
+          width: '46cqw', height: '46cqw', borderRadius: '50%', zIndex: 5,
+          border: `1.5px solid ${mix(85)}`,
+          boxShadow: `0 0 18px ${mix(30)}, inset 0 0 18px ${mix(16)}`,
+          transform: `translate(-50%, calc(-50% + ${hy.toFixed(1)}px)) scale(${(lerp(0.55, 1, ap) * hs).toFixed(3)})`,
+          opacity: Number((0.9 * Math.min(1, seg(t, 0.4, 0.8) * 2)).toFixed(3))
+        };
+        // outer frame — a quiet architectural echo
+        ring2Style = {
+          display: 'block', position: 'absolute', left: '50%', top: '50%',
+          width: '46cqw', height: '46cqw', borderRadius: '50%', zIndex: 4,
+          border: `1px solid ${mix(45)}`,
+          transform: `translate(-50%,-50%) scale(${lerp(1.0, 1.22, eo(seg(t, 0.9, 1.3))).toFixed(3)})`,
+          opacity: Number((0.25 * Math.min(1, seg(t, 0.9, 1.15) * 3)).toFixed(3))
+        };
+        // emblem revealed through the opening (circular mask)
+        const em = eio(seg(t, 0.6, 1.2));
+        emblemStyle.opacity = Math.min(1, seg(t, 0.6, 0.9) * 1.5);
+        emblemStyle.animation = 'none';
+        emblemStyle.clipPath = `circle(${lerp(0, 75, em).toFixed(1)}% at 50% 50%)`;
+        emblemStyle.filter = `blur(${lerp(4, 0, em).toFixed(2)}px)`;
+        emblemStyle.transform = `translate(-50%, calc(-50% + ${hy.toFixed(1)}px)) scale(${(lerp(1.05, 1, em) * hs).toFixed(3)})`;
+        const w = seg(t, 1.2, 1.65), woe = eo(w);
+        wordStyle.opacity = woe; wordStyle.animation = 'none';
+        wordStyle.letterSpacing = `${lerp(0.5, 0.3, woe).toFixed(3)}em`;
+        wordStyle.transform = `translateY(${lerp(8, 0, woe).toFixed(1)}px)`;
+        ruleStyle.opacity = seg(t, 1.5, 1.65); ruleStyle.animation = 'none';
+        ruleStyle.transform = `scaleX(${eio(seg(t, 1.5, 1.85)).toFixed(3)})`;
+        const tg = seg(t, 1.6, 2.0), tge = eo(tg);
+        tagStyle.opacity = tge; tagStyle.animation = 'none';
+        tagStyle.transform = `translateY(${lerp(6, 0, tge).toFixed(1)}px)`;
+      }
+
+      else if (variant === 'silk') {
+        horizonStyle.display = 'none';
+        bloomStyle.width = '120%'; bloomStyle.height = '60%';
+        bloomStyle.transform = 'translate(-50%,-52%)';
+        bloomStyle.background = `radial-gradient(closest-side at 50% 50%, ${mix(light ? 20 : 26)}, transparent 72%)`;
+        bloomStyle.opacity = 0.8 * eo(seg(t, 0.3, 1.0));
+        bloomStyle.animation = 'none';
+
+        const mkRibbon = (start, fromX, toX, top, rot, peak, hgt, ph) => {
+          const rp = seg(t, start, start + 0.9);
+          const x = lerp(fromX, toX, eio(rp)) + 1.6 * Math.sin(t * 1.4 + ph);
+          const o = Math.min(1, rp * 4) * (0.16 + (peak - 0.16) * Math.sin(Math.min(rp, 1) * Math.PI));
+          return {
+            display: 'block', position: 'absolute', left: '-45%', width: '190%', height: hgt,
+            top: top, borderRadius: '50%', zIndex: 4, pointerEvents: 'none',
+            background: `linear-gradient(90deg, transparent 4%, ${mix(light ? 30 : 38)} 32%, ${light ? 'rgba(255,252,244,.75)' : 'rgba(255,250,238,.6)'} 50%, ${mix(light ? 30 : 38)} 68%, transparent 96%)`,
+            filter: 'blur(10px)',
+            transform: `translateX(${x.toFixed(2)}%) rotate(${rot}deg)`,
+            opacity: Number(o.toFixed(3))
+          };
+        };
+        ribbon1Style = mkRibbon(0.15, -26, 14, '34%', -16, 0.5, '13%', 0);
+        ribbon2Style = mkRibbon(0.3, 24, -12, '45%', -10, 0.85, '15%', 2.1);
+        ribbon3Style = mkRibbon(0.45, -20, 10, '57%', -13, 0.4, '11%', 4.2);
+
+        const e = seg(t, 0.7, 1.3), eoe = eo(e);
+        emblemStyle.opacity = eoe; emblemStyle.animation = 'none';
+        emblemStyle.filter = `blur(${lerp(6, 0, eoe).toFixed(2)}px)`;
+        emblemStyle.transform = `translate(-50%, calc(-50% + ${(lerp(10, 0, eoe) + hy).toFixed(1)}px)) scale(${(lerp(0.96, 1, eoe) * hs).toFixed(3)})`;
+        emblemStyle.overflow = 'hidden';
+        const sh = seg(t, 0.85, 1.3);
+        shimmerStyle = {
+          position: 'absolute', top: 0, bottom: 0, left: 0, width: '60%',
+          background: `linear-gradient(90deg, transparent, ${light ? 'rgba(255,250,235,.55)' : 'rgba(255,255,255,.55)'}, transparent)`,
+          transform: `translateX(${lerp(-120, 220, eio(sh)).toFixed(1)}%) skewX(-14deg)`,
+          opacity: (sh > 0 && sh < 1) ? Number((Math.sin(sh * Math.PI) * 0.6).toFixed(3)) : 0,
+          pointerEvents: 'none'
+        };
+        const w = seg(t, 1.15, 1.6), woe = eo(w);
+        wordStyle.opacity = woe; wordStyle.animation = 'none';
+        wordStyle.letterSpacing = `${lerp(0.5, 0.3, woe).toFixed(3)}em`;
+        wordStyle.transform = `translateY(${lerp(8, 0, woe).toFixed(1)}px)`;
+        ruleStyle.opacity = seg(t, 1.4, 1.55); ruleStyle.animation = 'none';
+        ruleStyle.transform = `scaleX(${eio(seg(t, 1.4, 1.75)).toFixed(3)})`;
+        const tg = seg(t, 1.55, 1.9), tge = eo(tg);
+        tagStyle.opacity = tge; tagStyle.animation = 'none';
+        tagStyle.transform = `translateY(${lerp(6, 0, tge).toFixed(1)}px)`;
+      }
+
+      else if (variant === 'pulse') {
+        horizonStyle.display = 'none';
+        const bo = eo(seg(t, 0.1, 0.5));
+        bloomStyle.width = '110%'; bloomStyle.height = '58%';
+        bloomStyle.transform = `translate(-50%,-50%) scale(${lerp(0.4, 1, bo).toFixed(3)})`;
+        bloomStyle.background = `radial-gradient(closest-side at 50% 50%, ${mix(light ? 36 : 46)}, transparent 70%)`;
+        bloomStyle.opacity = bo; bloomStyle.animation = 'none';
+        const e = seg(t, 0.25, 0.65), eoe = eo(e);
+        emblemStyle.opacity = eoe; emblemStyle.animation = 'none';
+        emblemStyle.transform = `translate(-50%, calc(-50% + ${hy.toFixed(1)}px)) scale(${(lerp(0.6, 1, back(e)) * hs).toFixed(3)})`;
+        const mkRing = (start) => {
+          const rp = seg(t, start, start + 0.7);
+          return {
+            display: 'block', position: 'absolute', left: '50%', top: '50%',
+            width: '34cqw', height: '34cqw', borderRadius: '50%', zIndex: 5,
+            border: `1px solid ${brand}`,
+            transform: `translate(-50%,-50%) scale(${lerp(0.35, 2.4, eo(rp)).toFixed(3)})`,
+            opacity: Number((Math.min(1, rp * 6) * (1 - rp) * 0.65).toFixed(3))
+          };
+        };
+        ring1Style = mkRing(0.45);
+        ring2Style = mkRing(0.7);
+        const w = seg(t, 1.05, 1.45), woe = eo(w);
+        wordStyle.opacity = woe; wordStyle.animation = 'none';
+        wordStyle.transform = `translateY(${lerp(8, 0, woe).toFixed(1)}px)`;
+        ruleStyle.opacity = seg(t, 1.25, 1.4); ruleStyle.animation = 'none';
+        ruleStyle.transform = `scaleX(${eio(seg(t, 1.25, 1.6)).toFixed(3)})`;
+        const tg = seg(t, 1.35, 1.7), tge = eo(tg);
+        tagStyle.opacity = tge; tagStyle.animation = 'none';
+        tagStyle.transform = `translateY(${lerp(6, 0, tge).toFixed(1)}px)`;
+      }
+    }
+
+    return {
+      brandName, tagline, memberName, tier,
+      rootStyle, envStyle, scrimStyle, bloomStyle, horizonStyle,
+      statusStyle, dotsStyle, islandStyle, emblemStyle, blockStyle,
+      wordStyle, ruleStyle, tagStyle, shimmerStyle,
+      ring1Style, ring2Style, ribbon1Style, ribbon2Style, ribbon3Style,
+      card1Style, card2Style, card3Style,
+      cardEmblemStyle, cardTierStyle, cardNumStyle,
+      greetStyle, greet1Style, greet2Style,
+      ringSvgStyle, starDrawStyle, starFillStyle,
+      journeySvgStyle, terrainBackD, terrainFrontD, terrainBackFill, terrainFrontFill,
+      terrainBackStyle, terrainFrontStyle, journeyPathD, journeyStroke, journeyPathStyle, travelerStyle
+    };
+  }
+}
+</script>
+</body>
+</html>

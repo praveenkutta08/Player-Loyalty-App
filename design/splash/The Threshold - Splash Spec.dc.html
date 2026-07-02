@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#08090C;-webkit-font-smoothing:antialiased}
+  @keyframes th-horizon{0%{opacity:.2;transform:translateY(-50%) scaleX(.45)}10%{opacity:1;transform:translateY(-50%) scaleX(1)}18%{opacity:1}86%{opacity:1;transform:translateY(-50%) scaleX(1)}94%,100%{opacity:0}}
+  @keyframes th-bloom{0%,4%{opacity:0}20%{opacity:1}86%{opacity:1}94%,100%{opacity:0}}
+  @keyframes th-emblem{0%,6%{opacity:0;transform:translate(-50%,-38%) scale(.9);filter:blur(8px)}28%{opacity:1;transform:translate(-50%,-50%) scale(1);filter:blur(0)}86%{opacity:1;transform:translate(-50%,-50%) scale(1);filter:blur(0)}94%,100%{opacity:0;transform:translate(-50%,-54%) scale(1.02);filter:blur(2px)}}
+  @keyframes th-word{0%,32%{opacity:0;letter-spacing:.62em}50%{opacity:1;letter-spacing:.3em}86%{opacity:1;letter-spacing:.3em}94%,100%{opacity:0}}
+  @keyframes th-tag{0%,50%{opacity:0}64%{opacity:1}86%{opacity:1}94%,100%{opacity:0}}
+  @keyframes th-rule{0%,58%{transform:scaleX(0)}72%{transform:scaleX(1)}86%{transform:scaleX(1)}94%,100%{opacity:0;transform:scaleX(1)}}
+</style>
+</helmet>
+
+<div style="font-family:'Manrope',sans-serif;min-height:100%;background:radial-gradient(1300px 760px at 50% -6%, #16171F 0%, #08090C 58%);color:#C7C9D2;padding:60px 68px 110px">
+
+  <!-- ============ HEADER ============ -->
+  <header style="max-width:1360px;margin:0 auto 66px">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px">
+      <span style="width:30px;height:1px;background:#D8B979"></span>
+      <span style="font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:#7C7E88">Selected concept · Production spec</span>
+    </div>
+    <div style="display:flex;gap:56px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between">
+      <div style="max-width:44ch">
+        <h1 style="font-family:'Marcellus',serif;font-weight:400;color:#F2ECDF;font-size:clamp(46px,5.4vw,80px);line-height:.98;margin:0 0 20px">The Threshold</h1>
+        <p style="font-size:16px;line-height:1.7;color:#9A9CA6;margin:0">A single luminous horizon parts the dark; the brand emblem rises through it and settles as the wordmark resolves beneath. Not a logo dropped in the middle — an <em style="font-style:italic;color:#D8B979">arrival</em>. The horizon is the signature; everything else is a CMS token flowing through it.</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;max-width:420px">
+        <span style="font-size:11.5px;padding:7px 13px;border:1px solid rgba(216,169,121,.3);color:#D8B979;border-radius:999px">Iconic</span>
+        <span style="font-size:11.5px;padding:7px 13px;border:1px solid rgba(255,255,255,.12);color:#C7C9D2;border-radius:999px">Elegant</span>
+        <span style="font-size:11.5px;padding:7px 13px;border:1px solid rgba(255,255,255,.12);color:#C7C9D2;border-radius:999px">Memorable</span>
+        <span style="font-size:11.5px;padding:7px 13px;border:1px solid rgba(255,255,255,.12);color:#C7C9D2;border-radius:999px">~2.4s · 60fps</span>
+        <span style="font-size:11.5px;padding:7px 13px;border:1px solid rgba(255,255,255,.12);color:#C7C9D2;border-radius:999px">Reanimated + Lottie</span>
+      </div>
+    </div>
+  </header>
+
+  <div style="max-width:1360px;margin:0 auto;display:flex;flex-direction:column;gap:38px">
+
+    <!-- ============ 1 · ANATOMY + LAYOUT SPEC ============ -->
+    <section style="background:linear-gradient(180deg,rgba(216,169,121,.045),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:46px 48px">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:34px">
+        <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">01</span>
+        <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:26px;color:#F2ECDF;margin:0">Anatomy &amp; safe areas</h2>
+        <span style="margin-left:auto;font-size:12px;color:#63656F">Reference device · 390 × 844 dp · units in dp</span>
+      </div>
+
+      <div style="display:flex;gap:72px;align-items:center;flex-wrap:wrap;justify-content:center">
+        <!-- annotated phone -->
+        <div style="position:relative;flex:0 0 auto;padding:0 150px">
+          <!-- left callouts -->
+          <div style="position:absolute;left:0;top:52px;width:150px;text-align:right;padding-right:18px">
+            <div style="font-size:12px;color:#EFE7D6;font-weight:600">Status-bar safe area</div><div style="font-size:11px;color:#7C7E88">44 dp · CMS never draws here</div>
+          </div>
+          <div style="position:absolute;left:0;top:322px;width:150px;text-align:right;padding-right:18px">
+            <div style="font-size:12px;color:#EFE7D6;font-weight:600">Signature horizon</div><div style="font-size:11px;color:#7C7E88">optical center · 50% H</div>
+          </div>
+          <div style="position:absolute;left:0;top:250px;width:150px;text-align:right;padding-right:18px">
+            <div style="font-size:12px;color:#EFE7D6;font-weight:600">Emblem · logo token</div><div style="font-size:11px;color:#7C7E88">96 dp · centred on horizon</div>
+          </div>
+          <!-- right callouts -->
+          <div style="position:absolute;right:0;top:430px;width:150px;padding-left:18px">
+            <div style="font-size:12px;color:#EFE7D6;font-weight:600">Casino name</div><div style="font-size:11px;color:#7C7E88">Marcellus · tracking +0.30em</div>
+          </div>
+          <div style="position:absolute;right:0;top:498px;width:150px;padding-left:18px">
+            <div style="font-size:12px;color:#EFE7D6;font-weight:600">Tagline (optional)</div><div style="font-size:11px;color:#7C7E88">hidden if CMS empty</div>
+          </div>
+          <div style="position:absolute;right:0;top:596px;width:150px;padding-left:18px">
+            <div style="font-size:12px;color:#EFE7D6;font-weight:600">Bottom safe area</div><div style="font-size:11px;color:#7C7E88">34 dp · home indicator</div>
+          </div>
+          <!-- leader lines -->
+          <div style="position:absolute;left:150px;top:66px;width:150px;height:1px;background:rgba(216,169,121,.35)"></div>
+          <div style="position:absolute;left:150px;top:264px;width:150px;height:1px;background:rgba(216,169,121,.35)"></div>
+          <div style="position:absolute;left:150px;top:336px;width:150px;height:1px;background:rgba(216,169,121,.55)"></div>
+          <div style="position:absolute;right:150px;top:444px;width:150px;height:1px;background:rgba(216,169,121,.35)"></div>
+          <div style="position:absolute;right:150px;top:512px;width:150px;height:1px;background:rgba(216,169,121,.35)"></div>
+          <div style="position:absolute;right:150px;top:610px;width:150px;height:1px;background:rgba(216,169,121,.35)"></div>
+
+          <div style="position:relative;width:312px;height:676px;border-radius:50px;background:#1b1c22;padding:9px;box-shadow:0 46px 100px -34px rgba(0,0,0,.92),inset 0 0 0 1px rgba(255,255,255,.06)">
+            <div style="position:relative;width:100%;height:100%;border-radius:42px;overflow:hidden">
+              <dc-import name="SplashScreen" brand-name="MERIDIAN" tagline="GRAND RESORT & CLUB" brand="#D8B979" bg1="#241626" bg2="#0A0710" mode="dark" animate="{{ true }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import>
+            </div>
+          </div>
+        </div>
+
+        <!-- layout spec text -->
+        <div style="flex:1;min-width:400px;max-width:560px;display:flex;flex-direction:column;gap:26px">
+          <div>
+            <div style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#6B6D77;margin-bottom:12px">Screen layout</div>
+            <p style="font-size:14px;line-height:1.7;color:#B4B6BF;margin:0">Vertically anchored to a single horizon at 50% H — the optical centre. The emblem is centred on that line so it reads as <em style="font-style:italic;color:#D8B979">rising through</em> it; the wordmark block hangs in the lower third at 60% H. Nothing is bottom-pinned, keeping the composition brand-agnostic and calm.</p>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px 32px">
+            <div>
+              <div style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#6B6D77;margin-bottom:10px">Safe areas</div>
+              <div style="font-size:13px;line-height:1.85;color:#AEB0B9">Top · 44 dp status<br>Sides · 24 dp margin<br>Bottom · 34 dp indicator<br>Content stays in centre band</div>
+            </div>
+            <div>
+              <div style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#6B6D77;margin-bottom:10px">Spacing scale</div>
+              <div style="font-size:13px;line-height:1.85;color:#AEB0B9">4 · 8 · 12 · 16 · 24 · 32 · 48<br>Emblem→name · 32 dp<br>Name→rule · 20 dp<br>Rule→tagline · 20 dp</div>
+            </div>
+            <div>
+              <div style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#6B6D77;margin-bottom:10px">Logo placement</div>
+              <div style="font-size:13px;line-height:1.85;color:#AEB0B9">96 dp box, optically<br>centred on horizon.<br>SVG / PNG / Lottie, any<br>aspect fits the box.</div>
+            </div>
+            <div>
+              <div style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#6B6D77;margin-bottom:10px">Casino name</div>
+              <div style="font-size:13px;line-height:1.85;color:#AEB0B9">Centred, single line.<br>Auto-shrinks 28→20 dp<br>to fit width − 48 dp.<br>Tagline optional, below.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 2 · ANIMATION TIMELINE ============ -->
+    <section style="background:linear-gradient(180deg,rgba(216,169,121,.045),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:46px 48px">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:36px">
+        <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">02</span>
+        <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:26px;color:#F2ECDF;margin:0">Animation timeline</h2>
+        <span style="margin-left:auto;font-size:12px;color:#63656F">Total ~2.4s · then hand off to Home</span>
+      </div>
+      <div style="display:flex;gap:26px;justify-content:space-between;flex-wrap:wrap">
+        <div style="flex:1;min-width:150px;max-width:230px">
+          <div style="font-size:12px;color:#D8B979;font-family:'JetBrains Mono',monospace;margin-bottom:12px">0.0s</div>
+          <div style="border-radius:34px;background:#1b1c22;padding:6px;box-shadow:0 26px 60px -30px rgba(0,0,0,.9);margin-bottom:16px"><div style="border-radius:28px;overflow:hidden;height:344px"><dc-import name="SplashScreen" brand-name="MERIDIAN" tagline="GRAND RESORT & CLUB" brand="#D8B979" bg1="#241626" bg2="#0A0710" phase="{{ 0 }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div>
+          <div style="font-size:13px;color:#C7C9D2;font-weight:600;margin-bottom:3px">Dark opens</div>
+          <div style="font-size:12.5px;line-height:1.55;color:#8B8D96">A faint horizon glow is the only light. <span style="color:#63656F">Fade · ease-in-out</span></div>
+        </div>
+        <div style="flex:1;min-width:150px;max-width:230px">
+          <div style="font-size:12px;color:#D8B979;font-family:'JetBrains Mono',monospace;margin-bottom:12px">0.4s</div>
+          <div style="border-radius:34px;background:#1b1c22;padding:6px;box-shadow:0 26px 60px -30px rgba(0,0,0,.9);margin-bottom:16px"><div style="border-radius:28px;overflow:hidden;height:344px"><dc-import name="SplashScreen" brand-name="MERIDIAN" tagline="GRAND RESORT & CLUB" brand="#D8B979" bg1="#241626" bg2="#0A0710" phase="{{ 1 }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div>
+          <div style="font-size:13px;color:#C7C9D2;font-weight:600;margin-bottom:3px">Horizon ignites</div>
+          <div style="font-size:12.5px;line-height:1.55;color:#8B8D96">The seam brightens; light blooms upward, emblem emerges. <span style="color:#63656F">ease-out</span></div>
+        </div>
+        <div style="flex:1;min-width:150px;max-width:230px">
+          <div style="font-size:12px;color:#D8B979;font-family:'JetBrains Mono',monospace;margin-bottom:12px">0.9s</div>
+          <div style="border-radius:34px;background:#1b1c22;padding:6px;box-shadow:0 26px 60px -30px rgba(0,0,0,.9);margin-bottom:16px"><div style="border-radius:28px;overflow:hidden;height:344px"><dc-import name="SplashScreen" brand-name="MERIDIAN" tagline="GRAND RESORT & CLUB" brand="#D8B979" bg1="#241626" bg2="#0A0710" phase="{{ 2 }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div>
+          <div style="font-size:13px;color:#C7C9D2;font-weight:600;margin-bottom:3px">Emblem settles</div>
+          <div style="font-size:12.5px;line-height:1.55;color:#8B8D96">Logo rises through, sharpens and rests. <span style="color:#63656F">spring · gentle</span></div>
+        </div>
+        <div style="flex:1;min-width:150px;max-width:230px">
+          <div style="font-size:12px;color:#D8B979;font-family:'JetBrains Mono',monospace;margin-bottom:12px">1.5s</div>
+          <div style="border-radius:34px;background:#1b1c22;padding:6px;box-shadow:0 26px 60px -30px rgba(0,0,0,.9);margin-bottom:16px"><div style="border-radius:28px;overflow:hidden;height:344px"><dc-import name="SplashScreen" brand-name="MERIDIAN" tagline="GRAND RESORT & CLUB" brand="#D8B979" bg1="#241626" bg2="#0A0710" phase="{{ 3 }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div>
+          <div style="font-size:13px;color:#C7C9D2;font-weight:600;margin-bottom:3px">Name resolves</div>
+          <div style="font-size:12.5px;line-height:1.55;color:#8B8D96">Wordmark tightens from wide tracking into place. <span style="color:#63656F">ease-out</span></div>
+        </div>
+        <div style="flex:1;min-width:150px;max-width:230px">
+          <div style="font-size:12px;color:#D8B979;font-family:'JetBrains Mono',monospace;margin-bottom:12px">2.4s</div>
+          <div style="border-radius:34px;background:#1b1c22;padding:6px;box-shadow:0 26px 60px -30px rgba(0,0,0,.9);margin-bottom:16px"><div style="border-radius:28px;overflow:hidden;height:344px"><dc-import name="SplashScreen" brand-name="MERIDIAN" tagline="GRAND RESORT & CLUB" brand="#D8B979" bg1="#241626" bg2="#0A0710" phase="{{ 4 }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div>
+          <div style="font-size:13px;color:#C7C9D2;font-weight:600;margin-bottom:3px">Settle &amp; hand off</div>
+          <div style="font-size:12.5px;line-height:1.55;color:#8B8D96">Rule + tagline arrive; whole scene cross-fades to Home. <span style="color:#63656F">ease-in</span></div>
+        </div>
+      </div>
+      <!-- easing bar -->
+      <div style="margin-top:34px;position:relative;height:2px;background:linear-gradient(90deg,#3a2f22,#D8B979,#3a2f22);border-radius:2px">
+        <div style="position:absolute;left:0%;top:-4px;width:9px;height:9px;border-radius:50%;background:#D8B979"></div>
+        <div style="position:absolute;left:17%;top:-4px;width:9px;height:9px;border-radius:50%;background:#D8B979"></div>
+        <div style="position:absolute;left:38%;top:-4px;width:9px;height:9px;border-radius:50%;background:#D8B979"></div>
+        <div style="position:absolute;left:63%;top:-4px;width:9px;height:9px;border-radius:50%;background:#D8B979"></div>
+        <div style="position:absolute;left:100%;top:-4px;width:9px;height:9px;border-radius:50%;background:#D8B979;transform:translateX(-100%)"></div>
+      </div>
+      <div style="margin-top:12px;display:flex;justify-content:space-between;font-size:11px;color:#63656F;font-family:'JetBrains Mono',monospace">
+        <span>fade-in</span><span>horizon glow</span><span>emblem spring</span><span>text reveal</span><span>settle</span>
+      </div>
+    </section>
+
+    <!-- ============ 3 · LIGHT / DARK + BRAND ADAPTATION ============ -->
+    <div style="display:flex;gap:38px;flex-wrap:wrap">
+      <section style="flex:1;min-width:440px;background:linear-gradient(180deg,rgba(216,169,121,.045),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:46px 48px">
+        <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:32px">
+          <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">03</span>
+          <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:26px;color:#F2ECDF;margin:0">Light &amp; dark mode</h2>
+        </div>
+        <div style="display:flex;gap:34px;justify-content:center;flex-wrap:wrap">
+          <div style="text-align:center">
+            <div style="border-radius:40px;background:#1b1c22;padding:7px;box-shadow:0 30px 70px -34px rgba(0,0,0,.9);margin-bottom:14px"><div style="border-radius:33px;overflow:hidden;width:196px;height:424px"><dc-import name="SplashScreen" brand-name="MERIDIAN" tagline="GRAND RESORT & CLUB" brand="#D8B979" bg1="#241626" bg2="#0A0710" mode="dark" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div>
+            <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8B8D96">Dark · default</div>
+          </div>
+          <div style="text-align:center">
+            <div style="border-radius:40px;background:#d9d2c6;padding:7px;box-shadow:0 30px 70px -34px rgba(0,0,0,.9);margin-bottom:14px"><div style="border-radius:33px;overflow:hidden;width:196px;height:424px"><dc-import name="SplashScreen" brand-name="MERIDIAN" tagline="GRAND RESORT & CLUB" brand="#8A5A34" bg1="#F6EFE1" bg2="#E7D6BC" mode="light" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div>
+            <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8B8D96">Light · daytime</div>
+          </div>
+        </div>
+        <p style="font-size:13px;line-height:1.7;color:#9A9CA6;margin:24px 0 0;text-align:center">Same geometry. In light mode the ground lifts to a warm paper tone, text flips to ink, and the horizon &amp; bloom hold the brand hue — never pure white. Chosen from <span style="color:#C7C9D2">system appearance</span> or a CMS override.</p>
+      </section>
+
+      <section style="flex:1;min-width:440px;background:linear-gradient(180deg,rgba(216,169,121,.045),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:46px 48px">
+        <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:32px">
+          <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">04</span>
+          <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:26px;color:#F2ECDF;margin:0">Brand-color adaptation</h2>
+        </div>
+        <p style="font-size:13px;line-height:1.7;color:#9A9CA6;margin:0 0 26px">One token — <span style="font-family:'JetBrains Mono',monospace;color:#D8B979">primaryColor</span> — drives the horizon, the rising bloom, the emblem and the tagline in a single pass. Same neutral ground, four brands:</p>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
+          <div style="text-align:center"><div style="border-radius:26px;background:#1b1c22;padding:5px;margin-bottom:10px"><div style="border-radius:22px;overflow:hidden;height:230px"><dc-import name="SplashScreen" brand-name="MERIDIAN" tagline="" brand="#D8B979" bg1="#191a20" bg2="#0B0C10" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div><div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#8B8D96">#D8B979</div></div>
+          <div style="text-align:center"><div style="border-radius:26px;background:#1b1c22;padding:5px;margin-bottom:10px"><div style="border-radius:22px;overflow:hidden;height:230px"><dc-import name="SplashScreen" brand-name="MERIDIAN" tagline="" brand="#8E93F5" bg1="#191a20" bg2="#0B0C10" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div><div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#8B8D96">#8E93F5</div></div>
+          <div style="text-align:center"><div style="border-radius:26px;background:#1b1c22;padding:5px;margin-bottom:10px"><div style="border-radius:22px;overflow:hidden;height:230px"><dc-import name="SplashScreen" brand-name="MERIDIAN" tagline="" brand="#63D6C4" bg1="#191a20" bg2="#0B0C10" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div><div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#8B8D96">#63D6C4</div></div>
+          <div style="text-align:center"><div style="border-radius:26px;background:#1b1c22;padding:5px;margin-bottom:10px"><div style="border-radius:22px;overflow:hidden;height:230px"><dc-import name="SplashScreen" brand-name="MERIDIAN" tagline="" brand="#E8607D" bg1="#191a20" bg2="#0B0C10" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div><div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:#8B8D96">#E8607D</div></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============ 5 · WHITE-LABEL IN THE WILD ============ -->
+    <section style="background:linear-gradient(180deg,rgba(216,169,121,.045),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:46px 48px">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:8px">
+        <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">05</span>
+        <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:26px;color:#F2ECDF;margin:0">The same screen, four worlds</h2>
+      </div>
+      <p style="font-size:14px;line-height:1.7;color:#9A9CA6;margin:0 0 38px;max-width:70ch">Identical layout, safe areas and choreography. Only the background style, primary color, name and tagline change — no redesign, no per-brand engineering.</p>
+      <div style="display:flex;gap:26px;justify-content:space-between;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px;max-width:290px;text-align:center">
+          <div style="border-radius:44px;background:#1b1c22;padding:7px;box-shadow:0 34px 76px -34px rgba(0,0,0,.9);margin-bottom:18px"><div style="border-radius:37px;overflow:hidden;height:520px"><dc-import name="SplashScreen" brand-name="MERIDIAN" tagline="GRAND RESORT & CLUB" brand="#E4BE7C" bg1="#3A2413" bg2="#0C0705" animate="{{ true }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div>
+          <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#E4BE7C;margin-bottom:5px">Luxury Resort</div>
+          <div style="font-size:12px;color:#7C7E88;font-family:'JetBrains Mono',monospace">warm dusk · gold</div>
+        </div>
+        <div style="flex:1;min-width:200px;max-width:290px;text-align:center">
+          <div style="border-radius:44px;background:#1b1c22;padding:7px;box-shadow:0 34px 76px -34px rgba(0,0,0,.9);margin-bottom:18px"><div style="border-radius:37px;overflow:hidden;height:520px"><dc-import name="SplashScreen" brand-name="AXIS" tagline="THE CITY NEVER SETTLES" brand="#8E93F5" bg1="#1C1E33" bg2="#08090F" animate="{{ true }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div>
+          <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8E93F5;margin-bottom:5px">Modern Urban</div>
+          <div style="font-size:12px;color:#7C7E88;font-family:'JetBrains Mono',monospace">midnight · violet</div>
+        </div>
+        <div style="flex:1;min-width:200px;max-width:290px;text-align:center">
+          <div style="border-radius:44px;background:#1b1c22;padding:7px;box-shadow:0 34px 76px -34px rgba(0,0,0,.9);margin-bottom:18px"><div style="border-radius:37px;overflow:hidden;height:520px"><dc-import name="SplashScreen" brand-name="AZURE" tagline="WHERE THE TIDE MEETS GOLD" brand="#5FD6C6" bg1="#0F3C46" bg2="#05161B" animate="{{ true }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div>
+          <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#5FD6C6;margin-bottom:5px">Beach Resort</div>
+          <div style="font-size:12px;color:#7C7E88;font-family:'JetBrains Mono',monospace">tide dawn · aqua</div>
+        </div>
+        <div style="flex:1;min-width:200px;max-width:290px;text-align:center">
+          <div style="border-radius:44px;background:#1b1c22;padding:7px;box-shadow:0 34px 76px -34px rgba(0,0,0,.9);margin-bottom:18px"><div style="border-radius:37px;overflow:hidden;height:520px"><dc-import name="SplashScreen" brand-name="SUMMIT" tagline="RISE ABOVE" brand="#B4CBEC" bg1="#16283F" bg2="#070C14" animate="{{ true }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div>
+          <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#B4CBEC;margin-bottom:5px">Mountain Resort</div>
+          <div style="font-size:12px;color:#7C7E88;font-family:'JetBrains Mono',monospace">alpine dusk · platinum</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 6 · DESIGN SYSTEM + CMS ============ -->
+    <div style="display:flex;gap:38px;flex-wrap:wrap">
+      <section style="flex:1.4;min-width:460px;background:linear-gradient(180deg,rgba(216,169,121,.045),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:46px 48px">
+        <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:32px">
+          <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">06</span>
+          <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:26px;color:#F2ECDF;margin:0">Design system</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px 40px">
+          <div>
+            <div style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#6B6D77;margin-bottom:12px">Typography</div>
+            <div style="font-family:'Marcellus',serif;font-size:28px;color:#F2ECDF;line-height:1;margin-bottom:4px">Marcellus</div>
+            <div style="font-size:12px;color:#8B8D96;margin-bottom:14px">Casino name · high-contrast serif · +0.30em</div>
+            <div style="font-size:14px;color:#F2ECDF;letter-spacing:.1em;margin-bottom:4px">MANROPE</div>
+            <div style="font-size:12px;color:#8B8D96">Tagline &amp; system UI · +0.34em uppercase</div>
+          </div>
+          <div>
+            <div style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#6B6D77;margin-bottom:12px">Color roles</div>
+            <div style="display:flex;flex-direction:column;gap:9px;font-size:12.5px;color:#AEB0B9">
+              <div style="display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;border-radius:5px;background:#D8B979"></span>primary · emblem, horizon, bloom, tagline</div>
+              <div style="display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;border-radius:5px;background:linear-gradient(135deg,#241626,#0A0710)"></span>background · CMS gradient / image</div>
+              <div style="display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;border-radius:5px;background:#F3ECDD"></span>text · ink or cream by mode</div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#6B6D77;margin-bottom:12px">Gradient usage</div>
+            <p style="font-size:12.5px;line-height:1.7;color:#AEB0B9;margin:0">Two-stop vertical ground (178°) + one radial bloom rising from the horizon in <span style="color:#D8B979">primary @ ~55%</span> + a top scrim for status legibility. Never more than two ground stops.</p>
+          </div>
+          <div>
+            <div style="font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#6B6D77;margin-bottom:12px">Shadow usage</div>
+            <p style="font-size:12.5px;line-height:1.7;color:#AEB0B9;margin:0">Flat by design — no drop shadows on text or emblem. Depth comes only from the horizon glow (<span style="font-family:'JetBrains Mono',monospace">0 0 26 primary@72%</span>) and the bloom. Elevation is reserved for the app.</p>
+          </div>
+        </div>
+      </section>
+
+      <section style="flex:1;min-width:400px;background:linear-gradient(180deg,rgba(216,169,121,.045),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:46px 48px">
+        <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+          <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">07</span>
+          <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:26px;color:#F2ECDF;margin:0">CMS placeholders</h2>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px;margin-bottom:22px">
+          <div style="display:flex;gap:12px;font-size:12.5px"><span style="font-family:'JetBrains Mono',monospace;color:#D8B979;min-width:132px">logo</span><span style="color:#9A9CA6">SVG / PNG / Lottie · transparent</span></div>
+          <div style="display:flex;gap:12px;font-size:12.5px"><span style="font-family:'JetBrains Mono',monospace;color:#D8B979;min-width:132px">casinoName</span><span style="color:#9A9CA6">string · required</span></div>
+          <div style="display:flex;gap:12px;font-size:12.5px"><span style="font-family:'JetBrains Mono',monospace;color:#D8B979;min-width:132px">tagline</span><span style="color:#9A9CA6">string · optional</span></div>
+          <div style="display:flex;gap:12px;font-size:12.5px"><span style="font-family:'JetBrains Mono',monospace;color:#D8B979;min-width:132px">primaryColor</span><span style="color:#9A9CA6">hex · drives all accents</span></div>
+          <div style="display:flex;gap:12px;font-size:12.5px"><span style="font-family:'JetBrains Mono',monospace;color:#D8B979;min-width:132px">backgroundStyle</span><span style="color:#9A9CA6">gradient · image · video</span></div>
+          <div style="display:flex;gap:12px;font-size:12.5px"><span style="font-family:'JetBrains Mono',monospace;color:#D8B979;min-width:132px">backgroundValue</span><span style="color:#9A9CA6">[from, to] · or asset URL</span></div>
+          <div style="display:flex;gap:12px;font-size:12.5px"><span style="font-family:'JetBrains Mono',monospace;color:#D8B979;min-width:132px">appearance</span><span style="color:#9A9CA6">auto · light · dark</span></div>
+        </div>
+        <div style="background:#0A0B0F;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px 20px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.75;color:#8FA7B8;overflow-x:auto">
+<span style="color:#4E5560">{</span><br>
+&nbsp;&nbsp;<span style="color:#C99">"casinoName"</span>: <span style="color:#B7D9A8">"MERIDIAN"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"tagline"</span>: <span style="color:#B7D9A8">"GRAND RESORT & CLUB"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"logo"</span>: <span style="color:#B7D9A8">"cdn/meridian.svg"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"primaryColor"</span>: <span style="color:#D8B979">"#D8B979"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"backgroundStyle"</span>: <span style="color:#B7D9A8">"gradient"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"backgroundValue"</span>: [<span style="color:#D8B979">"#241626"</span>, <span style="color:#D8B979">"#0A0710"</span>],<br>
+&nbsp;&nbsp;<span style="color:#C99">"appearance"</span>: <span style="color:#B7D9A8">"auto"</span><br>
+<span style="color:#4E5560">}</span>
+        </div>
+      </section>
+    </div>
+
+  </div>
+
+  <footer style="max-width:1360px;margin:56px auto 0;padding-top:26px;border-top:1px solid rgba(255,255,255,.07);display:flex;gap:34px;flex-wrap:wrap;justify-content:space-between;font-size:12.5px;color:#7C7E88">
+    <span style="max-width:52ch;line-height:1.6"><strong style="color:#9A9CA6;font-weight:600">React Native</strong> · Reanimated timeline for opacity / translate / scale, Lottie for the logo draw. Lightweight — no particle systems, no 3D. Preload the next screen during the ~2.4s and cross-fade on complete.</span>
+    <span style="line-height:1.6">MERIDIAN, AXIS, AZURE, SUMMIT are placeholder brands.<br>Every mark, name, color &amp; tagline is a live CMS token.</span>
+  </footer>
+</div>
+</x-dc>
+</body>
+</html>

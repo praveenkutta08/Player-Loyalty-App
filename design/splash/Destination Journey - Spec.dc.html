@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#08090C;-webkit-font-smoothing:antialiased}
+  input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer}
+  input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:4px;background:linear-gradient(90deg,#D8B979 var(--fill,50%),rgba(255,255,255,.12) var(--fill,50%))}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;margin-top:-8px;width:20px;height:20px;border-radius:50%;background:#F3ECDD;border:3px solid #D8B979;box-shadow:0 3px 10px rgba(0,0,0,.5)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#F3ECDD;border:3px solid #D8B979}
+</style>
+</helmet>
+
+<div style="font-family:'Manrope',sans-serif;min-height:100%;background:radial-gradient(1300px 780px at 50% -6%, #16171F 0%, #08090C 58%);color:#C7C9D2;padding:60px 68px 110px">
+
+  <!-- HEADER -->
+  <header style="max-width:1240px;margin:0 auto 48px">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px">
+      <span style="width:30px;height:1px;background:#D8B979"></span>
+      <span style="font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:#7C7E88">Variant spec · animationVariant: "journey" · the eighth &amp; final arrival</span>
+    </div>
+    <h1 style="font-family:'Marcellus',serif;font-weight:400;color:#F2ECDF;font-size:clamp(42px,5vw,72px);line-height:1;margin:0 0 20px">Destination Journey</h1>
+    <div style="display:flex;gap:52px;flex-wrap:wrap">
+      <p style="font-size:16px;line-height:1.75;color:#9A9CA6;margin:0;max-width:56ch;flex:1;min-width:380px"><strong style="color:#C7C9D2;font-weight:600">Visual concept.</strong> The app doesn't open — you <em style="font-style:italic;color:#D8B979">arrive</em>. A sunrise glow gathers over an abstract land: two soft silhouette layers whose profile is the property's identity — coastline swells, mountain ridges, dunes, a skyline, a treeline. A hairline path of light draws toward the horizon, a single point of light travels it, and where the journey ends the light blooms and becomes the brand. Everything is silhouette and light — never a literal landscape.</p>
+      <p style="font-size:16px;line-height:1.75;color:#9A9CA6;margin:0;max-width:56ch;flex:1;min-width:380px"><strong style="color:#C7C9D2;font-weight:600">Design rationale.</strong> Every other variant stages the brand; this one earns it — the logo is the destination of a two-second story: place → path → arrival. It's the most emotionally loaded variant and the most personal to each property, because the land itself is a CMS token. Cinematic comes from sequence and parallax, not effects: three moving layers, one traveler, zero particles.</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:26px">
+      <span style="font-size:11.5px;padding:7px 13px;border:1px solid rgba(216,169,121,.3);color:#D8B979;border-radius:999px">Place · Path · Arrival</span>
+      <span style="font-size:11.5px;padding:7px 13px;border:1px solid rgba(255,255,255,.12);color:#C7C9D2;border-radius:999px">2.6s · CMS-scalable</span>
+      <span style="font-size:11.5px;padding:7px 13px;border:1px solid rgba(255,255,255,.12);color:#C7C9D2;border-radius:999px">5 environment themes · 1 codebase</span>
+      <span style="font-size:11.5px;padding:7px 13px;border:1px solid rgba(255,255,255,.12);color:#C7C9D2;border-radius:999px">Abstract · no literal landscape</span>
+    </div>
+  </header>
+
+  <!-- STAGE + CONTROLS -->
+  <section style="max-width:1240px;margin:0 auto 40px;display:flex;gap:56px;align-items:center;flex-wrap:wrap;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:28px;padding:48px">
+    <div style="flex:0 0 auto;margin:0 auto">
+      <div style="position:relative;width:300px;height:650px;border-radius:48px;background:#1b1c22;padding:9px;box-shadow:0 46px 100px -34px rgba(0,0,0,.92),inset 0 0 0 1px rgba(255,255,255,.06)">
+        <div style="position:relative;width:100%;height:100%;border-radius:40px;overflow:hidden">
+          <dc-import name="SplashScreen" variant="journey" environment="{{ env }}" brand-name="{{ brandName }}" tagline="{{ tagline }}" brand="{{ brand }}" bg1="{{ bg1 }}" bg2="{{ bg2 }}" mode="{{ mode }}" progress="{{ progress }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;min-width:420px;display:flex;flex-direction:column">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px">
+        <sc-for list="{{ envOptions }}" as="e" hint-placeholder-count="5">
+          <button data-e="{{ e.id }}" onClick="{{ selectEnv }}" style="{{ e.chipStyle }}">{{ e.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:flex-end;gap:20px;margin-bottom:6px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:54px;color:#F2ECDF;line-height:.9">{{ timeLabel }}</div>
+        <div style="font-size:13px;color:#7C7E88;padding-bottom:8px">of {{ durLabel }}</div>
+        <div style="margin-left:auto;display:flex;gap:10px">
+          <button onClick="{{ play }}" style="{{ playBtnStyle }}">{{ playLabel }}</button>
+          <button onClick="{{ replay }}" style="font-family:'Manrope';font-size:13px;font-weight:600;color:#C7C9D2;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:10px 18px;cursor:pointer">Replay</button>
+        </div>
+      </div>
+      <div style="position:relative;margin:26px 0 8px">
+        <input type="range" min="0" max="1000" value="{{ sliderVal }}" onInput="{{ onScrub }}" style="{{ sliderStyle }}">
+      </div>
+      <div style="position:relative;height:46px">
+        <sc-for list="{{ markers }}" as="m" hint-placeholder-count="8">
+          <div style="{{ m.wrapStyle }}">
+            <div style="width:1px;height:7px;background:rgba(216,169,121,.5);margin:0 auto 5px"></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#7C7E88;white-space:nowrap">{{ m.tLabel }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <p style="font-size:12.5px;color:#63656F;margin:14px 0 0;line-height:1.6">Switch environments live — the choreography never changes, only the silhouette profiles. Times at the 2.6s reference; <span style="font-family:'JetBrains Mono',monospace;color:#9A9CA6">animationDuration</span> rescales linearly.</p>
+    </div>
+  </section>
+
+  <!-- ANIMATION SEQUENCE -->
+  <section style="max-width:1240px;margin:0 auto 40px">
+    <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:24px">
+      <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">01</span>
+      <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:26px;color:#F2ECDF;margin:0">Animation sequence · 0.0–2.6s</h2>
+      <span style="margin-left:auto;font-size:12px;color:#63656F">tap a card to jump the scrubber</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+      <sc-for list="{{ frames }}" as="f" hint-placeholder-count="8">
+        <div data-t="{{ f.t }}" onClick="{{ onCard }}" style="{{ f.cardStyle }}">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:15px;color:#D8B979">{{ f.tLabel }}</span>
+            <span style="{{ f.heroBadgeStyle }}">HERO</span>
+            <span style="{{ f.easeStyle }}">{{ f.easeName }}</span>
+          </div>
+          <div style="font-size:15px;color:#F2ECDF;font-weight:600;margin-bottom:6px">{{ f.title }}</div>
+          <div style="font-size:13px;line-height:1.55;color:#9A9CA6;margin-bottom:14px">{{ f.desc }}</div>
+          <div style="display:flex;flex-direction:column;gap:6px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07)">
+            <sc-for list="{{ f.specs }}" as="s" hint-placeholder-count="3">
+              <div style="display:flex;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11.5px">
+                <span style="color:#6B6D77;min-width:86px">{{ s.k }}</span>
+                <span style="color:#B7C0BA">{{ s.v }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- MOTION SPECS + WHITE LABEL -->
+  <div style="max-width:1240px;margin:0 auto 40px;display:flex;gap:38px;flex-wrap:wrap">
+    <section style="flex:1;min-width:440px;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:44px 46px">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+        <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">02</span>
+        <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:24px;color:#F2ECDF;margin:0">Motion specifications</h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;font-size:13px;line-height:1.7;color:#AEB0B9">
+        <div><span style="color:#D8B979;font-family:'JetBrains Mono',monospace">journey path</span> · quadratic bézier (14,196) → ctrl (70,164) → (50,108) in a 100×216 canvas — origin low-left, destination exactly at the emblem center. Draw via dash-offset; length computed numerically.</div>
+        <div><span style="color:#D8B979;font-family:'JetBrains Mono',monospace">traveler</span> · 8 dp point of warm white, glow 0 0 12 primary@80% · position = bézier(t) with easeInOutCubic — slow departure, glide, gentle arrival.</div>
+        <div><span style="color:#D8B979;font-family:'JetBrains Mono',monospace">terrain parallax</span> · back layer drifts ±1.2u at 0.9 rad/s; front drifts opposite ±1.5u at 0.8 rad/s — both off the master clock, never a second timer.</div>
+        <div><span style="color:#D8B979;font-family:'JetBrains Mono',monospace">arrival</span> · pulse ring 0.3→1.6 (fast-in, fade-out) + emblem scale 0.6→1.00 growing out of the traveler's final position, blur 5→0.</div>
+        <div><span style="color:#D8B979;font-family:'JetBrains Mono',monospace">easing set</span> · easeOutCubic (fades, land, emblem) · easeInOutCubic (traveler, rule, hand-off) · no springs — arrival should feel inevitable, not bouncy.</div>
+      </div>
+    </section>
+
+    <section style="flex:1;min-width:440px;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:44px 46px">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+        <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">03</span>
+        <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:24px;color:#F2ECDF;margin:0">White-label behavior</h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;font-size:13px;line-height:1.65;color:#9A9CA6">
+        <div><span style="color:#F2ECDF;font-weight:600">The land is a token</span> — <span style="font-family:'JetBrains Mono',monospace;color:#D8B979">environmentTheme</span> selects a pair of silhouette profiles (back + front). Five ship at launch: <span style="font-family:'JetBrains Mono',monospace">coast · mountain · desert · skyline · forest</span>. A beach property and an alpine lodge run the same code with different strings.</div>
+        <div><span style="color:#F2ECDF;font-weight:600">Themes are data, not code</span> — each theme is two SVG path strings + nothing else. New themes (lakefront, vineyard, marina…) are added to the CMS catalog without an app release.</div>
+        <div><span style="color:#F2ECDF;font-weight:600">Silhouettes inherit the brand</span> — terrain fills are primary mixed into the ground (18% / 10% dark; 30% / 24% light), so the land always sits in the client's palette. No separate terrain colors to configure or get wrong.</div>
+        <div><span style="color:#F2ECDF;font-weight:600">Choreography is invariant</span> — path, traveler, arrival and text beats are identical across themes; only the profile of the land changes. QA once, ship to hundreds of properties.</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- BRANDING EXAMPLES -->
+  <section style="max-width:1240px;margin:0 auto 40px;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:44px 48px">
+    <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:8px">
+      <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">04</span>
+      <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:24px;color:#F2ECDF;margin:0">Branding examples — five properties, one component</h2>
+    </div>
+    <p style="font-size:13.5px;line-height:1.7;color:#9A9CA6;margin:0 0 30px;max-width:76ch">Each column is only CMS data: name, tagline, primary color, ground gradient, environment theme.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px">
+      <div style="text-align:center"><div style="border-radius:22px;background:#1b1c22;padding:4px;margin-bottom:9px"><div style="border-radius:18px;overflow:hidden;height:250px"><dc-import name="SplashScreen" variant="journey" environment="coast" brand-name="AZURE" tagline="WHERE THE TIDE MEETS GOLD" brand="#5FD6C6" bg1="#0F3C46" bg2="#05161B" progress="{{ settled }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#5FD6C6">coast · Beach</div></div>
+      <div style="text-align:center"><div style="border-radius:22px;background:#1b1c22;padding:4px;margin-bottom:9px"><div style="border-radius:18px;overflow:hidden;height:250px"><dc-import name="SplashScreen" variant="journey" environment="mountain" brand-name="SUMMIT" tagline="RISE ABOVE" brand="#B4CBEC" bg1="#16283F" bg2="#070C14" progress="{{ settled }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#B4CBEC">mountain · Alpine</div></div>
+      <div style="text-align:center"><div style="border-radius:22px;background:#1b1c22;padding:4px;margin-bottom:9px"><div style="border-radius:18px;overflow:hidden;height:250px"><dc-import name="SplashScreen" variant="journey" environment="desert" brand-name="MIRAGE" tagline="EXPERIENCE MORE" brand="#E0A46A" bg1="#33200F" bg2="#0B0603" progress="{{ settled }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#E0A46A">desert · Escape</div></div>
+      <div style="text-align:center"><div style="border-radius:22px;background:#1b1c22;padding:4px;margin-bottom:9px"><div style="border-radius:18px;overflow:hidden;height:250px"><dc-import name="SplashScreen" variant="journey" environment="skyline" brand-name="AXIS" tagline="THE CITY NEVER SETTLES" brand="#8E93F5" bg1="#1C1E33" bg2="#08090F" progress="{{ settled }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8E93F5">skyline · Urban</div></div>
+      <div style="text-align:center"><div style="border-radius:22px;background:#1b1c22;padding:4px;margin-bottom:9px"><div style="border-radius:18px;overflow:hidden;height:250px"><dc-import name="SplashScreen" variant="journey" environment="forest" brand-name="SYLVAN" tagline="LODGE & CLUB" brand="#8FC79E" bg1="#12301F" bg2="#06120B" progress="{{ settled }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8FC79E">forest · Lodge</div></div>
+    </div>
+  </section>
+
+  <!-- CMS + ACCESSIBILITY -->
+  <div style="max-width:1240px;margin:0 auto 40px;display:flex;gap:38px;flex-wrap:wrap">
+    <section style="flex:1;min-width:440px;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:44px 46px">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+        <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">05</span>
+        <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:24px;color:#F2ECDF;margin:0">CMS configuration</h2>
+      </div>
+      <div style="background:#0A0B0F;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px 22px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.85;color:#8FA7B8">
+<span style="color:#4E5560">{</span><br>
+&nbsp;&nbsp;<span style="color:#C99">"casinoName"</span>: <span style="color:#B7D9A8">"{{ brandName }}"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"tagline"</span>: <span style="color:#B7D9A8">"{{ tagline }}"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"logo"</span>: <span style="color:#B7D9A8">"cdn/&lt;client&gt;/logo.svg"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"primaryColor"</span>: <span style="color:#D8B979">"{{ brand }}"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"backgroundStyle"</span>: <span style="color:#B7D9A8">"gradient"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"backgroundValue"</span>: [<span style="color:#D8B979">"{{ bg1 }}"</span>, <span style="color:#D8B979">"{{ bg2 }}"</span>],<br>
+&nbsp;&nbsp;<span style="color:#C99">"appearance"</span>: <span style="color:#B7D9A8">"{{ mode }}"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"animationVariant"</span>: <span style="color:#E8A0B4">"journey"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"environmentTheme"</span>: <span style="color:#E8A0B4">"{{ env }}"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"animationDuration"</span>: <span style="color:#D8B979">{{ durMs }}</span>&nbsp;<span style="color:#4E5560">// ms · clamps 1800–3000</span><br>
+<span style="color:#4E5560">}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:20px;font-size:12.5px;line-height:1.6;color:#9A9CA6">
+        <div><span style="color:#C7C9D2;font-weight:600">environmentTheme</span> is live above — it reflects the chip you selected on the stage. Unknown theme → <span style="font-family:'JetBrains Mono',monospace">coast</span>.</div>
+        <div><span style="color:#C7C9D2;font-weight:600">Fallbacks</span> · unknown variant → horizon · missing tagline → beat skipped · image/video ground → terrain layers render above a 30% scrim.</div>
+      </div>
+    </section>
+
+    <section style="flex:1;min-width:440px;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:44px 46px">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+        <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">06</span>
+        <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:24px;color:#F2ECDF;margin:0">Accessibility</h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;font-size:13px;line-height:1.65;color:#9A9CA6">
+        <div><span style="color:#F2ECDF;font-weight:600">Reduced motion</span> — path, traveler and parallax are skipped; 300ms cross-fade of the settled frame (land at rest, emblem present). Shared code path with all variants.</div>
+        <div><span style="color:#F2ECDF;font-weight:600">Vestibular safety</span> — parallax amplitude is ±1.5% of width at ≤0.15 Hz; the traveler is a single small point. No full-field motion, no zoom. Well inside WCAG 2.3.3 comfort.</div>
+        <div><span style="color:#F2ECDF;font-weight:600">Contrast</span> — terrain sits at the bottom third; the wordmark block never overlaps a silhouette edge. Name vs ground ≥ 4.5:1 validated at ingest.</div>
+        <div><span style="color:#F2ECDF;font-weight:600">Screen readers</span> — root announces "‹Casino name›. Loading."; the journey is purely decorative and unannounced.</div>
+        <div><span style="color:#F2ECDF;font-weight:600">Time limit</span> — hand-off at timeline end or when Home is ready; hard cap 4s.</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- RN + PERFORMANCE + HANDOFF -->
+  <section style="max-width:1240px;margin:0 auto;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:44px 48px">
+    <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+      <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">07</span>
+      <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:24px;color:#F2ECDF;margin:0">React Native · performance · developer handoff</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px 44px;font-size:13px;line-height:1.65;color:#9A9CA6">
+      <div><span style="color:#F2ECDF;font-weight:600">Terrain</span> — two <span style="font-family:'JetBrains Mono',monospace">react-native-svg</span> Paths (or Skia). Theme = a pair of `d` strings from the CMS catalog; fills are computed color mixes of primary into the ground. Animate wrapper transform only, never the path data.</div>
+      <div><span style="color:#F2ECDF;font-weight:600">Journey path</span> — one svg Path with animated <span style="font-family:'JetBrains Mono',monospace">strokeDashoffset</span>; precompute length once (32-sample polyline). Traveler = a View positioned by the same bézier evaluated in the worklet — no path-following library needed.</div>
+      <div><span style="color:#F2ECDF;font-weight:600">Performance budget</span> — 5 animated layers (2 terrain, path, traveler, emblem) + 2 one-shot (bloom, pulse). Transform/opacity/dashoffset only; single small blur via pre-blurred logo cross-fade; no particles, no filters, no full-screen effects. 60fps on Android Go-class hardware.</div>
+      <div><span style="color:#F2ECDF;font-weight:600">Battery & startup</span> — the whole variant is ~0 extra assets (paths are strings); preload Home during the 2.6s; splash runs once per cold start, no loops.</div>
+      <div><span style="color:#F2ECDF;font-weight:600">Hand-off</span> — emblem → header slot (scale 1→0.42) as in every variant; the land dissolves with the scene. Ground gradient persists into Home.</div>
+      <div><span style="color:#F2ECDF;font-weight:600">Authoritative math</span> — <span style="font-family:'JetBrains Mono',monospace">variant === 'journey'</span> branch in <span style="font-family:'JetBrains Mono',monospace">SplashScreen.dc.html</span> (bézier, dash math, parallax, all windows). Complete 8-variant package: <span style="font-family:'JetBrains Mono',monospace">design_handoff_splash_system/README.md</span>.</div>
+    </div>
+  </section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;duration&quot;: { &quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 2.6, &quot;min&quot;: 1.8, &quot;max&quot;: 3, &quot;step&quot;: 0.1, &quot;unit&quot;: &quot;s&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Playback&quot; },
+  &quot;brandName&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;MERIDIAN&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;tagline&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;GRAND RESORT &amp; CLUB&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;brand&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#D8B979&quot;, &quot;options&quot;: [&quot;#D8B979&quot;, &quot;#5FD6C6&quot;, &quot;#B4CBEC&quot;, &quot;#E0A46A&quot;, &quot;#8E93F5&quot;, &quot;#8FC79E&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;bg1&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#241626&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;bg2&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#0A0710&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;mode&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;dark&quot;, &quot;options&quot;: [&quot;dark&quot;, &quot;light&quot;], &quot;tsType&quot;: &quot;'dark' | 'light'&quot;, &quot;section&quot;: &quot;Brand&quot; }
+}">
+class Component extends DCLogic {
+  state = { progress: 0.86, playing: false, env: 'coast' };
+
+  componentWillUnmount() { if (this._raf) cancelAnimationFrame(this._raf); }
+
+  _ms() { return Math.max(1800, Math.min(3000, (this.props.duration ?? 2.6) * 1000)); }
+
+  play = () => {
+    if (this.state.playing) { this._pause(); return; }
+    const from = this.state.progress >= 0.85 ? 0 : this.state.progress;
+    this._start = performance.now() - from * this._ms();
+    this.setState({ playing: true });
+    this._tick();
+  };
+  _tick = () => {
+    const el = (performance.now() - this._start) / this._ms();
+    if (el >= 1) { this.setState({ progress: 1, playing: false }); return; }
+    this.setState({ progress: el });
+    this._raf = requestAnimationFrame(this._tick);
+  };
+  _pause = () => { if (this._raf) cancelAnimationFrame(this._raf); this.setState({ playing: false }); };
+  replay = () => { if (this._raf) cancelAnimationFrame(this._raf); this._start = performance.now(); this.setState({ playing: true, progress: 0 }); this._tick(); };
+  onScrub = (e) => { if (this._raf) cancelAnimationFrame(this._raf); this.setState({ playing: false, progress: Number(e.target.value) / 1000 }); };
+  onCard = (e) => { if (this._raf) cancelAnimationFrame(this._raf); const tt = Number(e.currentTarget.dataset.t); this.setState({ playing: false, progress: tt / 2.6 }); };
+  selectEnv = (e) => { this.setState({ env: e.currentTarget.dataset.e }); };
+
+  renderVals() {
+    const p = this.props;
+    const brand = p.brand || '#D8B979';
+    const bg1 = p.bg1 || '#241626';
+    const bg2 = p.bg2 || '#0A0710';
+    const mode = p.mode || 'dark';
+    const brandName = p.brandName || 'MERIDIAN';
+    const tagline = p.tagline || 'GRAND RESORT & CLUB';
+    const durSec = this._ms() / 1000;
+
+    const T = 2.6;
+    const progress = this.state.progress;
+    const t = progress * T;
+    const env = this.state.env;
+
+    const envOptions = [
+      { id: 'coast', label: 'Coastline' },
+      { id: 'mountain', label: 'Mountains' },
+      { id: 'desert', label: 'Desert' },
+      { id: 'skyline', label: 'Skyline' },
+      { id: 'forest', label: 'Forest' }
+    ].map(o => ({
+      ...o,
+      chipStyle: {
+        fontFamily: "'Manrope'", fontSize: '12px', fontWeight: 600, cursor: 'pointer',
+        padding: '8px 16px', borderRadius: '999px',
+        color: o.id === env ? '#0E0F13' : '#C7C9D2',
+        background: o.id === env ? '#D8B979' : 'rgba(255,255,255,.05)',
+        border: o.id === env ? '1px solid #D8B979' : '1px solid rgba(255,255,255,.12)',
+        transition: 'background .2s, color .2s'
+      }
+    }));
+
+    const defs = [
+      { t: 0.00, tl: '0.0s', hero: false, ease: 'easeOut', title: 'Sky wakes', desc: 'The ground fades in; a low sunrise glow gathers where the land will be.', specs: [{ k: 'ground', v: 'opacity 0 → 1' }, { k: 'glow', v: 'scale 0.7 → 1' }, { k: 'window', v: '0.00–0.70s' }] },
+      { t: 0.20, tl: '0.20s', hero: false, ease: 'easeOut + drift', title: 'The land rises', desc: 'Two silhouette layers settle upward with opposing slow parallax.', specs: [{ k: 'back', v: 'y 10 → 0 u · ±1.2u drift' }, { k: 'front', v: 'y 14 → 0 u · ±1.5u drift' }, { k: 'window', v: '0.20–1.05s' }] },
+      { t: 0.50, tl: '0.50s', hero: false, ease: 'easeInOut', title: 'The journey begins', desc: 'A hairline path draws toward the horizon; a point of light travels it.', specs: [{ k: 'path draw', v: 'dashoffset L → 0' }, { k: 'traveler', v: 'bézier(t) · 8dp glow' }, { k: 'window', v: '0.50–1.45s' }] },
+      { t: 1.35, tl: '1.35s', hero: true, ease: 'easeOut', title: 'Arrival', desc: 'The light arrives, blooms once, and the emblem grows from that exact point.', specs: [{ k: 'pulse ring', v: 'scale 0.3 → 1.6' }, { k: 'emblem', v: 'scale 0.6 → 1.00' }, { k: 'blur', v: '5 → 0 px' }, { k: 'window', v: '1.35–1.85s' }] },
+      { t: 1.50, tl: '1.50s', hero: false, ease: 'easeOut', title: 'The path dissolves', desc: 'Its purpose complete, the path fades from the scene.', specs: [{ k: 'opacity', v: '.85 → 0' }, { k: 'window', v: '1.50–1.90s' }] },
+      { t: 1.70, tl: '1.70s', hero: false, ease: 'easeOut', title: 'Name resolves', desc: 'The casino name condenses beneath the destination.', specs: [{ k: 'tracking', v: '.50 → .30 em' }, { k: 'translateY', v: '8 → 0 px' }, { k: 'window', v: '1.70–2.10s' }] },
+      { t: 1.90, tl: '1.90s', hero: false, ease: 'easeInOut', title: 'Accent + tagline', desc: 'The rule sweeps; the optional line follows.', specs: [{ k: 'scaleX', v: '0 → 1' }, { k: 'tagline', v: 'opacity 0 → 1' }, { k: 'window', v: '1.90–2.30s' }] },
+      { t: 2.40, tl: '2.40s', hero: false, ease: 'easeInOut', title: 'Hand off to Home', desc: 'The emblem flies to the header; the land dissolves into Home.', specs: [{ k: 'scene', v: 'opacity 1 → 0' }, { k: 'emblem', v: 'scale 1 → 0.42' }, { k: 'window', v: '2.40–2.60s' }] }
+    ];
+
+    const frames = defs.map((d, i) => {
+      const nextT = (i < defs.length - 1) ? defs[i + 1].t : T + 0.001;
+      const active = (t >= d.t - 0.001) && (t < nextT);
+      return {
+        t: d.t, tLabel: d.tl, title: d.title, desc: d.desc, specs: d.specs, easeName: d.ease,
+        cardStyle: {
+          background: active ? 'rgba(216,169,121,.09)' : 'rgba(255,255,255,.02)',
+          border: active ? '1px solid rgba(216,169,121,.5)' : '1px solid rgba(255,255,255,.08)',
+          borderRadius: '16px', padding: '20px 22px', cursor: 'pointer',
+          transition: 'background .2s, border-color .2s'
+        },
+        heroBadgeStyle: {
+          display: d.hero ? 'inline-block' : 'none',
+          fontSize: '9px', letterSpacing: '.14em', color: '#0E0F13', background: '#8EC9A8',
+          padding: '2px 7px', borderRadius: '5px', fontWeight: 700
+        },
+        easeStyle: {
+          marginLeft: 'auto', fontFamily: "'JetBrains Mono', monospace", fontSize: '10px',
+          color: active ? '#D8B979' : '#63656F'
+        }
+      };
+    });
+
+    const markers = defs.map((d, i) => {
+      const first = i === 0, last = i === defs.length - 1;
+      return {
+        tLabel: d.tl,
+        wrapStyle: {
+          position: 'absolute', top: (i % 2 ? '21px' : '0px'),
+          left: (d.t / T * 100).toFixed(2) + '%',
+          transform: first ? 'none' : (last ? 'translateX(-100%)' : 'translateX(-50%)'),
+          textAlign: first ? 'left' : (last ? 'right' : 'center')
+        }
+      };
+    });
+
+    return {
+      brandName, tagline, brand, bg1, bg2, mode, env, envOptions, selectEnv: this.selectEnv,
+      progress, settled: 0.86,
+      durLabel: durSec.toFixed(2) + 's',
+      durMs: Math.round(durSec * 1000),
+      timeLabel: (progress * durSec).toFixed(2) + 's',
+      sliderVal: Math.round(progress * 1000),
+      sliderStyle: { width: '100%', ['--fill']: (progress * 100).toFixed(1) + '%' },
+      playBtnStyle: {
+        fontFamily: "'Manrope'", fontSize: '13px', fontWeight: 600,
+        color: '#0E0F13', background: '#D8B979', border: 'none', borderRadius: '999px',
+        padding: '10px 22px', cursor: 'pointer'
+      },
+      playLabel: this.state.playing ? 'Pause' : 'Play',
+      play: this.play, replay: this.replay, onScrub: this.onScrub, onCard: this.onCard,
+      frames, markers
+    };
+  }
+}
+</script>
+</body>
+</html>

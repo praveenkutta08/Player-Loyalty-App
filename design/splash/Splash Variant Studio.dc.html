@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#08090C;-webkit-font-smoothing:antialiased}
+  input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer}
+  input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:4px;background:linear-gradient(90deg,#D8B979 var(--fill,50%),rgba(255,255,255,.12) var(--fill,50%))}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;margin-top:-8px;width:20px;height:20px;border-radius:50%;background:#F3ECDD;border:3px solid #D8B979;box-shadow:0 3px 10px rgba(0,0,0,.5)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#F3ECDD;border:3px solid #D8B979}
+</style>
+</helmet>
+
+<div style="font-family:'Manrope',sans-serif;min-height:100%;background:radial-gradient(1300px 780px at 50% -6%, #16171F 0%, #08090C 58%);color:#C7C9D2;padding:60px 68px 110px">
+
+  <!-- HEADER -->
+  <header style="max-width:1280px;margin:0 auto 46px">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px">
+      <span style="width:30px;height:1px;background:#D8B979"></span>
+      <span style="font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:#7C7E88">Variant Studio · CMS-selectable splash</span>
+    </div>
+    <h1 style="font-family:'Marcellus',serif;font-weight:400;color:#F2ECDF;font-size:clamp(40px,4.8vw,68px);line-height:1;margin:0 0 18px">Choose your arrival.</h1>
+    <p style="font-size:16px;line-height:1.7;color:#9A9CA6;margin:0;max-width:70ch">One React Native component, eight choreographies. Every client picks their splash in the CMS with a single token — <span style="font-family:'JetBrains Mono',monospace;color:#D8B979">animationVariant</span> — while their logo, name, colors and tagline flow through the same layout. Tap a variant, then scrub or play its exact timeline.</p>
+  </header>
+
+  <!-- VARIANT SELECTOR -->
+  <section style="max-width:1280px;margin:0 auto 38px;display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:14px">
+    <sc-for list="{{ options }}" as="v" hint-placeholder-count="5">
+      <div data-v="{{ v.id }}" onClick="{{ selectVariant }}" style="{{ v.wrapStyle }}">
+        <div style="border-radius:24px;background:#1b1c22;padding:5px;margin-bottom:14px"><div style="border-radius:20px;overflow:hidden;height:300px"><dc-import name="SplashScreen" variant="{{ v.id }}" brand-name="{{ brandName }}" tagline="{{ tagline }}" member-name="{{ memberName }}" tier="{{ tier }}" brand="{{ brand }}" bg1="{{ bg1 }}" bg2="{{ bg2 }}" mode="{{ mode }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div>
+        <div style="font-family:'Marcellus',serif;font-size:17px;color:#F2ECDF;margin-bottom:3px">{{ v.label }}</div>
+        <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7C7E88;margin-bottom:8px">{{ v.sub }}</div>
+        <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
+          <span style="font-size:10px;font-family:'JetBrains Mono',monospace;color:#8B8D96;border:1px solid rgba(255,255,255,.12);padding:3px 8px;border-radius:999px">{{ v.dur }}</span>
+          <span style="font-size:10px;color:#8EC9A8;border:1px solid rgba(142,201,168,.3);padding:3px 8px;border-radius:999px">{{ v.complexity }}</span>
+        </div>
+      </div>
+    </sc-for>
+  </section>
+
+  <!-- STAGE + CONTROLS -->
+  <section style="max-width:1280px;margin:0 auto 40px;display:flex;gap:56px;align-items:center;flex-wrap:wrap;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:28px;padding:48px">
+    <div style="flex:0 0 auto;margin:0 auto">
+      <div style="position:relative;width:300px;height:650px;border-radius:48px;background:#1b1c22;padding:9px;box-shadow:0 46px 100px -34px rgba(0,0,0,.92),inset 0 0 0 1px rgba(255,255,255,.06)">
+        <div style="position:relative;width:100%;height:100%;border-radius:40px;overflow:hidden">
+          <dc-import name="SplashScreen" variant="{{ variant }}" brand-name="{{ brandName }}" tagline="{{ tagline }}" member-name="{{ memberName }}" tier="{{ tier }}" brand="{{ brand }}" bg1="{{ bg1 }}" bg2="{{ bg2 }}" mode="{{ mode }}" progress="{{ progress }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import>
+        </div>
+      </div>
+    </div>
+
+    <div style="flex:1;min-width:420px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:baseline;gap:16px;margin-bottom:4px">
+        <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:30px;color:#F2ECDF;margin:0">{{ activeLabel }}</h2>
+        <span style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#7C7E88">{{ activeSub }}</span>
+      </div>
+      <p style="font-size:14px;line-height:1.65;color:#9A9CA6;margin:0 0 26px;max-width:56ch">{{ activeStory }}</p>
+
+      <div style="display:flex;align-items:flex-end;gap:20px;margin-bottom:6px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:50px;color:#F2ECDF;line-height:.9">{{ timeLabel }}</div>
+        <div style="font-size:13px;color:#7C7E88;padding-bottom:7px">of {{ durLabel }}</div>
+        <div style="margin-left:auto;display:flex;gap:10px">
+          <button onClick="{{ play }}" style="{{ playBtnStyle }}">{{ playLabel }}</button>
+          <button onClick="{{ replay }}" style="font-family:'Manrope';font-size:13px;font-weight:600;color:#C7C9D2;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:10px 18px;cursor:pointer">Replay</button>
+        </div>
+      </div>
+      <div style="position:relative;margin:24px 0 8px">
+        <input type="range" min="0" max="1000" value="{{ sliderVal }}" onInput="{{ onScrub }}" style="{{ sliderStyle }}">
+      </div>
+      <div style="position:relative;height:46px">
+        <sc-for list="{{ markers }}" as="m" hint-placeholder-count="8">
+          <div style="{{ m.wrapStyle }}">
+            <div style="width:1px;height:7px;background:rgba(216,169,121,.5);margin:0 auto 5px"></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#7C7E88;white-space:nowrap">{{ m.tLabel }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <p style="font-size:12.5px;color:#63656F;margin:14px 0 0;line-height:1.6">Drag to freeze any frame — the stage renders the exact interpolated state, the same math the shared Reanimated worklet runs. Play ends on the hand-off to Home.</p>
+    </div>
+  </section>
+
+  <!-- FRAME-BY-FRAME -->
+  <section style="max-width:1280px;margin:0 auto 40px">
+    <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:24px">
+      <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">01</span>
+      <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:26px;color:#F2ECDF;margin:0">Frame by frame — {{ activeLabel }}</h2>
+      <span style="margin-left:auto;font-size:12px;color:#63656F">tap a card to jump the scrubber</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+      <sc-for list="{{ frames }}" as="f" hint-placeholder-count="8">
+        <div data-t="{{ f.t }}" onClick="{{ onCard }}" style="{{ f.cardStyle }}">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:15px;color:#D8B979">{{ f.tLabel }}</span>
+            <span style="{{ f.heroBadgeStyle }}">HERO</span>
+            <span style="{{ f.easeStyle }}">{{ f.easeName }}</span>
+          </div>
+          <div style="font-size:15px;color:#F2ECDF;font-weight:600;margin-bottom:6px">{{ f.title }}</div>
+          <div style="font-size:13px;line-height:1.55;color:#9A9CA6;margin-bottom:14px">{{ f.desc }}</div>
+          <div style="display:flex;flex-direction:column;gap:6px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07)">
+            <sc-for list="{{ f.specs }}" as="s" hint-placeholder-count="3">
+              <div style="display:flex;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11.5px">
+                <span style="color:#6B6D77;min-width:78px">{{ s.k }}</span>
+                <span style="color:#B7C0BA">{{ s.v }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- CMS · CLIENT CHOICE -->
+  <section style="max-width:1280px;margin:0 auto;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:44px 48px">
+    <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:10px">
+      <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">02</span>
+      <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:24px;color:#F2ECDF;margin:0">One token picks the arrival</h2>
+    </div>
+    <p style="font-size:14px;line-height:1.7;color:#9A9CA6;margin:0 0 30px;max-width:78ch">All eight variants share the layout system from the spec — same safe areas, same emblem box, same wordmark block, same hand-off. They differ only in choreography, so a client can switch splash at any time from the CMS with zero engineering. The JSON below is live — it reflects the variant selected above.</p>
+    <div style="display:flex;gap:40px;flex-wrap:wrap">
+      <div style="flex:1;min-width:380px">
+        <div style="background:#0A0B0F;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px 22px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.85;color:#8FA7B8">
+<span style="color:#4E5560">{</span><br>
+&nbsp;&nbsp;<span style="color:#C99">"casinoName"</span>: <span style="color:#B7D9A8">"{{ brandName }}"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"tagline"</span>: <span style="color:#B7D9A8">"{{ tagline }}"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"logo"</span>: <span style="color:#B7D9A8">"cdn/&lt;client&gt;/logo.svg"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"primaryColor"</span>: <span style="color:#D8B979">"{{ brand }}"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"backgroundStyle"</span>: <span style="color:#B7D9A8">"gradient"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"backgroundValue"</span>: [<span style="color:#D8B979">"{{ bg1 }}"</span>, <span style="color:#D8B979">"{{ bg2 }}"</span>],<br>
+&nbsp;&nbsp;<span style="color:#C99">"appearance"</span>: <span style="color:#B7D9A8">"{{ mode }}"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"animationVariant"</span>: <span style="color:#E8A0B4">"{{ variant }}"</span><br>
+<span style="color:#4E5560">}</span>
+        </div>
+      </div>
+      <div style="flex:1;min-width:380px;display:flex;flex-direction:column;gap:18px">
+        <div><div style="font-size:14px;color:#F2ECDF;font-weight:600;margin-bottom:3px">Client picker, not a fork</div><div style="font-size:13px;line-height:1.6;color:#9A9CA6">The CMS exposes the variants as a visual picker (thumbnails like the row above). Choosing one writes a single string — no build, no branch, no per-client bundle.</div></div>
+        <div><div style="font-size:14px;color:#F2ECDF;font-weight:600;margin-bottom:3px">Safe fallback</div><div style="font-size:13px;line-height:1.6;color:#9A9CA6">Unknown or missing variant → <span style="font-family:'JetBrains Mono',monospace;color:#C7C9D2">horizon</span>. A failed Lottie fetch (seal) falls back to the static logo with the horizon timing.</div></div>
+        <div><div style="font-size:14px;color:#F2ECDF;font-weight:600;margin-bottom:3px">Reduced motion</div><div style="font-size:13px;line-height:1.6;color:#9A9CA6">If the OS requests reduced motion, every variant collapses to the same 300ms cross-fade of its final frame — one shared code path.</div></div>
+        <div><div style="font-size:14px;color:#F2ECDF;font-weight:600;margin-bottom:3px">Tiering opportunity</div><div style="font-size:13px;line-height:1.6;color:#9A9CA6">Variants can be sold as a premium CMS feature: base plans get <span style="font-family:'JetBrains Mono',monospace;color:#C7C9D2">horizon</span>, premium plans unlock the full set.</div></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;brandName&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;MERIDIAN&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;tagline&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;GRAND RESORT &amp; CLUB&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;memberName&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;Alexander&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;tier&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;PLATINUM MEMBER&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;brand&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#D8B979&quot;, &quot;options&quot;: [&quot;#D8B979&quot;, &quot;#8E93F5&quot;, &quot;#5FD6C6&quot;, &quot;#B4CBEC&quot;, &quot;#E8607D&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;bg1&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#241626&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;bg2&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#0A0710&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;mode&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;dark&quot;, &quot;options&quot;: [&quot;dark&quot;, &quot;light&quot;], &quot;tsType&quot;: &quot;'dark' | 'light'&quot;, &quot;section&quot;: &quot;Brand&quot; }
+}">
+class Component extends DCLogic {
+  state = { variant: 'horizon', progress: 0.9, playing: false };
+
+  componentWillUnmount() { if (this._raf) cancelAnimationFrame(this._raf); }
+
+  _T() {
+    return ({ horizon: 2.4, journey: 2.6, portal: 2.4, silk: 2.2, seal: 2.4, golden: 2.4, collection: 2.4, pulse: 2.2 })[this.state.variant] || 2.4;
+  }
+  play = () => {
+    if (this.state.playing) { this._pause(); return; }
+    const from = this.state.progress >= 0.85 ? 0 : this.state.progress;
+    this._start = performance.now() - from * this._T() * 1000;
+    this.setState({ playing: true });
+    this._tick();
+  };
+  _tick = () => {
+    const el = (performance.now() - this._start) / (this._T() * 1000);
+    if (el >= 1) { this.setState({ progress: 1, playing: false }); return; }
+    this.setState({ progress: el });
+    this._raf = requestAnimationFrame(this._tick);
+  };
+  _pause = () => { if (this._raf) cancelAnimationFrame(this._raf); this.setState({ playing: false }); };
+  replay = () => { if (this._raf) cancelAnimationFrame(this._raf); this._start = performance.now(); this.setState({ playing: true, progress: 0 }); this._tick(); };
+  onScrub = (e) => { if (this._raf) cancelAnimationFrame(this._raf); this.setState({ playing: false, progress: Number(e.target.value) / 1000 }); };
+  onCard = (e) => { if (this._raf) cancelAnimationFrame(this._raf); const tt = Number(e.currentTarget.dataset.t); this.setState({ playing: false, progress: tt / this._T() }); };
+  selectVariant = (e) => { if (this._raf) cancelAnimationFrame(this._raf); this.setState({ variant: e.currentTarget.dataset.v, progress: 0.9, playing: false }); };
+
+  renderVals() {
+    const p = this.props;
+    const brand = p.brand || '#D8B979';
+    const bg1 = p.bg1 || '#241626';
+    const bg2 = p.bg2 || '#0A0710';
+    const mode = p.mode || 'dark';
+    const brandName = p.brandName || 'MERIDIAN';
+    const tagline = p.tagline || 'GRAND RESORT & CLUB';
+    const memberName = p.memberName || 'Alexander';
+    const tier = p.tier || 'PLATINUM MEMBER';
+
+    const META = {
+      horizon: {
+        label: 'The Threshold', sub: 'Horizon rise', T: 2.4, complexity: 'Easy–Med',
+        story: 'A luminous horizon parts the dark; the emblem rises through it and the name resolves beneath. The flagship arrival.',
+        frames: [
+          { t: 0.00, tl: '0.0s', hero: false, ease: 'easeOut', title: 'Ground fades in', desc: 'The gradient ground rises out of black.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'window', v: '0.00–0.40s' }] },
+          { t: 0.25, tl: '0.25s', hero: false, ease: 'easeOut', title: 'Ambient light blooms', desc: 'A soft glow gathers on the horizon and lifts.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'scale', v: '0.90 → 1.00' }, { k: 'window', v: '0.25–0.70s' }] },
+          { t: 0.35, tl: '0.35s', hero: false, ease: 'easeOutExpo', title: 'Horizon ignites', desc: 'A hairline of light draws open — the threshold.', specs: [{ k: 'scaleX', v: '0.40 → 1.00' }, { k: 'opacity', v: '0 → 1' }, { k: 'window', v: '0.35–0.75s' }] },
+          { t: 0.65, tl: '0.65s', hero: true, ease: 'spring', title: 'Emblem rises through', desc: 'The logo lifts through the horizon, sharpening as it settles.', specs: [{ k: 'translateY', v: '+14 → 0 dp' }, { k: 'scale', v: '0.92 → 1.00' }, { k: 'blur', v: '8 → 0 px' }, { k: 'window', v: '0.65–1.15s' }] },
+          { t: 0.95, tl: '0.95s', hero: false, ease: 'linear', title: 'Light passes over', desc: 'A single glint travels across the mark.', specs: [{ k: 'translateX', v: '−150 → 320 %' }, { k: 'opacity', v: '0 → .85 → 0' }, { k: 'window', v: '0.95–1.32s' }] },
+          { t: 1.20, tl: '1.20s', hero: false, ease: 'easeOut', title: 'Casino name resolves', desc: 'The name condenses from wide tracking into place.', specs: [{ k: 'tracking', v: '.62 → .30 em' }, { k: 'translateY', v: '8 → 0 px' }, { k: 'window', v: '1.20–1.65s' }] },
+          { t: 1.55, tl: '1.55s', hero: false, ease: 'easeInOut', title: 'Accent line sweeps', desc: 'A thin brand rule opens beneath the name.', specs: [{ k: 'scaleX', v: '0 → 1' }, { k: 'window', v: '1.55–1.90s' }] },
+          { t: 1.65, tl: '1.65s', hero: false, ease: 'easeOut', title: 'Tagline fades up', desc: 'The optional line arrives last, quietly.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'window', v: '1.65–2.05s' }] },
+          { t: 2.20, tl: '2.20s', hero: false, ease: 'easeInOut', title: 'Hand off to Home', desc: 'The emblem shrinks to the header; the ground persists.', specs: [{ k: 'scene', v: 'opacity 1 → 0' }, { k: 'emblem', v: 'scale 1 → 0.42' }, { k: 'window', v: '2.20–2.40s' }] }
+        ]
+      },
+      journey: {
+        label: 'Destination Journey', sub: 'The story of arriving', T: 2.6, complexity: 'Medium',
+        story: 'An abstract land rises, a path of light travels toward the horizon, and the brand appears where the journey ends. The landscape theme is a CMS token \u2014 coast, mountains, desert, skyline or forest.',
+        frames: [
+          { t: 0.00, tl: '0.0s', hero: false, ease: 'easeOut', title: 'Sky wakes', desc: 'Ground fades in; a low sunrise glow gathers over the land.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'window', v: '0.00–0.45s' }] },
+          { t: 0.20, tl: '0.20s', hero: false, ease: 'easeOut + drift', title: 'The land rises', desc: 'Two abstract silhouette layers settle with slow parallax.', specs: [{ k: 'translateY', v: '10/14 → 0 u' }, { k: 'drift', v: '±1.5u sine' }, { k: 'window', v: '0.20–1.05s' }] },
+          { t: 0.50, tl: '0.50s', hero: false, ease: 'easeInOut', title: 'The journey begins', desc: 'A hairline path draws toward the horizon; a point of light travels it.', specs: [{ k: 'path draw', v: '0 → 100 %' }, { k: 'traveler', v: 'along bézier' }, { k: 'window', v: '0.50–1.45s' }] },
+          { t: 1.35, tl: '1.35s', hero: true, ease: 'easeOut', title: 'Arrival', desc: 'The light arrives and blooms; the emblem grows from that exact point.', specs: [{ k: 'pulse ring', v: '0.3 → 1.6' }, { k: 'emblem scale', v: '0.6 → 1.00' }, { k: 'blur', v: '5 → 0 px' }, { k: 'window', v: '1.35–1.85s' }] },
+          { t: 1.50, tl: '1.50s', hero: false, ease: 'easeOut', title: 'The path dissolves', desc: 'Its purpose complete, the path fades from the scene.', specs: [{ k: 'opacity', v: '.85 → 0' }, { k: 'window', v: '1.50–1.90s' }] },
+          { t: 1.70, tl: '1.70s', hero: false, ease: 'easeOut', title: 'Name resolves', desc: 'The casino name condenses beneath the destination.', specs: [{ k: 'tracking', v: '.50 → .30 em' }, { k: 'window', v: '1.70–2.10s' }] },
+          { t: 1.90, tl: '1.90s', hero: false, ease: 'easeInOut', title: 'Accent + tagline', desc: 'Rule sweeps; tagline follows.', specs: [{ k: 'scaleX', v: '0 → 1' }, { k: 'window', v: '1.90–2.30s' }] },
+          { t: 2.40, tl: '2.40s', hero: false, ease: 'easeInOut', title: 'Hand off to Home', desc: 'The emblem flies to the header; the land dissolves into Home.', specs: [{ k: 'scene', v: 'opacity 1 → 0' }, { k: 'emblem', v: 'scale 1 → 0.42' }, { k: 'window', v: '2.40–2.60s' }] }
+        ]
+      },
+      portal: {
+        label: 'Luxury Portal', sub: 'The opening of an arrival', T: 2.4, complexity: 'Medium',
+        story: 'A warm light grows beyond a circular architectural opening; the aperture opens and the brand is revealed through it. Arrival, discovery, welcome.',
+        frames: [
+          { t: 0.00, tl: '0.0s', hero: false, ease: 'easeOut', title: 'Ground fades in', desc: 'The field arrives dark and still.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'window', v: '0.00–0.40s' }] },
+          { t: 0.20, tl: '0.20s', hero: false, ease: 'easeOut', title: 'A light beyond', desc: 'A distant warm glow grows at center — something is through there.', specs: [{ k: 'scale', v: '0.35 → 1.00' }, { k: 'opacity', v: '0 → 1' }, { k: 'window', v: '0.20–0.70s' }] },
+          { t: 0.40, tl: '0.40s', hero: true, ease: 'easeOutExpo', title: 'The aperture opens', desc: 'A hairline circular opening dilates — architectural, not sci-fi.', specs: [{ k: 'ring scale', v: '0.55 → 1.00' }, { k: 'opacity', v: '0 → .90' }, { k: 'window', v: '0.40–1.00s' }] },
+          { t: 0.60, tl: '0.60s', hero: false, ease: 'easeInOut', title: 'Brand revealed through it', desc: 'A circular mask uncovers the emblem inside the opening.', specs: [{ k: 'clip circle', v: '0 → 75 %' }, { k: 'blur', v: '4 → 0 px' }, { k: 'scale', v: '1.05 → 1.00' }, { k: 'window', v: '0.60–1.20s' }] },
+          { t: 0.90, tl: '0.90s', hero: false, ease: 'easeOut', title: 'Outer frame settles', desc: 'A quiet second ring echoes outward — the molding of the doorway.', specs: [{ k: 'scale', v: '1.00 → 1.22' }, { k: 'opacity', v: '0 → .25' }, { k: 'window', v: '0.90–1.30s' }] },
+          { t: 1.20, tl: '1.20s', hero: false, ease: 'easeOut', title: 'Name resolves', desc: 'The casino name condenses beneath the portal.', specs: [{ k: 'tracking', v: '.50 → .30 em' }, { k: 'translateY', v: '8 → 0 px' }, { k: 'window', v: '1.20–1.65s' }] },
+          { t: 1.50, tl: '1.50s', hero: false, ease: 'easeInOut', title: 'Accent sweeps', desc: 'The brand rule opens.', specs: [{ k: 'scaleX', v: '0 → 1' }, { k: 'window', v: '1.50–1.85s' }] },
+          { t: 1.60, tl: '1.60s', hero: false, ease: 'easeOut', title: 'Tagline fades up', desc: 'The optional line arrives last.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'window', v: '1.60–2.00s' }] },
+          { t: 2.20, tl: '2.20s', hero: false, ease: 'easeInOut', title: 'Hand off to Home', desc: 'Ring and emblem shrink together to the header slot.', specs: [{ k: 'scene', v: 'opacity 1 → 0' }, { k: 'emblem+ring', v: 'scale → 0.42' }, { k: 'window', v: '2.20–2.40s' }] }
+        ]
+      },
+      silk: {
+        label: 'Silk Wave', sub: 'Flowing fabric of light', T: 2.2, complexity: 'Medium',
+        story: 'Ribbons of silk-light flow across the dark and the emblem emerges from the current itself \u2014 uncovered, not faded in. Calm, fluid, VIP.',
+        frames: [
+          { t: 0.00, tl: '0.0s', hero: false, ease: 'easeOut', title: 'Ground fades in', desc: 'The field arrives still and dark.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'window', v: '0.00–0.40s' }] },
+          { t: 0.15, tl: '0.15s', hero: false, ease: 'silk drift', title: 'First silk flows', desc: 'A soft ribbon of light drifts across, upper third.', specs: [{ k: 'translateX', v: '−26 → 14 %' }, { k: 'rotate', v: '−16°' }, { k: 'window', v: '0.15–1.05s' }] },
+          { t: 0.30, tl: '0.30s', hero: false, ease: 'silk drift', title: 'Bright ribbon crosses', desc: 'The brightest band crosses the emblem position.', specs: [{ k: 'translateX', v: '24 → −12 %' }, { k: 'opacity', v: 'peak .85' }, { k: 'window', v: '0.30–1.20s' }] },
+          { t: 0.45, tl: '0.45s', hero: false, ease: 'silk drift', title: 'Third ribbon echoes', desc: 'A quieter band below completes the weave.', specs: [{ k: 'translateX', v: '−20 → 10 %' }, { k: 'opacity', v: 'peak .40' }, { k: 'window', v: '0.45–1.35s' }] },
+          { t: 0.70, tl: '0.70s', hero: true, ease: 'easeOut · long', title: 'Emblem emerges from the flow', desc: 'Revealed in the bright ribbon\u2019s wake — no plain fade.', specs: [{ k: 'blur', v: '6 → 0 px' }, { k: 'translateY', v: '10 → 0 px' }, { k: 'scale', v: '0.96 → 1.00' }, { k: 'window', v: '0.70–1.30s' }] },
+          { t: 0.85, tl: '0.85s', hero: false, ease: 'easeInOut', title: 'Silk sheen passes', desc: 'A wide, soft sheen slides over the mark like fabric.', specs: [{ k: 'translateX', v: '−120 → 220 %' }, { k: 'opacity', v: '0 → .6 → 0' }, { k: 'window', v: '0.85–1.30s' }] },
+          { t: 1.15, tl: '1.15s', hero: false, ease: 'easeOut', title: 'Name resolves', desc: 'The name condenses gently into place.', specs: [{ k: 'tracking', v: '.50 → .30 em' }, { k: 'translateY', v: '8 → 0 px' }, { k: 'window', v: '1.15–1.60s' }] },
+          { t: 1.40, tl: '1.40s', hero: false, ease: 'easeInOut', title: 'Ribbon settles into accent', desc: 'The flow calms to 16%; the rule opens beneath the name.', specs: [{ k: 'scaleX', v: '0 → 1' }, { k: 'ribbons', v: 'settle → 16%' }, { k: 'window', v: '1.40–1.75s' }] },
+          { t: 1.55, tl: '1.55s', hero: false, ease: 'easeOut', title: 'Tagline fades up', desc: 'The optional line arrives last.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'window', v: '1.55–1.90s' }] },
+          { t: 2.00, tl: '2.00s', hero: false, ease: 'easeInOut', title: 'Hand off to Home', desc: 'The emblem shrinks to the header; ribbons dissolve.', specs: [{ k: 'scene', v: 'opacity 1 → 0' }, { k: 'emblem', v: 'scale 1 → 0.42' }, { k: 'window', v: '2.00–2.20s' }] }
+        ]
+      },
+      seal: {
+        label: 'The Seal', sub: 'Engraved monogram', T: 2.4, complexity: 'Medium',
+        story: 'The mark engraves itself stroke by stroke like a maker\u2019s seal, fills to metal, then takes a single glint. Heritage and authenticity.',
+        frames: [
+          { t: 0.00, tl: '0.0s', hero: false, ease: 'easeOut', title: 'Ground fades in', desc: 'A deep, quiet field with a centered glow gathering.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'window', v: '0.00–0.40s' }] },
+          { t: 0.05, tl: '0.05s', hero: false, ease: 'easeInOut', title: 'Ring engraves', desc: 'The outer ring traces itself on.', specs: [{ k: 'dashoffset', v: '346 → 0' }, { k: 'window', v: '0.05–0.95s' }] },
+          { t: 0.25, tl: '0.25s', hero: true, ease: 'easeInOut', title: 'Mark engraves', desc: 'The emblem strokes draw on — Lottie path in production.', specs: [{ k: 'dashoffset', v: '350 → 0' }, { k: 'window', v: '0.25–1.05s' }] },
+          { t: 0.95, tl: '0.95s', hero: false, ease: 'easeOut', title: 'Fills to metal', desc: 'The engraved strokes fill solid.', specs: [{ k: 'fill opacity', v: '0 → 1' }, { k: 'window', v: '0.95–1.30s' }] },
+          { t: 1.10, tl: '1.10s', hero: false, ease: 'linear', title: 'Glint passes', desc: 'One light sweep authenticates the seal.', specs: [{ k: 'translateX', v: '−150 → 320 %' }, { k: 'opacity', v: '0 → .85 → 0' }, { k: 'window', v: '1.10–1.45s' }] },
+          { t: 1.35, tl: '1.35s', hero: false, ease: 'easeOut', title: 'Name rises', desc: 'The wordmark lifts in beneath the seal.', specs: [{ k: 'translateY', v: '10 → 0 px' }, { k: 'opacity', v: '0 → 1' }, { k: 'window', v: '1.35–1.80s' }] },
+          { t: 1.55, tl: '1.55s', hero: false, ease: 'easeInOut', title: 'Accent + tagline', desc: 'Rule sweeps; tagline follows.', specs: [{ k: 'scaleX', v: '0 → 1' }, { k: 'window', v: '1.55–2.00s' }] },
+          { t: 2.20, tl: '2.20s', hero: false, ease: 'easeInOut', title: 'Hand off to Home', desc: 'The seal shrinks to the header slot.', specs: [{ k: 'scene', v: 'opacity 1 → 0' }, { k: 'emblem', v: 'scale 1 → 0.42' }, { k: 'window', v: '2.20–2.40s' }] }
+        ]
+      },
+      golden: {
+        label: 'Golden Hour', sub: 'Personal welcome', T: 2.4, complexity: 'Easy',
+        story: 'Warm light breathes across the field and a time-aware greeting recognizes the member by name. The concierge who knows you.',
+        frames: [
+          { t: 0.00, tl: '0.0s', hero: false, ease: 'easeOut', title: 'Warm ground fades in', desc: 'The field arrives already warm.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'window', v: '0.00–0.40s' }] },
+          { t: 0.10, tl: '0.10s', hero: true, ease: 'easeOut', title: 'Light blooms & breathes', desc: 'A soft glow grows, then breathes gently — alive, not static.', specs: [{ k: 'scale', v: '0.92 → 1.00 ±2%' }, { k: 'opacity', v: '0 → 1' }, { k: 'window', v: '0.10–0.90s' }] },
+          { t: 0.30, tl: '0.30s', hero: false, ease: 'easeOut', title: 'Emblem settles', desc: 'A smaller mark rests above the greeting.', specs: [{ k: 'translateY', v: '12 → 0 px' }, { k: 'blur', v: '4 → 0 px' }, { k: 'window', v: '0.30–0.80s' }] },
+          { t: 0.80, tl: '0.80s', hero: false, ease: 'easeOut', title: '“Good evening,” fades up', desc: 'Copy adapts to local time of day.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'translateY', v: '8 → 0 px' }, { k: 'window', v: '0.80–1.25s' }] },
+          { t: 1.10, tl: '1.10s', hero: false, ease: 'easeOut', title: 'Member name rises', desc: 'The member\u2019s own name is the headline.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'translateY', v: '10 → 0 px' }, { k: 'window', v: '1.10–1.60s' }] },
+          { t: 2.20, tl: '2.20s', hero: false, ease: 'easeInOut', title: 'Hand off to Home', desc: 'The greeting becomes Home\u2019s header greeting.', specs: [{ k: 'scene', v: 'opacity 1 → 0' }, { k: 'emblem', v: 'scale 1 → 0.42' }, { k: 'window', v: '2.20–2.40s' }] }
+        ]
+      },
+      collection: {
+        label: 'The Collection', sub: 'Membership stack', T: 2.4, complexity: 'Medium',
+        story: 'Loyalty-tier cards drop into a neat fanned stack and the tier line settles beneath. Status you can almost hold — Apple Wallet physics.',
+        frames: [
+          { t: 0.00, tl: '0.0s', hero: false, ease: 'easeInOut', title: 'First card falls', desc: 'The base tier drops in from above.', specs: [{ k: 'translateY', v: '−230 → 0 %' }, { k: 'rotate', v: '−15 → −8°' }, { k: 'window', v: '0.00–0.55s' }] },
+          { t: 0.15, tl: '0.15s', hero: false, ease: 'easeInOut', title: 'Second card follows', desc: 'Staggered 150ms behind.', specs: [{ k: 'rotate', v: '11 → 4°' }, { k: 'window', v: '0.15–0.70s' }] },
+          { t: 0.30, tl: '0.30s', hero: true, ease: 'spring', title: 'Tier card lands', desc: 'The member\u2019s own tier lands on top, weighted.', specs: [{ k: 'rotate', v: '−3 → −1°' }, { k: 'window', v: '0.30–0.85s' }] },
+          { t: 1.00, tl: '1.00s', hero: false, ease: 'easeOut', title: 'Name resolves', desc: 'The wordmark settles under the stack.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'translateY', v: '8 → 0 px' }, { k: 'window', v: '1.00–1.45s' }] },
+          { t: 1.25, tl: '1.25s', hero: false, ease: 'easeInOut', title: 'Accent sweeps', desc: 'The brand rule opens.', specs: [{ k: 'scaleX', v: '0 → 1' }, { k: 'window', v: '1.25–1.55s' }] },
+          { t: 1.40, tl: '1.40s', hero: false, ease: 'easeOut', title: 'Tier line fades up', desc: 'Tagline or tier name, from the CMS.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'window', v: '1.40–1.80s' }] },
+          { t: 2.20, tl: '2.20s', hero: false, ease: 'easeInOut', title: 'Hand off to Home', desc: 'The stack recedes; the top card becomes the wallet card.', specs: [{ k: 'scene', v: 'opacity 1 → 0' }, { k: 'stack', v: 'y −8%, scale .92' }, { k: 'window', v: '2.20–2.40s' }] }
+        ]
+      },
+      pulse: {
+        label: 'Concierge Pulse', sub: 'Signal of presence', T: 2.2, complexity: 'Easy',
+        story: 'A soft bloom opens, the emblem springs in, and a fine ring pings outward twice — a quiet, confident “we\u2019re here.”',
+        frames: [
+          { t: 0.00, tl: '0.0s', hero: false, ease: 'easeOut', title: 'Ground fades in', desc: 'The field arrives.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'window', v: '0.00–0.35s' }] },
+          { t: 0.10, tl: '0.10s', hero: false, ease: 'easeOut', title: 'Bloom opens', desc: 'A radial glow opens from center.', specs: [{ k: 'scale', v: '0.40 → 1.00' }, { k: 'opacity', v: '0 → 1' }, { k: 'window', v: '0.10–0.50s' }] },
+          { t: 0.25, tl: '0.25s', hero: true, ease: 'spring', title: 'Emblem springs in', desc: 'The one accented beat — assured, ≤2% overshoot.', specs: [{ k: 'scale', v: '0.60 → 1.00' }, { k: 'opacity', v: '0 → 1' }, { k: 'window', v: '0.25–0.65s' }] },
+          { t: 0.45, tl: '0.45s', hero: false, ease: 'easeOut', title: 'First ping', desc: 'A hairline ring expands and dissolves.', specs: [{ k: 'scale', v: '0.35 → 2.40' }, { k: 'opacity', v: '.65 → 0' }, { k: 'window', v: '0.45–1.15s' }] },
+          { t: 0.70, tl: '0.70s', hero: false, ease: 'easeOut', title: 'Second ping', desc: 'Softer echo, 250ms behind.', specs: [{ k: 'scale', v: '0.35 → 2.40' }, { k: 'opacity', v: '.65 → 0' }, { k: 'window', v: '0.70–1.40s' }] },
+          { t: 1.05, tl: '1.05s', hero: false, ease: 'easeOut', title: 'Name resolves', desc: 'Wordmark fades up beneath.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'translateY', v: '8 → 0 px' }, { k: 'window', v: '1.05–1.45s' }] },
+          { t: 1.25, tl: '1.25s', hero: false, ease: 'easeInOut', title: 'Accent + tagline', desc: 'Rule sweeps; tagline follows.', specs: [{ k: 'scaleX', v: '0 → 1' }, { k: 'window', v: '1.25–1.70s' }] },
+          { t: 2.00, tl: '2.00s', hero: false, ease: 'easeInOut', title: 'Hand off to Home', desc: 'The emblem shrinks to the header slot.', specs: [{ k: 'scene', v: 'opacity 1 → 0' }, { k: 'emblem', v: 'scale 1 → 0.42' }, { k: 'window', v: '2.00–2.20s' }] }
+        ]
+      }
+    };
+
+    const variant = this.state.variant;
+    const meta = META[variant];
+    const T = meta.T;
+    const progress = this.state.progress;
+    const t = progress * T;
+
+    const options = Object.keys(META).map(id => ({
+      id,
+      label: META[id].label,
+      sub: META[id].sub,
+      dur: META[id].T.toFixed(1) + 's',
+      complexity: META[id].complexity,
+      wrapStyle: {
+        textAlign: 'center', cursor: 'pointer', padding: '14px 12px 18px', borderRadius: '22px',
+        background: id === variant ? 'rgba(216,169,121,.08)' : 'rgba(255,255,255,.015)',
+        border: id === variant ? '1px solid rgba(216,169,121,.5)' : '1px solid rgba(255,255,255,.07)',
+        transition: 'background .2s, border-color .2s'
+      }
+    }));
+
+    const frames = meta.frames.map((d, i) => {
+      const nextT = (i < meta.frames.length - 1) ? meta.frames[i + 1].t : T + 0.001;
+      const active = (t >= d.t - 0.001) && (t < nextT);
+      return {
+        t: d.t, tLabel: d.tl, title: d.title, desc: d.desc, specs: d.specs, easeName: d.ease,
+        cardStyle: {
+          background: active ? 'rgba(216,169,121,.09)' : 'rgba(255,255,255,.02)',
+          border: active ? '1px solid rgba(216,169,121,.5)' : '1px solid rgba(255,255,255,.08)',
+          borderRadius: '16px', padding: '20px 22px', cursor: 'pointer',
+          transition: 'background .2s, border-color .2s'
+        },
+        heroBadgeStyle: {
+          display: d.hero ? 'inline-block' : 'none',
+          fontSize: '9px', letterSpacing: '.14em', color: '#0E0F13', background: '#8EC9A8',
+          padding: '2px 7px', borderRadius: '5px', fontWeight: 700
+        },
+        easeStyle: {
+          marginLeft: 'auto', fontFamily: "'JetBrains Mono', monospace", fontSize: '10px',
+          color: active ? '#D8B979' : '#63656F'
+        }
+      };
+    });
+
+    const markers = meta.frames.map((d, i) => {
+      const first = i === 0, last = i === meta.frames.length - 1;
+      return {
+        tLabel: d.tl,
+        wrapStyle: {
+          position: 'absolute', top: (i % 2 ? '21px' : '0px'),
+          left: (d.t / T * 100).toFixed(2) + '%',
+          transform: first ? 'none' : (last ? 'translateX(-100%)' : 'translateX(-50%)'),
+          textAlign: first ? 'left' : (last ? 'right' : 'center')
+        }
+      };
+    });
+
+    return {
+      brandName, tagline, memberName, tier, brand, bg1, bg2, mode,
+      variant, progress,
+      activeLabel: meta.label, activeSub: meta.sub, activeStory: meta.story,
+      durLabel: T.toFixed(2) + 's',
+      timeLabel: (progress * T).toFixed(2) + 's',
+      sliderVal: Math.round(progress * 1000),
+      sliderStyle: { width: '100%', ['--fill']: (progress * 100).toFixed(1) + '%' },
+      playBtnStyle: {
+        fontFamily: "'Manrope'", fontSize: '13px', fontWeight: 600,
+        color: '#0E0F13', background: '#D8B979', border: 'none', borderRadius: '999px',
+        padding: '10px 22px', cursor: 'pointer'
+      },
+      playLabel: this.state.playing ? 'Pause' : 'Play',
+      play: this.play, replay: this.replay, onScrub: this.onScrub, onCard: this.onCard,
+      selectVariant: this.selectVariant,
+      options, frames, markers
+    };
+  }
+}
+</script>
+</body>
+</html>

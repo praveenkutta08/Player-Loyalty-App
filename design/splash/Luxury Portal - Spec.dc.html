@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#08090C;-webkit-font-smoothing:antialiased}
+  input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer}
+  input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:4px;background:linear-gradient(90deg,#D8B979 var(--fill,50%),rgba(255,255,255,.12) var(--fill,50%))}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;margin-top:-8px;width:20px;height:20px;border-radius:50%;background:#F3ECDD;border:3px solid #D8B979;box-shadow:0 3px 10px rgba(0,0,0,.5)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#F3ECDD;border:3px solid #D8B979}
+</style>
+</helmet>
+
+<div style="font-family:'Manrope',sans-serif;min-height:100%;background:radial-gradient(1300px 780px at 50% -6%, #16171F 0%, #08090C 58%);color:#C7C9D2;padding:60px 68px 110px">
+
+  <!-- HEADER · VISUAL DESIGN -->
+  <header style="max-width:1240px;margin:0 auto 48px">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:22px">
+      <span style="width:30px;height:1px;background:#D8B979"></span>
+      <span style="font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:#7C7E88">Variant spec · animationVariant: "portal"</span>
+    </div>
+    <h1 style="font-family:'Marcellus',serif;font-weight:400;color:#F2ECDF;font-size:clamp(42px,5vw,72px);line-height:1;margin:0 0 20px">Luxury Portal</h1>
+    <div style="display:flex;gap:52px;flex-wrap:wrap">
+      <p style="font-size:16px;line-height:1.75;color:#9A9CA6;margin:0;max-width:56ch;flex:1;min-width:380px"><strong style="color:#C7C9D2;font-weight:600">Visual design.</strong> Standing before an entrance at dusk: a warm light grows somewhere beyond, then a hairline circular aperture dilates — an architectural opening, like a rotunda oculus or a grand doorway — and the brand is <em style="font-style:italic;color:#D8B979">revealed through it</em> by a circular mask. A second, quieter ring settles outward like the molding of the doorway. Two hairline circles, one light, one mask — nothing science-fiction, nothing more.</p>
+      <p style="font-size:16px;line-height:1.75;color:#9A9CA6;margin:0;max-width:56ch;flex:1;min-width:380px"><strong style="color:#C7C9D2;font-weight:600">Design rationale.</strong> Every great resort choreographs the moment you pass its threshold: light beyond, an opening, then the reveal. Portal compresses that sequence — <em style="font-style:italic">arrival → discovery → welcome</em> — into 2.4 seconds. The circular geometry reads as exclusivity (a private entrance, a member's seal) while staying minimal: it is the only variant whose reveal is a true mask, so the logo appears <em style="font-style:italic">through</em> something rather than fading in.</p>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:26px">
+      <span style="font-size:11.5px;padding:7px 13px;border:1px solid rgba(216,169,121,.3);color:#D8B979;border-radius:999px">Arrival · Discovery · Welcome</span>
+      <span style="font-size:11.5px;padding:7px 13px;border:1px solid rgba(255,255,255,.12);color:#C7C9D2;border-radius:999px">2.4s · CMS-scalable</span>
+      <span style="font-size:11.5px;padding:7px 13px;border:1px solid rgba(255,255,255,.12);color:#C7C9D2;border-radius:999px">Reanimated + MaskedView</span>
+      <span style="font-size:11.5px;padding:7px 13px;border:1px solid rgba(255,255,255,.12);color:#C7C9D2;border-radius:999px">No sci-fi · no particles</span>
+    </div>
+  </header>
+
+  <!-- STAGE + CONTROLS -->
+  <section style="max-width:1240px;margin:0 auto 40px;display:flex;gap:56px;align-items:center;flex-wrap:wrap;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:28px;padding:48px">
+    <div style="flex:0 0 auto;margin:0 auto">
+      <div style="position:relative;width:300px;height:650px;border-radius:48px;background:#1b1c22;padding:9px;box-shadow:0 46px 100px -34px rgba(0,0,0,.92),inset 0 0 0 1px rgba(255,255,255,.06)">
+        <div style="position:relative;width:100%;height:100%;border-radius:40px;overflow:hidden">
+          <dc-import name="SplashScreen" variant="portal" brand-name="{{ brandName }}" tagline="{{ tagline }}" brand="{{ brand }}" bg1="{{ bg1 }}" bg2="{{ bg2 }}" mode="{{ mode }}" progress="{{ progress }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;min-width:420px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:flex-end;gap:20px;margin-bottom:6px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:54px;color:#F2ECDF;line-height:.9">{{ timeLabel }}</div>
+        <div style="font-size:13px;color:#7C7E88;padding-bottom:8px">of {{ durLabel }}</div>
+        <div style="margin-left:auto;display:flex;gap:10px">
+          <button onClick="{{ play }}" style="{{ playBtnStyle }}">{{ playLabel }}</button>
+          <button onClick="{{ replay }}" style="font-family:'Manrope';font-size:13px;font-weight:600;color:#C7C9D2;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:10px 18px;cursor:pointer">Replay</button>
+        </div>
+      </div>
+      <div style="position:relative;margin:26px 0 8px">
+        <input type="range" min="0" max="1000" value="{{ sliderVal }}" onInput="{{ onScrub }}" style="{{ sliderStyle }}">
+      </div>
+      <div style="position:relative;height:46px">
+        <sc-for list="{{ markers }}" as="m" hint-placeholder-count="9">
+          <div style="{{ m.wrapStyle }}">
+            <div style="width:1px;height:7px;background:rgba(216,169,121,.5);margin:0 auto 5px"></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#7C7E88;white-space:nowrap">{{ m.tLabel }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <p style="font-size:12.5px;color:#63656F;margin:14px 0 0;line-height:1.6">Scrub to freeze any frame. Times are at the 2.4s reference; <span style="font-family:'JetBrains Mono',monospace;color:#9A9CA6">animationDuration</span> rescales the clock linearly (Duration tweak to feel it).</p>
+    </div>
+  </section>
+
+  <!-- MOTION DESIGN · TIMELINE -->
+  <section style="max-width:1240px;margin:0 auto 40px">
+    <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:24px">
+      <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">01</span>
+      <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:26px;color:#F2ECDF;margin:0">Motion design · 0.0–2.4s</h2>
+      <span style="margin-left:auto;font-size:12px;color:#63656F">tap a card to jump the scrubber</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+      <sc-for list="{{ frames }}" as="f" hint-placeholder-count="9">
+        <div data-t="{{ f.t }}" onClick="{{ onCard }}" style="{{ f.cardStyle }}">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:15px;color:#D8B979">{{ f.tLabel }}</span>
+            <span style="{{ f.heroBadgeStyle }}">HERO</span>
+            <span style="{{ f.easeStyle }}">{{ f.easeName }}</span>
+          </div>
+          <div style="font-size:15px;color:#F2ECDF;font-weight:600;margin-bottom:6px">{{ f.title }}</div>
+          <div style="font-size:13px;line-height:1.55;color:#9A9CA6;margin-bottom:14px">{{ f.desc }}</div>
+          <div style="display:flex;flex-direction:column;gap:6px;padding-top:12px;border-top:1px solid rgba(255,255,255,.07)">
+            <sc-for list="{{ f.specs }}" as="s" hint-placeholder-count="3">
+              <div style="display:flex;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11.5px">
+                <span style="color:#6B6D77;min-width:86px">{{ s.k }}</span>
+                <span style="color:#B7C0BA">{{ s.v }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- GEOMETRY + BRANDING VARIATIONS -->
+  <div style="max-width:1240px;margin:0 auto 40px;display:flex;gap:38px;flex-wrap:wrap">
+    <section style="flex:1;min-width:420px;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:44px 46px">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+        <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">02</span>
+        <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:24px;color:#F2ECDF;margin:0">Portal geometry</h2>
+      </div>
+      <p style="font-size:13.5px;line-height:1.7;color:#9A9CA6;margin:0 0 22px">Shared layout system — safe areas 44 / 24 / 34 dp, emblem box 96 dp at 50% H, wordmark block at 60% H. The portal layer adds three concentric elements, all centered on the emblem:</p>
+      <div style="display:flex;flex-direction:column;gap:12px;font-size:13px;line-height:1.75;color:#AEB0B9">
+        <div><span style="color:#D8B979;font-family:'JetBrains Mono',monospace">interior light</span> · Ø 52% W circle · radial primary@44% → transparent 72% · the "beyond"</div>
+        <div><span style="color:#D8B979;font-family:'JetBrains Mono',monospace">aperture ring</span> · Ø 46% W · 1.5 dp hairline, primary@85% · glow 0 0 18 primary@30% outside + @16% inside</div>
+        <div><span style="color:#D8B979;font-family:'JetBrains Mono',monospace">outer frame</span> · Ø 46% W → ×1.22 · 1 dp hairline, primary@45% · rests at 25% opacity</div>
+        <div><span style="color:#D8B979;font-family:'JetBrains Mono',monospace">reveal mask</span> · circle 0 → 75% on the emblem — the logo appears <em style="font-style:italic">through</em> the opening, never a plain fade</div>
+        <div>Ring diameter (46%) deliberately exceeds the emblem box (27%) — generous negative space inside the opening reads as exclusivity, not a badge.</div>
+      </div>
+    </section>
+
+    <section style="flex:1.2;min-width:460px;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:44px 46px">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:28px">
+        <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">03</span>
+        <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:24px;color:#F2ECDF;margin:0">Branding variations</h2>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+        <div style="text-align:center"><div style="border-radius:22px;background:#1b1c22;padding:4px;margin-bottom:9px"><div style="border-radius:18px;overflow:hidden;height:245px"><dc-import name="SplashScreen" variant="portal" brand-name="MERIDIAN" tagline="GRAND RESORT & CLUB" brand="#E4BE7C" bg1="#3A2413" bg2="#0C0705" progress="{{ settled }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#E4BE7C">Luxury Resort</div></div>
+        <div style="text-align:center"><div style="border-radius:22px;background:#1b1c22;padding:4px;margin-bottom:9px"><div style="border-radius:18px;overflow:hidden;height:245px"><dc-import name="SplashScreen" variant="portal" brand-name="AXIS" tagline="THE CITY NEVER SETTLES" brand="#8E93F5" bg1="#1C1E33" bg2="#08090F" progress="{{ settled }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8E93F5">Modern Urban</div></div>
+        <div style="text-align:center"><div style="border-radius:22px;background:#1b1c22;padding:4px;margin-bottom:9px"><div style="border-radius:18px;overflow:hidden;height:245px"><dc-import name="SplashScreen" variant="portal" brand-name="AZURE" tagline="WHERE THE TIDE MEETS GOLD" brand="#5FD6C6" bg1="#0F3C46" bg2="#05161B" progress="{{ settled }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#5FD6C6">Beach Resort</div></div>
+        <div style="text-align:center"><div style="border-radius:22px;background:#1b1c22;padding:4px;margin-bottom:9px"><div style="border-radius:18px;overflow:hidden;height:245px"><dc-import name="SplashScreen" variant="portal" brand-name="SUMMIT" tagline="RISE ABOVE" brand="#B4CBEC" bg1="#16283F" bg2="#070C14" progress="{{ settled }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#B4CBEC">Mountain Resort</div></div>
+      </div>
+      <p style="font-size:12.5px;line-height:1.65;color:#9A9CA6;margin:20px 0 0;text-align:center">The aperture, interior light and frame all derive from <span style="font-family:'JetBrains Mono',monospace;color:#C7C9D2">primaryColor</span> — one token, four worlds, zero redesign.</p>
+    </section>
+  </div>
+
+  <!-- LIGHT/DARK + CMS -->
+  <div style="max-width:1240px;margin:0 auto 40px;display:flex;gap:38px;flex-wrap:wrap">
+    <section style="flex:1;min-width:440px;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:44px 46px">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:28px">
+        <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">04</span>
+        <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:24px;color:#F2ECDF;margin:0">Light &amp; dark themes</h2>
+      </div>
+      <div style="display:flex;gap:30px;justify-content:center;flex-wrap:wrap">
+        <div style="text-align:center">
+          <div style="border-radius:36px;background:#1b1c22;padding:6px;box-shadow:0 26px 60px -30px rgba(0,0,0,.9);margin-bottom:12px"><div style="border-radius:30px;overflow:hidden;width:180px;height:390px"><dc-import name="SplashScreen" variant="portal" brand-name="{{ brandName }}" tagline="{{ tagline }}" brand="{{ brand }}" bg1="{{ bg1 }}" bg2="{{ bg2 }}" mode="dark" progress="{{ settled }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div>
+          <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8B8D96">Dark · default</div>
+        </div>
+        <div style="text-align:center">
+          <div style="border-radius:36px;background:#d9d2c6;padding:6px;box-shadow:0 26px 60px -30px rgba(0,0,0,.9);margin-bottom:12px"><div style="border-radius:30px;overflow:hidden;width:180px;height:390px"><dc-import name="SplashScreen" variant="portal" brand-name="{{ brandName }}" tagline="{{ tagline }}" brand="#8A5A34" bg1="#F6EFE1" bg2="#E7D6BC" mode="light" progress="{{ settled }}" style="display:block;width:100%;height:100%" hint-size="100%,100%"></dc-import></div></div>
+          <div style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8B8D96">Light · daytime</div>
+        </div>
+      </div>
+      <p style="font-size:12.5px;line-height:1.65;color:#9A9CA6;margin:22px 0 0;text-align:center">In light mode the interior light drops to 34% mix so the opening reads as shade-into-sun rather than a glow; hairlines and geometry unchanged.</p>
+    </section>
+
+    <section style="flex:1;min-width:440px;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:44px 46px">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+        <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">05</span>
+        <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:24px;color:#F2ECDF;margin:0">CMS configuration</h2>
+      </div>
+      <div style="background:#0A0B0F;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px 22px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.85;color:#8FA7B8">
+<span style="color:#4E5560">{</span><br>
+&nbsp;&nbsp;<span style="color:#C99">"casinoName"</span>: <span style="color:#B7D9A8">"{{ brandName }}"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"tagline"</span>: <span style="color:#B7D9A8">"{{ tagline }}"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"logo"</span>: <span style="color:#B7D9A8">"cdn/&lt;client&gt;/logo.svg"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"primaryColor"</span>: <span style="color:#D8B979">"{{ brand }}"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"backgroundStyle"</span>: <span style="color:#B7D9A8">"gradient"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"backgroundValue"</span>: [<span style="color:#D8B979">"{{ bg1 }}"</span>, <span style="color:#D8B979">"{{ bg2 }}"</span>],<br>
+&nbsp;&nbsp;<span style="color:#C99">"appearance"</span>: <span style="color:#B7D9A8">"{{ mode }}"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"animationVariant"</span>: <span style="color:#E8A0B4">"portal"</span>,<br>
+&nbsp;&nbsp;<span style="color:#C99">"animationDuration"</span>: <span style="color:#D8B979">{{ durMs }}</span>&nbsp;<span style="color:#4E5560">// ms · clamps 1800–3000</span><br>
+<span style="color:#4E5560">}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:20px;font-size:12.5px;line-height:1.6;color:#9A9CA6">
+        <div><span style="color:#C7C9D2;font-weight:600">Everything above is a token</span> — logo (SVG/PNG/Lottie), name, colors, ground, tagline, variant, duration. The portal geometry itself is fixed code, shared by every client.</div>
+        <div><span style="color:#C7C9D2;font-weight:600">Ring color</span> derives from <span style="font-family:'JetBrains Mono',monospace">primaryColor</span>; clients cannot pick a separate ring hue — the single-light-source rule holds across all variants.</div>
+        <div><span style="color:#C7C9D2;font-weight:600">Fallbacks</span> · unknown variant → horizon · missing tagline → beat skipped · image/video ground → 30% scrim behind the portal.</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ACCESSIBILITY + RN -->
+  <div style="max-width:1240px;margin:0 auto;display:flex;gap:38px;flex-wrap:wrap">
+    <section style="flex:1;min-width:440px;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:44px 46px">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+        <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">06</span>
+        <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:24px;color:#F2ECDF;margin:0">Accessibility</h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;font-size:13px;line-height:1.65;color:#9A9CA6">
+        <div><span style="color:#F2ECDF;font-weight:600">Reduced motion</span> — aperture and mask are skipped; 300ms cross-fade of the settled frame (ring at rest, emblem revealed), then navigate. Shared code path.</div>
+        <div><span style="color:#F2ECDF;font-weight:600">Contrast</span> — name text vs ground ≥ 4.5:1 validated at ingest; hairline rings are decorative (not information-bearing) so their 25–90% opacities carry no contrast requirement.</div>
+        <div><span style="color:#F2ECDF;font-weight:600">Vestibular safety</span> — the aperture dilates once, slowly (≈0.6s); no rotation, no oscillation, no zoom-through-the-portal camera move. Well inside WCAG 2.3.3 comfort.</div>
+        <div><span style="color:#F2ECDF;font-weight:600">Screen readers</span> — root announces "‹Casino name›. Loading."; hand-off announces Home. No focusable elements inside the splash.</div>
+        <div><span style="color:#F2ECDF;font-weight:600">Time limit</span> — hand-off at timeline end or when Home is ready, hard cap 4s.</div>
+      </div>
+    </section>
+
+    <section style="flex:1;min-width:440px;background:linear-gradient(180deg,rgba(216,169,121,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:26px;padding:44px 46px">
+      <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:26px">
+        <span style="font-family:'Marcellus',serif;font-size:15px;color:#D8B979">07</span>
+        <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:24px;color:#F2ECDF;margin:0">React Native · performance · handoff</h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;font-size:13px;line-height:1.65;color:#9A9CA6">
+        <div><span style="color:#F2ECDF;font-weight:600">Rings</span> — two plain <span style="font-family:'JetBrains Mono',monospace">View</span>s with borderRadius 50% + hairline border, animated with scale/opacity worklets off the shared clock. The glow is a static shadow style, not an animated blur.</div>
+        <div><span style="color:#F2ECDF;font-weight:600">Reveal mask</span> — <span style="font-family:'JetBrains Mono',monospace">@react-native-masked-view/masked-view</span> with an animated circle (or a Skia circle clip if Skia is in the stack). Fallback for low-end devices: opacity + scale 1.05→1.00 — visually close, mask-free.</div>
+        <div><span style="color:#F2ECDF;font-weight:600">Performance</span> — 4 animated layers total (light, 2 rings, emblem), transform/opacity only; the single blur (4→0) is on the small emblem via pre-blurred cross-fade. No runtime blurs, no particles, no full-screen effects. Budget: 60fps on Android Go-class hardware.</div>
+        <div><span style="color:#F2ECDF;font-weight:600">Hand-off</span> — ring and emblem shrink together to the header slot (scale → 0.42); the ring fades during flight so only the logo lands. Ground persists into Home.</div>
+        <div><span style="color:#F2ECDF;font-weight:600">Authoritative math</span> — the <span style="font-family:'JetBrains Mono',monospace">variant === 'portal'</span> branch in <span style="font-family:'JetBrains Mono',monospace">SplashScreen.dc.html</span>; port <span style="font-family:'JetBrains Mono',monospace">seg / eo / eio / expo / lerp</span> 1:1. Full package: <span style="font-family:'JetBrains Mono',monospace">design_handoff_splash_system/README.md</span>.</div>
+      </div>
+    </section>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;duration&quot;: { &quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 2.4, &quot;min&quot;: 1.8, &quot;max&quot;: 3, &quot;step&quot;: 0.1, &quot;unit&quot;: &quot;s&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Playback&quot; },
+  &quot;brandName&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;MERIDIAN&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;tagline&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;GRAND RESORT &amp; CLUB&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;brand&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#D8B979&quot;, &quot;options&quot;: [&quot;#D8B979&quot;, &quot;#8E93F5&quot;, &quot;#5FD6C6&quot;, &quot;#B4CBEC&quot;, &quot;#E8607D&quot;], &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;bg1&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#241626&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;bg2&quot;: { &quot;editor&quot;: &quot;color&quot;, &quot;default&quot;: &quot;#0A0710&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Brand&quot; },
+  &quot;mode&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;default&quot;: &quot;dark&quot;, &quot;options&quot;: [&quot;dark&quot;, &quot;light&quot;], &quot;tsType&quot;: &quot;'dark' | 'light'&quot;, &quot;section&quot;: &quot;Brand&quot; }
+}">
+class Component extends DCLogic {
+  state = { progress: 0.88, playing: false };
+
+  componentWillUnmount() { if (this._raf) cancelAnimationFrame(this._raf); }
+
+  _ms() { return Math.max(1800, Math.min(3000, (this.props.duration ?? 2.4) * 1000)); }
+
+  play = () => {
+    if (this.state.playing) { this._pause(); return; }
+    const from = this.state.progress >= 0.85 ? 0 : this.state.progress;
+    this._start = performance.now() - from * this._ms();
+    this.setState({ playing: true });
+    this._tick();
+  };
+  _tick = () => {
+    const el = (performance.now() - this._start) / this._ms();
+    if (el >= 1) { this.setState({ progress: 1, playing: false }); return; }
+    this.setState({ progress: el });
+    this._raf = requestAnimationFrame(this._tick);
+  };
+  _pause = () => { if (this._raf) cancelAnimationFrame(this._raf); this.setState({ playing: false }); };
+  replay = () => { if (this._raf) cancelAnimationFrame(this._raf); this._start = performance.now(); this.setState({ playing: true, progress: 0 }); this._tick(); };
+  onScrub = (e) => { if (this._raf) cancelAnimationFrame(this._raf); this.setState({ playing: false, progress: Number(e.target.value) / 1000 }); };
+  onCard = (e) => { if (this._raf) cancelAnimationFrame(this._raf); const tt = Number(e.currentTarget.dataset.t); this.setState({ playing: false, progress: tt / 2.4 }); };
+
+  renderVals() {
+    const p = this.props;
+    const brand = p.brand || '#D8B979';
+    const bg1 = p.bg1 || '#241626';
+    const bg2 = p.bg2 || '#0A0710';
+    const mode = p.mode || 'dark';
+    const brandName = p.brandName || 'MERIDIAN';
+    const tagline = p.tagline || 'GRAND RESORT & CLUB';
+    const durSec = this._ms() / 1000;
+
+    const T = 2.4;
+    const progress = this.state.progress;
+    const t = progress * T;
+
+    const defs = [
+      { t: 0.00, tl: '0.0s', hero: false, ease: 'easeOut', title: 'Ground fades in', desc: 'Standing before the entrance — dark, still, expectant.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'window', v: '0.00–0.40s' }] },
+      { t: 0.20, tl: '0.20s', hero: false, ease: 'easeOut', title: 'A light beyond', desc: 'A distant warm glow grows at center — discovery begins.', specs: [{ k: 'scale', v: '0.35 → 1.00' }, { k: 'opacity', v: '0 → 1' }, { k: 'window', v: '0.20–0.70s' }] },
+      { t: 0.40, tl: '0.40s', hero: true, ease: 'easeOutExpo', title: 'The aperture opens', desc: 'A hairline circular opening dilates — architectural, deliberate, calm.', specs: [{ k: 'ring scale', v: '0.55 → 1.00' }, { k: 'opacity', v: '0 → .90' }, { k: 'hairline', v: '1.5 dp · primary@85%' }, { k: 'window', v: '0.40–1.00s' }] },
+      { t: 0.60, tl: '0.60s', hero: false, ease: 'easeInOut', title: 'Brand revealed through it', desc: 'A circular mask uncovers the emblem inside the opening — welcome.', specs: [{ k: 'clip circle', v: '0 → 75 %' }, { k: 'blur', v: '4 → 0 px' }, { k: 'scale', v: '1.05 → 1.00' }, { k: 'window', v: '0.60–1.20s' }] },
+      { t: 0.90, tl: '0.90s', hero: false, ease: 'easeOut', title: 'Outer frame settles', desc: 'A second, quieter ring echoes outward — the molding of the doorway.', specs: [{ k: 'scale', v: '1.00 → 1.22' }, { k: 'opacity', v: '0 → .25 hold' }, { k: 'window', v: '0.90–1.30s' }] },
+      { t: 1.20, tl: '1.20s', hero: false, ease: 'easeOut', title: 'Name resolves', desc: 'The casino name condenses beneath the portal.', specs: [{ k: 'tracking', v: '.50 → .30 em' }, { k: 'translateY', v: '8 → 0 px' }, { k: 'opacity', v: '0 → 1' }, { k: 'window', v: '1.20–1.65s' }] },
+      { t: 1.50, tl: '1.50s', hero: false, ease: 'easeInOut', title: 'Accent sweeps', desc: 'The brand rule opens beneath the name.', specs: [{ k: 'scaleX', v: '0 → 1' }, { k: 'window', v: '1.50–1.85s' }] },
+      { t: 1.60, tl: '1.60s', hero: false, ease: 'easeOut', title: 'Tagline fades up', desc: 'The optional line arrives last, quietly.', specs: [{ k: 'opacity', v: '0 → 1' }, { k: 'translateY', v: '6 → 0 px' }, { k: 'window', v: '1.60–2.00s' }] },
+      { t: 2.20, tl: '2.20s', hero: false, ease: 'easeInOut', title: 'Hand off to Home', desc: 'Ring and emblem shrink together to the header; the ring fades in flight.', specs: [{ k: 'scene', v: 'opacity 1 → 0' }, { k: 'emblem+ring', v: 'scale → 0.42' }, { k: 'window', v: '2.20–2.40s' }] }
+    ];
+
+    const frames = defs.map((d, i) => {
+      const nextT = (i < defs.length - 1) ? defs[i + 1].t : T + 0.001;
+      const active = (t >= d.t - 0.001) && (t < nextT);
+      return {
+        t: d.t, tLabel: d.tl, title: d.title, desc: d.desc, specs: d.specs, easeName: d.ease,
+        cardStyle: {
+          background: active ? 'rgba(216,169,121,.09)' : 'rgba(255,255,255,.02)',
+          border: active ? '1px solid rgba(216,169,121,.5)' : '1px solid rgba(255,255,255,.08)',
+          borderRadius: '16px', padding: '20px 22px', cursor: 'pointer',
+          transition: 'background .2s, border-color .2s'
+        },
+        heroBadgeStyle: {
+          display: d.hero ? 'inline-block' : 'none',
+          fontSize: '9px', letterSpacing: '.14em', color: '#0E0F13', background: '#8EC9A8',
+          padding: '2px 7px', borderRadius: '5px', fontWeight: 700
+        },
+        easeStyle: {
+          marginLeft: 'auto', fontFamily: "'JetBrains Mono', monospace", fontSize: '10px',
+          color: active ? '#D8B979' : '#63656F'
+        }
+      };
+    });
+
+    const markers = defs.map((d, i) => {
+      const first = i === 0, last = i === defs.length - 1;
+      return {
+        tLabel: d.tl,
+        wrapStyle: {
+          position: 'absolute', top: (i % 2 ? '21px' : '0px'),
+          left: (d.t / T * 100).toFixed(2) + '%',
+          transform: first ? 'none' : (last ? 'translateX(-100%)' : 'translateX(-50%)'),
+          textAlign: first ? 'left' : (last ? 'right' : 'center')
+        }
+      };
+    });
+
+    return {
+      brandName, tagline, brand, bg1, bg2, mode,
+      progress, settled: 0.88,
+      durLabel: durSec.toFixed(2) + 's',
+      durMs: Math.round(durSec * 1000),
+      timeLabel: (progress * durSec).toFixed(2) + 's',
+      sliderVal: Math.round(progress * 1000),
+      sliderStyle: { width: '100%', ['--fill']: (progress * 100).toFixed(1) + '%' },
+      playBtnStyle: {
+        fontFamily: "'Manrope'", fontSize: '13px', fontWeight: 600,
+        color: '#0E0F13', background: '#D8B979', border: 'none', borderRadius: '999px',
+        padding: '10px 22px', cursor: 'pointer'
+      },
+      playLabel: this.state.playing ? 'Pause' : 'Play',
+      play: this.play, replay: this.replay, onScrub: this.onScrub, onCard: this.onCard,
+      frames, markers
+    };
+  }
+}
+</script>
+</body>
+</html>

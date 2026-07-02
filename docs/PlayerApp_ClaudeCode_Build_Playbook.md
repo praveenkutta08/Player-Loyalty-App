@@ -419,6 +419,15 @@ Screens: THM
 **Acceptance:** editing tokens updates the live preview + manifest version.
 **Commit:** `feat(admin): theme management + live preview`
 
+> **Scope constraint (added 2026-07-02, applies whenever this screen is built or revisited):**
+> "typography" here means selecting a **font pairing from the app's bundled, curated set**
+> (enum `typography.pairing` in the manifest) — NOT free-form font-family input or font uploads.
+> Mobile fonts ship in the binary; arbitrary tenant fonts would need a build + store release and
+> a licensing check, which breaks the no-rebuild white-label model. Keep the curated set to
+> open-license fonts. Custom per-tenant fonts are a gated later-phase feature
+> (see docs/WHITE_LABEL_CUSTOMIZATION_ROADMAP.md §3.21). Font sizes/weights stay token values
+> (pack-driven), not per-tenant free-form fields.
+
 ### P3.5 — Content authoring
 ```
 Build content management: list/create/edit/schedule/publish content items with media (from the Media
@@ -926,6 +935,150 @@ Tests: seed idempotent; events written.
 
 ---
 
+# PHASE 7 — White-label Appearance: Splash & Bottom Nav variants
+
+> Added 2026-07-02 (rev. same day: 4 variants per the design handoff), **append-only** — nothing
+> above changes; safe to queue behind whatever is currently running. Full option catalog + phasing
+> rationale: `docs/WHITE_LABEL_CUSTOMIZATION_ROADMAP.md`.
+> Scope (decided): **4 splash variants** — `journey` (Destination Journey), `collection`
+> (The Collection), `portal` (Luxury Portal), `silk` (Silk Wave) — and **2 bottom-nav styles**
+> (Floating Pill, Editorial), both tenant-selected in the CMS Portal, delivered via the manifest
+> (golden rule #5) — no rebuild per tenant. **`silk` is the system default/fallback** (the
+> handoff's `horizon` flagship is NOT in MVP scope). Nav styles are **visual treatments only**;
+> the Option B structure (Home · Offers · center Scan/Play · Account · More) and the center
+> action's cashless-flag fallback are unchanged.
+> **Splash designs are in `design/splash/`** (high-fidelity handoff: `README.md` +
+> `Splash Variant Studio.dc.html` is the authoritative motion/interpolation spec — open in a
+> browser with `support.js` alongside). **Nav styles have NO design file (decided): Claude Code
+> designs them in P7.4** from the app's existing design system/tokens and the splash handoff's
+> visual language.
+> Dependencies: P7.1 needs P1.5; P7.2 needs P3.4 (+ P3.12 for the nav picker placement);
+> P7.3–P7.4 need P4.2. Run order: P7.1 → P7.2 → P7.3 → P7.4.
+> Open design item for P7.3 `collection`: the logged-out/anonymous card state (see prompt).
+
+### P7.1 — Manifest schema: `splash` block + `navigation.style` (backend)
+```
+Read CLAUDE.md golden rule #5, docs/WHITE_LABEL_CUSTOMIZATION_ROADMAP.md §2, and
+design/splash/README.md (manifest-relevant fields only). Backend only.
+Extend the tenant manifest (P1.5) additively:
+- New `splash` block: { variant: "journey"|"collection"|"portal"|"silk" (default "silk"),
+  logoAssetId, backgroundValue: [topHex, bottomHex], taglineText (optional, localizable key),
+  animationDurationMs (optional — RESCALES the variant's native timeline linearly; clamp
+  1800–3000; absent = variant native duration), environmentTheme:
+  "coast"|"mountain"|"desert"|"skyline"|"forest" (used by "journey" only; default "coast";
+  themes are CMS catalog entries — two SVG path strings each — so new themes need no app release) }.
+  Server-side validation: known enums only; clamp duration; logo asset must exist in the tenant
+  Media Library.
+- New `navigation.style`: "floatingPill" | "editorial" (default "editorial"). This is a SIBLING of
+  the existing `navigation.tabs` — tab structure/flags are untouched.
+- Forward compatibility: all appearance enums are versioned; the manifest endpoint never 500s on
+  config it can't validate — it falls back to the documented default ("silk" / "editorial") and
+  logs a warning. Document the fallback defaults in the manifest schema (shared-types).
+- Editing these via the tenant-config API is permission-gated (theme/appearance permission per
+  Appendix C) and writes an audit_logs row; publish bumps the manifest version.
+Update packages/shared-types Manifest type; regenerate packages/api-client (additive).
+Tests: validation clamps + rejects unknown enums on WRITE but tolerates them on READ (fallback);
+environmentTheme only accepted with variant "journey" (warn otherwise); RLS on config; audit row
+on change; manifest version bump on publish.
+```
+**Acceptance:** manifest serves `splash` + `navigation.style` with validated values and safe fallbacks; api-client regenerated.
+**Commit:** `feat(backend): manifest splash block + navigation.style enum`
+
+### P7.2 — Admin: Appearance — Splash gallery + Nav style picker + typography retrofit
+```
+Extend the CMS Portal (existing P3 patterns; permission-gated; tenant-scoped). Three changes:
+- RETROFIT the existing Theme Management typography section (built in P3.4 BEFORE the font
+  constraint was decided — see the note under P3.4): audit what P3.4 actually built. If it allows
+  free-form font-family input or font upload, REPLACE that with a curated pairing picker
+  (`typography.pairing` enum — gallery cards showing each display+UI pairing rendered live);
+  migrate any existing tenant font config to the nearest pairing. If P3.4 already built a
+  constrained picker, just align it to the `typography.pairing` manifest key. Backend: add the
+  enum to the manifest schema (same P7.1 pattern: versioned, default = tokens.json pairing,
+  read-side fallback). Sizes/weights remain token values — remove any free-form size fields.
+- Theme Management (P3.4) gains a "Splash Screen" section: a 4-card visual gallery — Destination
+  Journey (`journey`) / The Collection (`collection`) / Luxury Portal (`portal`) / Silk Wave
+  (`silk`) — with an animated thumbnail per variant, plus the config form (logo from Media
+  Library, background gradient [top,bottom], tagline, optional duration slider clamped 1.8–3s
+  labeled "rescales the animation", and — for `journey` only — an environment theme picker:
+  coast/mountain/desert/skyline/forest). The sticky phone-frame preview renders the SELECTED
+  variant with the tenant's actual logo, colors, and tagline; the design handoff's HTML prototypes
+  (design/splash/, esp. Splash Variant Studio.dc.html) are the visual reference for the preview
+  (web recreation — close, not pixel-perfect; label it "preview").
+- Navigation Builder (P3.12) gains a "Bar style" picker: Floating Pill vs Editorial radio cards
+  with a live preview of the tenant's current tabs in each style. Elevation/radius/blur are FIXED
+  per-style presets — not free-form fields.
+Draft -> Preview -> Publish flow as elsewhere; publish bumps the manifest version + audit row.
+Tests: RBAC gating; preview reflects config changes; publish bumps manifest; invalid duration
+rejected client- and server-side; typography accepts only known pairing enum values.
+```
+**Acceptance:** admin picks splash variant + nav style + font pairing, previews with real tenant branding, publishes; app manifest updates; no free-form font input remains.
+**Commit:** `feat(admin): splash gallery + nav style picker + curated typography pairings`
+
+### P7.3 — Mobile: 4 splash experiences (manifest-driven)
+```
+Use Plan mode. The high-fidelity design handoff is in design/splash/ — read README.md fully first.
+Splash Variant Studio.dc.html + SplashScreen.dc.html contain the AUTHORITATIVE interpolation math
+(the `progress != null` branch and the seg/eo/eio/expo/back/lerp helpers) — port to Reanimated
+worklets 1:1. Timing windows, easings, and layout are final; recreate precisely.
+Implement ONE <Splash variant=...> component family driven entirely by the manifest `splash`
+block resolved in P4.2 (no hardcoded brand values — golden rule #5):
+- Variants: journey, collection, portal, silk — shared fixed layout (safe areas, emblem slot,
+  wordmark block per README), shared master clock t (one useSharedValue + withTiming linear;
+  per-element worklets ease within their [start,end] windows), shared final 200ms hand-off
+  (scene fade + emblem interpolates to the measured Home header slot).
+- Per-variant native durations (journey 2.6s, others 2.2–2.4s); manifest animationDurationMs
+  RESCALES the timeline linearly (clamp 1800–3000ms).
+- journey: environmentTheme terrain (two react-native-svg Paths — animate wrapper transform only),
+  bézier traveler evaluated in the worklet per the spec.
+- collection: DESIGN PREREQUISITE — the logged-out/anonymous card state is not yet in the handoff
+  (tier label + card number require a member). Until the design drop arrives: logged-out = generic
+  brand-monogram cards, NO tier label, NO card number; logged-in shows tier label only — NEVER a
+  real card number on the splash (decorative masked digits only). STOP and confirm this reading
+  if ambiguous.
+- portal: rings = plain Views (hairline border + static shadow); reveal via masked-view/Skia clip;
+  low-end fallback = opacity + scale without mask, per the spec.
+- silk: pre-blurred ribbon assets (NO runtime blur on full-width layers); emblem blur = cross-fade
+  of pre-blurred vs sharp logo copies.
+- Animate ONLY opacity/transform/(dashoffset); respect OS reduced-motion via the handoff's shared
+  path: skip timelines, 300ms cross-fade of the final frame, navigate.
+- Cold start: native bootsplash shows tenant logo on backgroundValue[1] instantly; the animated
+  variant runs while manifest/Home data prefetch completes; never block on network (cached
+  manifest + bundled default config so first launch is never blank). Plays once per cold start.
+- Unknown/missing variant -> fall back to "silk" + log (NOT the handoff's "horizon" — horizon is
+  not in MVP scope).
+Storybook/dev screen: all 4 variants × light/dark × reduced-motion × (collection: logged-in/out).
+Tests: interpolation helpers (pure, matched against 3-4 sampled t values per variant from the
+studio); fallback on unknown enum; duration rescale clamp; reduced-motion path; no network block.
+```
+**Acceptance:** all 4 variants render from manifest config on iOS + Android matching the studio reference; switching variants in CMS changes the app splash with no rebuild.
+**Commit:** `feat(mobile): manifest-driven splash variants (journey/collection/portal/silk)`
+
+### P7.4 — Mobile: 2 bottom-nav styles (Floating Pill · Editorial)
+```
+Use Plan mode. There is NO design file for the nav styles — YOU design them, derived from the
+app as it exists: the design-system tokens (design/tokens.json names via the manifest), the
+current tab bar (P4.1/P4.14), and the visual language of the splash handoff (design/splash/
+README.md: Marcellus/Manrope type, hairline strokes, primary-color-only glows, restrained motion).
+Before implementing, present both designs for approval as a dev/Storybook screen or annotated
+mock: exact dp specs (bar height, insets, radius, icon/label sizes, active treatment) per style.
+Implement navigation.style as a visual-only skin over the EXISTING config-driven tab bar (P4.14).
+Non-negotiables: same Option B slots, same manifest `navigation.tabs`, center Scan/Play action and
+its cashless-flag fallback preserved, deep links and tab state untouched.
+- floatingPill: detached pill bar, per-style fixed preset for radius/elevation; blur only where
+  cheap (iOS native blur; Android uses a translucent solid — no RenderScript/heavy blur).
+- editorial: classic docked bar, hairline top border, label-forward.
+- Both: theme tokens only; safe-area + keyboard-avoidance correct on both platforms; active/inactive
+  colors from the manifest; respect reduced motion for transitions.
+- Unknown style value -> fall back to editorial + log.
+Storybook/dev screen: both styles × 4/5 tabs × cashless on/off × light/dark.
+Tests: fallback on unknown enum; center-action fallback still works in both styles; snapshot per
+style/theme; safe-area on notch + gesture-nav devices.
+```
+**Acceptance:** switching `navigation.style` in CMS restyles the tab bar with no rebuild; Option B behavior identical in both styles.
+**Commit:** `feat(mobile): navigation.style skins (floatingPill/editorial)`
+
+---
+
 # Appendix
 
 ## Suggested build order & dependencies
@@ -934,6 +1087,9 @@ the UIs. Phase 3 (admin) and Phase 4 (mobile) can then proceed in parallel by di
 Phase 5 wires + hardens. Within a phase, keep prompts in order — later ones assume earlier models.
 Phase 6 (concierge) is append-only: default is after P5.5; optionally interleave P6.1–P6.3 at any
 Phase-3 pause (backend-only, additive), P6.4 after P3.11, P6.5–P6.6 after P4.4.
+Phase 7 (appearance variants) is append-only: default is after Phase 6; P7.1 can run any time after
+P1.5, P7.2 after P3.4/P3.12, P7.3–P7.4 after P4.2. Splash designs are in `design/splash/` (done);
+nav styles are designed by Claude Code inside P7.4 (no design file — approval gate in the prompt).
 
 ## Definition of done (per prompt)
 Acceptance checks pass; new code has tests; `lint + typecheck + test` green; OpenAPI + api-client

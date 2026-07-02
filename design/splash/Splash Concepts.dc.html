@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#0A0B0F;-webkit-font-smoothing:antialiased}
+
+  /* ---------- 1 · THE THRESHOLD ---------- */
+  @keyframes c1-seam{0%{opacity:0;transform:scaleY(.15)}6%{opacity:1;transform:scaleY(1)}16%{opacity:1}24%{opacity:0}100%{opacity:0}}
+  @keyframes c1-doorL{0%,16%{transform:translateX(0)}42%{transform:translateX(-101%)}100%{transform:translateX(-101%)}}
+  @keyframes c1-doorR{0%,16%{transform:translateX(0)}42%{transform:translateX(101%)}100%{transform:translateX(101%)}}
+  @keyframes c1-logo{0%,24%{opacity:0;transform:scale(.9);filter:blur(7px)}46%{opacity:1;transform:scale(1);filter:blur(0)}84%{opacity:1;filter:blur(0)}94%,100%{opacity:0;transform:scale(1.03);filter:blur(3px)}}
+  @keyframes c1-word{0%,40%{opacity:0;letter-spacing:.62em}58%{opacity:1;letter-spacing:.30em}84%{opacity:1;letter-spacing:.30em}94%,100%{opacity:0}}
+  @keyframes c1-rule{0%,54%{transform:scaleX(0)}70%{transform:scaleX(1)}84%{transform:scaleX(1)}94%,100%{opacity:0;transform:scaleX(1)}}
+
+  /* ---------- 2 · THE SEAL ---------- */
+  @keyframes c2-draw{0%,5%{stroke-dashoffset:560;opacity:.85}46%{stroke-dashoffset:0;opacity:1}86%{stroke-dashoffset:0;opacity:1}94%,100%{opacity:0}}
+  @keyframes c2-fill{0%,46%{opacity:0}62%{opacity:1}86%{opacity:1}94%,100%{opacity:0}}
+  @keyframes c2-shimmer{0%,50%{transform:translateX(-180%) rotate(18deg);opacity:0}54%{opacity:.9}70%{transform:translateX(180%) rotate(18deg);opacity:.9}72%,100%{opacity:0}}
+  @keyframes c2-word{0%,58%{opacity:0;transform:translateY(10px)}74%{opacity:1;transform:translateY(0)}86%{opacity:1}94%,100%{opacity:0}}
+
+  /* ---------- 3 · GOLDEN HOUR ---------- */
+  @keyframes c3-glow{0%{opacity:0}14%{opacity:1}100%,50%{opacity:1}}
+  @keyframes c3-breathe{0%,100%{transform:translate(-50%,-46%) scale(1)}50%{transform:translate(-50%,-52%) scale(1.16)}}
+  @keyframes c3-logo{0%,10%{opacity:0;transform:translateY(12px) scale(.96)}30%{opacity:1;transform:translateY(0) scale(1)}86%{opacity:1}94%,100%{opacity:0}}
+  @keyframes c3-g1{0%,34%{opacity:0;transform:translateY(10px)}50%{opacity:1;transform:translateY(0)}86%{opacity:1}94%,100%{opacity:0}}
+  @keyframes c3-g2{0%,48%{opacity:0;transform:translateY(12px)}66%{opacity:1;transform:translateY(0)}86%{opacity:1}94%,100%{opacity:0}}
+
+  /* ---------- 4 · THE COLLECTION ---------- */
+  @keyframes c4-card1{0%{opacity:0;transform:translate(-50%,-190%) rotate(-15deg)}30%{opacity:1;transform:translate(-50%,-50%) rotate(-8deg)}86%{opacity:1;transform:translate(-50%,-50%) rotate(-8deg)}94%,100%{opacity:0;transform:translate(-50%,-50%) rotate(-8deg)}}
+  @keyframes c4-card2{0%,10%{opacity:0;transform:translate(-50%,-190%) rotate(11deg)}42%{opacity:1;transform:translate(-50%,-50%) rotate(4deg)}86%{opacity:1;transform:translate(-50%,-50%) rotate(4deg)}94%,100%{opacity:0;transform:translate(-50%,-50%) rotate(4deg)}}
+  @keyframes c4-card3{0%,20%{opacity:0;transform:translate(-50%,-190%) rotate(-3deg)}52%{opacity:1;transform:translate(-50%,-50%) rotate(-1deg)}86%{opacity:1;transform:translate(-50%,-50%) rotate(-1deg)}94%,100%{opacity:0;transform:translate(-50%,-50%) rotate(-1deg)}}
+  @keyframes c4-label{0%,56%{opacity:0;transform:translateY(10px)}72%{opacity:1;transform:translateY(0)}86%{opacity:1}94%,100%{opacity:0}}
+
+  /* ---------- 5 · CONCIERGE PULSE ---------- */
+  @keyframes c5-bloom{0%{opacity:0;transform:translate(-50%,-50%) scale(.35)}30%{opacity:1;transform:translate(-50%,-50%) scale(1)}86%{opacity:1}94%,100%{opacity:0}}
+  @keyframes c5-ring{0%,14%{opacity:0;transform:translate(-50%,-50%) scale(.35)}22%{opacity:.65}58%{opacity:0;transform:translate(-50%,-50%) scale(2.5)}100%{opacity:0}}
+  @keyframes c5-ring2{0%,26%{opacity:0;transform:translate(-50%,-50%) scale(.35)}34%{opacity:.5}70%{opacity:0;transform:translate(-50%,-50%) scale(2.5)}100%{opacity:0}}
+  @keyframes c5-logo{0%,12%{opacity:0;transform:scale(.6)}26%{opacity:1;transform:scale(1.09)}34%{transform:scale(1)}86%{opacity:1;transform:scale(1)}94%,100%{opacity:0;transform:scale(1.03)}}
+  @keyframes c5-word{0%,42%{opacity:0}58%{opacity:1}86%{opacity:1}94%,100%{opacity:0}}
+</style>
+</helmet>
+
+<div style="font-family:'Manrope',sans-serif;min-height:100%;background:radial-gradient(1200px 700px at 50% -8%, #16171E 0%, #0A0B0F 60%);color:#C9CBD2;padding:64px 72px 120px">
+
+  <!-- ============ HEADER ============ -->
+  <header style="max-width:1240px;margin:0 auto 68px">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:26px">
+      <span style="width:30px;height:1px;background:#D8B979"></span>
+      <span style="font-size:12px;letter-spacing:.42em;text-transform:uppercase;color:#7C7E88">White-Label · Loyalty &amp; Resort</span>
+    </div>
+    <h1 style="font-family:'Marcellus',serif;font-weight:400;color:#F1ECDF;font-size:clamp(38px,4.4vw,64px);line-height:1.04;margin:0 0 22px;max-width:20ch">Splash Experience System — five ways to say <em style="font-style:italic;color:#D8B979">welcome</em>.</h1>
+    <p style="max-width:64ch;font-size:16px;line-height:1.7;color:#9A9CA6;margin:0 0 34px">Five distinct arrival moments for a single white-label app serving hundreds of casino resorts. Every mark, wordmark, color and tagline is a CMS token — the choreography stays fixed while the brand flows through. Closer to Apple Wallet &amp; Airbnb than a casino floor: no chips, no cards, no neon. Each concept is shown running here in a <em style="font-style:italic;color:#C9CBD2">different</em> brand theme to prove the rig travels.</p>
+
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+      <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-right:6px">CMS tokens</span>
+      <span style="font-size:12px;padding:7px 14px;border:1px solid rgba(255,255,255,.12);border-radius:999px;color:#C9CBD2">Logo · SVG / PNG / Lottie</span>
+      <span style="font-size:12px;padding:7px 14px;border:1px solid rgba(255,255,255,.12);border-radius:999px;color:#C9CBD2">Casino name</span>
+      <span style="font-size:12px;padding:7px 14px;border:1px solid rgba(255,255,255,.12);border-radius:999px;color:#C9CBD2">Brand color</span>
+      <span style="font-size:12px;padding:7px 14px;border:1px solid rgba(255,255,255,.12);border-radius:999px;color:#C9CBD2">Background style</span>
+      <span style="font-size:12px;padding:7px 14px;border:1px solid rgba(255,255,255,.12);border-radius:999px;color:#C9CBD2">Optional tagline</span>
+    </div>
+    <p style="font-size:13px;color:#63656F;margin:22px 0 0">Tip · use the <strong style="color:#8E9098;font-weight:600">Tweaks</strong> panel to force one brand color across all five, or slow the playback down.</p>
+  </header>
+
+  <div style="max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:44px">
+
+    <!-- ============ 1 · THE THRESHOLD ============ -->
+    <section id="1a" data-screen-label="Concept 1a — The Threshold" style="display:flex;gap:56px;align-items:center;flex-wrap:wrap;background:linear-gradient(180deg, rgba(216,169,121,.05), rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:28px;padding:44px">
+      <div style="position:relative;flex:0 0 auto;margin:0 auto">
+        <div style="position:absolute;inset:-40px;background:radial-gradient(closest-side, rgba(216,169,121,.22), transparent 70%);filter:blur(6px)"></div>
+        <!-- PHONE -->
+        <div style="position:relative;width:300px;height:620px;border-radius:48px;background:#1b1c22;padding:9px;box-shadow:0 40px 90px -30px rgba(0,0,0,.9),inset 0 0 0 1px rgba(255,255,255,.06)">
+          <div style="position:relative;width:100%;height:100%;border-radius:40px;overflow:hidden;background:#0E0F13;color:var(--fb,#D8B979)">
+            <!-- status + island -->
+            <div style="position:absolute;top:0;left:0;right:0;height:52px;z-index:8;display:flex;align-items:center;justify-content:space-between;padding:18px 26px 0;font-size:13px;color:#EFE7D6;font-weight:600">
+              <span>9:41</span><span style="opacity:.8;font-size:11px;letter-spacing:.1em">● ● ●</span>
+            </div>
+            <div style="position:absolute;top:13px;left:50%;transform:translateX(-50%);width:96px;height:27px;background:#000;border-radius:16px;z-index:9"></div>
+            <!-- splash -->
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px">
+              <div style="animation:c1-logo calc(4.8s / var(--speed,1)) cubic-bezier(.2,.7,.2,1) infinite;color:var(--fb,#D8B979)">
+                <svg width="76" height="76" viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="55" stroke="currentColor" stroke-width="1.3" opacity="0.45"/><path d="M60 8 L70.5 49.5 L112 60 L70.5 70.5 L60 112 L49.5 70.5 L8 60 L49.5 49.5 Z" fill="currentColor"/><circle cx="60" cy="60" r="4" fill="#0E0F13"/></svg>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+                <div style="animation:c1-word calc(4.8s / var(--speed,1)) cubic-bezier(.2,.7,.2,1) infinite;font-family:'Marcellus',serif;font-size:26px;letter-spacing:.30em;color:#EFE7D6;padding-left:.30em">MERIDIAN</div>
+                <div style="width:64px;height:1px;background:var(--fb,#D8B979);transform-origin:center;animation:c1-rule calc(4.8s / var(--speed,1)) cubic-bezier(.2,.7,.2,1) infinite"></div>
+              </div>
+            </div>
+            <!-- doors of light -->
+            <div style="position:absolute;top:0;bottom:0;left:0;width:50%;background:linear-gradient(90deg,#0E0F13 60%, rgba(216,169,121,.18));z-index:6;animation:c1-doorL calc(4.8s / var(--speed,1)) cubic-bezier(.65,0,.2,1) infinite"></div>
+            <div style="position:absolute;top:0;bottom:0;right:0;width:50%;background:linear-gradient(270deg,#0E0F13 60%, rgba(216,169,121,.18));z-index:6;animation:c1-doorR calc(4.8s / var(--speed,1)) cubic-bezier(.65,0,.2,1) infinite"></div>
+            <!-- seam -->
+            <div style="position:absolute;top:12%;bottom:12%;left:50%;width:2px;transform:translateX(-50%);background:linear-gradient(180deg,transparent,var(--fb,#D8B979),transparent);box-shadow:0 0 24px 3px rgba(216,169,121,.7);z-index:7;transform-origin:center;animation:c1-seam calc(4.8s / var(--speed,1)) ease infinite"></div>
+          </div>
+        </div>
+      </div>
+      <!-- ANNOTATION -->
+      <div style="flex:1;min-width:420px">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+          <span style="font-family:'Manrope';font-weight:700;font-size:12px;letter-spacing:.12em;color:#0E0F13;background:#D8B979;padding:6px 11px;border-radius:8px">1A</span>
+          <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:30px;color:#F1ECDF;margin:0">The Threshold</h2>
+          <span style="margin-left:auto;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8EC9A8;border:1px solid rgba(142,201,168,.35);padding:5px 11px;border-radius:999px">Easy–Medium</span>
+        </div>
+        <p style="font-size:15px;line-height:1.65;color:#B4B6BF;margin:0 0 24px">Two planes of light part from a single champagne seam to reveal the emblem on near-black; a hairline rule settles beneath the wordmark. An <em style="font-style:italic;color:#D8B979">arrival</em>, not a spectacle.</p>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px 40px">
+          <div>
+            <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-bottom:12px">Motion sequence · ~2.6s</div>
+            <div style="display:flex;flex-direction:column;gap:9px;font-size:13.5px;line-height:1.4">
+              <div style="display:flex;gap:12px"><span style="color:#D8B979;font-variant-numeric:tabular-nums;min-width:34px">0.0s</span><span>Hairline seam glows at center</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#D8B979;font-variant-numeric:tabular-nums;min-width:34px">0.3s</span><span>Seam blooms, planes of light part</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#D8B979;font-variant-numeric:tabular-nums;min-width:34px">0.9s</span><span>Emblem resolves out of soft blur</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#D8B979;font-variant-numeric:tabular-nums;min-width:34px">1.4s</span><span>Wordmark tightens into place</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#D8B979;font-variant-numeric:tabular-nums;min-width:34px">2.0s</span><span>Gold underline draws L→R, holds</span></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div>
+              <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-bottom:8px">Why it feels premium</div>
+              <p style="font-size:13.5px;line-height:1.6;color:#AEB0B9;margin:0">A single choreographed reveal. The opening gesture reads as being welcomed through a door — hospitality, not gaming.</p>
+            </div>
+            <div>
+              <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-bottom:8px">White-label fit</div>
+              <p style="font-size:13.5px;line-height:1.6;color:#AEB0B9;margin:0">Emblem, wordmark and seam are pure tokens — swap the logo &amp; brand color and the choreography is untouched.</p>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:24px;display:flex;gap:8px">
+          <span style="font-size:11.5px;padding:5px 12px;border-radius:999px;background:rgba(216,169,121,.1);color:#D8B979;border:1px solid rgba(216,169,121,.25)">Reanimated · translate + opacity</span>
+          <span style="font-size:11.5px;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.04);color:#9A9CA6;border:1px solid rgba(255,255,255,.1)">Lottie logo (optional)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 2 · THE SEAL ============ -->
+    <section id="1b" data-screen-label="Concept 1b — The Seal" style="display:flex;gap:56px;align-items:center;flex-wrap:wrap;background:linear-gradient(180deg, rgba(228,197,116,.05), rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:28px;padding:44px">
+      <div style="position:relative;flex:0 0 auto;margin:0 auto">
+        <div style="position:absolute;inset:-40px;background:radial-gradient(closest-side, rgba(228,197,116,.18), transparent 70%);filter:blur(6px)"></div>
+        <div style="position:relative;width:300px;height:620px;border-radius:48px;background:#1b1c22;padding:9px;box-shadow:0 40px 90px -30px rgba(0,0,0,.9),inset 0 0 0 1px rgba(255,255,255,.06)">
+          <div style="position:relative;width:100%;height:100%;border-radius:40px;overflow:hidden;background:radial-gradient(120% 90% at 50% 30%, #103a2c, #0C2C22 70%);color:var(--fb,#E4C574)">
+            <div style="position:absolute;top:0;left:0;right:0;height:52px;z-index:8;display:flex;align-items:center;justify-content:space-between;padding:18px 26px 0;font-size:13px;color:#EAE0C8;font-weight:600"><span>9:41</span><span style="opacity:.8;font-size:11px;letter-spacing:.1em">● ● ●</span></div>
+            <div style="position:absolute;top:13px;left:50%;transform:translateX(-50%);width:96px;height:27px;background:#000;border-radius:16px;z-index:9"></div>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px">
+              <div style="position:relative;width:120px;height:120px;overflow:hidden;color:var(--fb,#E4C574)">
+                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" style="position:absolute;inset:0">
+                  <circle cx="60" cy="60" r="55" stroke="currentColor" stroke-width="1.4" fill="none" style="stroke-dasharray:560;animation:c2-draw calc(4.8s / var(--speed,1)) ease infinite"/>
+                  <path d="M60 8 L70.5 49.5 L112 60 L70.5 70.5 L60 112 L49.5 70.5 L8 60 L49.5 49.5 Z" stroke="currentColor" stroke-width="1.4" fill="none" style="stroke-dasharray:560;animation:c2-draw calc(4.8s / var(--speed,1)) ease infinite"/>
+                  <path d="M60 8 L70.5 49.5 L112 60 L70.5 70.5 L60 112 L49.5 70.5 L8 60 L49.5 49.5 Z" fill="currentColor" style="animation:c2-fill calc(4.8s / var(--speed,1)) ease infinite"/>
+                  <circle cx="60" cy="60" r="4" fill="#0C2C22" style="animation:c2-fill calc(4.8s / var(--speed,1)) ease infinite"/>
+                </svg>
+                <div style="position:absolute;top:0;bottom:0;left:0;width:30px;background:linear-gradient(90deg,transparent,rgba(255,248,225,.9),transparent);animation:c2-shimmer calc(4.8s / var(--speed,1)) ease infinite"></div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:11px;animation:c2-word calc(4.8s / var(--speed,1)) cubic-bezier(.2,.7,.2,1) infinite">
+                <div style="font-family:'Marcellus',serif;font-size:25px;letter-spacing:.28em;color:#EAE0C8;padding-left:.28em">MERIDIAN</div>
+                <div style="font-size:10.5px;letter-spacing:.36em;color:var(--fb,#E4C574);text-transform:uppercase;padding-left:.36em">Grand Resort &amp; Club</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:420px">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+          <span style="font-weight:700;font-size:12px;letter-spacing:.12em;color:#0C2C22;background:#E4C574;padding:6px 11px;border-radius:8px">1B</span>
+          <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:30px;color:#F1ECDF;margin:0">The Seal</h2>
+          <span style="margin-left:auto;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#E4C574;border:1px solid rgba(228,197,116,.35);padding:5px 11px;border-radius:999px">Medium</span>
+        </div>
+        <p style="font-size:15px;line-height:1.65;color:#B4B6BF;margin:0 0 24px">The mark draws itself stroke-by-stroke like an engraved seal, fills to solid metal, then a single light glint sweeps across it — a maker's mark, verified.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px 40px">
+          <div>
+            <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-bottom:12px">Motion sequence · ~2.6s</div>
+            <div style="display:flex;flex-direction:column;gap:9px;font-size:13.5px;line-height:1.4">
+              <div style="display:flex;gap:12px"><span style="color:#E4C574;font-variant-numeric:tabular-nums;min-width:34px">0.0s</span><span>Ring &amp; mark trace on as strokes</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#E4C574;font-variant-numeric:tabular-nums;min-width:34px">1.0s</span><span>Strokes fill to solid metal</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#E4C574;font-variant-numeric:tabular-nums;min-width:34px">1.3s</span><span>A light glint sweeps across</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#E4C574;font-variant-numeric:tabular-nums;min-width:34px">1.7s</span><span>Wordmark + tagline rise beneath</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#E4C574;font-variant-numeric:tabular-nums;min-width:34px">2.4s</span><span>Holds, dissolves into app</span></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div><div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-bottom:8px">Why it feels premium</div><p style="font-size:13.5px;line-height:1.6;color:#AEB0B9;margin:0">"Hand-crafted, then authenticated." The draw + glint signals heritage and trust — closer to a passport stamp than a loading spinner.</p></div>
+            <div><div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-bottom:8px">White-label fit</div><p style="font-size:13.5px;line-height:1.6;color:#AEB0B9;margin:0">Each brand ships a Lottie of its own logo path; the draw / fill / glint rig is reused verbatim.</p></div>
+          </div>
+        </div>
+        <div style="margin-top:24px;display:flex;gap:8px;flex-wrap:wrap">
+          <span style="font-size:11.5px;padding:5px 12px;border-radius:999px;background:rgba(228,197,116,.1);color:#E4C574;border:1px solid rgba(228,197,116,.25)">Lottie · stroke draw-on</span>
+          <span style="font-size:11.5px;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.04);color:#9A9CA6;border:1px solid rgba(255,255,255,.1)">Reanimated · shimmer sweep</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 3 · GOLDEN HOUR ============ -->
+    <section id="1c" data-screen-label="Concept 1c — Golden Hour" style="display:flex;gap:56px;align-items:center;flex-wrap:wrap;background:linear-gradient(180deg, rgba(233,201,160,.06), rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:28px;padding:44px">
+      <div style="position:relative;flex:0 0 auto;margin:0 auto">
+        <div style="position:absolute;inset:-40px;background:radial-gradient(closest-side, rgba(233,201,160,.24), transparent 70%);filter:blur(6px)"></div>
+        <div style="position:relative;width:300px;height:620px;border-radius:48px;background:#1b1c22;padding:9px;box-shadow:0 40px 90px -30px rgba(0,0,0,.9),inset 0 0 0 1px rgba(255,255,255,.06)">
+          <div style="position:relative;width:100%;height:100%;border-radius:40px;overflow:hidden;background:#F4ECDD;color:var(--fb,#8A5A34)">
+            <div style="position:absolute;inset:0;overflow:hidden;animation:c3-glow calc(4.8s / var(--speed,1)) ease infinite">
+              <div style="position:absolute;top:50%;left:50%;width:420px;height:420px;border-radius:50%;background:radial-gradient(closest-side, rgba(233,201,160,.9), rgba(233,201,160,0) 72%);animation:c3-breathe calc(4.8s / var(--speed,1)) ease-in-out infinite"></div>
+            </div>
+            <div style="position:absolute;top:0;left:0;right:0;height:52px;z-index:8;display:flex;align-items:center;justify-content:space-between;padding:18px 26px 0;font-size:13px;color:#3A2A1E;font-weight:600"><span>9:41</span><span style="opacity:.7;font-size:11px;letter-spacing:.1em">● ● ●</span></div>
+            <div style="position:absolute;top:13px;left:50%;transform:translateX(-50%);width:96px;height:27px;background:#00000022;border-radius:16px;z-index:9"></div>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;z-index:5">
+              <div style="animation:c3-logo calc(4.8s / var(--speed,1)) cubic-bezier(.2,.7,.2,1) infinite;margin-bottom:34px;color:var(--fb,#8A5A34)">
+                <svg width="58" height="58" viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="55" stroke="currentColor" stroke-width="1.6" opacity="0.5"/><path d="M60 8 L70.5 49.5 L112 60 L70.5 70.5 L60 112 L49.5 70.5 L8 60 L49.5 49.5 Z" fill="currentColor"/><circle cx="60" cy="60" r="4" fill="#F4ECDD"/></svg>
+              </div>
+              <div style="animation:c3-g1 calc(4.8s / var(--speed,1)) cubic-bezier(.2,.7,.2,1) infinite;font-size:15px;letter-spacing:.05em;color:#7A6753;margin-bottom:8px">Good evening,</div>
+              <div style="animation:c3-g2 calc(4.8s / var(--speed,1)) cubic-bezier(.2,.7,.2,1) infinite;font-family:'Marcellus',serif;font-size:34px;color:#3A2A1E">Alexander</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:420px">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+          <span style="font-weight:700;font-size:12px;letter-spacing:.12em;color:#F4ECDD;background:#8A5A34;padding:6px 11px;border-radius:8px">1C</span>
+          <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:30px;color:#F1ECDF;margin:0">Golden Hour</h2>
+          <span style="margin-left:auto;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8EC9A8;border:1px solid rgba(142,201,168,.35);padding:5px 11px;border-radius:999px">Easy</span>
+        </div>
+        <p style="font-size:15px;line-height:1.65;color:#B4B6BF;margin:0 0 24px">Warm light breathes across a cream field; the mark rests quietly and a time-aware greeting fades up — "Good evening," then the member's name. Being <em style="font-style:italic;color:#D8B979">recognized</em>, like a concierge who knows you.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px 40px">
+          <div>
+            <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-bottom:12px">Motion sequence · ~2.8s</div>
+            <div style="display:flex;flex-direction:column;gap:9px;font-size:13.5px;line-height:1.4">
+              <div style="display:flex;gap:12px"><span style="color:#C79C6A;font-variant-numeric:tabular-nums;min-width:34px">0.0s</span><span>Warm gradient breathes in</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#C79C6A;font-variant-numeric:tabular-nums;min-width:34px">0.4s</span><span>Emblem settles from below</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#C79C6A;font-variant-numeric:tabular-nums;min-width:34px">1.0s</span><span>"Good evening," fades up</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#C79C6A;font-variant-numeric:tabular-nums;min-width:34px">1.5s</span><span>Member name rises beneath</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#C79C6A;font-variant-numeric:tabular-nums;min-width:34px">2.4s</span><span>Holds, hands off to home</span></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div><div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-bottom:8px">Why it feels premium</div><p style="font-size:13.5px;line-height:1.6;color:#AEB0B9;margin:0">Apple-Wallet-calm and personal. Time-of-day tint + name do the emotional work; nothing shouts.</p></div>
+            <div><div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-bottom:8px">White-label fit</div><p style="font-size:13.5px;line-height:1.6;color:#AEB0B9;margin:0">Greeting copy, member name and warmth tint are data; the light theme adapts to any brand's ground color.</p></div>
+          </div>
+        </div>
+        <div style="margin-top:24px;display:flex;gap:8px;flex-wrap:wrap">
+          <span style="font-size:11.5px;padding:5px 12px;border-radius:999px;background:rgba(199,156,106,.12);color:#C79C6A;border:1px solid rgba(199,156,106,.3)">Reanimated · opacity + translate</span>
+          <span style="font-size:11.5px;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.04);color:#9A9CA6;border:1px solid rgba(255,255,255,.1)">Profile + local time</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 4 · THE COLLECTION ============ -->
+    <section id="1d" data-screen-label="Concept 1d — The Collection" style="display:flex;gap:56px;align-items:center;flex-wrap:wrap;background:linear-gradient(180deg, rgba(201,210,222,.05), rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:28px;padding:44px">
+      <div style="position:relative;flex:0 0 auto;margin:0 auto">
+        <div style="position:absolute;inset:-40px;background:radial-gradient(closest-side, rgba(201,210,222,.16), transparent 70%);filter:blur(6px)"></div>
+        <div style="position:relative;width:300px;height:620px;border-radius:48px;background:#1b1c22;padding:9px;box-shadow:0 40px 90px -30px rgba(0,0,0,.9),inset 0 0 0 1px rgba(255,255,255,.06)">
+          <div style="position:relative;width:100%;height:100%;border-radius:40px;overflow:hidden;background:radial-gradient(130% 90% at 50% 20%, #123055, #0B1B30 70%);color:var(--fb,#C9D2DE)">
+            <div style="position:absolute;top:0;left:0;right:0;height:52px;z-index:8;display:flex;align-items:center;justify-content:space-between;padding:18px 26px 0;font-size:13px;color:#E6EBF2;font-weight:600"><span>9:41</span><span style="opacity:.8;font-size:11px;letter-spacing:.1em">● ● ●</span></div>
+            <div style="position:absolute;top:13px;left:50%;transform:translateX(-50%);width:96px;height:27px;background:#000;border-radius:16px;z-index:9"></div>
+            <!-- card stack -->
+            <div style="position:absolute;top:42%;left:0;right:0;height:0;z-index:4">
+              <div style="position:absolute;top:0;left:50%;width:184px;height:116px;border-radius:16px;background:linear-gradient(135deg,#1d3f6b,#12294a);box-shadow:0 20px 40px -18px rgba(0,0,0,.8),inset 0 0 0 1px rgba(201,210,222,.18);animation:c4-card1 calc(4.8s / var(--speed,1)) cubic-bezier(.2,.8,.25,1) infinite"></div>
+              <div style="position:absolute;top:0;left:50%;width:184px;height:116px;border-radius:16px;background:linear-gradient(135deg,#254e82,#16335c);box-shadow:0 20px 40px -18px rgba(0,0,0,.8),inset 0 0 0 1px rgba(201,210,222,.2);animation:c4-card2 calc(4.8s / var(--speed,1)) cubic-bezier(.2,.8,.25,1) infinite"></div>
+              <div style="position:absolute;top:0;left:50%;width:184px;height:116px;border-radius:16px;background:linear-gradient(135deg,#e9edf3,#c3ccd8);box-shadow:0 24px 46px -16px rgba(0,0,0,.85),inset 0 0 0 1px rgba(255,255,255,.5);animation:c4-card3 calc(4.8s / var(--speed,1)) cubic-bezier(.2,.8,.25,1) infinite">
+                <div style="position:absolute;top:16px;left:18px;color:#123055"><svg width="26" height="26" viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="55" stroke="currentColor" stroke-width="2.4" opacity="0.55"/><path d="M60 8 L70.5 49.5 L112 60 L70.5 70.5 L60 112 L49.5 70.5 L8 60 L49.5 49.5 Z" fill="currentColor"/></svg></div>
+                <div style="position:absolute;bottom:14px;left:18px;font-size:9px;letter-spacing:.24em;color:#123055;font-weight:600">PLATINUM MEMBER</div>
+                <div style="position:absolute;bottom:14px;right:18px;font-size:9px;letter-spacing:.14em;color:#3a5680;font-family:'Marcellus',serif">•••• 4417</div>
+              </div>
+            </div>
+            <!-- label -->
+            <div style="position:absolute;left:0;right:0;bottom:118px;display:flex;flex-direction:column;align-items:center;gap:8px;animation:c4-label calc(4.8s / var(--speed,1)) cubic-bezier(.2,.7,.2,1) infinite;z-index:5">
+              <div style="font-family:'Marcellus',serif;font-size:24px;letter-spacing:.26em;color:#E6EBF2;padding-left:.26em">MERIDIAN</div>
+              <div style="font-size:10.5px;letter-spacing:.34em;color:var(--fb,#C9D2DE);text-transform:uppercase;padding-left:.34em">Platinum Collection</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:420px">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+          <span style="font-weight:700;font-size:12px;letter-spacing:.12em;color:#0B1B30;background:#C9D2DE;padding:6px 11px;border-radius:8px">1D</span>
+          <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:30px;color:#F1ECDF;margin:0">The Collection</h2>
+          <span style="margin-left:auto;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#E4C574;border:1px solid rgba(228,197,116,.35);padding:5px 11px;border-radius:999px">Medium</span>
+        </div>
+        <p style="font-size:15px;line-height:1.65;color:#B4B6BF;margin:0 0 24px">Loyalty-tier cards drop from above and settle into a neat fanned stack behind the emblem; a tier line resolves beneath. Membership made <em style="font-style:italic;color:#D8B979">tangible</em>.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px 40px">
+          <div>
+            <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-bottom:12px">Motion sequence · ~2.7s</div>
+            <div style="display:flex;flex-direction:column;gap:9px;font-size:13.5px;line-height:1.4">
+              <div style="display:flex;gap:12px"><span style="color:#C9D2DE;font-variant-numeric:tabular-nums;min-width:34px">0.0s</span><span>Cards drop from above in sequence</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#C9D2DE;font-variant-numeric:tabular-nums;min-width:34px">0.9s</span><span>They settle into a fanned stack</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#C9D2DE;font-variant-numeric:tabular-nums;min-width:34px">1.3s</span><span>Emblem + tier label resolve</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#C9D2DE;font-variant-numeric:tabular-nums;min-width:34px">2.4s</span><span>Holds, dissolves into app</span></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div><div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-bottom:8px">Why it feels premium</div><p style="font-size:13.5px;line-height:1.6;color:#AEB0B9;margin:0">Card physics echo Apple Wallet — status you can almost hold. Weighted springs feel expensive, never flashy.</p></div>
+            <div><div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-bottom:8px">White-label fit</div><p style="font-size:13.5px;line-height:1.6;color:#AEB0B9;margin:0">Card art, tier names and card count are CMS-driven; the drop-and-settle rig is shared across brands.</p></div>
+          </div>
+        </div>
+        <div style="margin-top:24px;display:flex;gap:8px;flex-wrap:wrap">
+          <span style="font-size:11.5px;padding:5px 12px;border-radius:999px;background:rgba(201,210,222,.1);color:#C9D2DE;border:1px solid rgba(201,210,222,.25)">Reanimated · staggered springs</span>
+          <span style="font-size:11.5px;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.04);color:#9A9CA6;border:1px solid rgba(255,255,255,.1)">Card art · image / Lottie</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 5 · CONCIERGE PULSE ============ -->
+    <section id="1e" data-screen-label="Concept 1e — Concierge Pulse" style="display:flex;gap:56px;align-items:center;flex-wrap:wrap;background:linear-gradient(180deg, rgba(231,183,166,.05), rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.07);border-radius:28px;padding:44px">
+      <div style="position:relative;flex:0 0 auto;margin:0 auto">
+        <div style="position:absolute;inset:-40px;background:radial-gradient(closest-side, rgba(231,183,166,.2), transparent 70%);filter:blur(6px)"></div>
+        <div style="position:relative;width:300px;height:620px;border-radius:48px;background:#1b1c22;padding:9px;box-shadow:0 40px 90px -30px rgba(0,0,0,.9),inset 0 0 0 1px rgba(255,255,255,.06)">
+          <div style="position:relative;width:100%;height:100%;border-radius:40px;overflow:hidden;background:radial-gradient(120% 90% at 50% 40%, #2a1738, #1B1024 72%);color:var(--fb,#E7B7A6)">
+            <div style="position:absolute;top:0;left:0;right:0;height:52px;z-index:8;display:flex;align-items:center;justify-content:space-between;padding:18px 26px 0;font-size:13px;color:#EFE2DC;font-weight:600"><span>9:41</span><span style="opacity:.8;font-size:11px;letter-spacing:.1em">● ● ●</span></div>
+            <div style="position:absolute;top:13px;left:50%;transform:translateX(-50%);width:96px;height:27px;background:#000;border-radius:16px;z-index:9"></div>
+            <!-- bloom + rings -->
+            <div style="position:absolute;top:44%;left:50%;width:240px;height:240px;border-radius:50%;background:radial-gradient(closest-side, rgba(231,183,166,.55), transparent 70%);animation:c5-bloom calc(4.8s / var(--speed,1)) ease infinite"></div>
+            <div style="position:absolute;top:44%;left:50%;width:120px;height:120px;border-radius:50%;border:1px solid var(--fb,#E7B7A6);animation:c5-ring calc(4.8s / var(--speed,1)) ease-out infinite"></div>
+            <div style="position:absolute;top:44%;left:50%;width:120px;height:120px;border-radius:50%;border:1px solid var(--fb,#E7B7A6);animation:c5-ring2 calc(4.8s / var(--speed,1)) ease-out infinite"></div>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;z-index:5">
+              <div style="margin-top:-30px;animation:c5-logo calc(4.8s / var(--speed,1)) cubic-bezier(.34,1.4,.5,1) infinite;color:var(--fb,#E7B7A6)">
+                <svg width="72" height="72" viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="55" stroke="currentColor" stroke-width="1.3" opacity="0.5"/><path d="M60 8 L70.5 49.5 L112 60 L70.5 70.5 L60 112 L49.5 70.5 L8 60 L49.5 49.5 Z" fill="currentColor"/><circle cx="60" cy="60" r="4" fill="#1B1024"/></svg>
+              </div>
+              <div style="position:absolute;bottom:96px;display:flex;flex-direction:column;align-items:center;gap:10px;animation:c5-word calc(4.8s / var(--speed,1)) ease infinite">
+                <div style="font-family:'Marcellus',serif;font-size:25px;letter-spacing:.28em;color:#EFE2DC;padding-left:.28em">MERIDIAN</div>
+                <div style="font-size:10.5px;letter-spacing:.34em;color:var(--fb,#E7B7A6);text-transform:uppercase;padding-left:.34em">At your service</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:420px">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px">
+          <span style="font-weight:700;font-size:12px;letter-spacing:.12em;color:#1B1024;background:#E7B7A6;padding:6px 11px;border-radius:8px">1E</span>
+          <h2 style="font-family:'Marcellus',serif;font-weight:400;font-size:30px;color:#F1ECDF;margin:0">Concierge Pulse</h2>
+          <span style="margin-left:auto;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8EC9A8;border:1px solid rgba(142,201,168,.35);padding:5px 11px;border-radius:999px">Easy</span>
+        </div>
+        <p style="font-size:15px;line-height:1.65;color:#B4B6BF;margin:0 0 24px">A soft radial bloom opens from center; a fine ring pings outward twice as the emblem springs in. A quiet, confident "<em style="font-style:italic;color:#D8B979">we're here</em>."</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px 40px">
+          <div>
+            <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-bottom:12px">Motion sequence · ~2.5s</div>
+            <div style="display:flex;flex-direction:column;gap:9px;font-size:13.5px;line-height:1.4">
+              <div style="display:flex;gap:12px"><span style="color:#E7B7A6;font-variant-numeric:tabular-nums;min-width:34px">0.0s</span><span>Radial bloom opens from center</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#E7B7A6;font-variant-numeric:tabular-nums;min-width:34px">0.3s</span><span>Emblem springs to scale</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#E7B7A6;font-variant-numeric:tabular-nums;min-width:34px">0.5s</span><span>A hairline ring pings outward</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#E7B7A6;font-variant-numeric:tabular-nums;min-width:34px">0.9s</span><span>A second, softer ping</span></div>
+              <div style="display:flex;gap:12px"><span style="color:#E7B7A6;font-variant-numeric:tabular-nums;min-width:34px">2.4s</span><span>Holds, dissolves into app</span></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div><div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-bottom:8px">Why it feels premium</div><p style="font-size:13.5px;line-height:1.6;color:#AEB0B9;margin:0">One assured spring + a quiet ping reads as responsive, modern technology — trust without noise or neon.</p></div>
+            <div><div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B6D77;margin-bottom:8px">White-label fit</div><p style="font-size:13.5px;line-height:1.6;color:#AEB0B9;margin:0">Bloom &amp; rings inherit the brand color directly; only the emblem token changes per casino.</p></div>
+          </div>
+        </div>
+        <div style="margin-top:24px;display:flex;gap:8px;flex-wrap:wrap">
+          <span style="font-size:11.5px;padding:5px 12px;border-radius:999px;background:rgba(231,183,166,.1);color:#E7B7A6;border:1px solid rgba(231,183,166,.28)">Reanimated · scale + opacity springs</span>
+          <span style="font-size:11.5px;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.04);color:#9A9CA6;border:1px solid rgba(255,255,255,.1)">No particles · no 3D</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer style="max-width:1240px;margin:64px auto 0;padding-top:28px;border-top:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;font-size:12.5px;color:#63656F">
+    <span>MERIDIAN is a placeholder brand · every mark, name, color &amp; tagline flows from the CMS.</span>
+    <span>Built for React Native · Reanimated + Lottie · lightweight, no particle systems or 3D.</span>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;forceBrand&quot;: {
+    &quot;editor&quot;: &quot;color&quot;,
+    &quot;default&quot;: null,
+    &quot;tsType&quot;: &quot;string | null&quot;,
+    &quot;options&quot;: [&quot;#D8B979&quot;, &quot;#E4C574&quot;, &quot;#4C8B7A&quot;, &quot;#C9D2DE&quot;, &quot;#E7B7A6&quot;],
+    &quot;section&quot;: &quot;White-label&quot;
+  },
+  &quot;speed&quot;: {
+    &quot;editor&quot;: &quot;range&quot;,
+    &quot;default&quot;: 1,
+    &quot;min&quot;: 0.5,
+    &quot;max&quot;: 1.6,
+    &quot;step&quot;: 0.05,
+    &quot;unit&quot;: &quot;×&quot;,
+    &quot;tsType&quot;: &quot;number&quot;,
+    &quot;section&quot;: &quot;Playback&quot;
+  }
+}">
+class Component extends DCLogic {
+  componentDidMount(){ this.applyVars(); }
+  componentDidUpdate(){ this.applyVars(); }
+  applyVars(){
+    const r = document.documentElement;
+    const fb = this.props.forceBrand;
+    if (fb) { r.style.setProperty('--fb', fb); } else { r.style.removeProperty('--fb'); }
+    r.style.setProperty('--speed', this.props.speed ?? 1);
+  }
+}
+</script>
+</body>
+</html>
