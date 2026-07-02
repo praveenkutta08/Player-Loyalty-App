@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
 import { useTheme } from '../../theme/ThemeProvider';
+import { KitGalleryScreen } from '../concierge/KitGalleryScreen';
 import { DigitalKeyScreen } from '../digitalkey/DigitalKeyScreen';
 import { GamesNavigator } from '../games/GamesNavigator';
 import { LocationConsentScreen } from '../geofencing/LocationConsentScreen';
@@ -49,6 +50,11 @@ export function MoreNavigator(): React.JSX.Element {
         name="Appearance"
         component={ThemeSettingsScreen}
         options={{ title: 'Appearance' }}
+      />
+      <Stack.Screen
+        name="ConciergeKit"
+        component={KitGalleryScreen}
+        options={{ title: 'Concierge kit' }}
       />
       <Stack.Screen
         name="Reservations"

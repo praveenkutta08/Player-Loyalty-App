@@ -16,4 +16,6 @@ export type MoreStackParamList = {
   Games: undefined;
   Security: undefined;
   Support: undefined;
+  /** Dev-only concierge kit gallery (P6.5); the row is __DEV__-gated in Appearance. */
+  ConciergeKit: undefined;
 };

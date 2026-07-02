@@ -1,11 +1,15 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { useManifest } from '../../app/manifest/ManifestProvider';
 import { useFeatures } from '../../app/providers/FeatureProvider';
-import { Button, Card, Screen, StatusPill, ThemedText, Toggle } from '../../components';
+import { Button, Card, ListRow, Screen, StatusPill, ThemedText, Toggle } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
 import { logout } from '../auth/session';
+
+import type { MoreStackParamList } from '../more/types';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 /**
  * M4 — theme / appearance. Lets the player switch light/dark (tenant-permitted) and surfaces the
@@ -14,6 +18,7 @@ import { logout } from '../auth/session';
  */
 export function ThemeSettingsScreen(): React.JSX.Element {
   const theme = useTheme();
+  const navigation = useNavigation<NativeStackNavigationProp<MoreStackParamList>>();
   const { manifest, status } = useManifest();
   const { flags } = useFeatures();
   const enabledFlags = Object.entries(flags).filter(([, on]) => on);
@@ -73,6 +78,21 @@ export function ThemeSettingsScreen(): React.JSX.Element {
             </View>
           )}
         </Card>
+
+        {__DEV__ ? (
+          <>
+            <ThemedText variant="label" color="muted" style={styles.sectionLabel}>
+              Developer
+            </ThemedText>
+            <Card>
+              <ListRow
+                title="Concierge kit gallery"
+                subtitle="All components × states (dev only)"
+                onPress={() => navigation.navigate('ConciergeKit')}
+              />
+            </Card>
+          </>
+        ) : null}
 
         <Button
           label="Log out"

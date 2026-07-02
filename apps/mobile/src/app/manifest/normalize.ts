@@ -5,7 +5,12 @@ import { deepMerge } from '../../lib/deepMerge';
 import { DEFAULT_THEME } from '../../theme/tokens';
 
 import type { components } from '@repo/api-client';
-import type { FeatureFlags, ManifestNavigation, ThemeTokens } from '@repo/shared-types';
+import type {
+  FeatureFlags,
+  ManifestConcierge,
+  ManifestNavigation,
+  ThemeTokens,
+} from '@repo/shared-types';
 
 /** Raw manifest as served by the backend (snake_case, possibly partial `theme`). */
 export type ManifestOut = components['schemas']['ManifestOut'];
@@ -19,6 +24,8 @@ export interface ResolvedManifest {
   theme: ThemeTokens;
   featureFlags: FeatureFlags;
   navigation?: ManifestNavigation;
+  /** Concierge persona (P6.5); the `concierge` feature flag gates the UI. */
+  concierge?: ManifestConcierge;
   apiBaseUrl: string;
   etag?: string;
   updatedAt?: string;
@@ -77,6 +84,17 @@ function normalizeNavigation(
   };
 }
 
+function normalizeConcierge(
+  raw: Record<string, unknown> | null | undefined,
+): ManifestConcierge | undefined {
+  if (!raw) return undefined;
+  return {
+    personaName: typeof raw.persona_name === 'string' ? raw.persona_name : 'Concierge',
+    tone: typeof raw.tone === 'string' ? raw.tone : 'warm',
+    accentToken: typeof raw.accent_token === 'string' ? raw.accent_token : 'gold',
+  };
+}
+
 /** Turn the raw backend manifest into the app's resolved, theme-merged manifest. */
 export function normalizeManifest(raw: ManifestOut, etag?: string): ResolvedManifest {
   const theme = deepMerge<ThemeTokens>(DEFAULT_THEME, raw.theme);
@@ -89,6 +107,7 @@ export function normalizeManifest(raw: ManifestOut, etag?: string): ResolvedMani
     theme,
     featureFlags: coerceFlags(raw.feature_flags as Record<string, unknown>),
     navigation: normalizeNavigation(raw.navigation as Record<string, unknown>),
+    concierge: normalizeConcierge(raw.concierge as Record<string, unknown> | null | undefined),
     apiBaseUrl: resolveApiBaseUrl(endpoints.api_base_url),
     etag,
     updatedAt: raw.updated_at ?? undefined,
