@@ -17,6 +17,7 @@ from ..audit.models import ActorType
 from ..audit.service import write_audit
 from ..tenants.models import Tenant
 from .schemas import (
+    AppearanceUpdate,
     ManifestOut,
     TenantConfigOut,
     TenantConfigUpdate,
@@ -31,6 +32,7 @@ from .service import (
     get_or_create_config,
     list_themes,
     resolve_manifest,
+    update_appearance,
     update_config,
     update_theme,
 )
@@ -70,6 +72,32 @@ async def put_config(
         action="tenant_config:update",
         entity="tenant_config",
         entity_id=config.id,
+    )
+    return TenantConfigOut.model_validate(config)
+
+
+@router.put("/config/appearance", response_model=TenantConfigOut, tags=["config"])
+async def put_appearance(
+    body: AppearanceUpdate,
+    session: AdminTenantSessionDep,
+    tenant_id: AdminTenantIdDep,
+    ctx: Annotated[AdminContext, Depends(require(Permission.branding_update.value))],
+) -> TenantConfigOut:
+    """Publish splash / navigation-style appearance (P7.1) — branding-gated, audited, and the
+    write bumps the manifest version so apps re-fetch with no rebuild (golden rule #5)."""
+    config = await update_appearance(session, tenant_id, body)
+    await write_audit(
+        session,
+        tenant_id=tenant_id,
+        actor_type=ActorType.admin.value,
+        actor_id=ctx.user.id,
+        action="appearance:update",
+        entity="tenant_config",
+        entity_id=config.id,
+        meta={
+            "splash_variant": (config.appearance.get("splash") or {}).get("variant"),
+            "navigation_style": (config.navigation or {}).get("style"),
+        },
     )
     return TenantConfigOut.model_validate(config)
 

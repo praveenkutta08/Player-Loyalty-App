@@ -19,6 +19,7 @@ class TenantConfigOut(BaseModel):
     endpoints: dict[str, Any]
     navigation: dict[str, Any]
     concierge: dict[str, Any]
+    appearance: dict[str, Any]
     version: int
 
 
@@ -30,6 +31,18 @@ class TenantConfigUpdate(BaseModel):
     endpoints: dict[str, Any] | None = None
     navigation: dict[str, Any] | None = None
     concierge: dict[str, Any] | None = None
+
+
+class AppearanceUpdate(BaseModel):
+    """Appearance publish (P7.1) — gated by the branding permission, not tenant_config.
+
+    `splash` is validated server-side (enums rejected on write, duration clamped 1800–3000,
+    logo must be a tenant-owned media key); `navigation_style` writes `navigation.style`
+    (sibling of tabs — the tab structure is never touched here).
+    """
+
+    splash: dict[str, Any] | None = None
+    navigation_style: str | None = None
 
 
 class ThemeOut(BaseModel):
@@ -74,4 +87,7 @@ class ManifestOut(BaseModel):
     # Concierge persona for the app (P6.4): {"persona_name", "tone", "accent_token"}.
     # The `concierge` feature flag gates the UI; persona is config, never hardcoded (rule #5).
     concierge: dict[str, Any] | None = None
+    # Resolved splash block (P7.1): always present with safe defaults (variant falls back to
+    # "silk"); `journey` additionally carries its environment terrain paths from the catalog.
+    splash: dict[str, Any]
     updated_at: datetime | None

@@ -34,6 +34,12 @@ class TenantConfig(TenantOwnedMixin, BaseModel):
     concierge: Mapped[dict[str, Any]] = mapped_column(
         JSONB, nullable=False, default=dict, server_default=text("'{}'::jsonb")
     )
+    # Appearance config (P7.1): {"splash": {...}} — versioned enums with read-side fallbacks.
+    # navigation.style lives inside `navigation` (sibling of tabs). Typography pairing joins in
+    # P7.2; Experience Packs later (roadmap §3.20).
+    appearance: Mapped[dict[str, Any]] = mapped_column(
+        JSONB, nullable=False, default=dict, server_default=text("'{}'::jsonb")
+    )
     version: Mapped[int] = mapped_column(Integer, nullable=False, default=1, server_default="1")
 
 

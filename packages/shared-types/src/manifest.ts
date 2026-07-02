@@ -84,13 +84,51 @@ export interface ManifestNavGlobals {
 }
 
 /**
+ * Bottom-nav visual treatment (P7.1) — a SKIN only: the Option B tab structure and the center
+ * action's cashless fallback are identical in every style. Versioned enum; unknown values fall
+ * back to the documented default `"editorial"` on read (writes reject them).
+ */
+export type NavigationStyle = 'floatingPill' | 'editorial';
+
+/**
  * The manifest `navigation` block that drives the mobile bottom nav (Option B). Consumed lightly
- * from P4.2 and fully (config-driven tabs + center action) in P4.14.
+ * from P4.2 and fully (config-driven tabs + center action) in P4.14; `style` (P7.1) skins the
+ * bar without touching structure.
  */
 export interface ManifestNavigation {
   tabs: ManifestNavTab[];
   centerAction?: ManifestNavCenterAction;
   globals?: ManifestNavGlobals;
+  /** Visual style of the tab bar. Default/fallback: `"editorial"`. */
+  style?: NavigationStyle;
+}
+
+/** Splash animation variant (P7.1). Versioned enum; default/fallback: `"silk"`. */
+export type SplashVariant = 'journey' | 'collection' | 'portal' | 'silk';
+
+/** `journey` terrain silhouette (P7.1). Default: `"coast"`. Themes are CMS catalog entries —
+ * two SVG path strings each — so new themes require no app release. */
+export type SplashEnvironmentTheme = 'coast' | 'mountain' | 'desert' | 'skyline' | 'forest';
+
+/**
+ * The manifest `splash` block (P7.1): tenant-selected cold-start experience, resolved
+ * server-side with safe fallbacks (unknown variant → `"silk"`; the manifest never 500s on
+ * appearance config). All values flow from the CMS — the app ships no brand values (rule #5).
+ */
+export interface ManifestSplash {
+  variant: SplashVariant;
+  /** Media Library key of the tenant logo shown in the emblem slot. */
+  logoAssetId?: string;
+  /** Full-bleed vertical gradient [topHex, bottomHex]; absent → app derives from theme bg. */
+  backgroundValue?: [string, string];
+  /** Optional tagline under the wordmark (localizable key); absent → beat skipped. */
+  taglineText?: string;
+  /** Linearly RESCALES the variant's native timeline; server-clamped to 1800–3000 ms. */
+  animationDurationMs?: number;
+  /** `journey` only; server fills `"coast"` when journey is selected without a theme. */
+  environmentTheme?: SplashEnvironmentTheme;
+  /** Terrain paths for the selected environment (journey only), served from the catalog. */
+  environmentThemePaths?: { back: string; front: string };
 }
 
 /**
@@ -127,6 +165,8 @@ export interface TenantManifest {
   navigation?: ManifestNavigation;
   /** Concierge persona; present when the tenant has configured the concierge (P6.4). */
   concierge?: ManifestConcierge;
+  /** Cold-start splash config (P7.1); always resolved with safe defaults server-side. */
+  splash?: ManifestSplash;
   /** ISO 8601 timestamp of when this manifest version was published. */
   updatedAt: string;
 }

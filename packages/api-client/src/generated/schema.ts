@@ -178,6 +178,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/config/appearance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Put Appearance
+         * @description Publish splash / navigation-style appearance (P7.1) — branding-gated, audited, and the
+         *     write bumps the manifest version so apps re-fetch with no rebuild (golden rule #5).
+         */
+        put: operations["put_appearance_api_v1_config_appearance_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/config/themes": {
         parameters: {
             query?: never;
@@ -1692,6 +1713,22 @@ export interface components {
              */
             created_at: string;
         };
+        /**
+         * AppearanceUpdate
+         * @description Appearance publish (P7.1) — gated by the branding permission, not tenant_config.
+         *
+         *     `splash` is validated server-side (enums rejected on write, duration clamped 1800–3000,
+         *     logo must be a tenant-owned media key); `navigation_style` writes `navigation.style`
+         *     (sibling of tabs — the tab structure is never touched here).
+         */
+        AppearanceUpdate: {
+            /** Splash */
+            splash?: {
+                [key: string]: unknown;
+            } | null;
+            /** Navigation Style */
+            navigation_style?: string | null;
+        };
         /** AskIn */
         AskIn: {
             /** Question */
@@ -2334,6 +2371,10 @@ export interface components {
             concierge?: {
                 [key: string]: unknown;
             } | null;
+            /** Splash */
+            splash: {
+                [key: string]: unknown;
+            };
             /** Updated At */
             updated_at: string | null;
         };
@@ -2775,6 +2816,10 @@ export interface components {
             };
             /** Concierge */
             concierge: {
+                [key: string]: unknown;
+            };
+            /** Appearance */
+            appearance: {
                 [key: string]: unknown;
             };
             /** Version */
@@ -3600,6 +3645,42 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["TenantConfigUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TenantConfigOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    put_appearance_api_v1_config_appearance_put: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Tenant"?: string | null;
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AppearanceUpdate"];
             };
         };
         responses: {

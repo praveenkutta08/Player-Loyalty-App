@@ -11,8 +11,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.errors import ProblemException
 from ..tenants.models import Tenant
+from .appearance import (
+    resolve_nav_style_read,
+    resolve_splash_read,
+    validate_nav_style_write,
+    validate_splash_write,
+)
 from .models import TenantConfig, Theme
-from .schemas import ManifestOut, TenantConfigUpdate, ThemeCreate, ThemeUpdate
+from .schemas import AppearanceUpdate, ManifestOut, TenantConfigUpdate, ThemeCreate, ThemeUpdate
 
 # Sensible default bottom navigation shipped when a tenant hasn't customised it.
 DEFAULT_NAVIGATION: dict[str, Any] = {
@@ -47,8 +53,32 @@ async def update_config(
 ) -> TenantConfig:
     config = await get_or_create_config(session, tenant_id)
     fields = data.model_dump(exclude_unset=True)
+    # navigation.style is a versioned enum (P7.1): reject unknown values on WRITE. Reads fall
+    # back to the default, so a stale admin can never brick the app.
+    navigation = fields.get("navigation")
+    if isinstance(navigation, dict) and "style" in navigation:
+        navigation["style"] = validate_nav_style_write(navigation["style"])
     for key, value in fields.items():
         setattr(config, key, value)
+    config.version += 1
+    await session.flush()
+    return config
+
+
+async def update_appearance(
+    session: AsyncSession, tenant_id: UUID, data: AppearanceUpdate
+) -> TenantConfig:
+    """Validate + persist the appearance block (P7.1); every publish bumps the manifest."""
+    config = await get_or_create_config(session, tenant_id)
+    appearance = dict(config.appearance or {})
+    if data.splash is not None:
+        appearance["splash"] = validate_splash_write(data.splash, tenant_id)
+    config.appearance = appearance
+    if data.navigation_style is not None:
+        config.navigation = {
+            **(config.navigation or {}),
+            "style": validate_nav_style_write(data.navigation_style),
+        }
     config.version += 1
     await session.flush()
     return config
@@ -135,7 +165,14 @@ async def resolve_manifest(session: AsyncSession, tenant: Tenant) -> ManifestOut
 
     version = config.version if config else 1
     feature_flags = config.feature_flags if config else {}
-    navigation = config.navigation if (config and config.navigation) else DEFAULT_NAVIGATION
+    # Merge stored navigation OVER the defaults so a partial write (e.g. only `style`) never
+    # drops the Option B tab structure.
+    stored_navigation = dict(config.navigation) if (config and config.navigation) else {}
+    navigation = {**DEFAULT_NAVIGATION, **stored_navigation}
+    # navigation.style + splash resolve tolerantly (P7.1): unknown/corrupt values fall back to
+    # the documented defaults (editorial / silk) — the manifest endpoint never 500s on config.
+    navigation["style"] = resolve_nav_style_read(navigation.get("style"))
+    splash = resolve_splash_read((config.appearance or {}).get("splash") if config else None)
     endpoints: dict[str, Any] = dict(config.endpoints) if config else {}
     if config and config.api_base_url:
         endpoints.setdefault("api_base_url", config.api_base_url)
@@ -167,5 +204,6 @@ async def resolve_manifest(session: AsyncSession, tenant: Tenant) -> ManifestOut
         endpoints=endpoints,
         navigation=navigation,
         concierge=concierge,
+        splash=splash,
         updated_at=max(updated_candidates) if updated_candidates else None,
     )
