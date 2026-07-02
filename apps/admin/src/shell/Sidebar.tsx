@@ -5,20 +5,50 @@ import { useState } from 'react';
 import { BRAND_ICON, groupsForScope } from '@/app/nav';
 import { setActiveTenant } from '@/app/sessionSlice';
 import { useAppDispatch, useAppSelector } from '@/app/store';
+import { useListTenantsQuery } from '@/auth/authApi';
+import { clearAuth } from '@/auth/authSlice';
+import { tokenStore } from '@/auth/tokenStore';
+import { useMe } from '@/auth/useAuth';
 import { AppLink } from '@/components/AppLink';
 import { Avatar } from '@/components/ui';
 import { cn } from '@/lib/cn';
 
 export function Sidebar() {
   const scope = useAppSelector((s) => s.session.scope);
-  const { tenants, activeTenantId } = useAppSelector((s) => s.session);
+  const { tenants: fallbackTenants, activeTenantId } = useAppSelector((s) => s.session);
   const dispatch = useAppDispatch();
+  const me = useMe();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [switcherOpen, setSwitcherOpen] = useState(false);
+  const { data: apiTenants } = useListTenantsQuery();
 
-  const groups = groupsForScope(scope);
+  // Real (server-scoped) tenants when the API is reachable; demo list otherwise.
+  const tenants =
+    apiTenants && apiTenants.length > 0
+      ? apiTenants.map((t) => ({ id: t.slug, name: t.name, subtitle: `${t.slug} · ${t.status}` }))
+      : fallbackTenants;
   const activeTenant = tenants.find((t) => t.id === activeTenantId) ?? tenants[0]!;
+
+  // Scope + permission filtering: the UI mirrors the server permissions (the real guard).
+  const permissions = new Set(me?.permissions ?? []);
+  const groups = groupsForScope(scope)
+    .map((g) => ({
+      ...g,
+      items: g.items.filter((it) => !it.permission || permissions.has(it.permission)),
+    }))
+    .filter((g) => g.items.length > 0);
+
   const Brand = BRAND_ICON;
+  const roleLabel = me?.roles[0]
+    ? me.roles[0].replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+    : scope === 'platform'
+      ? 'Platform Admin'
+      : 'Casino Admin';
+
+  const signOut = () => {
+    tokenStore.clear();
+    dispatch(clearAuth());
+  };
 
   return (
     <aside className="flex h-full w-[250px] shrink-0 flex-col border-r border-border bg-bg2">
@@ -63,7 +93,7 @@ export function Sidebar() {
                 }}
                 className={cn(
                   'block w-full px-3 py-2 text-left text-[12px] hover:bg-panel2',
-                  t.id === activeTenantId ? 'text-gold' : 'text-text2',
+                  t.id === activeTenant.id ? 'text-gold' : 'text-text2',
                 )}
               >
                 {t.name}
@@ -89,7 +119,7 @@ export function Sidebar() {
                     'group mb-0.5 flex items-center gap-2.5 rounded-[9px] px-2.5 py-2 text-[13px] transition-colors',
                     active
                       ? 'bg-nav-active font-semibold text-text'
-                      : 'text-muted hover:text-text hover:bg-panel2',
+                      : 'text-muted hover:bg-panel2 hover:text-text',
                   )}
                 >
                   <Icon
@@ -117,14 +147,14 @@ export function Sidebar() {
           <Settings size={17} /> Settings
         </AppLink>
         <div className="flex items-center gap-2.5 rounded-control bg-panel px-2.5 py-2">
-          <Avatar name="Sridhar K" />
+          <Avatar name={me?.full_name ?? me?.email ?? 'Admin'} />
           <div className="min-w-0 flex-1">
-            <div className="truncate text-[12px] font-semibold text-text">Sridhar K</div>
-            <div className="truncate text-[11px] text-muted">
-              {scope === 'platform' ? 'Platform Admin' : 'Casino Admin'}
+            <div className="truncate text-[12px] font-semibold text-text">
+              {me?.full_name ?? me?.email ?? 'Admin'}
             </div>
+            <div className="truncate text-[11px] text-muted">{roleLabel}</div>
           </div>
-          <button className="text-muted hover:text-text" aria-label="Sign out">
+          <button onClick={signOut} className="text-muted hover:text-text" aria-label="Sign out">
             <LogOut size={15} />
           </button>
         </div>

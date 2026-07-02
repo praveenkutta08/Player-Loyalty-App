@@ -6,9 +6,11 @@ import {
   redirect,
 } from '@tanstack/react-router';
 
-import { NAV_ITEMS } from './nav';
+import { NAV_ITEMS, type NavItem } from './nav';
 import { SCREEN_REGISTRY } from './screenRegistry';
 
+import { useHasPermission } from '@/auth/useAuth';
+import { Forbidden } from '@/screens/Forbidden';
 import { Placeholder } from '@/screens/Placeholder';
 import { AppShell } from '@/shell/AppShell';
 
@@ -29,14 +31,19 @@ const indexRoute = createRoute({
   },
 });
 
+/** A screen wrapped in its route's permission guard (mirrors the server 403). */
+function GuardedScreen({ item }: { item: NavItem }) {
+  const allowed = useHasPermission(item.permission);
+  if (!allowed) return <Forbidden permission={item.permission} />;
+  const Real = SCREEN_REGISTRY[item.path];
+  return Real ? <Real /> : <Placeholder id={item.id} title={item.label} />;
+}
+
 const navRoutes = NAV_ITEMS.map((item) =>
   createRoute({
     getParentRoute: () => rootRoute,
     path: item.path,
-    component: () => {
-      const Real = SCREEN_REGISTRY[item.path];
-      return Real ? <Real /> : <Placeholder id={item.id} title={item.label} />;
-    },
+    component: () => <GuardedScreen item={item} />,
   }),
 );
 

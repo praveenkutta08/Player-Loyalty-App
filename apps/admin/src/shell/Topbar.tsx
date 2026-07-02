@@ -1,4 +1,4 @@
-import { useRouterState } from '@tanstack/react-router';
+import { useNavigate, useRouterState } from '@tanstack/react-router';
 import { Bell, Moon, Plus, Search, Sun } from 'lucide-react';
 
 import { NAV_ITEMS } from '@/app/nav';
@@ -15,12 +15,20 @@ const SCOPES: { key: RoleScope; label: string }[] = [
 
 export function Topbar() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const scope = useAppSelector((s) => s.session.scope);
   const { theme, toggle } = useTheme();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const current = NAV_ITEMS.find((i) => pathname === i.path || pathname.startsWith(`${i.path}/`));
   const viewTitle = current?.label ?? 'Dashboard';
+
+  // Switching Platform/Casino swaps the nav set + scope and resets to the Dashboard.
+  const switchScope = (next: RoleScope) => {
+    if (next === scope) return;
+    dispatch(setScope(next));
+    void navigate({ to: '/dashboard' as never });
+  };
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-4 border-b border-border bg-bg px-6">
@@ -49,7 +57,7 @@ export function Topbar() {
           {SCOPES.map((s) => (
             <button
               key={s.key}
-              onClick={() => dispatch(setScope(s.key))}
+              onClick={() => switchScope(s.key)}
               className={cn(
                 'rounded-[7px] px-3 py-1.5 text-[12px] font-semibold transition-colors',
                 scope === s.key ? 'bg-gold-dim text-gold' : 'text-muted hover:text-text',
