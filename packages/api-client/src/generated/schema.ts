@@ -794,6 +794,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/app/reservations/{res_id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** App Cancel Reservation */
+        post: operations["app_cancel_reservation_api_v1_app_reservations__res_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/app/valet": {
         parameters: {
             query?: never;
@@ -4613,6 +4630,39 @@ export interface operations {
         };
     };
     app_get_reservation_api_v1_app_reservations__res_id__get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                res_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReservationOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    app_cancel_reservation_api_v1_app_reservations__res_id__cancel_post: {
         parameters: {
             query?: never;
             header?: {

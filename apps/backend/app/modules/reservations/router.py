@@ -22,6 +22,7 @@ from .schemas import (
 )
 from .service import (
     book_reservation,
+    cancel_own_reservation,
     get_reservation,
     get_valet,
     list_reservations,
@@ -113,6 +114,15 @@ async def app_get_reservation(
     res_id: uuid.UUID, player: PlayerDep, session: SessionDep
 ) -> ReservationOut:
     return ReservationOut.model_validate(await get_reservation(session, player.tenant_id, res_id))
+
+
+@router.post(
+    "/app/reservations/{res_id}/cancel", response_model=ReservationOut, tags=["reservations"]
+)
+async def app_cancel_reservation(
+    res_id: uuid.UUID, player: PlayerDep, session: SessionDep
+) -> ReservationOut:
+    return ReservationOut.model_validate(await cancel_own_reservation(session, player, res_id))
 
 
 @router.post("/app/valet", response_model=ValetOut, tags=["reservations"])

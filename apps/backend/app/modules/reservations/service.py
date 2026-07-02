@@ -77,6 +77,20 @@ async def set_reservation_status(
     return res
 
 
+async def cancel_own_reservation(
+    session: AsyncSession, player: Player, res_id: UUID
+) -> Reservation:
+    """Player-initiated cancel of their own reservation (C12)."""
+    res = await get_reservation(session, player.tenant_id, res_id)
+    if res.player_id != player.id:
+        raise ProblemException(404, "Reservation not found")
+    if res.status in _RESERVATION_TERMINAL:
+        raise ProblemException(409, f"Reservation is already {res.status}")
+    res.status = ReservationStatus.cancelled.value
+    await session.flush()
+    return res
+
+
 async def request_valet(session: AsyncSession, player: Player) -> ValetRequest:
     valet = ValetRequest(
         tenant_id=player.tenant_id,

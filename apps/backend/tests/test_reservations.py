@@ -32,6 +32,23 @@ async def test_reservation_lifecycle(api: AsyncClient) -> None:
     assert blocked.status_code == 409
 
 
+async def test_player_can_cancel_own_reservation(api: AsyncClient) -> None:
+    tenant = await create_tenant()
+    auth = {"Authorization": f"Bearer {await player_token(api, tenant.id)}"}
+
+    res_id = (
+        await api.post("/api/v1/app/reservations", headers=auth, json={"type": "hotel"})
+    ).json()["id"]
+
+    cancelled = await api.post(f"/api/v1/app/reservations/{res_id}/cancel", headers=auth)
+    assert cancelled.status_code == 200
+    assert cancelled.json()["status"] == "cancelled"
+
+    # Cancelling again is a no-op conflict (terminal state).
+    again = await api.post(f"/api/v1/app/reservations/{res_id}/cancel", headers=auth)
+    assert again.status_code == 409
+
+
 async def test_valet_lifecycle(api: AsyncClient) -> None:
     tenant = await create_tenant()
     admin = await admin_headers(api, tenant_id=tenant.id)
