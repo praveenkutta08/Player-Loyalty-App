@@ -1,6 +1,6 @@
 import { useRouterState } from '@tanstack/react-router';
 import { Building2, ChevronsUpDown, LogOut, Settings } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { BRAND_ICON, groupsForScope } from '@/app/nav';
 import { setActiveTenant } from '@/app/sessionSlice';
@@ -22,12 +22,20 @@ export function Sidebar() {
   const [switcherOpen, setSwitcherOpen] = useState(false);
   const { data: apiTenants } = useListTenantsQuery();
 
-  // Real (server-scoped) tenants when the API is reachable; demo list otherwise.
+  // Real (server-scoped) tenants when the API is reachable; demo list otherwise. The id is the
+  // tenant UUID so it can be sent as X-Tenant on tenant-scoped calls.
   const tenants =
     apiTenants && apiTenants.length > 0
-      ? apiTenants.map((t) => ({ id: t.slug, name: t.name, subtitle: `${t.slug} · ${t.status}` }))
+      ? apiTenants.map((t) => ({ id: t.id, name: t.name, subtitle: `${t.slug} · ${t.status}` }))
       : fallbackTenants;
   const activeTenant = tenants.find((t) => t.id === activeTenantId) ?? tenants[0]!;
+
+  // Once real tenants load, ensure the acting tenant is a valid (UUID) selection.
+  useEffect(() => {
+    if (apiTenants && apiTenants.length > 0 && !apiTenants.some((t) => t.id === activeTenantId)) {
+      dispatch(setActiveTenant(apiTenants[0]!.id));
+    }
+  }, [apiTenants, activeTenantId, dispatch]);
 
   // Scope + permission filtering: the UI mirrors the server permissions (the real guard).
   const permissions = new Set(me?.permissions ?? []);

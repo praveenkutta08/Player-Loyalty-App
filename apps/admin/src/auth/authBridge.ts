@@ -12,6 +12,8 @@ import { store } from '@/app/store';
 export function installAuthBridge(): void {
   configureApiAuth({
     getAccessToken: () => tokenStore.getAccess(),
+    // Send the sidebar's selected tenant as X-Tenant on every tenant-scoped call.
+    getActingTenant: () => store.getState().session.activeTenantId || null,
     refresh: async () => {
       const refreshToken = tokenStore.getRefresh();
       if (!refreshToken) return false;

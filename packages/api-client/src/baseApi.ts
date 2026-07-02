@@ -18,6 +18,12 @@ export const API_REDUCER_PATH = 'api';
 interface ApiAuth {
   /** Current bearer access token, or null when unauthenticated. */
   getAccessToken: () => string | null;
+  /**
+   * The admin's acting tenant id (UUID), sent as `X-Tenant` on tenant-scoped calls. The server
+   * requires it for every tenant-owned resource and validates it against the caller's allow-list.
+   * Ignored by player-audience callers (mobile derives its tenant from the token).
+   */
+  getActingTenant?: () => string | null;
   /** Attempt to refresh the token; resolve true if a new token is now available. */
   refresh?: () => Promise<boolean>;
   /** Called when a request is unauthorized and refresh did not recover the session. */
@@ -49,6 +55,8 @@ const rawBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError
     prepareHeaders: (headers: { set: (name: string, value: string) => void }) => {
       const token = apiAuth.getAccessToken();
       if (token) headers.set('authorization', `Bearer ${token}`);
+      const tenant = apiAuth.getActingTenant?.();
+      if (tenant) headers.set('X-Tenant', tenant);
       return headers;
     },
   })(args, api, extraOptions);

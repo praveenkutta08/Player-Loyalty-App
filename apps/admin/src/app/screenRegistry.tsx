@@ -1,5 +1,7 @@
 import type { ComponentType } from 'react';
 
+import { CasinosScreen } from '@/features/casinos/CasinosScreen';
+import { FeatureFlagsScreen } from '@/features/featureflags/FeatureFlagsScreen';
 import { UsersRolesScreen } from '@/features/users/UsersRolesScreen';
 
 /**
@@ -7,6 +9,8 @@ import { UsersRolesScreen } from '@/features/users/UsersRolesScreen';
  * builds them; any path without an entry falls back to the <Placeholder> in the router.
  */
 export const SCREEN_REGISTRY: Record<string, ComponentType> = {
+  '/casinos': CasinosScreen,
+  '/feature-flags': FeatureFlagsScreen,
   '/users': UsersRolesScreen,
-  // Remaining paths populated by P3.3–P3.19.
+  // Remaining paths populated by P3.4–P3.19.
 };
