@@ -359,6 +359,77 @@ appropriate and reference the finding.
 
 ---
 
+# WAVE 6 — Post-verification gaps (added 2026-07-03)
+
+A verification pass confirmed R1–R16 landed and are test-backed, EXCEPT the items below. H5 and H8 were never given prompts in the original playbook (my omission); the rest are partials.
+
+### R17 — H5: Admin token storage + CSP + single-flight refresh (NEVER PROMPTED — do this)
+```
+Fix audit finding H5 (docs/ARCHITECTURE_AUDIT.md), still fully open. Three parts:
+1. Refresh token: stop storing the admin REFRESH token in localStorage (apps/admin/src/auth/tokenStore.ts).
+   Preferred: backend sets it as an httpOnly, Secure, SameSite=Strict cookie on /auth/admin/login and
+   reads it on /auth/admin/refresh (backend change in apps/backend identity module); the SPA then holds
+   only the short-lived access token in memory (not localStorage). If a cookie is infeasible, at minimum
+   keep the access token in memory and shorten refresh TTL. Update authBridge/baseApi accordingly.
+2. CSP: add a strict Content-Security-Policy (apps/admin/index.html meta or server header) — default-src
+   'self', no unsafe-inline scripts, restrict connect-src to the API origin. This limits XSS token theft.
+3. Single-flight refresh: in packages/api-client baseApi.ts, share ONE in-flight refresh promise across
+   concurrent 401s (mutex) so token rotation isn't raced into spurious logout (interacts with M1 family
+   rotation — losers must await the winner, not fire their own refresh).
+Add tests: concurrent 401s trigger exactly one /auth/admin/refresh; access token is not in localStorage.
+Update ARCHITECTURE_AUDIT.md H5 to resolved. Commit: `fix(admin): httpOnly refresh cookie + CSP +
+single-flight refresh (H5)`.
+```
+
+### R18 — H8: Remove plaintext passcode; gate keychain with biometric access-control (NEVER PROMPTED)
+```
+Fix audit finding H8 (docs/ARCHITECTURE_AUDIT.md), still open. apps/mobile biometricStore.ts stores the
+raw PIN (secureStore.setToken(PASSCODE_KEY, pin)) and compares by string equality.
+Do: never persist the raw PIN. Store a salted hash (e.g. PBKDF2/scrypt via a vetted RN crypto lib) and
+verify against it; better, gate the refresh-token keychain entry itself with
+react-native-keychain ACCESS_CONTROL.BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE + ACCESSIBLE.WHEN_UNLOCKED so
+the OS enforces the unlock and the app never handles a comparable secret. Migrate any existing stored PIN
+on next unlock. Add a test that no plaintext PIN is recoverable from the store.
+Update ARCHITECTURE_AUDIT.md H8 to resolved. Commit: `fix(mobile): hash/keychain-gate passcode, drop
+plaintext PIN (H8)`.
+```
+
+### R19 — M2 finish: adopt cursor pagination beyond the audit feed
+```
+Complete audit finding M2 (partial). core/pagination.py is correct but only the audit feed (and players)
+use it. Adopt cursor pagination on the remaining high-volume list endpoints: wallet transactions, offers,
+rewards, content, geofence zones. Remove bare `limit`/offset returns. Regenerate api-client (pnpm gen:api)
+and update admin/mobile consumers + the drift check. Add a cursor test on wallet transactions.
+Commit: `fix(backend): roll out cursor pagination to remaining lists (M2)`.
+```
+
+### R20 — H6 iOS + M13 finish
+```
+Two honest-but-incomplete partials:
+- H6 iOS: Android per-tenant flavors/fonts are done; iOS is scaffold-only (xcconfig + Swift module exist
+  but project.pbxproj baseConfigurationReference, schemes, Info.plist TenantId/TenantSlug/UIAppFonts, and
+  CFBundleDisplayName are not wired). Wire per-tenant iOS schemes + xcconfigs so a second-tenant iOS binary
+  builds from the same JS. (Mac-gated per CLAUDE.md — if you can't build here, produce the exact pbxproj/
+  Info.plist/scheme changes + manual steps.)
+- M13: only ContentScreen and CatalogForm use react-hook-form + zod. Migrate the remaining entity forms
+  (users invite modal, promotions, casino wizard, any other useState form) to RHF + zod from generated types.
+Commit each app separately. Commits: `feat(mobile): per-tenant iOS schemes/fonts (H6)`,
+`fix(admin): migrate remaining forms to RHF+zod (M13)`.
+```
+
+### R21 — Verification nits: tracked build artifact, wallet RLS probe, coverage thresholds
+```
+Small gaps from the verification pass:
+1. Untrack apps/admin/tsconfig.tsbuildinfo and add it (+ **/*.tsbuildinfo) to .gitignore.
+2. Add a DIRECT wallet cross-tenant probe to apps/backend/tests/test_cross_tenant_api.py (tenant-A token
+   requesting tenant-B wallet/transactions must 404/empty) — currently offers/rewards/players are probed
+   but wallet is only indirect.
+3. Add coverage thresholds (R16 leftover) to pytest and vitest/jest configs and enforce in CI.
+Commit: `chore: untrack tsbuildinfo + wallet RLS probe + coverage gates`.
+```
+
+---
+
 ## Sequencing notes
 - Waves 1–2 are the release blockers (money integrity, isolation, compliance). Do them first, in order.
 - R1, R2, R11 warrant Plan mode — they touch migrations / concurrency / the contract.
