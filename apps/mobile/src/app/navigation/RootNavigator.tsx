@@ -15,6 +15,7 @@ import { MessageDetailScreen } from '../../features/notifications/MessageDetailS
 import { NotificationCenterScreen } from '../../features/notifications/NotificationCenterScreen';
 import { registerPushHandlers } from '../../features/notifications/pushBridge';
 import { PushPermissionScreen } from '../../features/notifications/PushPermissionScreen';
+import { useDeepLinks } from '../../features/notifications/useDeepLinks';
 import { BrandSplash } from '../../features/splash/BrandSplash';
 import { ForceUpdateScreen } from '../../features/splash/ForceUpdateScreen';
 import { needsForceUpdate } from '../../lib/version';
@@ -51,6 +52,9 @@ export function RootNavigator(): React.JSX.Element {
     if (status !== 'authenticated') return undefined;
     return registerPushHandlers(dispatch, () => new Date().toISOString());
   }, [status, dispatch]);
+
+  // OS casino:// deep links route through the same resolver as push (LOW).
+  useDeepLinks(status === 'authenticated');
 
   // H7: the device token is registered only after the player granted the push prompt; when
   // they already have, re-register on each session so token rotation reaches the server.

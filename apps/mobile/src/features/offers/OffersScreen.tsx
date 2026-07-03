@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { FlatList, RefreshControl, StyleSheet } from 'react-native';
+import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 
 import { useFeature } from '../../app/providers/FeatureProvider';
 import { useAppSelector } from '../../app/store';
@@ -107,7 +107,14 @@ export function OffersScreen({ navigation, route }: Props): React.JSX.Element {
               />
             }
             ListEmptyComponent={
-              active.isLoading ? null : (
+              active.isLoading ? null : active.isError ? (
+                // Distinct error state (LOW) — don't render a load failure as "empty".
+                <View style={styles.emptyText}>
+                  <ThemedText variant="body" color="muted">
+                    Couldn’t load {segment}. Pull to retry.
+                  </ThemedText>
+                </View>
+              ) : (
                 <ThemedText variant="body" color="muted" style={styles.emptyText}>
                   Nothing here yet.
                 </ThemedText>

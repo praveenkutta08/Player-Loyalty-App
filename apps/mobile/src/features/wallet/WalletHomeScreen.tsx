@@ -95,7 +95,12 @@ export function WalletHomeScreen({ navigation }: Props): React.JSX.Element {
           ) : null}
         </View>
         <Card style={styles.card}>
-          {recent.length === 0 ? (
+          {txns.isError ? (
+            // Distinct error state (LOW) — a load failure is not an empty ledger.
+            <ThemedText variant="body" color="muted">
+              Couldn’t load transactions. Pull to retry.
+            </ThemedText>
+          ) : recent.length === 0 ? (
             <ThemedText variant="body" color="muted">
               No transactions yet. Make a deposit to get started.
             </ThemedText>
