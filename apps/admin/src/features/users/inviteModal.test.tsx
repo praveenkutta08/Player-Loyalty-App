@@ -41,7 +41,7 @@ describe('InviteUserModal validation (M13)', () => {
     await user.click(screen.getByLabelText(/aurora bay/i));
     await user.click(screen.getByRole('button', { name: /send invite/i }));
     await waitFor(() => expect(onInvite).toHaveBeenCalledTimes(1));
-    expect(onInvite.mock.calls[0][0]).toMatchObject({
+    expect(onInvite.mock.calls[0]![0]).toMatchObject({
       email: 'gm@aurora.com',
       tenantScope: ['t1'],
     });
