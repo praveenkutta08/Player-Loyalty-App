@@ -14,7 +14,9 @@
     "infra:up": "docker compose up -d",
     "infra:down": "docker compose down",
     "gen:api": "bash scripts/regen-api-client.sh",
-    "check:api": "bash scripts/check-api-client.sh"
+    "check:api": "bash scripts/check-api-client.sh",
+    "gen:tokens": "node scripts/gen-tokens.mjs",
+    "check:tokens": "node scripts/gen-tokens.mjs --check"
   },
   "devDependencies": {
     "@repo/config": "workspace:*",

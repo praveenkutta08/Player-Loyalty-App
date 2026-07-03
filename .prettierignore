@@ -3,10 +3,17 @@ dist/
 build/
 .turbo/
 coverage/
+# Native build caches (gradle)
+**/.cxx/
+**/android/app/build/
+**/android/.gradle/
 
 # Generated code / artifacts
 **/generated/**
 apps/backend/openapi.json
+# Design-token codegen output (scripts/gen-tokens.mjs; machine-formatted, DO NOT EDIT)
+apps/mobile/src/theme/tokens.generated.ts
+apps/admin/src/styles/tokens.generated.css
 
 # Dependencies
 node_modules/

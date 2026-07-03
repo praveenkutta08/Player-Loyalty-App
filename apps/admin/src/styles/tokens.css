@@ -1,38 +1,40 @@
 /*
- * Design tokens — the single source of color truth for the admin console.
- * Reconciled from design/tokens.json + the CMS handoff table. Dark is the default; light is
- * applied by switching `data-theme` on <html>. Tailwind color utilities all resolve to these
- * variables (see tailwind.config.ts), so no component ever hardcodes a color.
+ * Design tokens — the admin console's color truth. The raw palette is GENERATED from
+ * design/tokens.json into tokens.generated.css (audit M9: `pnpm gen:tokens`, CI-checked); the
+ * vars below alias those `--token-*` values into the short names Tailwind resolves (see
+ * tailwind.config.ts). Derived/bespoke values (dims, glows, gold text ramp) that aren't raw
+ * design tokens stay literal here. Dark is the default; light switches on `data-theme`.
  */
+@import './tokens.generated.css';
 
 :root,
 [data-theme='dark'] {
-  --bg: #0e0f13;
-  --bg2: #0a0b0e;
+  --bg: var(--token-bg-base);
+  --bg2: var(--token-bg-sidebar);
   --content: #0e0f13;
-  --panel: #16181d;
-  --panel2: #1b1e23;
+  --panel: var(--token-bg-surface);
+  --panel2: var(--token-bg-elevated);
   --input: #101216;
-  --border: #23262d;
-  --border-soft: #1b1e24;
-  --border-strong: #2c3039;
-  --text: #f2f3f5;
-  --text2: #c7ccd3;
-  --muted: #8b929c;
-  --faint: #5c636e;
+  --border: var(--token-border-default);
+  --border-soft: var(--token-border-soft);
+  --border-strong: var(--token-border-strong);
+  --text: var(--token-text-primary);
+  --text2: var(--token-text-secondary);
+  --muted: var(--token-text-muted);
+  --faint: var(--token-text-faint);
 
   --gold: #e6b450;
   --gold-fill: #e6b450;
   --gold-bright: #ffd680;
-  --gold-ink: #1a1408;
+  --gold-ink: var(--token-brand-on-gold);
   --gold-dim: rgba(230, 180, 80, 0.12);
   --gold-border: rgba(230, 180, 80, 0.3);
   --nav-active-bg: rgba(230, 180, 80, 0.1);
 
-  --green: #5cc48f;
-  --red: #e5736b;
-  --blue: #6aa6e8;
-  --purple: #b08ae0;
+  --green: var(--token-state-success);
+  --red: var(--token-state-error);
+  --blue: var(--token-state-info);
+  --purple: var(--token-state-purple);
   --green-dim: rgba(92, 196, 143, 0.14);
   --red-dim: rgba(229, 115, 107, 0.14);
   --blue-dim: rgba(106, 166, 232, 0.14);
@@ -40,36 +42,36 @@
 
   --track-empty: #22252b;
   --card-shadow: 0 1px 0 rgba(255, 255, 255, 0.02);
-  --scrim: rgba(0, 0, 0, 0.6);
+  --scrim: var(--token-bg-scrim);
 }
 
 [data-theme='light'] {
-  --bg: #f5f4f0;
-  --bg2: #fbfaf7;
+  --bg: var(--token-bg-base);
+  --bg2: var(--token-bg-sidebar);
   --content: #f2f1ec;
-  --panel: #ffffff;
-  --panel2: #faf9f5;
+  --panel: var(--token-bg-surface);
+  --panel2: var(--token-bg-elevated);
   --input: #ffffff;
-  --border: #e5e2da;
-  --border-soft: #edeae2;
-  --border-strong: #d9d5cb;
-  --text: #1a1c20;
-  --text2: #454a52;
-  --muted: #767c85;
-  --faint: #a3a8b0;
+  --border: var(--token-border-default);
+  --border-soft: var(--token-border-soft);
+  --border-strong: var(--token-border-strong);
+  --text: var(--token-text-primary);
+  --text2: var(--token-text-secondary);
+  --muted: var(--token-text-muted);
+  --faint: var(--token-text-faint);
 
   --gold: #9a6c15;
   --gold-fill: #e6b450;
   --gold-bright: #c9992f;
-  --gold-ink: #1a1408;
+  --gold-ink: var(--token-brand-on-gold);
   --gold-dim: rgba(230, 180, 80, 0.16);
   --gold-border: rgba(180, 130, 40, 0.35);
   --nav-active-bg: rgba(230, 180, 80, 0.18);
 
-  --green: #1f9d5f;
-  --red: #d64d43;
-  --blue: #2f74c8;
-  --purple: #7c4fd0;
+  --green: var(--token-state-success);
+  --red: var(--token-state-error);
+  --blue: var(--token-state-info);
+  --purple: var(--token-state-purple);
   --green-dim: rgba(31, 157, 95, 0.12);
   --red-dim: rgba(214, 77, 67, 0.12);
   --blue-dim: rgba(47, 116, 200, 0.12);
@@ -77,5 +79,5 @@
 
   --track-empty: #e9e6de;
   --card-shadow: 0 1px 2px rgba(20, 22, 28, 0.05), 0 1px 3px rgba(20, 22, 28, 0.05);
-  --scrim: rgba(20, 22, 28, 0.4);
+  --scrim: var(--token-bg-scrim);
 }

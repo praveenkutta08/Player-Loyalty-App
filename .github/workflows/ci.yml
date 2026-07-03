@@ -27,6 +27,7 @@ jobs:
           node-version: 22 # apps/mobile engines requires >= 22.11
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm check:tokens # design tokens -> mobile TS + admin CSS in sync (M9)
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
