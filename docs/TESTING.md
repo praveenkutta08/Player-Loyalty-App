@@ -28,24 +28,27 @@ excluded from typecheck/lint) because they require infra a device/CI runner must
 
 ### Admin — Playwright (`apps/admin/e2e/provision-and-publish.spec.ts`)
 
-Critical path: **login → provision tenant → publish offer**.
+Critical path: **login → provision tenant → publish offer**. `@playwright/test` is an admin
+devDependency; config is `apps/admin/playwright.config.ts` (base URL `ADMIN_BASE_URL`, default
+`http://localhost:5173`). Credentials default to the demo seed's super-admin
+(`super@demo-casino.com` / `demo-pass`); override with `ADMIN_EMAIL` / `ADMIN_PASSWORD`.
 
 ```bash
-pnpm add -D @playwright/test        # once
-npx playwright install              # browsers
-# start infra + backend + `pnpm --filter admin dev`, then:
-pnpm --filter admin exec playwright test
+pnpm --filter admin e2e:install     # browsers, once
+# start infra + backend (seeded) + `pnpm --filter admin dev` (or vite preview), then:
+pnpm --filter admin e2e
 ```
 
 ### Mobile — Detox (`apps/mobile/e2e/appFlow.e2e.ts`)
 
 Critical path: **auth → offers → wallet(mock) → geofence dwell(sim)**, driven by the screens'
-existing `testID`s.
+existing `testID`s. `detox` is a mobile devDependency; config is `apps/mobile/.detoxrc.js`
+(Android emulator, the `demo` flavor's debug APK) and `apps/mobile/e2e/jest.config.js`. iOS is
+added on a Mac. Needs a running Android emulator (`DETOX_AVD_NAME` overrides the AVD name).
 
 ```bash
-pnpm add -D detox                   # once
-detox build -c ios.sim.debug        # native build (needs Xcode/Android Studio)
-detox test -c ios.sim.debug
+pnpm --filter mobile e2e:build      # gradle assembleDemoDebug + androidTest
+pnpm --filter mobile e2e            # detox test on a booted emulator
 ```
 
 ## CI (implemented — `.github/workflows/ci.yml`)
@@ -54,13 +57,20 @@ Four jobs on every push to `main` / PR:
 
 | Job          | What it runs                                                                                             |
 | ------------ | -------------------------------------------------------------------------------------------------------- |
-| `web`        | `pnpm format:check` → `lint` → `typecheck` → `test` → `build`; uploads the admin `dist/` artifact         |
+| `web`        | `pnpm check:tokens` → `format:check` → `lint` → `typecheck` → `test` → `build`; uploads the admin `dist/` |
 | `backend`    | `ruff` → `mypy` → `alembic upgrade head` (clean `postgres:16` service) → `alembic check` → `pytest`       |
-| `api-client` | `scripts/check-api-client.sh` — OpenAPI ↔ generated client drift (GOLDEN RULE #7; no DB needed)          |
+| `api-client` | `scripts/check-api-client.sh` — OpenAPI snapshot + generated client drift (GOLDEN RULE #7; no DB needed) |
 | `android`    | Debug-APK artifact build (skipped on PRs — runs on `main` pushes + manual dispatch)                       |
 
-Playwright/Detox E2E stay opt-in per the section above (device/browser infra). Release/signing
-builds are a later phase — see `docs/MOBILE_RELEASE.md` (fastlane).
+Two more jobs run **only on `workflow_dispatch`** (manual), so the E2E specs stay runnable and
+can't rot without slowing the PR lane (audit M11):
+
+| Job          | What it runs                                                                                             |
+| ------------ | -------------------------------------------------------------------------------------------------------- |
+| `e2e-admin`  | postgres+redis services → migrate+seed backend → `uvicorn` + admin `vite preview` → `pnpm --filter admin e2e` (Playwright) |
+| `e2e-mobile` | build the demo + androidTest APKs → boot an Android emulator → `pnpm --filter mobile e2e` (Detox)        |
+
+Release/signing builds are a later phase — see `docs/MOBILE_RELEASE.md` (fastlane).
 
 ## Pre-commit hooks (implemented — `.pre-commit-config.yaml`)
 

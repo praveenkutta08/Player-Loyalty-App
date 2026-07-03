@@ -8,8 +8,9 @@ import { expect, test } from '@playwright/test';
  * Gated: needs the backend + admin dev server running (see docs/TESTING.md). Not part of the
  * default `pnpm test` (Vitest excludes e2e/).
  */
-const EMAIL = process.env.ADMIN_EMAIL ?? 'owner@demo.test';
-const PASSWORD = process.env.ADMIN_PASSWORD ?? 'password';
+// Defaults match the demo seed (app/seed.py): the unrestricted super-admin.
+const EMAIL = process.env.ADMIN_EMAIL ?? 'super@demo-casino.com';
+const PASSWORD = process.env.ADMIN_PASSWORD ?? 'demo-pass';
 
 test('login → provision tenant → publish offer', async ({ page }) => {
   // 1. Login
@@ -19,9 +20,9 @@ test('login → provision tenant → publish offer', async ({ page }) => {
   await page.getByRole('button', { name: /sign in|log in/i }).click();
   await expect(page.getByRole('navigation')).toBeVisible();
 
-  // 2. Provision a tenant
+  // 2. Provision a tenant — the tenants area is labelled "Casino Directory" in the nav.
   const tenantName = `E2E Casino ${Date.now()}`;
-  await page.getByRole('link', { name: /tenants/i }).click();
+  await page.getByRole('link', { name: /casino directory/i }).click();
   await page.getByRole('button', { name: /new tenant|add tenant|create/i }).click();
   await page.getByLabel(/name/i).fill(tenantName);
   await page.getByRole('button', { name: /create|save/i }).click();

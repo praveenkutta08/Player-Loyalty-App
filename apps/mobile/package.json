@@ -10,7 +10,9 @@
     "start": "react-native start",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "e2e:build": "detox build -c android.emu.debug",
+    "e2e": "detox test -c android.emu.debug"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.1.0",
@@ -45,6 +47,7 @@
     "@repo/config": "workspace:*",
     "@testing-library/react-native": "^13.0.1",
     "@types/jest": "^29.5.13",
+    "detox": "^20.28.0",
     "@types/react": "^19.2.0",
     "@types/react-test-renderer": "^19.1.0",
     "eslint": "^9.11.1",

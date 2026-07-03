@@ -132,3 +132,88 @@ jobs:
           name: mobile-debug-apk
           path: apps/mobile/android/app/build/outputs/apk/debug/*.apk
           retention-days: 7
+
+  # ---------------------------------------------------------------- E2E (opt-in, M11)
+  # Manual-dispatch only — they need a full stack / emulator, so they never block PRs but are
+  # kept runnable so the specs can't rot (audit M11).
+  e2e-admin:
+    name: E2E · Admin (Playwright)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:16
+        env:
+          POSTGRES_USER: player
+          POSTGRES_PASSWORD: player
+          POSTGRES_DB: player
+        ports: ['5433:5432']
+        options: >-
+          --health-cmd "pg_isready -U player" --health-interval 5s
+          --health-timeout 3s --health-retries 10
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd "redis-cli ping" --health-interval 5s
+          --health-timeout 3s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: apps/backend/uv.lock
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter admin exec playwright install --with-deps chromium
+      - name: Migrate + seed backend
+        working-directory: apps/backend
+        run: |
+          uv sync --frozen
+          uv run python -m alembic upgrade head
+          uv run python -m app.seed
+      - name: Start backend
+        working-directory: apps/backend
+        run: uv run uvicorn app.main:app --port 8000 &
+      - name: Build + preview admin
+        run: |
+          pnpm --filter admin build
+          pnpm --filter admin exec vite preview --port 5173 &
+      - name: Wait for servers
+        run: npx --yes wait-on http://localhost:8000/health http://localhost:5173
+      - name: Playwright
+        run: pnpm --filter admin e2e
+        env:
+          ADMIN_BASE_URL: http://localhost:5173
+
+  e2e-mobile:
+    name: E2E · Mobile (Detox)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - run: pnpm install --frozen-lockfile
+      - name: Build the demo app + androidTest APKs
+        run: pnpm --filter mobile e2e:build
+      - name: Detox test on an emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          profile: pixel_7
+          avd-name: Pixel_7_API_34
+          script: pnpm --filter mobile e2e
