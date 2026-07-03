@@ -39,16 +39,14 @@ export function Topbar() {
         <span className="font-semibold text-text">{viewTitle}</span>
       </div>
 
-      {/* Search */}
+      {/* Search — the dead ⌘K affordance was removed (no command palette wired) (LOW). */}
       <div className="relative ml-4 hidden max-w-sm flex-1 md:block">
         <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
         <input
           placeholder="Search..."
-          className="w-full rounded-control border border-border bg-input py-2 pl-9 pr-16 text-[13px] text-text placeholder:text-muted outline-none focus:border-gold"
+          aria-label="Search"
+          className="w-full rounded-control border border-border bg-input py-2 pl-9 pr-3 text-[13px] text-text placeholder:text-muted outline-none focus:border-gold"
         />
-        <span className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-md border border-border px-1.5 py-0.5 font-mono text-[10px] text-faint">
-          ⌘K
-        </span>
       </div>
 
       <div className="ml-auto flex items-center gap-3">
