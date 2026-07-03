@@ -227,14 +227,44 @@ JS reads these via the `TenantBuildConfig` native module
 back to `apps/mobile/.env`, then the committed demo values, so the `demo` flavor stays the dev loop.
 
 ### iOS (scheme + xcconfig) — requires a Mac
+
+**Already wired in the repo (R20, no Mac needed):** `Info.plist` reads the tenant identity from the
+attached xcconfig — `CFBundleDisplayName=$(TENANT_APP_NAME)`, `TenantId=$(TENANT_ID)`,
+`TenantSlug=$(TENANT_SLUG)`, `TenantApiBaseUrl=$(TENANT_API_BASE_URL)` — and declares `UIAppFonts`
+for the six bundled brand TTFs. The `Demo`/`AuroraBay` xcconfigs and the `TenantBuildConfig`
+Swift/ObjC module are committed. Only the project-file steps below remain, and they must be done in
+Xcode on macOS (hand-editing `project.pbxproj` off-Mac corrupts it). See
+[the full iOS runbook in §6.1](#61-ios-project-file-steps-mac-only).
+
 1. Copy `ios/Config/AuroraBay.xcconfig` → `ios/Config/Acme.xcconfig`; fill `TENANT_ID`,
-   `TENANT_SLUG`, `TENANT_API_BASE_URL`, `TENANT_APP_NAME`, `PRODUCT_BUNDLE_IDENTIFIER`.
-2. In Xcode: add duplicate Debug/Release configurations based on the xcconfig, duplicate the
-   `mobile` scheme as `mobile-Acme`, and set `CFBundleDisplayName = $(TENANT_APP_NAME)` plus
-   `TenantId/TenantSlug/TenantApiBaseUrl = $(TENANT_ID)/$(TENANT_SLUG)/$(TENANT_API_BASE_URL)`
-   in Info.plist.
-3. Add `ios/mobile/TenantBuildConfig.swift` + `.m` to the target once (first tenant only) —
-   they expose the Info.plist values to JS; until then iOS uses the `.env`/dev fallbacks.
+   `TENANT_SLUG`, `TENANT_API_BASE_URL`, `TENANT_APP_NAME`, `PRODUCT_BUNDLE_IDENTIFIER` (note the
+   `https:/$()/…` escape — `//` starts a comment in xcconfig).
+2. In Xcode: add `Debug-Acme`/`Release-Acme` configurations with `Acme.xcconfig` set as the
+   target's `baseConfigurationReference`, then duplicate the `mobile` scheme as `mobile-Acme`
+   (mark **Shared** so the `.xcscheme` is committed). Info.plist already resolves the values.
+3. First tenant only: add `ios/mobile/TenantBuildConfig.swift` + `.m` to the target's Compile
+   Sources (accept the auto-created bridging header) and the six `assets/fonts/*.ttf` to **Copy
+   Bundle Resources**. Until this is done iOS falls back to the `.env`/demo values and system fonts.
+
+#### 6.1 iOS project-file steps (Mac only)
+
+The end-to-end, click-by-click version (register xcconfigs → duplicate configurations → attach
+`baseConfigurationReference` → per-tenant shared schemes → target membership + bridging header →
+Copy Bundle Resources → `xcodebuild` verification) lives at the top of this file's companion, but
+the short form is:
+
+| Step | Where | Result |
+| --- | --- | --- |
+| Add `Demo.xcconfig` / `AuroraBay.xcconfig` to the project | File ▸ Add Files | xcconfigs visible to configs |
+| Duplicate Debug/Release → `*-Demo`, `*-AuroraBay` | Project ▸ Info ▸ Configurations | per-tenant configs |
+| Set each config's file to its `.xcconfig` | same panel | `baseConfigurationReference` (audit gap) |
+| Duplicate scheme → `mobile-Demo`, `mobile-AuroraBay` (Shared) | Manage Schemes | committed `.xcscheme`s |
+| Add `TenantBuildConfig.swift`/`.m` to target + bridging header | File Inspector ▸ Target Membership | native module present |
+| Add `assets/fonts/*.ttf` to Copy Bundle Resources | Build Phases | fonts render (matches `UIAppFonts`) |
+
+Verify: `cd apps/mobile/ios && pod install && xcodebuild -workspace mobile.xcworkspace -scheme
+mobile-AuroraBay -configuration Debug-AuroraBay -sdk iphonesimulator build` → installs as
+“Aurora Bay Casino”, bundle id `…mobile.aurorabay`, `buildConfig.tenantId` = the xcconfig UUID.
 
 ### Fonts
 Manifest typography tokens must name a font bundled in `assets/fonts/` (see

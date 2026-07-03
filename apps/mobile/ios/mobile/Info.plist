@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>mobile</string>
+	<string>$(TENANT_APP_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -36,6 +36,26 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<!-- H6 white-label: per-tenant identity comes from the attached xcconfig (Demo / AuroraBay),
+	     surfaced to JS by the TenantBuildConfig native module. CFBundleDisplayName above is the
+	     launcher label; these three are the runtime tenant binding. -->
+	<key>TenantId</key>
+	<string>$(TENANT_ID)</string>
+	<key>TenantSlug</key>
+	<string>$(TENANT_SLUG)</string>
+	<key>TenantApiBaseUrl</key>
+	<string>$(TENANT_API_BASE_URL)</string>
+	<!-- Bundled brand fonts (must also be added to the target's Copy Bundle Resources — see
+	     docs/WHITE_LABEL_CUSTOMIZATION_ROADMAP.md). Manifest typography tokens resolve to these. -->
+	<key>UIAppFonts</key>
+	<array>
+		<string>Bodoni Moda.ttf</string>
+		<string>Bodoni Moda_bold.ttf</string>
+		<string>Manrope.ttf</string>
+		<string>Manrope_bold.ttf</string>
+		<string>JetBrains Mono.ttf</string>
+		<string>JetBrains Mono_bold.ttf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
