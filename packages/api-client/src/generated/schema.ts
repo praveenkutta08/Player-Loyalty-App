@@ -38,6 +38,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/admin/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Admin Logout */
+        post: operations["admin_logout_api_v1_auth_admin_logout_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/admin/me": {
         parameters: {
             query?: never;
@@ -103,6 +120,23 @@ export interface paths {
         put?: never;
         /** Player Refresh */
         post: operations["player_refresh_api_v1_auth_player_refresh_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/player/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Player Logout */
+        post: operations["player_logout_api_v1_auth_player_logout_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1218,7 +1252,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Audit Logs */
+        /**
+         * Get Audit Logs
+         * @description Cursor-paginated audit feed (M2). Pass the response's `next_cursor` back as `cursor`.
+         */
         get: operations["get_audit_logs_api_v1_audit_logs_get"];
         put?: never;
         post?: never;
@@ -1825,6 +1862,21 @@ export interface components {
              * Format: date-time
              */
             ts: string;
+        };
+        /**
+         * AuditLogPage
+         * @description Cursor-paginated audit feed (M2). `next_cursor` is opaque; pass it back as `cursor`.
+         */
+        AuditLogPage: {
+            /** Items */
+            items: components["schemas"]["AuditLogOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /**
+             * Has More
+             * @default false
+             */
+            has_more: boolean;
         };
         /** BeaconCreate */
         BeaconCreate: {
@@ -3668,6 +3720,37 @@ export interface operations {
             };
         };
     };
+    admin_logout_api_v1_auth_admin_logout_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RefreshRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     admin_me_api_v1_auth_admin_me_get: {
         parameters: {
             query?: never;
@@ -3786,6 +3869,37 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["TokenPair"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    player_logout_api_v1_auth_player_logout_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RefreshRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
@@ -6444,7 +6558,10 @@ export interface operations {
     };
     get_audit_logs_api_v1_audit_logs_get: {
         parameters: {
-            query?: never;
+            query?: {
+                cursor?: string | null;
+                limit?: number | null;
+            };
             header?: {
                 authorization?: string | null;
                 "X-Tenant"?: string | null;
@@ -6460,7 +6577,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AuditLogOut"][];
+                    "application/json": components["schemas"]["AuditLogPage"];
                 };
             };
             /** @description Validation Error */

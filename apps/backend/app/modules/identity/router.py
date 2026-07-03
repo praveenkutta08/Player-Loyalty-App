@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -20,7 +20,12 @@ from ...rbac.deps import AdminContext, AdminContextDep, require
 from ...rbac.matrix import Permission
 from ..tenants.models import Tenant
 from .schemas import AdminLoginRequest, AdminMeOut, RefreshRequest, TenantOut, TokenPair
-from .service import authenticate_admin, issue_token_pair, rotate_refresh_token
+from .service import (
+    authenticate_admin,
+    issue_token_pair,
+    revoke_refresh_token,
+    rotate_refresh_token,
+)
 
 router = APIRouter()
 
@@ -48,6 +53,12 @@ async def admin_login(
 async def admin_refresh(body: RefreshRequest, session: SessionDep) -> TokenPair:
     # audit: exempt — authentication flow, not a privileged mutation (rate-limited, H4).
     return await rotate_refresh_token(session, body.refresh_token, AUDIENCE_ADMIN)
+
+
+@router.post("/auth/admin/logout", status_code=status.HTTP_204_NO_CONTENT, tags=["auth"])
+async def admin_logout(body: RefreshRequest, session: SessionDep) -> None:
+    # audit: exempt — session teardown, not a privileged mutation. Revokes the token family (M1).
+    await revoke_refresh_token(session, body.refresh_token, AUDIENCE_ADMIN)
 
 
 @router.get("/auth/admin/me", response_model=AdminMeOut, tags=["auth"])

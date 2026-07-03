@@ -60,7 +60,7 @@ async def test_rg_flags_write_audit_and_neutralize_concierge(api: AsyncClient) -
     assert resp.status_code == 200
 
     # Audited (Golden Rule #8) with admin actor attribution.
-    logs = (await api.get("/api/v1/audit-logs", headers=admin)).json()
+    logs = (await api.get("/api/v1/audit-logs", headers=admin)).json()["items"]
     rg_rows = [r for r in logs if r["action"] == "player:rg_flags_update"]
     assert rg_rows and rg_rows[0]["actor_type"] == "admin"
     assert rg_rows[0]["meta"]["self_exclusion"] is True

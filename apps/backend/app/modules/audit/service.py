@@ -6,9 +6,10 @@ from datetime import UTC, datetime
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from ...core.pagination import Page, clamp_limit, decode_cursor, encode_cursor
 from .models import AnalyticsEvent, AuditLog
 
 
@@ -62,19 +63,36 @@ async def record_event(
     await session.flush()
 
 
-async def list_audit(session: AsyncSession, tenant_id: UUID, limit: int = 100) -> list[AuditLog]:
-    return list(
-        (
-            await session.execute(
-                select(AuditLog)
-                .where(AuditLog.tenant_id == tenant_id)
-                .order_by(AuditLog.ts.desc())
-                .limit(limit)
+def _audit_cursor(row: AuditLog) -> str:
+    """Opaque keyset cursor for the (ts DESC, id DESC) ordering (M2)."""
+    return encode_cursor(f"{row.ts.isoformat()}|{row.id}")
+
+
+async def list_audit(
+    session: AsyncSession, tenant_id: UUID, *, cursor: str | None = None, limit: int | None = None
+) -> Page[AuditLog]:
+    """Cursor-paginated audit feed, newest first. Keyset on (ts, id) — stable under inserts,
+    no offset drift (M2). Fetches ``limit + 1`` to detect whether more remain."""
+    size = clamp_limit(limit)
+    query = select(AuditLog).where(AuditLog.tenant_id == tenant_id)
+    if cursor:
+        ts_raw, id_raw = decode_cursor(cursor).split("|", 1)
+        after_ts = datetime.fromisoformat(ts_raw)
+        after_id = UUID(id_raw)
+        # Rows strictly "after" the cursor in (ts DESC, id DESC): earlier ts, or same ts + lower id.
+        query = query.where(
+            or_(
+                AuditLog.ts < after_ts,
+                (AuditLog.ts == after_ts) & (AuditLog.id < after_id),
             )
         )
-        .scalars()
-        .all()
-    )
+    query = query.order_by(AuditLog.ts.desc(), AuditLog.id.desc()).limit(size + 1)
+    rows = list((await session.execute(query)).scalars().all())
+
+    has_more = len(rows) > size
+    items = rows[:size]
+    next_cursor = _audit_cursor(items[-1]) if has_more and items else None
+    return Page(items=items, next_cursor=next_cursor, has_more=has_more)
 
 
 async def analytics_summary(session: AsyncSession, tenant_id: UUID) -> dict[str, int]:

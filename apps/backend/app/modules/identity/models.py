@@ -82,7 +82,11 @@ class AdminUserTenant(Base):
 
 
 class RefreshToken(BaseModel):
-    """Tracks issued refresh tokens (both audiences) to support rotation and revocation."""
+    """Tracks issued refresh tokens (both audiences) to support rotation and revocation.
+
+    Tokens descending from one login share a ``family_id`` (M1): rotation carries it forward,
+    and detected reuse of an already-rotated token revokes the whole family (theft response).
+    """
 
     __tablename__ = "refresh_tokens"
 
@@ -91,5 +95,8 @@ class RefreshToken(BaseModel):
     )
     subject_id: Mapped[uuid.UUID] = mapped_column(PgUUID(as_uuid=True), nullable=False, index=True)
     audience: Mapped[str] = mapped_column(String(20), nullable=False)
+    family_id: Mapped[uuid.UUID] = mapped_column(
+        PgUUID(as_uuid=True), nullable=False, index=True, default=uuid.uuid4
+    )
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

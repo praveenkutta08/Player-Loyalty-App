@@ -13,6 +13,7 @@ from ...core.errors import ProblemException
 from ...core.logging import get_logger
 from ...core.ratelimit import enforce_auth_rate_limit
 from ...core.security import AUDIENCE_PLAYER
+from ...core.settings import get_settings
 from ...db.session import get_session
 from ...rbac.deps import AdminContext, AdminTenantIdDep, AdminTenantSessionDep, require
 from ...rbac.matrix import Permission
@@ -20,7 +21,7 @@ from ...tenancy.deps import TenantSessionDep, get_current_tenant_id, require_act
 from ..audit.models import ActorType
 from ..audit.service import write_audit
 from ..identity.schemas import RefreshRequest, TokenPair
-from ..identity.service import issue_token_pair, rotate_refresh_token
+from ..identity.service import issue_token_pair, revoke_refresh_token, rotate_refresh_token
 from .deps import get_current_player
 from .models import Player
 from .schemas import (
@@ -71,6 +72,14 @@ async def player_refresh(
     )
 
 
+@router.post("/auth/player/logout", status_code=status.HTTP_204_NO_CONTENT, tags=["auth"])
+async def player_logout(
+    body: RefreshRequest, session: Annotated[AsyncSession, Depends(get_session)]
+) -> None:
+    # audit: exempt — session teardown, not a privileged mutation. Revokes the token family (M1).
+    await revoke_refresh_token(session, body.refresh_token, AUDIENCE_PLAYER)
+
+
 @router.post("/auth/player/otp/request", status_code=status.HTTP_202_ACCEPTED, tags=["auth"])
 async def player_otp_request(
     request: Request, body: PlayerOtpRequest, session: TenantSessionDep, tenant_id: TenantIdDep
@@ -82,8 +91,12 @@ async def player_otp_request(
     player = await get_player_by_email(session, body.email)
     if player is not None:
         code = await create_player_otp(session, tenant_id, body.email)
-        # Dev delivery: log the code. Real APNs/FCM/email adapter wires in later.
-        logger.info("player_otp_issued", tenant_id=str(tenant_id), email=body.email, code=code)
+        # Never log the plaintext code outside dev (M3). Dev logs it as the delivery channel
+        # until a real APNs/FCM/email adapter lands; prod logs only that a code was issued.
+        if get_settings().is_dev:
+            logger.info("player_otp_issued", tenant_id=str(tenant_id), email=body.email, code=code)
+        else:
+            logger.info("player_otp_issued", tenant_id=str(tenant_id))
     return {"status": "sent"}
 
 

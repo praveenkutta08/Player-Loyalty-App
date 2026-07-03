@@ -24,8 +24,23 @@ export async function persistTokens(tokens: TokenPair): Promise<void> {
   await secureStore.setToken(REFRESH_KEY, tokens.refresh_token);
 }
 
-/** Full logout: drop the in-memory access token and wipe the Keychain refresh token. */
+/**
+ * Full logout: revoke the refresh token's family server-side (best-effort, M1), then drop the
+ * in-memory access token and wipe the Keychain refresh token.
+ */
 export async function logout(): Promise<void> {
+  const refreshToken = await secureStore.getToken(REFRESH_KEY);
+  if (refreshToken) {
+    try {
+      await fetch(`${getApiBaseUrl()}/auth/player/logout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh_token: refreshToken }),
+      });
+    } catch {
+      // best-effort — always clear local state below even if the server is unreachable
+    }
+  }
   store.dispatch(clearSession());
   await secureStore.removeToken(REFRESH_KEY);
 }

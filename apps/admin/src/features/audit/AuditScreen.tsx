@@ -118,7 +118,8 @@ function Pipeline() {
 
 function AuditLogTab() {
   const { toast } = useToast();
-  const { data: logs = [], isLoading } = useListAuditLogsQuery();
+  const { data: page, isLoading } = useListAuditLogsQuery();
+  const logs = page?.items ?? [];
 
   const columns: Column<AuditLog>[] = [
     {

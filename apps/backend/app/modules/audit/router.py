@@ -14,7 +14,7 @@ from ...rbac.deps import AdminTenantIdDep, AdminTenantSessionDep, require
 from ...rbac.matrix import Permission
 from ..players.deps import get_current_player
 from ..players.models import Player
-from .schemas import AuditLogOut
+from .schemas import AuditLogOut, AuditLogPage
 from .service import analytics_summary, list_audit, record_event
 
 router = APIRouter()
@@ -65,14 +65,23 @@ async def post_client_event(
 
 @router.get(
     "/audit-logs",
-    response_model=list[AuditLogOut],
+    response_model=AuditLogPage,
     tags=["audit"],
     dependencies=[Depends(require(Permission.audit_logs_read.value))],
 )
 async def get_audit_logs(
-    session: AdminTenantSessionDep, tenant_id: AdminTenantIdDep
-) -> list[AuditLogOut]:
-    return [AuditLogOut.model_validate(a) for a in await list_audit(session, tenant_id)]
+    session: AdminTenantSessionDep,
+    tenant_id: AdminTenantIdDep,
+    cursor: str | None = None,
+    limit: int | None = None,
+) -> AuditLogPage:
+    """Cursor-paginated audit feed (M2). Pass the response's `next_cursor` back as `cursor`."""
+    page = await list_audit(session, tenant_id, cursor=cursor, limit=limit)
+    return AuditLogPage(
+        items=[AuditLogOut.model_validate(a) for a in page.items],
+        next_cursor=page.next_cursor,
+        has_more=page.has_more,
+    )
 
 
 @router.get(

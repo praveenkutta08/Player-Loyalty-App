@@ -7,6 +7,9 @@ from functools import lru_cache
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine import make_url
 
+# The insecure JWT default is referenced by the production-safety guard (M5).
+_DEV_JWT_SECRET = "dev-only-insecure-change-me-32bytes-minimum"
+
 
 class Settings(BaseSettings):
     """Typed application configuration.
@@ -39,7 +42,7 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
 
     # Auth
-    jwt_secret: str = "dev-only-insecure-change-me-32bytes-minimum"
+    jwt_secret: str = _DEV_JWT_SECRET
     jwt_access_ttl_min: int = 15
     jwt_refresh_ttl_days: int = 30
 
@@ -93,6 +96,30 @@ class Settings(BaseSettings):
     @property
     def is_dev(self) -> bool:
         return self.app_env.lower() in {"dev", "development", "local"}
+
+    def assert_production_safe(self) -> None:
+        """Refuse to run outside dev with baked-in dev credentials or wildcard CORS (M5).
+
+        Called from the app lifespan; in dev it is a no-op so the demo keeps working with the
+        committed defaults.
+        """
+        if self.is_dev:
+            return
+        problems: list[str] = []
+        if self.jwt_secret == _DEV_JWT_SECRET:
+            problems.append("JWT_SECRET is still the insecure dev default")
+        if self.s3_access_key == "minioadmin" or self.s3_secret_key == "minioadmin":
+            problems.append("S3/MinIO credentials are still the default 'minioadmin'")
+        if any("*" in origin for origin in self.cors_origins):
+            problems.append("CORS_ORIGINS contains a wildcard '*'")
+        if not self.cors_origins:
+            problems.append("CORS_ORIGINS is empty")
+        if problems:
+            raise RuntimeError(
+                f"Refusing to start with APP_ENV={self.app_env!r} (M5): "
+                + "; ".join(problems)
+                + ". Set real secrets and explicit CORS origins for non-dev environments."
+            )
 
     @property
     def runtime_database_url(self) -> str:

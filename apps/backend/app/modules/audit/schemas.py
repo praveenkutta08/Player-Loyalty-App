@@ -20,3 +20,11 @@ class AuditLogOut(BaseModel):
     entity_id: UUID | None
     meta: dict[str, Any] | None
     ts: datetime
+
+
+class AuditLogPage(BaseModel):
+    """Cursor-paginated audit feed (M2). `next_cursor` is opaque; pass it back as `cursor`."""
+
+    items: list[AuditLogOut]
+    next_cursor: str | None = None
+    has_more: bool = False

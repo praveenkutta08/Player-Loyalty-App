@@ -23,6 +23,8 @@ OPENAPI_TAGS = [
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    # Refuse to serve with dev secrets / wildcard CORS outside dev (audit M5).
+    get_settings().assert_production_safe()
     # Fail-closed isolation (audit C1): never serve traffic on a role that bypasses RLS.
     await assert_rls_bound_role()
     yield

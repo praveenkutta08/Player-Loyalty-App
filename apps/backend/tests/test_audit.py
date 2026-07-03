@@ -27,7 +27,7 @@ async def test_privileged_mutations_write_audit(api: AsyncClient) -> None:
     # Config mutation (admin) -> audit.
     await api.put("/api/v1/config", headers=admin, json={"feature_flags": {"x": True}})
 
-    logs = (await api.get("/api/v1/audit-logs", headers=admin)).json()
+    logs = (await api.get("/api/v1/audit-logs", headers=admin)).json()["items"]
     actions = {row["action"] for row in logs}
     assert "wallet:fund" in actions
     assert "tenant_config:update" in actions
@@ -81,7 +81,7 @@ async def test_money_key_and_theme_actions_write_audit(api: AsyncClient) -> None
     )
     assert theme.status_code == 201
 
-    logs = (await api.get("/api/v1/audit-logs", headers=admin)).json()
+    logs = (await api.get("/api/v1/audit-logs", headers=admin)).json()["items"]
     actions = {row["action"] for row in logs}
     for expected in (
         "wallet:transfer_to_egm",
@@ -116,7 +116,7 @@ async def test_audit_log_is_immutable(api: AsyncClient, db_engine: object) -> No
     tenant = await create_tenant()
     admin = await admin_headers(api, tenant_id=tenant.id)
     await api.put("/api/v1/config", headers=admin, json={"feature_flags": {"y": True}})
-    row = (await api.get("/api/v1/audit-logs", headers=admin)).json()[0]
+    row = (await api.get("/api/v1/audit-logs", headers=admin)).json()["items"][0]
 
     with pytest.raises(Exception, match="append-only"):
         async with engine.begin() as conn:
