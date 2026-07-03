@@ -43,18 +43,23 @@ export function MapView({
     m.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
     m.on('click', (e) => onPickRef.current(e.lngLat.lng, e.lngLat.lat));
     m.on('load', () => {
+      // MapLibre paint values can't reference CSS vars, so read the design token once from the
+      // document so geofence overlays track the theme instead of a hardcoded gold (M14).
+      const gold =
+        getComputedStyle(document.documentElement).getPropertyValue('--gold-fill').trim() ||
+        '#E6B450';
       m.addSource('zones', { type: 'geojson', data: featureCollection([]) });
       m.addLayer({
         id: 'zones-fill',
         type: 'fill',
         source: 'zones',
-        paint: { 'fill-color': '#E6B450', 'fill-opacity': 0.18 },
+        paint: { 'fill-color': gold, 'fill-opacity': 0.18 },
       });
       m.addLayer({
         id: 'zones-line',
         type: 'line',
         source: 'zones',
-        paint: { 'line-color': '#E6B450', 'line-width': 2 },
+        paint: { 'line-color': gold, 'line-width': 2 },
       });
       loaded.current = true;
       syncData(m, zones, draft);

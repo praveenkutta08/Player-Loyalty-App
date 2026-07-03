@@ -5,6 +5,7 @@ import {
   Outlet,
   redirect,
 } from '@tanstack/react-router';
+import { Suspense } from 'react';
 
 import { NAV_ITEMS, type NavItem } from './nav';
 import { SCREEN_REGISTRY } from './screenRegistry';
@@ -36,7 +37,13 @@ function GuardedScreen({ item }: { item: NavItem }) {
   const allowed = useHasPermission(item.permission);
   if (!allowed) return <Forbidden permission={item.permission} />;
   const Real = SCREEN_REGISTRY[item.path];
-  return Real ? <Real /> : <Placeholder id={item.id} title={item.label} />;
+  if (!Real) return <Placeholder id={item.id} title={item.label} />;
+  // Screens are code-split (M14); Suspense covers the chunk load on first navigation.
+  return (
+    <Suspense fallback={<div className="p-8 text-[13px] text-muted">Loading…</div>}>
+      <Real />
+    </Suspense>
+  );
 }
 
 const navRoutes = NAV_ITEMS.map((item) =>

@@ -70,7 +70,17 @@ export function MediaLibraryScreen() {
         filename: file.name,
         content_type: file.type || 'application/octet-stream',
       }).unwrap();
-      await fetch(res.upload_url, { method: 'PUT', body: file }).catch(() => undefined);
+      // The presign gives us a URL; the PUT is the actual upload — a failure there must abort
+      // the create, not be swallowed while we pretend it worked (M14).
+      const put = await fetch(res.upload_url, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type || 'application/octet-stream' },
+      });
+      if (!put.ok) {
+        toast(`Upload failed (${put.status}) — the asset was not stored.`, 'error');
+        return;
+      }
       setAssets((a) => [
         {
           id: res.key,

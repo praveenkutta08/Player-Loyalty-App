@@ -321,7 +321,7 @@ function PromotionDetailModal({ promo, onClose }: { promo: Offer | null; onClose
           {promo.description && <p className="mb-4 text-[13px] text-text2">{promo.description}</p>}
           <div
             className="mb-4 h-28 rounded-card"
-            style={{ background: 'linear-gradient(135deg, #b08ae0, #E6B450)' }}
+            style={{ background: 'linear-gradient(135deg, var(--purple), var(--gold))' }}
           />
           <div className="grid grid-cols-3 gap-3">
             {[
