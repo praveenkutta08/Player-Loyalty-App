@@ -1,5 +1,10 @@
 # Getting Started — Building in Claude Code
 
+> **Historical (pre-build) document.** This describes how the repo was originally bootstrapped
+> from a planning folder + `starter-scaffold/`, neither of which exists anymore — the scaffold has
+> long since become this working monorepo. For running the project today, use
+> [`docs/RUNNING.md`](RUNNING.md) and [`docs/TESTING.md`](TESTING.md). Kept only for provenance.
+
 How to go from this planning folder to an actual repo you build with Claude Code, with a **preflight**
 that installs prerequisites (or stops and gives you steps).
 

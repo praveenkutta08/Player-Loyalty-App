@@ -223,8 +223,9 @@ function PromotionsCalendar({
   promos: Offer[];
   onSelect: (p: Offer) => void;
 }) {
-  // Anchored to July 2026 (the seed/demo window); navigable month-to-month.
-  const [ym, setYm] = useState({ year: 2026, month: 6 });
+  // Opens on the current month (navigable month-to-month) instead of a pinned demo date.
+  const now = new Date();
+  const [ym, setYm] = useState({ year: now.getFullYear(), month: now.getMonth() });
   const first = new Date(ym.year, ym.month, 1);
   const startWeekday = first.getDay();
   const daysInMonth = new Date(ym.year, ym.month + 1, 0).getDate();
