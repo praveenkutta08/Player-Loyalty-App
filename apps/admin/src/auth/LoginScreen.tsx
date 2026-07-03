@@ -34,8 +34,8 @@ export function LoginScreen() {
   const onSubmit = handleSubmit(async (values) => {
     setError(null);
     try {
-      const tokens = await login(values).unwrap();
-      tokenStore.set(tokens);
+      const { access_token } = await login(values).unwrap();
+      tokenStore.setAccess(access_token);
       // Hydrate the session with roles/permissions/tenant scope from the server.
       const me = await dispatch(authApi.endpoints.me.initiate(undefined)).unwrap();
       dispatch(setMe(me));

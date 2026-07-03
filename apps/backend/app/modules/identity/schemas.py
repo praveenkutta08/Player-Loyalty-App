@@ -13,6 +13,14 @@ class TokenPair(BaseModel):
     token_type: str = "bearer"
 
 
+class AdminAuthOut(BaseModel):
+    """Admin auth response (H5): the SPA receives only the short-lived access token; the refresh
+    token is delivered as an httpOnly, Secure, SameSite=Strict cookie it can never read from JS."""
+
+    access_token: str
+    token_type: str = "bearer"
+
+
 class RefreshRequest(BaseModel):
     refresh_token: str
 

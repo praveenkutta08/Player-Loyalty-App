@@ -2,6 +2,7 @@ import { Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
 
 import { authApi } from './authApi';
+import { refreshAccessToken } from './authBridge';
 import { clearAuth, setMe, setStatus } from './authSlice';
 import { LoginScreen } from './LoginScreen';
 import { tokenStore } from './tokenStore';
@@ -11,8 +12,10 @@ import type { ReactNode } from 'react';
 import { useAppDispatch, useAppSelector } from '@/app/store';
 
 /**
- * Bootstraps the session: if an admin token is stored, hydrate `me` (roles/permissions/scope);
- * otherwise show the login screen. Children (the routed console) render only when authenticated.
+ * Bootstraps the session (H5): the access token is memory-only, so a reload starts with none.
+ * We silently mint one from the httpOnly refresh cookie; if that succeeds, hydrate `me`
+ * (roles/permissions/scope). No cookie / expired session → the login screen. Children (the routed
+ * console) render only when authenticated.
  */
 export function AuthGate({ children }: { children: ReactNode }) {
   const dispatch = useAppDispatch();
@@ -21,8 +24,9 @@ export function AuthGate({ children }: { children: ReactNode }) {
   useEffect(() => {
     let active = true;
     void (async () => {
-      if (!tokenStore.getAccess()) {
-        dispatch(setStatus('anonymous'));
+      // Re-establish the access token from the refresh cookie (no-op body; browser sends cookie).
+      if (!tokenStore.getAccess() && !(await refreshAccessToken())) {
+        if (active) dispatch(setStatus('anonymous'));
         return;
       }
       try {

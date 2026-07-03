@@ -38,11 +38,39 @@ async def test_admin_bad_password_rejected(api: AsyncClient) -> None:
     assert resp.headers["content-type"].startswith("application/problem+json")
 
 
+async def test_login_delivers_refresh_as_httponly_cookie_not_body(api: AsyncClient) -> None:
+    """H5 — the SPA must never receive the refresh token in a place JS can read: it comes back
+    only as an httpOnly cookie, and the JSON body carries the access token alone."""
+    email = f"{unique('cookie')}@example.com"
+    await create_admin(email, "pw", "super_admin")
+
+    login = await api.post("/api/v1/auth/admin/login", json={"email": email, "password": "pw"})
+    assert login.status_code == 200
+    assert "refresh_token" not in login.json()  # not in the body...
+    assert login.cookies.get("admin_refresh")  # ...only in the cookie.
+
+    set_cookie = login.headers["set-cookie"].lower()
+    assert "httponly" in set_cookie
+    assert "samesite=strict" in set_cookie
+
+
+async def test_refresh_works_from_cookie_without_a_body(api: AsyncClient) -> None:
+    """H5 — a browser refresh sends no body; the httpOnly cookie the client jar holds is enough."""
+    email = f"{unique('cref')}@example.com"
+    await create_admin(email, "pw", "super_admin")
+    await api.post("/api/v1/auth/admin/login", json={"email": email, "password": "pw"})
+
+    rotated = await api.post("/api/v1/auth/admin/refresh")  # cookie only, no body
+    assert rotated.status_code == 200
+    assert rotated.json()["access_token"]
+    assert "refresh_token" not in rotated.json()
+
+
 async def test_refresh_rotation_invalidates_old_token(api: AsyncClient) -> None:
     email = f"{unique('super')}@example.com"
     await create_admin(email, "pw", "super_admin")
     login = await api.post("/api/v1/auth/admin/login", json={"email": email, "password": "pw"})
-    old_refresh = login.json()["refresh_token"]
+    old_refresh = login.cookies.get("admin_refresh")
 
     rotated = await api.post("/api/v1/auth/admin/refresh", json={"refresh_token": old_refresh})
     assert rotated.status_code == 200

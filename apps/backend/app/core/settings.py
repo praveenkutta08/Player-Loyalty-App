@@ -46,6 +46,13 @@ class Settings(BaseSettings):
     jwt_access_ttl_min: int = 15
     jwt_refresh_ttl_days: int = 30
 
+    # Admin refresh cookie (H5) — the console holds only the access token in memory; the refresh
+    # token rides in an httpOnly, SameSite=Strict cookie scoped to the admin-auth path. `Secure`
+    # is forced on outside dev (see ``admin_cookie_secure``); over plain-http dev it must be off so
+    # the browser (and the test client) send it back.
+    admin_refresh_cookie_name: str = "admin_refresh"
+    admin_refresh_cookie_path: str = "/api/v1/auth/admin"
+
     # Rate limiting (audit H4) — Redis-backed fixed windows on the auth endpoints.
     rate_limit_enabled: bool = True
     rate_limit_auth_per_ip: int = 30  # attempts per window per client IP per endpoint
@@ -96,6 +103,12 @@ class Settings(BaseSettings):
     @property
     def is_dev(self) -> bool:
         return self.app_env.lower() in {"dev", "development", "local"}
+
+    @property
+    def admin_cookie_secure(self) -> bool:
+        """`Secure` flag for the admin refresh cookie: off in dev (plain http), on everywhere else
+        so the cookie is never transmitted over an unencrypted connection."""
+        return not self.is_dev
 
     def assert_production_safe(self) -> None:
         """Refuse to run outside dev with baked-in dev credentials or wildcard CORS (M5).

@@ -52,6 +52,10 @@ const rawBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError
 ) =>
   fetchBaseQuery({
     baseUrl: apiBaseUrl,
+    // Send cookies so the admin's httpOnly refresh cookie (H5) reaches /auth/admin/refresh even in
+    // a split-origin deployment. The cookie is path-scoped to the admin-auth endpoints, so it's
+    // never attached to ordinary API calls; the mobile app carries no cookies (Authorization only).
+    credentials: 'include',
     // Headers typed structurally (mutated in place, returns void) so the shared package needn't
     // pull in the DOM lib for the global `Headers` type.
     prepareHeaders: (headers: { set: (name: string, value: string) => void }): void => {
@@ -62,7 +66,21 @@ const rawBaseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError
     },
   })(args, api, extraOptions);
 
-/** Wraps the base query with a single refresh-and-retry on 401. */
+// Single-flight refresh (H5): while one refresh is in flight, every other 401 awaits that SAME
+// promise instead of firing its own. With rotating refresh tokens (M1 family rotation) parallel
+// refreshes would race — the first rotates the token, the rest replay a now-revoked one and trip
+// reuse-detection, logging the user out. Sharing one promise means losers await the winner.
+let inFlightRefresh: Promise<boolean> | null = null;
+
+function refreshOnce(): Promise<boolean> {
+  if (!apiAuth.refresh) return Promise.resolve(false);
+  inFlightRefresh ??= Promise.resolve(apiAuth.refresh()).finally(() => {
+    inFlightRefresh = null;
+  });
+  return inFlightRefresh;
+}
+
+/** Wraps the base query with a single refresh-and-retry on 401 (shared across concurrent 401s). */
 const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
   args,
   api,
@@ -70,7 +88,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 ) => {
   let result = await rawBaseQuery(args, api, extraOptions);
   if (result.error?.status === 401 && apiAuth.refresh) {
-    const refreshed = await apiAuth.refresh();
+    const refreshed = await refreshOnce();
     if (refreshed) {
       result = await rawBaseQuery(args, api, extraOptions);
     } else {

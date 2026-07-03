@@ -1,12 +1,13 @@
 import { baseApi } from '@repo/api-client';
 
-import type { AdminLoginRequest, AdminMe, TenantOut, TokenPair } from './types';
+import type { AdminAuth, AdminLoginRequest, AdminMe, TenantOut } from './types';
 
 // Auth + tenant endpoints injected onto the shared baseApi. Refresh is handled by the baseApi
 // reauth bridge (see authBridge.ts), not as an RTK endpoint, so it can run mid-request.
 export const authApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    login: build.mutation<TokenPair, AdminLoginRequest>({
+    // Returns only the access token; the refresh token arrives as an httpOnly cookie (H5).
+    login: build.mutation<AdminAuth, AdminLoginRequest>({
       query: (body) => ({ url: '/auth/admin/login', method: 'POST', body }),
     }),
     me: build.query<AdminMe, void>({

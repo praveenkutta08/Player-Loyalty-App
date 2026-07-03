@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Request, status
+from fastapi import APIRouter, Depends, Request, Response, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -15,11 +15,18 @@ from ...core.ratelimit import (
     record_login_failure,
 )
 from ...core.security import AUDIENCE_ADMIN
+from ...core.settings import get_settings
 from ...db.session import get_session
 from ...rbac.deps import AdminContext, AdminContextDep, require
 from ...rbac.matrix import Permission
 from ..tenants.models import Tenant
-from .schemas import AdminLoginRequest, AdminMeOut, RefreshRequest, TenantOut, TokenPair
+from .schemas import (
+    AdminAuthOut,
+    AdminLoginRequest,
+    AdminMeOut,
+    RefreshRequest,
+    TenantOut,
+)
 from .service import (
     authenticate_admin,
     issue_token_pair,
@@ -32,10 +39,48 @@ router = APIRouter()
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
 
-@router.post("/auth/admin/login", response_model=TokenPair, tags=["auth"])
+def _set_refresh_cookie(response: Response, refresh_token: str) -> None:
+    """Deliver the admin refresh token as an httpOnly, SameSite=Strict cookie (H5).
+
+    httpOnly keeps it out of reach of any injected script (XSS can't read it); SameSite=Strict
+    blocks it from cross-site requests; the path scopes it to the admin-auth endpoints so it is
+    never attached to ordinary API calls.
+    """
+    settings = get_settings()
+    response.set_cookie(
+        key=settings.admin_refresh_cookie_name,
+        value=refresh_token,
+        max_age=settings.jwt_refresh_ttl_days * 24 * 60 * 60,
+        httponly=True,
+        secure=settings.admin_cookie_secure,
+        samesite="strict",
+        path=settings.admin_refresh_cookie_path,
+    )
+
+
+def _clear_refresh_cookie(response: Response) -> None:
+    settings = get_settings()
+    response.delete_cookie(
+        key=settings.admin_refresh_cookie_name,
+        httponly=True,
+        secure=settings.admin_cookie_secure,
+        samesite="strict",
+        path=settings.admin_refresh_cookie_path,
+    )
+
+
+def _presented_refresh(request: Request, body: RefreshRequest | None) -> str | None:
+    """The refresh token to act on: an explicit body value wins (programmatic clients), else the
+    httpOnly cookie the browser sends automatically (H5)."""
+    if body is not None and body.refresh_token:
+        return body.refresh_token
+    return request.cookies.get(get_settings().admin_refresh_cookie_name)
+
+
+@router.post("/auth/admin/login", response_model=AdminAuthOut, tags=["auth"])
 async def admin_login(
-    request: Request, body: AdminLoginRequest, session: SessionDep
-) -> TokenPair:
+    request: Request, body: AdminLoginRequest, session: SessionDep, response: Response
+) -> AdminAuthOut:
     # audit: exempt — authentication flow, not a privileged mutation (rate-limited, H4).
     await enforce_auth_rate_limit(request, "admin_login", body.email)
     # Lockout backoff: repeated failed credentials for the same account get a 429 window.
@@ -46,19 +91,35 @@ async def admin_login(
         if exc.status == 401:
             await record_login_failure(body.email, scope="admin_login_fail")
         raise
-    return await issue_token_pair(session, user.id, AUDIENCE_ADMIN)
+    pair = await issue_token_pair(session, user.id, AUDIENCE_ADMIN)
+    _set_refresh_cookie(response, pair.refresh_token)
+    return AdminAuthOut(access_token=pair.access_token)
 
 
-@router.post("/auth/admin/refresh", response_model=TokenPair, tags=["auth"])
-async def admin_refresh(body: RefreshRequest, session: SessionDep) -> TokenPair:
+@router.post("/auth/admin/refresh", response_model=AdminAuthOut, tags=["auth"])
+async def admin_refresh(
+    request: Request, session: SessionDep, response: Response, body: RefreshRequest | None = None
+) -> AdminAuthOut:
     # audit: exempt — authentication flow, not a privileged mutation (rate-limited, H4).
-    return await rotate_refresh_token(session, body.refresh_token, AUDIENCE_ADMIN)
+    refresh_token = _presented_refresh(request, body)
+    if not refresh_token:
+        raise ProblemException(401, "Missing refresh token")
+    # On failure the raised ProblemException is rendered by the exception handler (which replaces
+    # this response), so a stale cookie is simply left to expire — the SPA logs the user out.
+    pair = await rotate_refresh_token(session, refresh_token, AUDIENCE_ADMIN)
+    _set_refresh_cookie(response, pair.refresh_token)
+    return AdminAuthOut(access_token=pair.access_token)
 
 
 @router.post("/auth/admin/logout", status_code=status.HTTP_204_NO_CONTENT, tags=["auth"])
-async def admin_logout(body: RefreshRequest, session: SessionDep) -> None:
+async def admin_logout(
+    request: Request, session: SessionDep, response: Response, body: RefreshRequest | None = None
+) -> None:
     # audit: exempt — session teardown, not a privileged mutation. Revokes the token family (M1).
-    await revoke_refresh_token(session, body.refresh_token, AUDIENCE_ADMIN)
+    refresh_token = _presented_refresh(request, body)
+    if refresh_token:
+        await revoke_refresh_token(session, refresh_token, AUDIENCE_ADMIN)
+    _clear_refresh_cookie(response)
 
 
 @router.get("/auth/admin/me", response_model=AdminMeOut, tags=["auth"])

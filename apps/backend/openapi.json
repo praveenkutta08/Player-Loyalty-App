@@ -96,6 +96,25 @@
         "title": "AdminAnswerOut",
         "type": "object"
       },
+      "AdminAuthOut": {
+        "description": "Admin auth response (H5): the SPA receives only the short-lived access token; the refresh\ntoken is delivered as an httpOnly, Secure, SameSite=Strict cookie it can never read from JS.",
+        "properties": {
+          "access_token": {
+            "title": "Access Token",
+            "type": "string"
+          },
+          "token_type": {
+            "default": "bearer",
+            "title": "Token Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "title": "AdminAuthOut",
+        "type": "object"
+      },
       "AdminLoginRequest": {
         "properties": {
           "email": {
@@ -6261,7 +6280,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TokenPair"
+                  "$ref": "#/components/schemas/AdminAuthOut"
                 }
               }
             },
@@ -6291,11 +6310,18 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RefreshRequest"
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/RefreshRequest"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "204": {
@@ -6374,18 +6400,25 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RefreshRequest"
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/RefreshRequest"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TokenPair"
+                  "$ref": "#/components/schemas/AdminAuthOut"
                 }
               }
             },

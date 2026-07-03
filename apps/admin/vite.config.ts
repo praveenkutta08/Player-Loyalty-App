@@ -2,12 +2,45 @@
 import { fileURLToPath, URL } from 'node:url';
 
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
+
+// Strict Content-Security-Policy (H5) — injected into the built index.html only. It blocks inline
+// and remote scripts (no `unsafe-inline`/`unsafe-eval`), so an XSS payload can't run injected JS to
+// exfiltrate a token, and confines network egress to our own origin. `connect-src 'self'` covers
+// the same-origin API; the MapLibre geofence editor legitimately fetches demo tiles/glyphs, so that
+// origin is allowed for map data (img/connect) only. Applied at build only because Vite's dev
+// server relies on inline scripts + eval for HMR — the dev origin is trusted and local.
+const CSP = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'none'",
+  "form-action 'self'",
+  "script-src 'self'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' https://fonts.gstatic.com data:",
+  "img-src 'self' data: blob: https://demotiles.maplibre.org",
+  "connect-src 'self' https://demotiles.maplibre.org",
+  "worker-src 'self' blob:",
+].join('; ');
+
+function cspPlugin(): Plugin {
+  return {
+    name: 'inject-csp',
+    apply: 'build',
+    transformIndexHtml(html) {
+      return html.replace(
+        '</title>',
+        `</title>\n    <meta http-equiv="Content-Security-Policy" content="${CSP}" />`,
+      );
+    },
+  };
+}
 
 // The admin console talks to the FastAPI backend under /api/v1; in dev we proxy to the local
 // backend so RTK Query can use same-origin relative URLs (matching @repo/api-client's baseApi).
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), cspPlugin()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

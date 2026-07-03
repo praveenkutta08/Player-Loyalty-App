@@ -42,6 +42,7 @@
 - **Fix:** attempt cap on OTP (consume after N failures), Redis-backed rate limits on all four auth endpoints, admin lockout/backoff.
 
 ### H5. Admin refresh token in localStorage + refresh race
+> **RESOLVED (R17, 2026-07-03):** (1) The refresh token is no longer in JS at all — the backend issues it as an httpOnly, Secure (outside dev), SameSite=Strict cookie path-scoped to `/api/v1/auth/admin` (`identity/router.py` `_set_refresh_cookie`); admin login/refresh return only the short-lived access token (`AdminAuthOut`), which the SPA holds in memory (`tokenStore.ts` — no web storage). On reload the SPA silently re-mints from the cookie (`AuthGate` → `refreshAccessToken`). (2) A strict CSP (no `unsafe-inline`/`unsafe-eval` scripts; `connect-src 'self'`) is injected into the built `index.html` (`vite.config.ts` `cspPlugin`). (3) Single-flight refresh: concurrent 401s share one in-flight refresh promise (`baseApi.ts` `refreshOnce`), so rotation can't be raced into a spurious logout. Tests: `test_auth_admin.py` (cookie-only refresh, no token in body), `tokenStore.test.ts` (not in localStorage), `singleFlightRefresh.test.ts` (exactly one refresh across concurrent 401s).
 - `apps/admin/src/auth/tokenStore.ts:12-14` (verified): access **and refresh** tokens in localStorage — XSS exfiltrates a long-lived admin credential for a console that moves money. No CSP in `index.html`. Separately, `baseApi.ts:66-81` fires parallel refreshes on concurrent 401s; with rotation the losers 401 → spurious logout.
 - **Fix:** refresh token to httpOnly cookie (backend change) or memory + strict CSP; single-flight refresh mutex.
 
@@ -54,6 +55,7 @@
 - **Fix:** pre-permission screen → OS prompt → register; hydrate consent from server on launch; don't flip local state on server failure.
 
 ### H8. Plaintext passcode in Keychain (biometric fallback)
+> **OPEN (verified 2026-07-03):** Still `secureStore.setToken(PASSCODE_KEY, pin)` + `stored === pin` (raw PIN, string compare). **Root cause: no remediation prompt for H8.** See R18.
 - `biometricStore.ts:25-36`: the PIN is stored raw and string-compared. Mock biometrics is fine per playbook, but this design survives the mock swap.
 - **Fix:** gate the refresh-token Keychain entry with `BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE` access control; never store the raw PIN (salted hash at minimum).
 

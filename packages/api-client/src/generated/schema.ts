@@ -1791,6 +1791,20 @@ export interface components {
             /** Verdict */
             verdict: string;
         };
+        /**
+         * AdminAuthOut
+         * @description Admin auth response (H5): the SPA receives only the short-lived access token; the refresh
+         *     token is delivered as an httpOnly, Secure, SameSite=Strict cookie it can never read from JS.
+         */
+        AdminAuthOut: {
+            /** Access Token */
+            access_token: string;
+            /**
+             * Token Type
+             * @default bearer
+             */
+            token_type: string;
+        };
         /** AdminLoginRequest */
         AdminLoginRequest: {
             /**
@@ -4257,7 +4271,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TokenPair"];
+                    "application/json": components["schemas"]["AdminAuthOut"];
                 };
             };
             /** @description Validation Error */
@@ -4278,9 +4292,9 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody: {
+        requestBody?: {
             content: {
-                "application/json": components["schemas"]["RefreshRequest"];
+                "application/json": components["schemas"]["RefreshRequest"] | null;
             };
         };
         responses: {
@@ -4340,9 +4354,9 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody: {
+        requestBody?: {
             content: {
-                "application/json": components["schemas"]["RefreshRequest"];
+                "application/json": components["schemas"]["RefreshRequest"] | null;
             };
         };
         responses: {
@@ -4352,7 +4366,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TokenPair"];
+                    "application/json": components["schemas"]["AdminAuthOut"];
                 };
             };
             /** @description Validation Error */
