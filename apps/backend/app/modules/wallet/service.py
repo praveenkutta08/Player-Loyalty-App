@@ -26,6 +26,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.errors import ProblemException
+from ...core.pagination import Page, paginate_keyset
 from ...ports.cashless import CashlessPort, CashlessTransaction
 from ...ports.errors import AdapterError, AdapterRejectedError
 from ...ports.types import Money
@@ -59,23 +60,24 @@ async def get_or_create_wallet(
 
 
 async def list_transactions(
-    session: AsyncSession, player: Player, limit: int = 100
-) -> list[WalletTransaction]:
-    """Player's ledger, newest first — backs the Wallet history view (S5/S9)."""
+    session: AsyncSession,
+    player: Player,
+    *,
+    cursor: str | None = None,
+    limit: int | None = None,
+) -> Page[WalletTransaction]:
+    """Player's ledger, newest first — backs the Wallet history view (S5/S9). Cursor-paginated on
+    (created_at, id) so long histories page without offset drift (M2)."""
     wallet = await get_or_create_wallet(session, player)
-    rows = (
-        (
-            await session.execute(
-                select(WalletTransaction)
-                .where(WalletTransaction.wallet_id == wallet.id)
-                .order_by(WalletTransaction.created_at.desc())
-                .limit(limit)
-            )
-        )
-        .scalars()
-        .all()
+    base = select(WalletTransaction).where(WalletTransaction.wallet_id == wallet.id)
+    return await paginate_keyset(
+        session,
+        base,
+        order_col=WalletTransaction.created_at,
+        id_col=WalletTransaction.id,
+        cursor=cursor,
+        limit=limit,
     )
-    return list(rows)
 
 
 async def derived_balance(session: AsyncSession, wallet_id: UUID) -> int:

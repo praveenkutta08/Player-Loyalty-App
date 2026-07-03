@@ -14,6 +14,7 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.errors import ProblemException
+from ...core.pagination import Page, paginate_keyset
 from ...ports.push import PushPort
 from ..audit.service import record_event
 from ..notifications.schemas import NotificationCreate
@@ -42,11 +43,22 @@ async def create_zone(session: AsyncSession, tenant_id: UUID, data: ZoneCreate) 
     return zone
 
 
-async def list_zones(session: AsyncSession, tenant_id: UUID) -> list[GeofenceZone]:
-    return list(
-        (await session.execute(select(GeofenceZone).where(GeofenceZone.tenant_id == tenant_id)))
-        .scalars()
-        .all()
+async def list_zones(
+    session: AsyncSession,
+    tenant_id: UUID,
+    *,
+    cursor: str | None = None,
+    limit: int | None = None,
+) -> Page[GeofenceZone]:
+    """Admin geofence-zone list, newest first, cursor-paginated on (created_at, id) (M2)."""
+    base = select(GeofenceZone).where(GeofenceZone.tenant_id == tenant_id)
+    return await paginate_keyset(
+        session,
+        base,
+        order_col=GeofenceZone.created_at,
+        id_col=GeofenceZone.id,
+        cursor=cursor,
+        limit=limit,
     )
 
 

@@ -19,6 +19,7 @@ from ..players.models import Player
 from .schemas import (
     ContentCreate,
     ContentItemOut,
+    ContentItemPage,
     ContentUpdate,
     PresignRequest,
     PresignResponse,
@@ -37,14 +38,22 @@ router = APIRouter()
 
 @router.get(
     "/content",
-    response_model=list[ContentItemOut],
+    response_model=ContentItemPage,
     tags=["content"],
     dependencies=[Depends(require(Permission.content_read.value))],
 )
 async def admin_list_content(
-    session: AdminTenantSessionDep, tenant_id: AdminTenantIdDep
-) -> list[ContentItemOut]:
-    return [ContentItemOut.model_validate(i) for i in await list_items(session, tenant_id)]
+    session: AdminTenantSessionDep,
+    tenant_id: AdminTenantIdDep,
+    cursor: str | None = None,
+    limit: int | None = None,
+) -> ContentItemPage:
+    page = await list_items(session, tenant_id, cursor=cursor, limit=limit)
+    return ContentItemPage(
+        items=[ContentItemOut.model_validate(i) for i in page.items],
+        next_cursor=page.next_cursor,
+        has_more=page.has_more,
+    )
 
 
 async def write_audit_content(

@@ -6,7 +6,13 @@ import type { components } from '@repo/api-client';
 export type WalletOut = components['schemas']['WalletOut'];
 export type TransactionOut = components['schemas']['TransactionOut'];
 export type WalletTransactionOut = components['schemas']['WalletTransactionOut'];
+export type WalletTransactionPage = components['schemas']['WalletTransactionPage'];
 export type EgmPairOut = components['schemas']['EgmPairOut'];
+
+// The ledger endpoint is cursor-paginated (M2). The history view isn't infinite-scroll yet, so we
+// fetch the first (max-size) page and expose the rows array unchanged to callers; wiring a
+// "load more" that follows `next_cursor` is a follow-up that needs no further backend change.
+const PAGE_SIZE = 100;
 
 /** Fresh idempotency key unless the caller pins one (so a retry of the same attempt is safe). */
 const idem = (key?: string): string => key ?? String(uuid.v4());
@@ -23,7 +29,8 @@ export const walletApi = baseApi.injectEndpoints({
       providesTags: ['Wallet'],
     }),
     getTransactions: build.query<WalletTransactionOut[], void>({
-      query: () => ({ url: '/wallet/transactions' }),
+      query: () => ({ url: '/wallet/transactions', params: { limit: PAGE_SIZE } }),
+      transformResponse: (page: WalletTransactionPage) => page.items,
       providesTags: ['Wallet'],
     }),
     fundWallet: build.mutation<TransactionOut, { amountCents: number; idempotencyKey?: string }>({

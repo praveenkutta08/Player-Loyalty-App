@@ -15,7 +15,7 @@ from ..audit.service import write_audit
 from ..players.deps import get_current_player
 from ..players.models import Player
 from .models import OfferKind
-from .schemas import OfferCreate, OfferOut, OfferUpdate, RedemptionOut
+from .schemas import OfferCreate, OfferOut, OfferPage, OfferUpdate, RedemptionOut
 from .service import (
     create_offer,
     delete_offer,
@@ -41,9 +41,19 @@ def _register_admin_group(prefix: str, kind: OfferKind, resource: str) -> None:
     publish = require(f"{resource}:publish")
     tag = prefix.strip("/")
 
-    @router.get(prefix, response_model=list[OfferOut], tags=[tag], dependencies=[Depends(read)])
-    async def _list(session: AdminTenantSessionDep, tenant_id: AdminTenantIdDep) -> list[OfferOut]:
-        return [OfferOut.model_validate(o) for o in await list_offers(session, tenant_id, kind)]
+    @router.get(prefix, response_model=OfferPage, tags=[tag], dependencies=[Depends(read)])
+    async def _list(
+        session: AdminTenantSessionDep,
+        tenant_id: AdminTenantIdDep,
+        cursor: str | None = None,
+        limit: int | None = None,
+    ) -> OfferPage:
+        page = await list_offers(session, tenant_id, kind, cursor=cursor, limit=limit)
+        return OfferPage(
+            items=[OfferOut.model_validate(o) for o in page.items],
+            next_cursor=page.next_cursor,
+            has_more=page.has_more,
+        )
 
     async def _write_audit(
         session: AsyncSession, tenant_id: uuid.UUID, ctx: AdminContext, verb: str, offer_id: object

@@ -9,23 +9,25 @@ from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.errors import ProblemException
+from ...core.pagination import Page, paginate_keyset
 from ..audit.service import record_event
 from ..players.models import Player
 from .models import Offer, OfferStatus, PlayerOffer, RedemptionStatus
 from .schemas import OfferCreate, OfferUpdate
 
 
-async def list_offers(session: AsyncSession, tenant_id: UUID, kind: str) -> list[Offer]:
-    return list(
-        (
-            await session.execute(
-                select(Offer)
-                .where(Offer.tenant_id == tenant_id, Offer.kind == kind)
-                .order_by(Offer.created_at.desc())
-            )
-        )
-        .scalars()
-        .all()
+async def list_offers(
+    session: AsyncSession,
+    tenant_id: UUID,
+    kind: str,
+    *,
+    cursor: str | None = None,
+    limit: int | None = None,
+) -> Page[Offer]:
+    """Admin catalog list for a kind, newest first, cursor-paginated on (created_at, id) (M2)."""
+    base = select(Offer).where(Offer.tenant_id == tenant_id, Offer.kind == kind)
+    return await paginate_keyset(
+        session, base, order_col=Offer.created_at, id_col=Offer.id, cursor=cursor, limit=limit
     )
 
 

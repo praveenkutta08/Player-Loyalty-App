@@ -1698,7 +1698,7 @@ export interface paths {
         };
         /**
          * Wallet Transactions
-         * @description The player's append-only ledger, newest first (history view).
+         * @description The player's append-only ledger, newest first (history view). Cursor-paginated (M2).
          */
         get: operations["wallet_transactions_api_v1_wallet_transactions_get"];
         put?: never;
@@ -2152,6 +2152,21 @@ export interface components {
             tenant_id: string;
             /** Title */
             title: string;
+        };
+        /**
+         * ContentItemPage
+         * @description Cursor-paginated admin CMS content list (M2).
+         */
+        ContentItemPage: {
+            /**
+             * Has More
+             * @default false
+             */
+            has_more: boolean;
+            /** Items */
+            items: components["schemas"]["ContentItemOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
         };
         /**
          * ContentStatus
@@ -2856,6 +2871,21 @@ export interface components {
             title: string;
         };
         /**
+         * OfferPage
+         * @description Cursor-paginated admin offer/promotion list (M2).
+         */
+        OfferPage: {
+            /**
+             * Has More
+             * @default false
+             */
+            has_more: boolean;
+            /** Items */
+            items: components["schemas"]["OfferOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+        };
+        /**
          * OfferStatus
          * @enum {string}
          */
@@ -3026,6 +3056,21 @@ export interface components {
             /** Corrected */
             corrected: number;
         };
+        /**
+         * RedemptionPage
+         * @description Cursor-paginated player redemption history (M2).
+         */
+        RedemptionPage: {
+            /**
+             * Has More
+             * @default false
+             */
+            has_more: boolean;
+            /** Items */
+            items: components["schemas"]["app__modules__rewards__schemas__RedemptionOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+        };
         /** RefreshRequest */
         RefreshRequest: {
             /** Refresh Token */
@@ -3116,6 +3161,21 @@ export interface components {
             terms: string | null;
             /** Title */
             title: string;
+        };
+        /**
+         * RewardItemPage
+         * @description Cursor-paginated admin rewards catalog (M2).
+         */
+        RewardItemPage: {
+            /**
+             * Has More
+             * @default false
+             */
+            has_more: boolean;
+            /** Items */
+            items: components["schemas"]["RewardItemOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
         };
         /** RewardItemUpdate */
         RewardItemUpdate: {
@@ -3583,6 +3643,21 @@ export interface components {
             /** Type */
             type: string;
         };
+        /**
+         * WalletTransactionPage
+         * @description Cursor-paginated ledger (M2). `next_cursor` is opaque; pass it back as `cursor`.
+         */
+        WalletTransactionPage: {
+            /**
+             * Has More
+             * @default false
+             */
+            has_more: boolean;
+            /** Items */
+            items: components["schemas"]["WalletTransactionOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+        };
         /** ZoneCreate */
         ZoneCreate: {
             /** Center Lat */
@@ -3624,6 +3699,21 @@ export interface components {
             radius_m: number | null;
             /** Type */
             type: string;
+        };
+        /**
+         * ZonePage
+         * @description Cursor-paginated admin geofence-zone list (M2).
+         */
+        ZonePage: {
+            /**
+             * Has More
+             * @default false
+             */
+            has_more: boolean;
+            /** Items */
+            items: components["schemas"]["ZoneOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
         };
         /**
          * ZoneType
@@ -5128,7 +5218,10 @@ export interface operations {
     };
     admin_list_content_api_v1_content_get: {
         parameters: {
-            query?: never;
+            query?: {
+                cursor?: string | null;
+                limit?: number | null;
+            };
             header?: {
                 authorization?: string | null;
                 "X-Tenant"?: string | null;
@@ -5144,7 +5237,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ContentItemOut"][];
+                    "application/json": components["schemas"]["ContentItemPage"];
                 };
             };
             /** @description Validation Error */
@@ -5911,7 +6004,10 @@ export interface operations {
     };
     list_geo_zones_api_v1_geo_zones_get: {
         parameters: {
-            query?: never;
+            query?: {
+                cursor?: string | null;
+                limit?: number | null;
+            };
             header?: {
                 authorization?: string | null;
                 "X-Tenant"?: string | null;
@@ -5927,7 +6023,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ZoneOut"][];
+                    "application/json": components["schemas"]["ZonePage"];
                 };
             };
             /** @description Validation Error */
@@ -6282,7 +6378,10 @@ export interface operations {
     };
     app_my_redemptions_api_v1_me_redemptions_get: {
         parameters: {
-            query?: never;
+            query?: {
+                cursor?: string | null;
+                limit?: number | null;
+            };
             header?: {
                 authorization?: string | null;
             };
@@ -6297,7 +6396,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["app__modules__rewards__schemas__RedemptionOut"][];
+                    "application/json": components["schemas"]["RedemptionPage"];
                 };
             };
             /** @description Validation Error */
@@ -6449,7 +6548,10 @@ export interface operations {
     };
     _list_api_v1_offers_get: {
         parameters: {
-            query?: never;
+            query?: {
+                cursor?: string | null;
+                limit?: number | null;
+            };
             header?: {
                 authorization?: string | null;
                 "X-Tenant"?: string | null;
@@ -6465,7 +6567,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OfferOut"][];
+                    "application/json": components["schemas"]["OfferPage"];
                 };
             };
             /** @description Validation Error */
@@ -6756,7 +6858,10 @@ export interface operations {
     };
     _list_api_v1_promotions_get: {
         parameters: {
-            query?: never;
+            query?: {
+                cursor?: string | null;
+                limit?: number | null;
+            };
             header?: {
                 authorization?: string | null;
                 "X-Tenant"?: string | null;
@@ -6772,7 +6877,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["OfferOut"][];
+                    "application/json": components["schemas"]["OfferPage"];
                 };
             };
             /** @description Validation Error */
@@ -7029,7 +7134,10 @@ export interface operations {
     };
     admin_list_api_v1_rewards_admin_get: {
         parameters: {
-            query?: never;
+            query?: {
+                cursor?: string | null;
+                limit?: number | null;
+            };
             header?: {
                 authorization?: string | null;
                 "X-Tenant"?: string | null;
@@ -7045,7 +7153,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["RewardItemOut"][];
+                    "application/json": components["schemas"]["RewardItemPage"];
                 };
             };
             /** @description Validation Error */
@@ -7608,7 +7716,10 @@ export interface operations {
     };
     wallet_transactions_api_v1_wallet_transactions_get: {
         parameters: {
-            query?: never;
+            query?: {
+                cursor?: string | null;
+                limit?: number | null;
+            };
             header?: {
                 authorization?: string | null;
             };
@@ -7623,7 +7734,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WalletTransactionOut"][];
+                    "application/json": components["schemas"]["WalletTransactionPage"];
                 };
             };
             /** @description Validation Error */

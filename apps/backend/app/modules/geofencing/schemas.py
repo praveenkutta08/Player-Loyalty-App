@@ -23,6 +23,14 @@ class ZoneOut(BaseModel):
     is_active: bool
 
 
+class ZonePage(BaseModel):
+    """Cursor-paginated admin geofence-zone list (M2)."""
+
+    items: list[ZoneOut]
+    next_cursor: str | None = None
+    has_more: bool = False
+
+
 class ZoneCreate(BaseModel):
     name: str
     type: ZoneType = ZoneType.gps

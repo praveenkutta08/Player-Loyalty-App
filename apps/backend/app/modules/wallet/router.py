@@ -29,6 +29,7 @@ from .schemas import (
     TransferRequest,
     WalletOut,
     WalletTransactionOut,
+    WalletTransactionPage,
 )
 from .service import (
     cashout,
@@ -65,11 +66,20 @@ async def get_wallet(player: PlayerDep, session: SessionDep) -> WalletOut:
     return WalletOut.model_validate(wallet)
 
 
-@router.get("/wallet/transactions", response_model=list[WalletTransactionOut], tags=["wallet"])
-async def wallet_transactions(player: PlayerDep, session: SessionDep) -> list[WalletTransactionOut]:
-    """The player's append-only ledger, newest first (history view)."""
-    txns = await list_transactions(session, player)
-    return [WalletTransactionOut.model_validate(txn) for txn in txns]
+@router.get("/wallet/transactions", response_model=WalletTransactionPage, tags=["wallet"])
+async def wallet_transactions(
+    player: PlayerDep,
+    session: SessionDep,
+    cursor: str | None = None,
+    limit: int | None = None,
+) -> WalletTransactionPage:
+    """The player's append-only ledger, newest first (history view). Cursor-paginated (M2)."""
+    page = await list_transactions(session, player, cursor=cursor, limit=limit)
+    return WalletTransactionPage(
+        items=[WalletTransactionOut.model_validate(txn) for txn in page.items],
+        next_cursor=page.next_cursor,
+        has_more=page.has_more,
+    )
 
 
 @router.post("/wallet/fund", response_model=TransactionOut, tags=["wallet"])

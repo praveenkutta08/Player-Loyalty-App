@@ -1085,6 +1085,39 @@
         "title": "ContentItemOut",
         "type": "object"
       },
+      "ContentItemPage": {
+        "description": "Cursor-paginated admin CMS content list (M2).",
+        "properties": {
+          "has_more": {
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ContentItemOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "ContentItemPage",
+        "type": "object"
+      },
       "ContentStatus": {
         "enum": [
           "draft",
@@ -2950,6 +2983,39 @@
         "title": "OfferOut",
         "type": "object"
       },
+      "OfferPage": {
+        "description": "Cursor-paginated admin offer/promotion list (M2).",
+        "properties": {
+          "has_more": {
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/OfferOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "OfferPage",
+        "type": "object"
+      },
       "OfferStatus": {
         "enum": [
           "draft",
@@ -3374,6 +3440,39 @@
         "title": "ReconcileResult",
         "type": "object"
       },
+      "RedemptionPage": {
+        "description": "Cursor-paginated player redemption history (M2).",
+        "properties": {
+          "has_more": {
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/app__modules__rewards__schemas__RedemptionOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "RedemptionPage",
+        "type": "object"
+      },
       "RefreshRequest": {
         "properties": {
           "refresh_token": {
@@ -3683,6 +3782,39 @@
           "terms"
         ],
         "title": "RewardItemOut",
+        "type": "object"
+      },
+      "RewardItemPage": {
+        "description": "Cursor-paginated admin rewards catalog (M2).",
+        "properties": {
+          "has_more": {
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RewardItemOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "RewardItemPage",
         "type": "object"
       },
       "RewardItemUpdate": {
@@ -4950,6 +5082,39 @@
         "title": "WalletTransactionOut",
         "type": "object"
       },
+      "WalletTransactionPage": {
+        "description": "Cursor-paginated ledger (M2). `next_cursor` is opaque; pass it back as `cursor`.",
+        "properties": {
+          "has_more": {
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/WalletTransactionOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "WalletTransactionPage",
+        "type": "object"
+      },
       "ZoneCreate": {
         "properties": {
           "center_lat": {
@@ -5093,6 +5258,39 @@
           "is_active"
         ],
         "title": "ZoneOut",
+        "type": "object"
+      },
+      "ZonePage": {
+        "description": "Cursor-paginated admin geofence-zone list (M2).",
+        "properties": {
+          "has_more": {
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ZoneOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "ZonePage",
         "type": "object"
       },
       "ZoneType": {
@@ -7841,6 +8039,38 @@
         "operationId": "admin_list_content_api_v1_content_get",
         "parameters": [
           {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Limit"
+            }
+          },
+          {
             "in": "header",
             "name": "authorization",
             "required": false,
@@ -7879,11 +8109,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/ContentItemOut"
-                  },
-                  "title": "Response Admin List Content Api V1 Content Get",
-                  "type": "array"
+                  "$ref": "#/components/schemas/ContentItemPage"
                 }
               }
             },
@@ -9427,6 +9653,38 @@
         "operationId": "list_geo_zones_api_v1_geo_zones_get",
         "parameters": [
           {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Limit"
+            }
+          },
+          {
             "in": "header",
             "name": "authorization",
             "required": false,
@@ -9465,11 +9723,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/ZoneOut"
-                  },
-                  "title": "Response List Geo Zones Api V1 Geo Zones Get",
-                  "type": "array"
+                  "$ref": "#/components/schemas/ZonePage"
                 }
               }
             },
@@ -10119,6 +10373,38 @@
         "operationId": "app_my_redemptions_api_v1_me_redemptions_get",
         "parameters": [
           {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Limit"
+            }
+          },
+          {
             "in": "header",
             "name": "authorization",
             "required": false,
@@ -10140,11 +10426,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/app__modules__rewards__schemas__RedemptionOut"
-                  },
-                  "title": "Response App My Redemptions Api V1 Me Redemptions Get",
-                  "type": "array"
+                  "$ref": "#/components/schemas/RedemptionPage"
                 }
               }
             },
@@ -10472,6 +10754,38 @@
         "operationId": "_list_api_v1_offers_get",
         "parameters": [
           {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Limit"
+            }
+          },
+          {
             "in": "header",
             "name": "authorization",
             "required": false,
@@ -10510,11 +10824,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/OfferOut"
-                  },
-                  "title": "Response  List Api V1 Offers Get",
-                  "type": "array"
+                  "$ref": "#/components/schemas/OfferPage"
                 }
               }
             },
@@ -11128,6 +11438,38 @@
         "operationId": "_list_api_v1_promotions_get",
         "parameters": [
           {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Limit"
+            }
+          },
+          {
             "in": "header",
             "name": "authorization",
             "required": false,
@@ -11166,11 +11508,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/OfferOut"
-                  },
-                  "title": "Response  List Api V1 Promotions Get",
-                  "type": "array"
+                  "$ref": "#/components/schemas/OfferPage"
                 }
               }
             },
@@ -11710,6 +12048,38 @@
         "operationId": "admin_list_api_v1_rewards_admin_get",
         "parameters": [
           {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Limit"
+            }
+          },
+          {
             "in": "header",
             "name": "authorization",
             "required": false,
@@ -11748,11 +12118,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/RewardItemOut"
-                  },
-                  "title": "Response Admin List Api V1 Rewards Admin Get",
-                  "type": "array"
+                  "$ref": "#/components/schemas/RewardItemPage"
                 }
               }
             },
@@ -12880,9 +13246,41 @@
     },
     "/api/v1/wallet/transactions": {
       "get": {
-        "description": "The player's append-only ledger, newest first (history view).",
+        "description": "The player's append-only ledger, newest first (history view). Cursor-paginated (M2).",
         "operationId": "wallet_transactions_api_v1_wallet_transactions_get",
         "parameters": [
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Limit"
+            }
+          },
           {
             "in": "header",
             "name": "authorization",
@@ -12905,11 +13303,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "items": {
-                    "$ref": "#/components/schemas/WalletTransactionOut"
-                  },
-                  "title": "Response Wallet Transactions Api V1 Wallet Transactions Get",
-                  "type": "array"
+                  "$ref": "#/components/schemas/WalletTransactionPage"
                 }
               }
             },

@@ -5,6 +5,11 @@ import type { components } from '@repo/api-client';
 
 export type RewardItemOut = components['schemas']['RewardItemOut'];
 export type RedemptionOut = components['schemas']['app__modules__rewards__schemas__RedemptionOut'];
+export type RedemptionPage = components['schemas']['RedemptionPage'];
+
+// Redemption history is cursor-paginated (M2); the panel shows the first (max-size) page. Following
+// `next_cursor` for older history is a follow-up needing no backend change.
+const PAGE_SIZE = 100;
 
 /**
  * Rewards marketplace (player audience). Redeeming requires an Idempotency-Key (GOLDEN RULE #4) so a
@@ -18,7 +23,8 @@ export const rewardsApi = baseApi.injectEndpoints({
       providesTags: ['Reward'],
     }),
     getMyRedemptions: build.query<RedemptionOut[], void>({
-      query: () => ({ url: '/me/redemptions' }),
+      query: () => ({ url: '/me/redemptions', params: { limit: PAGE_SIZE } }),
+      transformResponse: (page: RedemptionPage) => page.items,
       providesTags: ['Redemption'],
     }),
     redeemReward: build.mutation<RedemptionOut, { itemId: string; idempotencyKey?: string }>({

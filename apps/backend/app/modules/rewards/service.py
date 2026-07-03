@@ -9,6 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.errors import ProblemException
+from ...core.pagination import Page, paginate_keyset
 from ...ports.errors import AdapterRejectedError
 from ...ports.loyalty import LoyaltyPort
 from ..audit.service import record_event
@@ -25,11 +26,22 @@ async def create_item(session: AsyncSession, tenant_id: UUID, data: RewardItemCr
     return item
 
 
-async def list_items_admin(session: AsyncSession, tenant_id: UUID) -> list[RewardItem]:
-    return list(
-        (await session.execute(select(RewardItem).where(RewardItem.tenant_id == tenant_id)))
-        .scalars()
-        .all()
+async def list_items_admin(
+    session: AsyncSession,
+    tenant_id: UUID,
+    *,
+    cursor: str | None = None,
+    limit: int | None = None,
+) -> Page[RewardItem]:
+    """Admin rewards catalog, newest first, cursor-paginated on (created_at, id) (M2)."""
+    base = select(RewardItem).where(RewardItem.tenant_id == tenant_id)
+    return await paginate_keyset(
+        session,
+        base,
+        order_col=RewardItem.created_at,
+        id_col=RewardItem.id,
+        cursor=cursor,
+        limit=limit,
     )
 
 
@@ -75,17 +87,22 @@ async def list_published(session: AsyncSession, tenant_id: UUID) -> list[RewardI
     )
 
 
-async def list_my_redemptions(session: AsyncSession, player: Player) -> list[RewardRedemption]:
-    return list(
-        (
-            await session.execute(
-                select(RewardRedemption)
-                .where(RewardRedemption.player_id == player.id)
-                .order_by(RewardRedemption.redeemed_at.desc())
-            )
-        )
-        .scalars()
-        .all()
+async def list_my_redemptions(
+    session: AsyncSession,
+    player: Player,
+    *,
+    cursor: str | None = None,
+    limit: int | None = None,
+) -> Page[RewardRedemption]:
+    """Player's redemption history, newest first, cursor-paginated on (redeemed_at, id) (M2)."""
+    base = select(RewardRedemption).where(RewardRedemption.player_id == player.id)
+    return await paginate_keyset(
+        session,
+        base,
+        order_col=RewardRedemption.redeemed_at,
+        id_col=RewardRedemption.id,
+        cursor=cursor,
+        limit=limit,
     )
 
 

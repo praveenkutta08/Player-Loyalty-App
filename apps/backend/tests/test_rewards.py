@@ -56,7 +56,7 @@ async def test_redeem_deducts_points_and_stock_once(api: AsyncClient) -> None:
     )
     assert reward["stock"] == 4  # decremented once
 
-    history = (await api.get("/api/v1/me/redemptions", headers=auth)).json()
+    history = (await api.get("/api/v1/me/redemptions", headers=auth)).json()["items"]
     assert len(history) == 1
 
 

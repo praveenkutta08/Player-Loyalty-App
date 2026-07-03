@@ -24,6 +24,14 @@ class ContentItemOut(BaseModel):
     segment: str | None
 
 
+class ContentItemPage(BaseModel):
+    """Cursor-paginated admin CMS content list (M2)."""
+
+    items: list[ContentItemOut]
+    next_cursor: str | None = None
+    has_more: bool = False
+
+
 class ContentCreate(BaseModel):
     content_type: ContentType
     title: str

@@ -132,7 +132,7 @@ async def test_adapter_failure_leaves_failed_row_not_phantom_balance(api: AsyncC
         assert down.status_code == 503
 
         history = await api.get("/api/v1/wallet/transactions", headers=auth)
-        rows = history.json()
+        rows = history.json()["items"]
         failed = [r for r in rows if r["status"] == "failed"]
         assert len(failed) == 1 and failed[0]["type"] == "cashout"
 

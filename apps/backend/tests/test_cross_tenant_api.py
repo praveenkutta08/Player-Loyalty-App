@@ -34,7 +34,7 @@ async def test_offer_ids_do_not_cross_tenants(api: AsyncClient) -> None:
     b_offer_id = created.json()["id"]
 
     # Tenant A cannot see B's offer in its list...
-    a_list = (await api.get("/api/v1/offers", headers=a_headers)).json()
+    a_list = (await api.get("/api/v1/offers", headers=a_headers)).json()["items"]
     assert all(o["id"] != b_offer_id for o in a_list)
 
     # ...nor update, publish, or delete it by id (RLS-scoped 404, no data leak).
@@ -48,7 +48,7 @@ async def test_offer_ids_do_not_cross_tenants(api: AsyncClient) -> None:
     assert dele.status_code == 404
 
     # B still owns an intact offer.
-    b_list = (await api.get("/api/v1/offers", headers=b_headers)).json()
+    b_list = (await api.get("/api/v1/offers", headers=b_headers)).json()["items"]
     assert any(o["id"] == b_offer_id and o["title"] == "B-only" for o in b_list)
 
 
@@ -68,7 +68,7 @@ async def test_reward_ids_do_not_cross_tenants(api: AsyncClient) -> None:
     dele = await api.delete(f"/api/v1/rewards/admin/{b_reward_id}", headers=a_headers)
     assert dele.status_code == 404
 
-    a_list = (await api.get("/api/v1/rewards/admin", headers=a_headers)).json()
+    a_list = (await api.get("/api/v1/rewards/admin", headers=a_headers)).json()["items"]
     assert all(r["id"] != b_reward_id for r in a_list)
 
 

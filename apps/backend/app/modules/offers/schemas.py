@@ -26,6 +26,14 @@ class OfferOut(BaseModel):
     terms: str | None
 
 
+class OfferPage(BaseModel):
+    """Cursor-paginated admin offer/promotion list (M2)."""
+
+    items: list[OfferOut]
+    next_cursor: str | None = None
+    has_more: bool = False
+
+
 class OfferCreate(BaseModel):
     title: str
     description: str | None = None

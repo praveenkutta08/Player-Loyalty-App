@@ -23,6 +23,14 @@ class RewardItemOut(BaseModel):
     terms: str | None
 
 
+class RewardItemPage(BaseModel):
+    """Cursor-paginated admin rewards catalog (M2)."""
+
+    items: list[RewardItemOut]
+    next_cursor: str | None = None
+    has_more: bool = False
+
+
 class RewardItemCreate(BaseModel):
     title: str
     image_url: str | None = None
@@ -50,3 +58,11 @@ class RedemptionOut(BaseModel):
     points_spent: int
     status: str
     redeemed_at: datetime
+
+
+class RedemptionPage(BaseModel):
+    """Cursor-paginated player redemption history (M2)."""
+
+    items: list[RedemptionOut]
+    next_cursor: str | None = None
+    has_more: bool = False

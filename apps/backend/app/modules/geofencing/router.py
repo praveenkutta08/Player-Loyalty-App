@@ -30,6 +30,7 @@ from .schemas import (
     TriggerUpdate,
     ZoneCreate,
     ZoneOut,
+    ZonePage,
     ZoneUpdate,
 )
 from .service import (
@@ -61,14 +62,22 @@ _TRIGGERS = "location_triggers"
 # ------------------------------------------------------------------ admin: zones
 @router.get(
     "/geo/zones",
-    response_model=list[ZoneOut],
+    response_model=ZonePage,
     tags=["geofencing"],
     dependencies=[Depends(require(Permission.geofence_zones_read.value))],
 )
 async def list_geo_zones(
-    session: AdminTenantSessionDep, tenant_id: AdminTenantIdDep
-) -> list[ZoneOut]:
-    return [ZoneOut.model_validate(z) for z in await list_zones(session, tenant_id)]
+    session: AdminTenantSessionDep,
+    tenant_id: AdminTenantIdDep,
+    cursor: str | None = None,
+    limit: int | None = None,
+) -> ZonePage:
+    page = await list_zones(session, tenant_id, cursor=cursor, limit=limit)
+    return ZonePage(
+        items=[ZoneOut.model_validate(z) for z in page.items],
+        next_cursor=page.next_cursor,
+        has_more=page.has_more,
+    )
 
 
 @router.post(

@@ -9,22 +9,28 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.errors import ProblemException
+from ...core.pagination import Page, paginate_keyset
 from ..tenant_config.service import bump_version
 from .models import ContentItem, ContentStatus
 from .schemas import ContentCreate, ContentUpdate
 
 
-async def list_items(session: AsyncSession, tenant_id: UUID) -> list[ContentItem]:
-    return list(
-        (
-            await session.execute(
-                select(ContentItem)
-                .where(ContentItem.tenant_id == tenant_id)
-                .order_by(ContentItem.created_at.desc())
-            )
-        )
-        .scalars()
-        .all()
+async def list_items(
+    session: AsyncSession,
+    tenant_id: UUID,
+    *,
+    cursor: str | None = None,
+    limit: int | None = None,
+) -> Page[ContentItem]:
+    """Admin CMS content list, newest first, cursor-paginated on (created_at, id) (M2)."""
+    base = select(ContentItem).where(ContentItem.tenant_id == tenant_id)
+    return await paginate_keyset(
+        session,
+        base,
+        order_col=ContentItem.created_at,
+        id_col=ContentItem.id,
+        cursor=cursor,
+        limit=limit,
     )
 
 

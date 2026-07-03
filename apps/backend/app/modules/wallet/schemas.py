@@ -35,6 +35,14 @@ class WalletTransactionOut(TransactionOut):
     created_at: datetime
 
 
+class WalletTransactionPage(BaseModel):
+    """Cursor-paginated ledger (M2). `next_cursor` is opaque; pass it back as `cursor`."""
+
+    items: list[WalletTransactionOut]
+    next_cursor: str | None = None
+    has_more: bool = False
+
+
 class FundRequest(BaseModel):
     amount_cents: int = Field(gt=0)
 

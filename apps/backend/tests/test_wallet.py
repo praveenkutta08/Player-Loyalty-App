@@ -52,7 +52,7 @@ async def test_transaction_history(api: AsyncClient) -> None:
     # Empty ledger to start.
     empty = await api.get("/api/v1/wallet/transactions", headers=auth)
     assert empty.status_code == 200
-    assert empty.json() == []
+    assert empty.json()["items"] == []
 
     await api.post(
         "/api/v1/wallet/fund",
@@ -67,7 +67,7 @@ async def test_transaction_history(api: AsyncClient) -> None:
 
     history = await api.get("/api/v1/wallet/transactions", headers=auth)
     assert history.status_code == 200
-    rows = history.json()
+    rows = history.json()["items"]
     assert len(rows) == 2
     # Newest first: the transfer precedes the fund; each carries a timestamp + signed amount.
     assert rows[0]["type"] == "transfer_to_egm"
@@ -76,6 +76,46 @@ async def test_transaction_history(api: AsyncClient) -> None:
     assert rows[1]["type"] == "fund"
     assert rows[1]["amount_cents"] == 8000
     assert "created_at" in rows[0]
+
+
+async def test_transaction_history_cursor_pagination(api: AsyncClient) -> None:
+    """M2 — the ledger pages via opaque cursors: keyset on (created_at, id), newest first, with no
+    overlap or gaps as the caller follows `next_cursor` to exhaustion."""
+    tenant = await create_tenant()
+    auth = {"Authorization": f"Bearer {await player_token(api, tenant.id)}"}
+
+    for i in range(5):
+        resp = await api.post(
+            "/api/v1/wallet/fund",
+            headers={**auth, "Idempotency-Key": f"page-{i}"},
+            json={"amount_cents": 1000 + i},
+        )
+        assert resp.status_code == 200
+
+    seen: list[str] = []
+    cursor: str | None = None
+    pages = 0
+    while True:
+        params = {"limit": 2}
+        if cursor:
+            params["cursor"] = cursor
+        resp = await api.get("/api/v1/wallet/transactions", headers=auth, params=params)
+        assert resp.status_code == 200
+        body = resp.json()
+        assert len(body["items"]) <= 2
+        seen.extend(row["id"] for row in body["items"])
+        pages += 1
+        cursor = body["next_cursor"]
+        if not body["has_more"]:
+            assert cursor is None
+            break
+        assert cursor is not None
+        assert pages <= 5  # guard against a non-terminating cursor
+
+    # Every row exactly once, across 3 pages (2 + 2 + 1), newest-first and de-duplicated.
+    assert pages == 3
+    assert len(seen) == 5
+    assert len(set(seen)) == 5
 
 
 async def test_insufficient_funds_and_missing_key(api: AsyncClient) -> None:

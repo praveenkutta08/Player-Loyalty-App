@@ -3,6 +3,7 @@ import { baseApi } from '@repo/api-client';
 import type { components } from '@repo/api-client';
 
 export type Zone = components['schemas']['ZoneOut'];
+export type ZonePage = components['schemas']['ZonePage'];
 export type ZoneCreate = components['schemas']['ZoneCreate'];
 export type ZoneUpdate = components['schemas']['ZoneUpdate'];
 export type Beacon = components['schemas']['BeaconOut'];
@@ -11,11 +12,15 @@ export type Trigger = components['schemas']['TriggerOut'];
 export type TriggerCreate = components['schemas']['TriggerCreate'];
 export type TriggerUpdate = components['schemas']['TriggerUpdate'];
 
+// Cursor-paginated admin zone list (M2); fetch the first (max-size) page, expose the array unchanged.
+const PAGE_SIZE = 100;
+
 // Geofence zones, beacons and location triggers for the acting tenant.
 export const geoApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     listZones: build.query<Zone[], void>({
-      query: () => ({ url: '/geo/zones' }),
+      query: () => ({ url: '/geo/zones', params: { limit: PAGE_SIZE } }),
+      transformResponse: (page: ZonePage) => page.items,
       providesTags: ['GeofenceZone'],
     }),
     createZone: build.mutation<Zone, ZoneCreate>({

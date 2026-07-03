@@ -18,7 +18,14 @@ from ..audit.models import ActorType
 from ..audit.service import write_audit
 from ..players.deps import get_current_player
 from ..players.models import Player
-from .schemas import RedemptionOut, RewardItemCreate, RewardItemOut, RewardItemUpdate
+from .schemas import (
+    RedemptionOut,
+    RedemptionPage,
+    RewardItemCreate,
+    RewardItemOut,
+    RewardItemPage,
+    RewardItemUpdate,
+)
 from .service import (
     create_item,
     delete_item,
@@ -50,14 +57,22 @@ IdemDep = Annotated[str, Depends(idempotency_key)]
 # ------------------------------------------------------------------ admin (CMS)
 @router.get(
     "/rewards/admin",
-    response_model=list[RewardItemOut],
+    response_model=RewardItemPage,
     tags=["rewards"],
     dependencies=[Depends(require(Permission.content_read.value))],
 )
 async def admin_list(
-    session: AdminTenantSessionDep, tenant_id: AdminTenantIdDep
-) -> list[RewardItemOut]:
-    return [RewardItemOut.model_validate(i) for i in await list_items_admin(session, tenant_id)]
+    session: AdminTenantSessionDep,
+    tenant_id: AdminTenantIdDep,
+    cursor: str | None = None,
+    limit: int | None = None,
+) -> RewardItemPage:
+    page = await list_items_admin(session, tenant_id, cursor=cursor, limit=limit)
+    return RewardItemPage(
+        items=[RewardItemOut.model_validate(i) for i in page.items],
+        next_cursor=page.next_cursor,
+        has_more=page.has_more,
+    )
 
 
 @router.post(
@@ -163,6 +178,16 @@ async def app_redeem(
     return RedemptionOut.model_validate(redemption)
 
 
-@router.get("/me/redemptions", response_model=list[RedemptionOut], tags=["rewards"])
-async def app_my_redemptions(player: PlayerDep, session: SessionDep) -> list[RedemptionOut]:
-    return [RedemptionOut.model_validate(r) for r in await list_my_redemptions(session, player)]
+@router.get("/me/redemptions", response_model=RedemptionPage, tags=["rewards"])
+async def app_my_redemptions(
+    player: PlayerDep,
+    session: SessionDep,
+    cursor: str | None = None,
+    limit: int | None = None,
+) -> RedemptionPage:
+    page = await list_my_redemptions(session, player, cursor=cursor, limit=limit)
+    return RedemptionPage(
+        items=[RedemptionOut.model_validate(r) for r in page.items],
+        next_cursor=page.next_cursor,
+        has_more=page.has_more,
+    )
