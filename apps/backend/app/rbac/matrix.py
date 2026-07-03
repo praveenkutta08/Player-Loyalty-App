@@ -308,6 +308,20 @@ def all_permissions() -> list[Permission]:
     return list(Permission)
 
 
+def export_matrix() -> dict[str, object]:
+    """Serialize the matrix to the language-neutral shape shared with the TS mirror (M8).
+
+    This is the canonical form committed to ``packages/shared-types/rbac-matrix.json`` and
+    diffed exhaustively against ``shared-types/rbac.ts`` in CI so the two can never drift.
+    """
+    return {
+        "permissions": [p.value for p in all_permissions()],
+        "roles": {
+            role.value: [p.value for p in perms] for role, perms in ROLE_PERMISSIONS.items()
+        },
+    }
+
+
 def split_permission(permission: Permission) -> tuple[str, str]:
     """Return the ``(resource, action)`` parts of a permission key."""
     resource, action = permission.value.split(":", 1)
