@@ -14,9 +14,3 @@ export function useHasPermission(permission?: string): boolean {
   if (!permission) return true;
   return Boolean(me?.permissions.includes(permission));
 }
-
-/** Super-admins have an unrestricted tenant scope (allowed_tenant_ids === null). */
-export function useIsScopedAdmin(): boolean {
-  const me = useMe();
-  return Array.isArray(me?.allowed_tenant_ids);
-}
