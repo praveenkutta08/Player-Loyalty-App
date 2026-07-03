@@ -12,6 +12,7 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import json
+import re
 from datetime import UTC, datetime, timedelta
 from typing import Any
 from uuid import UUID
@@ -259,6 +260,30 @@ def _signals(
     return signals
 
 
+_MONEY_OR_PCT = re.compile(r"\$\s?\d[\d,]*(?:\.\d+)?|\b\d+(?:\.\d+)?\s?%")
+
+
+def _numbers_in(context: dict[str, Any]) -> set[str]:
+    """Every numeric token present anywhere in the tool context (for output validation)."""
+    blob = json.dumps(context, default=str)
+    return set(re.findall(r"\d+(?:\.\d+)?", blob))
+
+
+def _sanitize_narration(verdict: str, context: dict[str, Any], fallback: str) -> str:
+    """Reject LLM narration that invents $ amounts / percentages absent from the tool context.
+
+    Prompt injection can't move scores or money (those are deterministic), but it could make the
+    branded concierge quote a fabricated figure. If the verdict contains a money/percent token
+    whose digits aren't grounded in the context, fall back to the deterministic verdict (LOW).
+    """
+    allowed = _numbers_in(context)
+    for token in _MONEY_OR_PCT.findall(verdict):
+        digits = re.findall(r"\d+(?:\.\d+)?", token)
+        if any(d not in allowed for d in digits):
+            return fallback
+    return verdict
+
+
 async def _narrate(
     llm: LlmPort, use_case: str, context: dict[str, Any], fallback: str
 ) -> str:
@@ -269,7 +294,8 @@ async def _narrate(
             messages=[LlmMessage(role="user", content=json.dumps(context, default=str))],
             temperature=TEMPERATURES[use_case],
         )
-        return completion.text
+        # Output post-check: never let the narration quote ungrounded money/percentages (LOW).
+        return _sanitize_narration(completion.text, context, fallback)
     except AdapterError:
         return fallback
 

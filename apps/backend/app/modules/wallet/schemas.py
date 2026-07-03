@@ -57,3 +57,10 @@ class EgmPairOut(BaseModel):
     egm_id: str
     status: str
     paired_at: datetime
+
+
+class ReconcileResult(BaseModel):
+    """Outcome of a wallet cache reconciliation pass (LOW)."""
+
+    checked: int
+    corrected: int

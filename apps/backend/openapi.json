@@ -3336,6 +3336,25 @@
         "title": "ReasonOut",
         "type": "object"
       },
+      "ReconcileResult": {
+        "description": "Outcome of a wallet cache reconciliation pass (LOW).",
+        "properties": {
+          "checked": {
+            "title": "Checked",
+            "type": "integer"
+          },
+          "corrected": {
+            "title": "Corrected",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "checked",
+          "corrected"
+        ],
+        "title": "ReconcileResult",
+        "type": "object"
+      },
       "RefreshRequest": {
         "properties": {
           "refresh_token": {
@@ -8235,7 +8254,7 @@
     },
     "/api/v1/egm/pair": {
       "post": {
-        "description": "Return a simulated cardless-play pairing session for an EGM.",
+        "description": "Return a simulated cardless-play pairing session for an EGM (mock-only).",
         "operationId": "egm_pair_api_v1_egm_pair_post",
         "parameters": [
           {
@@ -12604,6 +12623,73 @@
           }
         },
         "summary": "Get Wallet",
+        "tags": [
+          "wallet"
+        ]
+      }
+    },
+    "/api/v1/wallet/admin/reconcile": {
+      "post": {
+        "description": "Recompute cached wallet balances from the ledger and correct drift for the tenant (LOW).\n\nIdempotent + self-healing (only moves the cache toward the derived truth); intended to be\ncalled on a schedule by a cron/worker. Records an audit row with the correction count.",
+        "operationId": "reconcile_api_v1_wallet_admin_reconcile_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Tenant",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Tenant"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReconcileResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reconcile",
         "tags": [
           "wallet"
         ]

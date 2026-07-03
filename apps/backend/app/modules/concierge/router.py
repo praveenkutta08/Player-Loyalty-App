@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -21,6 +21,7 @@ from ...adapters.factory import (
     get_weather_port,
 )
 from ...core.errors import ProblemException
+from ...core.ratelimit import enforce_auth_rate_limit
 from ...db.session import get_session
 from ...ports.llm import LlmPort
 from ...ports.loyalty import LoyaltyPort
@@ -134,6 +135,7 @@ async def plan_visit(
 
 @router.post("/concierge/ask", response_model=ConciergeEnvelope, tags=["concierge"])
 async def ask(
+    request: Request,
     body: AskIn,
     session: SessionDep,
     player: PlayerDep,
@@ -144,6 +146,8 @@ async def ask(
 ) -> ConciergeEnvelope:
     """Free-form question; answered from tool context, rendered as signal cards + sources."""
     # audit: exempt — every answer persists to append-only concierge_answers (P6-mandated trail).
+    # Per-player rate limit caps unbounded distinct questions -> unbounded LLM spend (LOW).
+    await enforce_auth_rate_limit(request, "concierge_ask", str(player.id))
     envelope = await run_use_case(
         session,
         player,

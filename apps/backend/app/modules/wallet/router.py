@@ -13,6 +13,8 @@ from ...adapters.factory import get_cashless_port
 from ...core.errors import ProblemException
 from ...db.session import get_session
 from ...ports.cashless import CashlessPort
+from ...rbac.deps import AdminContext, AdminTenantIdDep, AdminTenantSessionDep, require
+from ...rbac.matrix import Permission
 from ..audit.models import ActorType
 from ..audit.service import write_audit
 from ..players.deps import get_current_player
@@ -22,6 +24,7 @@ from .schemas import (
     EgmPairOut,
     EgmPairRequest,
     FundRequest,
+    ReconcileResult,
     TransactionOut,
     TransferRequest,
     WalletOut,
@@ -33,6 +36,7 @@ from .service import (
     fund,
     get_or_create_wallet,
     list_transactions,
+    reconcile_wallets,
     transfer_to_egm,
 )
 
@@ -130,10 +134,40 @@ async def wallet_cashout(
     return TransactionOut.model_validate(txn)
 
 
+@router.post(
+    "/wallet/admin/reconcile",
+    response_model=ReconcileResult,
+    tags=["wallet"],
+)
+async def reconcile(
+    session: AdminTenantSessionDep,
+    tenant_id: AdminTenantIdDep,
+    ctx: Annotated[AdminContext, Depends(require(Permission.wallet_read.value))],
+) -> ReconcileResult:
+    """Recompute cached wallet balances from the ledger and correct drift for the tenant (LOW).
+
+    Idempotent + self-healing (only moves the cache toward the derived truth); intended to be
+    called on a schedule by a cron/worker. Records an audit row with the correction count.
+    """
+    result = await reconcile_wallets(session)
+    await write_audit(
+        session,
+        tenant_id=tenant_id,
+        actor_type=ActorType.admin.value,
+        actor_id=ctx.user.id,
+        action="wallet:reconcile",
+        entity="wallet",
+        entity_id=None,
+        meta=result,
+    )
+    return ReconcileResult(**result)
+
+
 @router.post("/egm/pair", response_model=EgmPairOut, tags=["wallet"])
 async def egm_pair(body: EgmPairRequest, player: PlayerDep) -> EgmPairOut:
-    """Return a simulated cardless-play pairing session for an EGM."""
-    # audit: exempt — mock-only pairing simulation, no persistence and no money movement.
+    """Return a simulated cardless-play pairing session for an EGM (mock-only)."""
+    # audit: exempt — mock-only pairing simulation, no persistence and no money movement. When a
+    # real cardless adapter lands this must persist a pairing session + audit the issue.
     return EgmPairOut(
         session_id=uuid.uuid4(),
         egm_id=body.egm_id,

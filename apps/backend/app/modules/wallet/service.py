@@ -91,6 +91,25 @@ async def derived_balance(session: AsyncSession, wallet_id: UUID) -> int:
     return int(total)
 
 
+async def reconcile_wallets(session: AsyncSession) -> dict[str, int]:
+    """Recompute every visible wallet's cached balance from the ledger and correct drift (LOW).
+
+    ``wallets.balance_cents`` is a convenience cache; the ledger is the source of truth. This
+    re-derives it under the current RLS scope and rewrites any that drifted, returning
+    ``{checked, corrected}``. Safe to run on a schedule (a cron/worker calls the admin endpoint)
+    — it only ever moves the cache toward the derived truth, never the ledger.
+    """
+    wallets = (await session.execute(select(Wallet).with_for_update())).scalars().all()
+    corrected = 0
+    for wallet in wallets:
+        derived = await derived_balance(session, wallet.id)
+        if wallet.balance_cents != derived:
+            wallet.balance_cents = derived
+            corrected += 1
+    await session.flush()
+    return {"checked": len(wallets), "corrected": corrected}
+
+
 async def available_balance(session: AsyncSession, wallet_id: UUID) -> int:
     """Spendable balance: completed entries plus pending debits (holds on in-flight money-out).
 

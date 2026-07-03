@@ -793,7 +793,7 @@ export interface paths {
         put?: never;
         /**
          * Egm Pair
-         * @description Return a simulated cardless-play pairing session for an EGM.
+         * @description Return a simulated cardless-play pairing session for an EGM (mock-only).
          */
         post: operations["egm_pair_api_v1_egm_pair_post"];
         delete?: never;
@@ -1626,6 +1626,29 @@ export interface paths {
         get: operations["get_wallet_api_v1_wallet_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/wallet/admin/reconcile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reconcile
+         * @description Recompute cached wallet balances from the ledger and correct drift for the tenant (LOW).
+         *
+         *     Idempotent + self-healing (only moves the cache toward the derived truth); intended to be
+         *     called on a schedule by a cron/worker. Records an audit row with the correction count.
+         */
+        post: operations["reconcile_api_v1_wallet_admin_reconcile_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2978,6 +3001,16 @@ export interface components {
             detail: string;
             /** Source */
             source: string;
+        };
+        /**
+         * ReconcileResult
+         * @description Outcome of a wallet cache reconciliation pass (LOW).
+         */
+        ReconcileResult: {
+            /** Checked */
+            checked: number;
+            /** Corrected */
+            corrected: number;
         };
         /** RefreshRequest */
         RefreshRequest: {
@@ -7442,6 +7475,38 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WalletOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reconcile_api_v1_wallet_admin_reconcile_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "X-Tenant"?: string | null;
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReconcileResult"];
                 };
             };
             /** @description Validation Error */
