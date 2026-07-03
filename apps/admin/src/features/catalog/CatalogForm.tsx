@@ -1,31 +1,59 @@
-import { useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import type { Offer, OfferCreate } from './catalogApi';
 
 import { Button, Field, Input, Modal, Select, Textarea } from '@/components/ui';
 import { SEGMENTS } from '@/features/shared/segments';
 
-export interface CatalogFormValues extends OfferCreate {
-  title: string;
+export type CatalogFormValues = OfferCreate & { title: string };
+
+// Form-shape schema (M13): datetime fields are the datetime-local string; mapped to ISO on
+// submit. Derived from the generated OfferCreate contract so the fields can't drift from the API.
+const schema = z
+  .object({
+    title: z.string().trim().min(1, 'Title is required').max(200, 'Keep the title under 200 chars'),
+    description: z.string().max(2000).optional().default(''),
+    image_url: z
+      .string()
+      .trim()
+      .refine((v) => v === '' || /^https?:\/\/|^\//.test(v), 'Enter a URL or media path')
+      .optional()
+      .default(''),
+    segment: z.string().default('all'),
+    start_local: z.string().optional().default(''),
+    end_local: z.string().optional().default(''),
+    terms: z.string().max(4000).optional().default(''),
+  })
+  .refine(
+    (v) => !v.start_local || !v.end_local || new Date(v.end_local) > new Date(v.start_local),
+    { path: ['end_local'], message: 'End must be after start' },
+  );
+
+type FormShape = z.input<typeof schema>;
+
+function forInput(iso: string | null | undefined): string {
+  return iso ? iso.slice(0, 16) : '';
+}
+function toIso(local: string): string | null {
+  return local ? new Date(local).toISOString() : null;
 }
 
-function toForm(offer: Offer | null): CatalogFormValues {
+function defaults(offer: Offer | null): FormShape {
   return {
     title: offer?.title ?? '',
     description: offer?.description ?? '',
     image_url: offer?.image_url ?? '',
     segment: offer?.segment ?? 'all',
-    start_at: offer?.start_at ?? null,
-    end_at: offer?.end_at ?? null,
+    start_local: forInput(offer?.start_at),
+    end_local: forInput(offer?.end_at),
     terms: offer?.terms ?? '',
   };
 }
 
-function forInput(iso: string | null | undefined): string {
-  return iso ? iso.slice(0, 16) : '';
-}
-
-/** Shared create/edit form for both offers and promotions. */
+/** Shared create/edit form for both offers and promotions (RHF + zod, M13). */
 export function CatalogForm({
   open,
   onClose,
@@ -39,15 +67,32 @@ export function CatalogForm({
   noun: string;
   onSave: (values: CatalogFormValues) => Promise<void>;
 }) {
-  const [form, setForm] = useState<CatalogFormValues>(() => toForm(editing));
-  const [key, setKey] = useState(editing?.id ?? 'new');
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<FormShape>({
+    resolver: zodResolver(schema),
+    defaultValues: defaults(editing),
+  });
 
-  // Reset local form when the modal opens for a different record.
-  const currentKey = editing?.id ?? 'new';
-  if (open && key !== currentKey) {
-    setKey(currentKey);
-    setForm(toForm(editing));
-  }
+  // Rehydrate when the modal opens for a different record.
+  useEffect(() => {
+    if (open) reset(defaults(editing));
+  }, [open, editing, reset]);
+
+  const submit = handleSubmit(async (v) => {
+    await onSave({
+      title: v.title.trim(),
+      description: v.description?.trim() || null,
+      image_url: v.image_url?.trim() || null,
+      segment: v.segment === 'all' ? null : v.segment,
+      start_at: toIso(v.start_local ?? ''),
+      end_at: toIso(v.end_local ?? ''),
+      terms: v.terms?.trim() || null,
+    });
+  });
 
   return (
     <Modal
@@ -57,40 +102,23 @@ export function CatalogForm({
       footer={
         <>
           <Button onClick={onClose}>Cancel</Button>
-          <Button
-            variant="primary"
-            disabled={!form.title}
-            onClick={() =>
-              void onSave({
-                ...form,
-                description: form.description || null,
-                image_url: form.image_url || null,
-                segment: form.segment === 'all' ? null : form.segment,
-                terms: form.terms || null,
-              })
-            }
-          >
+          <Button variant="primary" disabled={isSubmitting} onClick={() => void submit()}>
             {editing ? 'Save' : 'Create'}
           </Button>
         </>
       }
     >
-      <div className="space-y-4">
+      <form onSubmit={(e) => void submit(e)} className="space-y-4">
         <Field label="Title">
-          <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+          <Input {...register('title')} />
+          {errors.title && <p className="mt-1 text-[12px] text-red">{errors.title.message}</p>}
         </Field>
         <Field label="Description">
-          <Textarea
-            value={form.description ?? ''}
-            onChange={(e) => setForm({ ...form, description: e.target.value })}
-          />
+          <Textarea {...register('description')} />
         </Field>
         <div className="grid grid-cols-2 gap-4">
           <Field label="Segment">
-            <Select
-              value={form.segment ?? 'all'}
-              onChange={(e) => setForm({ ...form, segment: e.target.value })}
-            >
+            <Select {...register('segment')}>
               {SEGMENTS.map((s) => (
                 <option key={s} value={s}>
                   {s}
@@ -99,46 +127,27 @@ export function CatalogForm({
             </Select>
           </Field>
           <Field label="Image URL">
-            <Input
-              value={form.image_url ?? ''}
-              onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-              placeholder="From Media Library"
-            />
+            <Input {...register('image_url')} placeholder="From Media Library" />
+            {errors.image_url && (
+              <p className="mt-1 text-[12px] text-red">{errors.image_url.message}</p>
+            )}
           </Field>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <Field label="Starts">
-            <Input
-              type="datetime-local"
-              value={forInput(form.start_at)}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  start_at: e.target.value ? new Date(e.target.value).toISOString() : null,
-                })
-              }
-            />
+            <Input type="datetime-local" {...register('start_local')} />
           </Field>
           <Field label="Ends">
-            <Input
-              type="datetime-local"
-              value={forInput(form.end_at)}
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  end_at: e.target.value ? new Date(e.target.value).toISOString() : null,
-                })
-              }
-            />
+            <Input type="datetime-local" {...register('end_local')} />
+            {errors.end_local && (
+              <p className="mt-1 text-[12px] text-red">{errors.end_local.message}</p>
+            )}
           </Field>
         </div>
         <Field label="Terms">
-          <Textarea
-            value={form.terms ?? ''}
-            onChange={(e) => setForm({ ...form, terms: e.target.value })}
-          />
+          <Textarea {...register('terms')} />
         </Field>
-      </div>
+      </form>
     </Modal>
   );
 }

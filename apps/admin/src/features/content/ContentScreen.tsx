@@ -1,5 +1,8 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Pencil, Plus, Send, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import {
   useCreateContentMutation,
@@ -29,16 +32,23 @@ import { SEGMENTS, STATUS_TONE } from '@/features/shared/segments';
 
 const TYPES = ['banner', 'article', 'promo_card', 'announcement'] as const;
 
-interface FormState {
-  content_type: (typeof TYPES)[number];
-  title: string;
-  body: string;
-  media_url: string;
-  segment: string;
-  publish_at: string;
-}
+// RHF + zod (M13). `publish_at` is the datetime-local string; mapped to ISO on submit.
+const schema = z.object({
+  content_type: z.enum(TYPES),
+  title: z.string().trim().min(1, 'Title is required').max(200, 'Keep the title under 200 chars'),
+  body: z.string().max(8000).optional().default(''),
+  media_url: z
+    .string()
+    .trim()
+    .refine((v) => v === '' || /^https?:\/\/|^\//.test(v), 'Enter a URL or media path')
+    .optional()
+    .default(''),
+  segment: z.string().default('all'),
+  publish_at: z.string().optional().default(''),
+});
+type FormShape = z.input<typeof schema>;
 
-const EMPTY: FormState = {
+const EMPTY: FormShape = {
   content_type: 'banner',
   title: '',
   body: '',
@@ -57,18 +67,25 @@ export function ContentScreen() {
 
   const [editing, setEditing] = useState<ContentItem | null>(null);
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState<FormState>(EMPTY);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<FormShape>({ resolver: zodResolver(schema), defaultValues: EMPTY });
 
   const openNew = () => {
     setEditing(null);
-    setForm(EMPTY);
+    reset(EMPTY);
     setOpen(true);
   };
 
   const openEdit = (item: ContentItem) => {
     setEditing(item);
-    setForm({
-      content_type: (item.content_type as FormState['content_type']) ?? 'banner',
+    reset({
+      content_type: (TYPES as readonly string[]).includes(item.content_type)
+        ? (item.content_type as FormShape['content_type'])
+        : 'banner',
       title: item.title,
       body: item.body ?? '',
       media_url: item.media_url ?? '',
@@ -78,14 +95,14 @@ export function ContentScreen() {
     setOpen(true);
   };
 
-  const save = async () => {
+  const save = handleSubmit(async (v) => {
     const body = {
-      content_type: form.content_type,
-      title: form.title,
-      body: form.body || null,
-      media_url: form.media_url || null,
-      segment: form.segment === 'all' ? null : form.segment,
-      publish_at: form.publish_at ? new Date(form.publish_at).toISOString() : null,
+      content_type: v.content_type,
+      title: v.title.trim(),
+      body: v.body?.trim() || null,
+      media_url: v.media_url?.trim() || null,
+      segment: v.segment === 'all' ? null : v.segment,
+      publish_at: v.publish_at ? new Date(v.publish_at).toISOString() : null,
     };
     try {
       if (editing) await updateContent({ id: editing.id, body }).unwrap();
@@ -95,7 +112,7 @@ export function ContentScreen() {
     } catch {
       toast('Save failed (is the backend running?)', 'error');
     }
-  };
+  });
 
   const columns: Column<ContentItem>[] = [
     {
@@ -219,21 +236,16 @@ export function ContentScreen() {
         footer={
           <>
             <Button onClick={() => setOpen(false)}>Cancel</Button>
-            <Button variant="primary" disabled={!form.title} onClick={() => void save()}>
+            <Button variant="primary" disabled={isSubmitting} onClick={() => void save()}>
               {editing ? 'Save' : 'Create'}
             </Button>
           </>
         }
       >
-        <div className="space-y-4">
+        <form onSubmit={(e) => void save(e)} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <Field label="Type">
-              <Select
-                value={form.content_type}
-                onChange={(e) =>
-                  setForm({ ...form, content_type: e.target.value as FormState['content_type'] })
-                }
-              >
+              <Select {...register('content_type')}>
                 {TYPES.map((t) => (
                   <option key={t} value={t}>
                     {t.replace('_', ' ')}
@@ -242,10 +254,7 @@ export function ContentScreen() {
               </Select>
             </Field>
             <Field label="Segment">
-              <Select
-                value={form.segment}
-                onChange={(e) => setForm({ ...form, segment: e.target.value })}
-              >
+              <Select {...register('segment')}>
                 {SEGMENTS.map((s) => (
                   <option key={s} value={s}>
                     {s}
@@ -255,34 +264,24 @@ export function ContentScreen() {
             </Field>
           </div>
           <Field label="Title">
-            <Input
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-            />
+            <Input {...register('title')} />
+            {errors.title && <p className="mt-1 text-[12px] text-red">{errors.title.message}</p>}
           </Field>
           <Field label="Body">
-            <Textarea
-              value={form.body}
-              onChange={(e) => setForm({ ...form, body: e.target.value })}
-            />
+            <Textarea {...register('body')} />
           </Field>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Media URL">
-              <Input
-                value={form.media_url}
-                onChange={(e) => setForm({ ...form, media_url: e.target.value })}
-                placeholder="From Media Library"
-              />
+              <Input {...register('media_url')} placeholder="From Media Library" />
+              {errors.media_url && (
+                <p className="mt-1 text-[12px] text-red">{errors.media_url.message}</p>
+              )}
             </Field>
             <Field label="Schedule (publish at)">
-              <Input
-                type="datetime-local"
-                value={form.publish_at}
-                onChange={(e) => setForm({ ...form, publish_at: e.target.value })}
-              />
+              <Input type="datetime-local" {...register('publish_at')} />
             </Field>
           </div>
-        </div>
+        </form>
       </Modal>
 
       {items.length === 0 && !isLoading && (
