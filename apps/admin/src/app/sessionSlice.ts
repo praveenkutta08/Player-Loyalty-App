@@ -1,9 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 /**
- * UI-facing session state. Real authentication (tokens, permissions) is layered on in P3.2; for
- * the shell we track the active role scope (Platform vs Casino) and the acting tenant, which the
- * topbar role switch and sidebar tenant switcher drive.
+ * UI-facing session state: the active role scope (Platform vs Casino) and the acting tenant that
+ * the topbar role switch + sidebar tenant switcher drive.
+ *
+ * No demo tenants (M12): `activeTenantId` starts null so NO X-Tenant is sent until real tenants
+ * load from the API (see authBridge.getActingTenant), and `tenants` is populated from the server
+ * by the Sidebar rather than shipped as a fake list.
  */
 export type RoleScope = 'platform' | 'casino';
 
@@ -15,20 +18,14 @@ export interface TenantOption {
 
 interface SessionState {
   scope: RoleScope;
-  activeTenantId: string;
+  activeTenantId: string | null;
   tenants: TenantOption[];
 }
 
-const DEMO_TENANTS: TenantOption[] = [
-  { id: 'demo-casino', name: 'Demo Casino', subtitle: 'Las Vegas, NV · Live' },
-  { id: 'aurora-bay', name: 'Aurora Bay Resort', subtitle: 'Atlantic City, NJ · Live' },
-  { id: 'silver-peak', name: 'Silver Peak Casino', subtitle: 'Reno, NV · Draft' },
-];
-
 const initialState: SessionState = {
   scope: 'platform',
-  activeTenantId: DEMO_TENANTS[0]!.id,
-  tenants: DEMO_TENANTS,
+  activeTenantId: null,
+  tenants: [],
 };
 
 const sessionSlice = createSlice({
@@ -41,8 +38,12 @@ const sessionSlice = createSlice({
     setActiveTenant(state, action: PayloadAction<string>) {
       state.activeTenantId = action.payload;
     },
+    /** Replace the tenant list with the server-scoped tenants (Sidebar, once /tenants loads). */
+    setTenants(state, action: PayloadAction<TenantOption[]>) {
+      state.tenants = action.payload;
+    },
   },
 });
 
-export const { setScope, setActiveTenant } = sessionSlice.actions;
+export const { setScope, setActiveTenant, setTenants } = sessionSlice.actions;
 export default sessionSlice.reducer;

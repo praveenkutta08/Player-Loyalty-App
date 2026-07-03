@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import { useAppSelector } from '@/app/store';
 import { Can } from '@/auth/Can';
 import { ROLE_LABELS, roleMatrix, SCOPED_ROLES } from '@/auth/rbac';
+import { DemoBanner } from '@/components/DemoBanner';
 import { PageHeader } from '@/components/PageHeader';
 import {
   Avatar,
@@ -191,6 +192,12 @@ export function UsersRolesScreen() {
           </Can>
         }
       />
+
+      <DemoBanner>
+        Preview data — the admin-users API isn’t built yet, so this list and the invite/role actions
+        are local-only demo state. The <strong>Roles</strong> matrix on the right is real (from
+        shared-types). Changes here are not persisted.
+      </DemoBanner>
 
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-[1fr_320px]">
         <Table columns={columns} rows={users} rowKey={(u) => u.id} />

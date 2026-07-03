@@ -50,8 +50,8 @@ export function FeatureFlagsScreen() {
                     </StatusPill>
                   </div>
                   <p className="mb-2 text-[12px] text-muted">{flag.description}</p>
+                  {/* Backend stores booleans — no rollout %. Show only the real on/off state (M12). */}
                   <div className="flex items-center gap-2 text-[11px] text-faint">
-                    <span className="font-mono">{flag.rollout}% rollout</span>
                     <StatusPill tone={on ? 'green' : 'neutral'}>{on ? 'Live' : 'Off'}</StatusPill>
                   </div>
                 </div>

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { MEMBERS, mask, maskEmail, type Member } from './demoMembers';
 
 import { useHasPermission } from '@/auth/useAuth';
+import { DemoBanner } from '@/components/DemoBanner';
 import { PageHeader } from '@/components/PageHeader';
 import {
   Avatar,
@@ -83,11 +84,12 @@ export function MembersScreen() {
 
   return (
     <div>
-      <PageHeader
-        kicker="MBR"
-        title="Members"
-        subtitle="Player 360 — PII masked by default; unmask & export are audited."
-      />
+      <PageHeader kicker="MBR" title="Members" subtitle="Player 360 — PII masked by default." />
+
+      <DemoBanner>
+        Preview data — there is no admin player-list API yet, so these records are static demo data.
+        Unmask/export are local-only and do <strong>not</strong> write to the audit log.
+      </DemoBanner>
 
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <div className="w-64">
@@ -114,7 +116,7 @@ export function MembersScreen() {
         member={selected}
         elevated={elevated}
         onClose={() => setSelected(null)}
-        onAudit={(action, m) => toast(`${action} recorded to audit log for ${m.name}`)}
+        onAudit={(action, m) => toast(`${action} for ${m.name} (demo — not persisted)`)}
       />
     </div>
   );

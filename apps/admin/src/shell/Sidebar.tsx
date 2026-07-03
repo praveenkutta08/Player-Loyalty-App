@@ -3,7 +3,7 @@ import { Building2, ChevronsUpDown, LogOut, Settings } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { BRAND_ICON, groupsForScope } from '@/app/nav';
-import { setActiveTenant } from '@/app/sessionSlice';
+import { setActiveTenant, setTenants } from '@/app/sessionSlice';
 import { useAppDispatch, useAppSelector } from '@/app/store';
 import { useListTenantsQuery } from '@/auth/authApi';
 import { clearAuth } from '@/auth/authSlice';
@@ -15,27 +15,40 @@ import { cn } from '@/lib/cn';
 
 export function Sidebar() {
   const scope = useAppSelector((s) => s.session.scope);
-  const { tenants: fallbackTenants, activeTenantId } = useAppSelector((s) => s.session);
+  const { tenants, activeTenantId } = useAppSelector((s) => s.session);
   const dispatch = useAppDispatch();
   const me = useMe();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [switcherOpen, setSwitcherOpen] = useState(false);
-  const { data: apiTenants } = useListTenantsQuery();
+  const {
+    data: apiTenants,
+    isLoading: tenantsLoading,
+    isError: tenantsError,
+  } = useListTenantsQuery();
 
-  // Real (server-scoped) tenants when the API is reachable; demo list otherwise. The id is the
-  // tenant UUID so it can be sent as X-Tenant on tenant-scoped calls.
-  const tenants =
-    apiTenants && apiTenants.length > 0
-      ? apiTenants.map((t) => ({ id: t.id, name: t.name, subtitle: `${t.slug} · ${t.status}` }))
-      : fallbackTenants;
-  const activeTenant = tenants.find((t) => t.id === activeTenantId) ?? tenants[0]!;
-
-  // Once real tenants load, ensure the acting tenant is a valid (UUID) selection.
+  // Server-scoped tenants are the ONLY source (M12 — no demo fallback). Mirror them into the
+  // session store so the rest of the app reads real data, and pick a valid acting tenant once
+  // they load; the switcher shows an explicit loading/empty state until then.
   useEffect(() => {
-    if (apiTenants && apiTenants.length > 0 && !apiTenants.some((t) => t.id === activeTenantId)) {
+    if (!apiTenants) return;
+    dispatch(
+      setTenants(
+        apiTenants.map((t) => ({ id: t.id, name: t.name, subtitle: `${t.slug} · ${t.status}` })),
+      ),
+    );
+    if (apiTenants.length > 0 && !apiTenants.some((t) => t.id === activeTenantId)) {
       dispatch(setActiveTenant(apiTenants[0]!.id));
     }
   }, [apiTenants, activeTenantId, dispatch]);
+
+  const activeTenant = tenants.find((t) => t.id === activeTenantId) ?? null;
+  const tenantStatus: string | null = tenantsLoading
+    ? 'Loading casinos…'
+    : tenantsError
+      ? 'Couldn’t load casinos'
+      : tenants.length === 0
+        ? 'No casinos available'
+        : null;
 
   // Scope + permission filtering: the UI mirrors the server permissions (the real guard).
   const permissions = new Set(me?.permissions ?? []);
@@ -76,21 +89,30 @@ export function Sidebar() {
       {/* Tenant switcher */}
       <div className="px-3">
         <button
-          onClick={() => setSwitcherOpen((o) => !o)}
-          className="flex w-full items-center gap-2.5 rounded-control border border-border bg-panel px-3 py-2.5 text-left hover:bg-panel2"
+          onClick={() => activeTenant && setSwitcherOpen((o) => !o)}
+          disabled={!activeTenant}
+          className="flex w-full items-center gap-2.5 rounded-control border border-border bg-panel px-3 py-2.5 text-left enabled:hover:bg-panel2 disabled:cursor-default"
         >
           <span className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-panel2 text-gold">
             <Building2 size={16} />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-[13px] font-bold text-text">
-              {activeTenant.name}
-            </span>
-            <span className="block truncate text-[11px] text-muted">{activeTenant.subtitle}</span>
+            {activeTenant ? (
+              <>
+                <span className="block truncate text-[13px] font-bold text-text">
+                  {activeTenant.name}
+                </span>
+                <span className="block truncate text-[11px] text-muted">
+                  {activeTenant.subtitle}
+                </span>
+              </>
+            ) : (
+              <span className="block truncate text-[12px] text-muted">{tenantStatus}</span>
+            )}
           </span>
-          <ChevronsUpDown size={15} className="text-muted" />
+          {activeTenant && <ChevronsUpDown size={15} className="text-muted" />}
         </button>
-        {switcherOpen && (
+        {switcherOpen && activeTenant && (
           <div className="mt-1 overflow-hidden rounded-control border border-border bg-panel shadow-md">
             {tenants.map((t) => (
               <button
