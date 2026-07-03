@@ -5,6 +5,14 @@
 jest.mock('react-native-keychain', () => {
   const store = {};
   return {
+    // Enum surfaces the app reads for accessibility / access-control options (H8).
+    ACCESSIBLE: {
+      WHEN_UNLOCKED: 'AccessibleWhenUnlocked',
+      WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'AccessibleWhenUnlockedThisDeviceOnly',
+    },
+    ACCESS_CONTROL: {
+      BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE: 'BiometryCurrentSetOrDevicePasscode',
+    },
     setGenericPassword: jest.fn(async (username, password, opts) => {
       store[(opts && opts.service) || 'default'] = { username, password };
       return true;

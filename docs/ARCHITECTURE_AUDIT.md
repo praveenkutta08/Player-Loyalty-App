@@ -55,9 +55,7 @@
 - **Fix:** pre-permission screen → OS prompt → register; hydrate consent from server on launch; don't flip local state on server failure.
 
 ### H8. Plaintext passcode in Keychain (biometric fallback)
-> **OPEN (verified 2026-07-03):** Still `secureStore.setToken(PASSCODE_KEY, pin)` + `stored === pin` (raw PIN, string compare). **Root cause: no remediation prompt for H8.** See R18.
-- `biometricStore.ts:25-36`: the PIN is stored raw and string-compared. Mock biometrics is fine per playbook, but this design survives the mock swap.
-- **Fix:** gate the refresh-token Keychain entry with `BIOMETRY_CURRENT_SET_OR_DEVICE_PASSCODE` access control; never store the raw PIN (salted hash at minimum).
+> **RESOLVED (R18, 2026-07-03):** The PIN is never stored in the clear. `setPasscode` writes a versioned record `{v,salt,hash,iters}` where `hash = PBKDF2-HMAC-SHA256(pin, salt, 100k)` (`biometricStore.ts`), and `verifyPasscode` recomputes + compares in constant time. The primitive is a dependency-free, test-vector-verified implementation (`native/crypto/pbkdf2.ts`, `pbkdf2.test.ts`) since bare RN ships no crypto. A legacy plaintext PIN is verified once by equality then upgraded to a hash in place. Every Keychain entry is pinned `WHEN_UNLOCKED_THIS_DEVICE_ONLY` (`secureStore.ts`) so a leaked backup can't migrate the refresh token / passcode hash to another device. Full biometric `ACCESS_CONTROL` on the refresh entry is intentionally NOT applied — it would force a biometric prompt on every silent background refresh; user-presence is enforced by the LockScreen passcode/biometric gate instead. Test: `passcodeStore.test.ts` (no plaintext recoverable; wrong PIN rejected; per-set salt; legacy migration).
 
 ---
 

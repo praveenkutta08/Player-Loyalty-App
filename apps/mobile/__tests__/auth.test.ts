@@ -42,6 +42,8 @@ describe('session persistence', () => {
     expect(store.getState().auth).toEqual({ status: 'authenticated', accessToken: 'at' });
     expect(Keychain.setGenericPassword).toHaveBeenCalledWith('player.refresh', 'rt', {
       service: 'player.refresh',
+      // H8: pinned to this device (no iCloud/backup migration of the refresh token).
+      accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
     });
 
     await logout();

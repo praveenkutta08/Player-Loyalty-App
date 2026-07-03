@@ -11,9 +11,18 @@ export interface SecureStore {
   removeToken(key: string): Promise<void>;
 }
 
+// H8: keep every secret entry pinned to THIS device — `WHEN_UNLOCKED_THIS_DEVICE_ONLY` blocks the
+// item from syncing to iCloud Keychain or restoring onto another device via backup, so a leaked
+// backup can't resurrect a refresh token or passcode hash elsewhere. It still permits the silent
+// background token refresh (no per-read biometric prompt), which a biometric ACCESS_CONTROL on the
+// refresh entry would break — the passcode gate below is what enforces user presence on unlock.
+const DEVICE_ONLY = {
+  accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+} as const;
+
 export const secureStore: SecureStore = {
   async setToken(key, value) {
-    await Keychain.setGenericPassword(key, value, { service: key });
+    await Keychain.setGenericPassword(key, value, { service: key, ...DEVICE_ONLY });
   },
   async getToken(key) {
     const result = await Keychain.getGenericPassword({ service: key });
