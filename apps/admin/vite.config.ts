@@ -84,5 +84,27 @@ export default defineConfig({
     css: true,
     // Keep Vitest's default excludes and also skip e2e/ (Playwright runs it under its own runner).
     exclude: ['**/node_modules/**', '**/dist/**', 'e2e/**'],
+    // Coverage floor (R21). Like the mobile suite, scope to the logic units the tests exercise —
+    // auth/rbac, store/slices, api builders, pure helpers — not the presentational screens, routes,
+    // and design-system components (those are guarded by typecheck + Playwright e2e). Enforced in
+    // CI via `pnpm test:coverage`. A ratchet — raise as coverage grows, never lower to go green.
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: [
+        'src/**/*.test.{ts,tsx}',
+        'src/**/*Screen.tsx',
+        'src/routes/**',
+        'src/components/**',
+        'src/main.tsx',
+        'src/app/router.tsx',
+        'src/**/index.ts',
+        'src/vite-env.d.ts',
+      ],
+      // Modest starting floor: most admin logic lives in screens (excluded) or api builders that
+      // are exercised via Playwright e2e, so the unit-covered slice is small today. This locks in
+      // the current level (~11% stmts / ~66% branches) as a regression guard to ratchet upward.
+      thresholds: { statements: 10, branches: 55, functions: 28, lines: 10 },
+    },
   },
 });

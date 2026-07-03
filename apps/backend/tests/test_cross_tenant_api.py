@@ -12,7 +12,7 @@ import uuid
 import pytest
 from httpx import AsyncClient
 
-from ._helpers import admin_headers, create_player, create_tenant, unique
+from ._helpers import admin_headers, create_player, create_tenant, player_token, unique
 
 
 async def _two_tenants(api: AsyncClient) -> tuple:
@@ -94,6 +94,41 @@ async def test_player_records_do_not_cross_tenants(api: AsyncClient) -> None:
     ok = await api.get("/api/v1/players/lookup", headers=b_headers, params={"email": email})
     assert ok.status_code == 200
     assert ok.json()["email"] == email
+
+
+async def test_wallet_does_not_cross_tenants(api: AsyncClient) -> None:
+    """Direct wallet probe (R21): a tenant-A player session never sees tenant-B ledger data. The
+    wallet endpoints are self-scoped (no id param), so this pins self-scoping + RLS together — A's
+    /wallet is its own empty wallet and A's /wallet/transactions is empty even though B funded."""
+    tenant_a = await create_tenant()
+    tenant_b = await create_tenant()
+    token_a = await player_token(api, tenant_a.id)
+    token_b = await player_token(api, tenant_b.id)
+    auth_a = {"Authorization": f"Bearer {token_a}"}
+    auth_b = {"Authorization": f"Bearer {token_b}"}
+
+    # Player B funds their wallet — a real ledger row under tenant B.
+    funded = await api.post(
+        "/api/v1/wallet/fund",
+        headers={**auth_b, "Idempotency-Key": "b-fund"},
+        json={"amount_cents": 7500},
+    )
+    assert funded.status_code == 200
+
+    # Player A sees only their own (empty, zero-balance) wallet — never B's rows or balance.
+    a_wallet = await api.get("/api/v1/wallet", headers=auth_a)
+    assert a_wallet.status_code == 200
+    assert a_wallet.json()["balance_cents"] == 0
+
+    a_txns = await api.get("/api/v1/wallet/transactions", headers=auth_a)
+    assert a_txns.status_code == 200
+    assert a_txns.json()["items"] == []
+
+    # Positive control: player B does see their own funded ledger.
+    b_txns = await api.get("/api/v1/wallet/transactions", headers=auth_b)
+    assert b_txns.status_code == 200
+    b_items = b_txns.json()["items"]
+    assert len(b_items) == 1 and b_items[0]["amount_cents"] == 7500
 
 
 @pytest.mark.parametrize("resource", ["offers", "rewards/admin"])

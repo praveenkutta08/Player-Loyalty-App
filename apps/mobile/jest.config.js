@@ -7,6 +7,9 @@ module.exports = {
   moduleNameMapper: {
     '^react$': '<rootDir>/../../node_modules/react',
     '^react/(.*)$': '<rootDir>/../../node_modules/react/$1',
+    // The dotenv babel plugin is off under test (babel.config.js); resolve the `@env` virtual
+    // module to a deterministic stub so coverage instrumentation can't break the import.
+    '^@env$': '<rootDir>/__mocks__/env.js',
   },
   // Transform the ESM-only deps we pull in (lucide, workspace packages ship ESM) via babel.
   // pnpm keeps real package files under node_modules/.pnpm/<pkg>@<ver>/node_modules/<pkg>. Anchor
@@ -25,4 +28,10 @@ module.exports = {
     '!src/**/index.ts',
   ],
   coverageDirectory: '<rootDir>/coverage',
+  // Coverage floor (R21) — a ratchet set below current (~67% stmts) so it guards against
+  // regressions without being brittle. Enforced in CI via `pnpm test:coverage`. Raise as coverage
+  // grows; never lower to make a red build pass.
+  coverageThreshold: {
+    global: { statements: 60, branches: 50, functions: 50, lines: 60 },
+  },
 };

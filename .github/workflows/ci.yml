@@ -32,6 +32,12 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm test
+      # Coverage floors (R21) — fail the build if the tested-logic coverage regresses below the
+      # ratchet in each app's config (apps/admin/vite.config.ts, apps/mobile/jest.config.js).
+      - name: Coverage thresholds (admin + mobile)
+        run: |
+          pnpm --filter @repo/admin test:coverage
+          pnpm --filter mobile test:coverage
       - run: pnpm build
       - name: Upload admin bundle
         uses: actions/upload-artifact@v4
@@ -84,7 +90,8 @@ jobs:
         run: uv run python -m alembic upgrade head
       - name: Migration drift — models match migrations
         run: uv run python -m alembic check
-      - run: uv run python -m pytest
+      # Coverage floor (R21): --cov triggers the fail_under=80 gate in pyproject.toml.
+      - run: uv run python -m pytest --cov=app
 
   api-client:
     name: Contract · OpenAPI ↔ api-client drift

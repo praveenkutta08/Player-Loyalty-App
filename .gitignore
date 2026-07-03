@@ -6,6 +6,12 @@ build/
 *.log
 .pnpm-store/
 
+# TypeScript incremental build cache (machine-local; never commit — R21)
+*.tsbuildinfo
+
+# Test coverage output (machine-local — R21)
+coverage/
+
 # Python
 __pycache__/
 *.pyc
@@ -13,6 +19,8 @@ __pycache__/
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
+.coverage
+htmlcov/
 
 # Env / secrets
 .env

@@ -48,6 +48,9 @@ omit = ["app/seed.py", "alembic/*"]
 
 [tool.coverage.report]
 show_missing = true
+# Coverage floor (R21) — a ratchet below current (~85%). Enforced when CI runs `pytest --cov`
+# (`uv run pytest --cov=app`); the default no-cov run stays fast. Raise as coverage grows.
+fail_under = 80
 
 [tool.ruff]
 target-version = "py312"
