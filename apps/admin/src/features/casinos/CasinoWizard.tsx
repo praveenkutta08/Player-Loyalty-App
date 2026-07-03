@@ -1,5 +1,8 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Check, Rocket } from 'lucide-react';
 import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { Monogram } from './Monogram';
 
@@ -15,39 +18,61 @@ const THEME_PRESETS = [
   { key: 'sapphire', name: 'Sapphire Bay', color: '#6aa6e8' },
 ];
 
-interface WizardState {
-  name: string;
-  slug: string;
-  location: string;
-  primaryColor: string;
-  flags: Record<string, boolean>;
-  theme: string;
-}
+// Form-shape schema (M13). Maps to the POST /tenants (tenants:create) payload once that endpoint
+// ships (GOLDEN RULE #7); only Property Basics is required to launch.
+const wizardSchema = z.object({
+  name: z.string().trim().min(1, 'Casino name is required'),
+  slug: z
+    .string()
+    .trim()
+    .min(1, 'Slug is required')
+    .regex(/^[a-z0-9-]+$/, 'Lowercase letters, numbers and hyphens only'),
+  location: z.string().trim().optional().default(''),
+  primaryColor: z.string().default('#E6B450'),
+  flags: z.record(z.boolean()).default({ cardless: true, geofencing: true }),
+  theme: z.string().default('luxe'),
+});
+
+type WizardForm = z.input<typeof wizardSchema>;
+
+const WIZARD_DEFAULTS: WizardForm = {
+  name: '',
+  slug: '',
+  location: '',
+  primaryColor: '#E6B450',
+  flags: { cardless: true, geofencing: true },
+  theme: 'luxe',
+};
 
 export function CasinoWizard({ onDone }: { onDone: () => void }) {
   const { toast } = useToast();
   const [step, setStep] = useState(0);
-  const [state, setState] = useState<WizardState>({
-    name: '',
-    slug: '',
-    location: '',
-    primaryColor: '#E6B450',
-    flags: { cardless: true, geofencing: true },
-    theme: 'luxe',
-  });
+  const {
+    register,
+    control,
+    watch,
+    trigger,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm<WizardForm>({ resolver: zodResolver(wizardSchema), defaultValues: WIZARD_DEFAULTS });
 
-  const set = <K extends keyof WizardState>(key: K, value: WizardState[K]) =>
-    setState((s) => ({ ...s, [key]: value }));
-
-  const canContinue = step !== 0 || (state.name.trim() !== '' && state.slug.trim() !== '');
+  const state = watch();
   const isLast = step === STEPS.length - 1;
 
-  const launch = () => {
+  // Only Property Basics (step 0) has required fields; validate it before advancing.
+  const goNext = async () => {
+    if (step === 0 && !(await trigger(['name', 'slug']))) return;
+    setStep((s) => s + 1);
+  };
+
+  const launch = handleSubmit((v) => {
     // No tenant provisioning endpoint in the P1–P2 backend yet; this validates + confirms the flow.
     // Wires to POST /tenants (tenants:create) once that endpoint ships (GOLDEN RULE #7).
-    toast(`${state.name || 'New casino'} queued for launch`);
+    toast(`${v.name || 'New casino'} queued for launch`);
     onDone();
-  };
+  });
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-[240px_1fr]">
@@ -89,30 +114,42 @@ export function CasinoWizard({ onDone }: { onDone: () => void }) {
             <div className="max-w-md space-y-4">
               <h2 className="display text-[18px] font-semibold text-text">Property Basics</h2>
               <Field label="Casino name">
-                <Input
-                  value={state.name}
-                  onChange={(e) => {
-                    const name = e.target.value;
-                    set('name', name);
-                    if (!state.slug || state.slug === slugify(state.name))
-                      set('slug', slugify(name));
-                  }}
-                  placeholder="Aurora Bay Resort"
+                <Controller
+                  control={control}
+                  name="name"
+                  render={({ field }) => (
+                    <Input
+                      value={field.value}
+                      placeholder="Aurora Bay Resort"
+                      onChange={(e) => {
+                        const name = e.target.value;
+                        const slug = getValues('slug');
+                        // Keep the slug mirrored to the name until the user edits it by hand.
+                        if (!slug || slug === slugify(field.value ?? ''))
+                          setValue('slug', slugify(name), { shouldValidate: true });
+                        field.onChange(name);
+                      }}
+                    />
+                  )}
                 />
+                {errors.name && <p className="mt-1 text-[12px] text-red">{errors.name.message}</p>}
               </Field>
               <Field label="Slug">
-                <Input
-                  value={state.slug}
-                  onChange={(e) => set('slug', slugify(e.target.value))}
-                  placeholder="aurora-bay"
+                <Controller
+                  control={control}
+                  name="slug"
+                  render={({ field }) => (
+                    <Input
+                      value={field.value}
+                      placeholder="aurora-bay"
+                      onChange={(e) => field.onChange(slugify(e.target.value))}
+                    />
+                  )}
                 />
+                {errors.slug && <p className="mt-1 text-[12px] text-red">{errors.slug.message}</p>}
               </Field>
               <Field label="Location">
-                <Input
-                  value={state.location}
-                  onChange={(e) => set('location', e.target.value)}
-                  placeholder="Atlantic City, NJ"
-                />
+                <Input placeholder="Atlantic City, NJ" {...register('location')} />
               </Field>
             </div>
           )}
@@ -134,7 +171,8 @@ export function CasinoWizard({ onDone }: { onDone: () => void }) {
                   {['#E6B450', '#e5736b', '#5cc48f', '#6aa6e8', '#b08ae0'].map((c) => (
                     <button
                       key={c}
-                      onClick={() => set('primaryColor', c)}
+                      type="button"
+                      onClick={() => setValue('primaryColor', c)}
                       className={`h-8 w-8 rounded-full ${state.primaryColor === c ? 'ring-2 ring-gold ring-offset-2 ring-offset-panel' : ''}`}
                       style={{ backgroundColor: c }}
                       aria-label={c}
@@ -159,8 +197,8 @@ export function CasinoWizard({ onDone }: { onDone: () => void }) {
                       <div className="text-[11px] text-muted">{flag.tag}</div>
                     </div>
                     <Toggle
-                      checked={Boolean(state.flags[flag.key])}
-                      onChange={(v) => set('flags', { ...state.flags, [flag.key]: v })}
+                      checked={Boolean(state.flags?.[flag.key])}
+                      onChange={(v) => setValue('flags', { ...(state.flags ?? {}), [flag.key]: v })}
                       label={flag.name}
                     />
                   </div>
@@ -176,7 +214,8 @@ export function CasinoWizard({ onDone }: { onDone: () => void }) {
                 {THEME_PRESETS.map((preset) => (
                   <button
                     key={preset.key}
-                    onClick={() => set('theme', preset.key)}
+                    type="button"
+                    onClick={() => setValue('theme', preset.key)}
                     className={`flex items-center gap-3 rounded-card border p-3 text-left ${
                       state.theme === preset.key
                         ? 'border-gold bg-gold-dim'
@@ -204,7 +243,7 @@ export function CasinoWizard({ onDone }: { onDone: () => void }) {
                 <Row
                   label="Features"
                   value={
-                    Object.entries(state.flags)
+                    Object.entries(state.flags ?? {})
                       .filter(([, v]) => v)
                       .map(([k]) => k)
                       .join(', ') || 'none'
@@ -228,15 +267,11 @@ export function CasinoWizard({ onDone }: { onDone: () => void }) {
               {step === 0 ? 'Cancel' : 'Back'}
             </Button>
             {isLast ? (
-              <Button variant="primary" icon={<Rocket size={16} />} onClick={launch}>
+              <Button variant="primary" icon={<Rocket size={16} />} onClick={() => void launch()}>
                 Launch Casino
               </Button>
             ) : (
-              <Button
-                variant="primary"
-                disabled={!canContinue}
-                onClick={() => setStep((s) => s + 1)}
-              >
+              <Button variant="primary" onClick={() => void goNext()}>
                 Continue
               </Button>
             )}

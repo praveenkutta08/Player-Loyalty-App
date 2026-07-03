@@ -1,5 +1,8 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Crown, Pencil, Plus, Star, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import {
   useCreateGameMutation,
@@ -38,17 +41,29 @@ const LEADERBOARD = [
   { rank: 5, player: 'f0c4…', points: 87330 },
 ];
 
-interface GameForm {
-  title: string;
-  category: 'slots' | 'tables';
-  provider: string;
-  thumbnail_url: string;
-  volatility: string;
-  is_jackpot: boolean;
-  jackpot_amount: string;
-  featured: boolean;
-  sort_order: string;
-}
+// Form-shape schema (M13). Numeric inputs stay strings in the form and coerce on submit; jackpot
+// amount is required (and positive) only when the game is flagged as a jackpot.
+const schema = z
+  .object({
+    title: z.string().trim().min(1, 'Title is required').max(200, 'Keep the title under 200 chars'),
+    category: z.enum(['slots', 'tables']),
+    provider: z.string().trim().max(120).optional().default(''),
+    thumbnail_url: z.string().trim().max(2000).optional().default(''),
+    volatility: z.string().default('medium'),
+    is_jackpot: z.boolean().default(false),
+    jackpot_amount: z.string().optional().default(''),
+    featured: z.boolean().default(false),
+    sort_order: z
+      .string()
+      .default('0')
+      .refine((v) => v === '' || Number.isFinite(Number(v)), 'Enter a number'),
+  })
+  .refine((v) => !v.is_jackpot || Number(v.jackpot_amount) > 0, {
+    path: ['jackpot_amount'],
+    message: 'Enter a jackpot amount greater than 0',
+  });
+
+type GameForm = z.input<typeof schema>;
 
 const EMPTY: GameForm = {
   title: '',
@@ -62,6 +77,21 @@ const EMPTY: GameForm = {
   sort_order: '0',
 };
 
+function defaults(g: Game | null): GameForm {
+  if (!g) return EMPTY;
+  return {
+    title: g.title,
+    category: (g.category as 'slots' | 'tables') ?? 'slots',
+    provider: g.provider ?? '',
+    thumbnail_url: g.thumbnail_url ?? '',
+    volatility: g.volatility ?? 'medium',
+    is_jackpot: g.is_jackpot,
+    jackpot_amount: g.jackpot_amount_cents == null ? '' : String(g.jackpot_amount_cents / 100),
+    featured: g.featured,
+    sort_order: String(g.sort_order),
+  };
+}
+
 export function GamesScreen() {
   const { toast } = useToast();
   const { data: games = [], isLoading } = useListGamesQuery();
@@ -70,40 +100,40 @@ export function GamesScreen() {
   const [deleteGame] = useDeleteGameMutation();
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Game | null>(null);
-  const [form, setForm] = useState<GameForm>(EMPTY);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<GameForm>({ resolver: zodResolver(schema), defaultValues: EMPTY });
+
+  const isJackpot = watch('is_jackpot');
 
   const openNew = () => {
     setEditing(null);
-    setForm(EMPTY);
+    reset(EMPTY);
     setOpen(true);
   };
   const openEdit = (g: Game) => {
     setEditing(g);
-    setForm({
-      title: g.title,
-      category: (g.category as 'slots' | 'tables') ?? 'slots',
-      provider: g.provider ?? '',
-      thumbnail_url: g.thumbnail_url ?? '',
-      volatility: g.volatility ?? 'medium',
-      is_jackpot: g.is_jackpot,
-      jackpot_amount: g.jackpot_amount_cents == null ? '' : String(g.jackpot_amount_cents / 100),
-      featured: g.featured,
-      sort_order: String(g.sort_order),
-    });
+    reset(defaults(g));
     setOpen(true);
   };
 
-  const save = async () => {
+  const save = handleSubmit(async (form) => {
     const body = {
-      title: form.title,
+      title: form.title.trim(),
       category: form.category,
-      provider: form.provider || null,
-      thumbnail_url: form.thumbnail_url || null,
+      provider: form.provider?.trim() || null,
+      thumbnail_url: form.thumbnail_url?.trim() || null,
       volatility: form.volatility || null,
-      is_jackpot: form.is_jackpot,
+      is_jackpot: !!form.is_jackpot,
       jackpot_amount_cents:
         form.is_jackpot && form.jackpot_amount ? Number(form.jackpot_amount) * 100 : null,
-      featured: form.featured,
+      featured: !!form.featured,
       sort_order: Number(form.sort_order),
     };
     try {
@@ -114,7 +144,7 @@ export function GamesScreen() {
     } catch {
       toast('Save failed (is the backend running?)', 'error');
     }
-  };
+  });
 
   const columns: Column<Game>[] = [
     {
@@ -255,85 +285,74 @@ export function GamesScreen() {
         footer={
           <>
             <Button onClick={() => setOpen(false)}>Cancel</Button>
-            <Button variant="primary" disabled={!form.title} onClick={() => void save()}>
+            <Button variant="primary" disabled={isSubmitting} onClick={() => void save()}>
               {editing ? 'Save' : 'Create'}
             </Button>
           </>
         }
       >
-        <div className="space-y-4">
+        <form onSubmit={(e) => void save(e)} className="space-y-4">
           <Field label="Title">
-            <Input
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-            />
+            <Input {...register('title')} />
+            {errors.title && <p className="mt-1 text-[12px] text-red">{errors.title.message}</p>}
           </Field>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Category">
-              <Select
-                value={form.category}
-                onChange={(e) =>
-                  setForm({ ...form, category: e.target.value as 'slots' | 'tables' })
-                }
-              >
+              <Select {...register('category')}>
                 <option value="slots">Slots</option>
                 <option value="tables">Tables</option>
               </Select>
             </Field>
             <Field label="Provider">
-              <Input
-                value={form.provider}
-                onChange={(e) => setForm({ ...form, provider: e.target.value })}
-              />
+              <Input {...register('provider')} />
             </Field>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <Field label="Volatility">
-              <Select
-                value={form.volatility}
-                onChange={(e) => setForm({ ...form, volatility: e.target.value })}
-              >
+              <Select {...register('volatility')}>
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high">High</option>
               </Select>
             </Field>
             <Field label="Sort order">
-              <Input
-                type="number"
-                value={form.sort_order}
-                onChange={(e) => setForm({ ...form, sort_order: e.target.value })}
-              />
+              <Input type="number" {...register('sort_order')} />
+              {errors.sort_order && (
+                <p className="mt-1 text-[12px] text-red">{errors.sort_order.message}</p>
+              )}
             </Field>
           </div>
           <div className="flex items-center gap-6">
-            <label className="flex items-center gap-2 text-[13px] text-text2">
-              <Toggle
-                checked={form.featured}
-                onChange={(v) => setForm({ ...form, featured: v })}
-                label="Featured"
-              />
-              Featured
-            </label>
-            <label className="flex items-center gap-2 text-[13px] text-text2">
-              <Toggle
-                checked={form.is_jackpot}
-                onChange={(v) => setForm({ ...form, is_jackpot: v })}
-                label="Jackpot"
-              />
-              Jackpot
-            </label>
+            <Controller
+              control={control}
+              name="featured"
+              render={({ field }) => (
+                <label className="flex items-center gap-2 text-[13px] text-text2">
+                  <Toggle checked={!!field.value} onChange={field.onChange} label="Featured" />
+                  Featured
+                </label>
+              )}
+            />
+            <Controller
+              control={control}
+              name="is_jackpot"
+              render={({ field }) => (
+                <label className="flex items-center gap-2 text-[13px] text-text2">
+                  <Toggle checked={!!field.value} onChange={field.onChange} label="Jackpot" />
+                  Jackpot
+                </label>
+              )}
+            />
           </div>
-          {form.is_jackpot && (
+          {isJackpot && (
             <Field label="Jackpot amount ($)">
-              <Input
-                type="number"
-                value={form.jackpot_amount}
-                onChange={(e) => setForm({ ...form, jackpot_amount: e.target.value })}
-              />
+              <Input type="number" {...register('jackpot_amount')} />
+              {errors.jackpot_amount && (
+                <p className="mt-1 text-[12px] text-red">{errors.jackpot_amount.message}</p>
+              )}
             </Field>
           )}
-        </div>
+        </form>
       </Modal>
     </div>
   );

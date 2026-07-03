@@ -76,7 +76,7 @@
 
 **Admin**
 - **M12. Demo data masquerading as features**: Members screen fakes PII with client-only "gated unmask/export" and an untrue "audited" caption; Users & Roles is display-only hardcoded admins; feature-flag screen shows invented rollout-% (backend stores booleans); default `X-Tenant` falls back to fake slug `demo-casino` and Sidebar silently substitutes demo tenants when the API errors — masking outages. Label demo surfaces or remove invented metrics.
-- **M13. Forms convention (react-hook-form + zod) used only on Login** — all entity forms are hand-rolled `useState` with `disabled={!form.title}`-grade validation.
+- **M13. Forms convention (react-hook-form + zod) used only on Login** — **RESOLVED (R15 Content/Catalog; R20 the rest, 2026-07-03).** The entity forms are RHF + zod with schemas derived from the shape of the generated `*Create` contracts: `CatalogForm` (offers + promotions), `ContentScreen`, `GamesScreen` (conditional jackpot rule + `Controller` toggles), `NotificationsScreen` composer (A/B cross-field rule, datetime→ISO), the Users `InviteUserModal` (email + scoped-role-needs-a-casino rule), and the multi-step `CasinoWizard` (step-0 gated via `trigger`, `Controller` pickers). Genuinely stateful non-entity surfaces (Theme color studio, Nav drag-builder, the map-driven geofence draft, the mock Payments limits) intentionally stay `useState` — they aren't form submissions. Test: `inviteModal.test.tsx` (validation gates submit).
 - **M14. Swallowed media-upload error** (`MediaLibraryScreen.tsx:73` — presign PUT `.catch(() => undefined)`, flow proceeds as success). Hardcoded hexes (`#E6B450` in ≥4 files) bypass the token system. No route-level code splitting (only geofencing is lazy).
 
 **Mobile**

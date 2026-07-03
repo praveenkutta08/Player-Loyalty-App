@@ -1,6 +1,9 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Role } from '@repo/shared-types';
 import { Check, Plus, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { useAppSelector } from '@/app/store';
 import { Can } from '@/auth/Can';
@@ -261,7 +264,25 @@ export function UsersRolesScreen() {
   );
 }
 
-function InviteUserModal({
+// Form-shape schema (M13). Scope is required only for scoped roles (Account Manager); when the
+// admin_users API lands this maps straight to its create payload (email/name/role/tenant_scope).
+const inviteSchema = z
+  .object({
+    email: z.string().trim().email('Enter a valid email'),
+    name: z.string().trim().optional().default(''),
+    role: z.nativeEnum(Role),
+    scope: z.array(z.string()).default([]),
+  })
+  .refine((v) => !SCOPED_ROLES.has(v.role) || v.scope.length > 0, {
+    path: ['scope'],
+    message: 'Assign at least one casino for a scoped role',
+  });
+
+type InviteForm = z.input<typeof inviteSchema>;
+
+const INVITE_DEFAULTS: InviteForm = { email: '', name: '', role: Role.TenantAdmin, scope: [] };
+
+export function InviteUserModal({
   open,
   onClose,
   tenants,
@@ -272,19 +293,29 @@ function InviteUserModal({
   tenants: { id: string; name: string }[];
   onInvite: (user: AdminUserRow) => void;
 }) {
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [role, setRole] = useState<Role>(Role.TenantAdmin);
-  const [scope, setScope] = useState<string[]>([]);
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<InviteForm>({ resolver: zodResolver(inviteSchema), defaultValues: INVITE_DEFAULTS });
 
-  const scoped = SCOPED_ROLES.has(role);
+  const scoped = SCOPED_ROLES.has(watch('role'));
 
-  const reset = () => {
-    setEmail('');
-    setName('');
-    setRole(Role.TenantAdmin);
-    setScope([]);
-  };
+  const submit = handleSubmit((v) => {
+    onInvite({
+      id: `u${Math.round(performance.now())}`,
+      name: v.name?.trim() || v.email.split('@')[0]!,
+      email: v.email.trim(),
+      role: v.role,
+      tenantScope: SCOPED_ROLES.has(v.role) ? (v.scope ?? []) : [],
+      active: true,
+      lastLogin: 'Never',
+    });
+    reset(INVITE_DEFAULTS);
+  });
 
   return (
     <Modal
@@ -294,41 +325,22 @@ function InviteUserModal({
       footer={
         <>
           <Button onClick={onClose}>Cancel</Button>
-          <Button
-            variant="primary"
-            disabled={!email || (scoped && scope.length === 0)}
-            onClick={() => {
-              onInvite({
-                id: `u${Math.round(performance.now())}`,
-                name: name || email.split('@')[0]!,
-                email,
-                role,
-                tenantScope: scoped ? scope : [],
-                active: true,
-                lastLogin: 'Never',
-              });
-              reset();
-            }}
-          >
+          <Button variant="primary" disabled={isSubmitting} onClick={() => void submit()}>
             Send invite
           </Button>
         </>
       }
     >
-      <div className="space-y-4">
+      <form onSubmit={(e) => void submit(e)} className="space-y-4">
         <Field label="Email">
-          <Input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="name@casino.com"
-          />
+          <Input type="email" placeholder="name@casino.com" {...register('email')} />
+          {errors.email && <p className="mt-1 text-[12px] text-red">{errors.email.message}</p>}
         </Field>
         <Field label="Full name">
-          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Optional" />
+          <Input placeholder="Optional" {...register('name')} />
         </Field>
         <Field label="Role">
-          <Select value={role} onChange={(e) => setRole(e.target.value as Role)}>
+          <Select {...register('role')}>
             {Object.values(Role).map((r) => (
               <option key={r} value={r}>
                 {ROLE_LABELS[r]}
@@ -337,30 +349,42 @@ function InviteUserModal({
           </Select>
         </Field>
         {scoped && (
-          <div>
-            <div className="mb-1.5 text-label uppercase text-muted">Assigned casinos</div>
-            <div className="space-y-1.5">
-              {tenants.map((t) => (
-                <label key={t.id} className="flex items-center gap-2 text-[13px] text-text2">
-                  <input
-                    type="checkbox"
-                    checked={scope.includes(t.id)}
-                    onChange={(e) =>
-                      setScope((prev) =>
-                        e.target.checked ? [...prev, t.id] : prev.filter((x) => x !== t.id),
-                      )
-                    }
-                  />
-                  {t.name}
-                </label>
-              ))}
-            </div>
-            <p className="mt-1.5 text-[11px] text-faint">
-              Scoped roles only see their assigned casinos (enforced by RLS server-side).
-            </p>
-          </div>
+          <Controller
+            control={control}
+            name="scope"
+            render={({ field }) => {
+              const value = field.value ?? [];
+              return (
+                <div>
+                  <div className="mb-1.5 text-label uppercase text-muted">Assigned casinos</div>
+                  <div className="space-y-1.5">
+                    {tenants.map((t) => (
+                      <label key={t.id} className="flex items-center gap-2 text-[13px] text-text2">
+                        <input
+                          type="checkbox"
+                          checked={value.includes(t.id)}
+                          onChange={(e) =>
+                            field.onChange(
+                              e.target.checked ? [...value, t.id] : value.filter((x) => x !== t.id),
+                            )
+                          }
+                        />
+                        {t.name}
+                      </label>
+                    ))}
+                  </div>
+                  {errors.scope && (
+                    <p className="mt-1 text-[12px] text-red">{errors.scope.message}</p>
+                  )}
+                  <p className="mt-1.5 text-[11px] text-faint">
+                    Scoped roles only see their assigned casinos (enforced by RLS server-side).
+                  </p>
+                </div>
+              );
+            }}
+          />
         )}
-      </div>
+      </form>
     </Modal>
   );
 }
