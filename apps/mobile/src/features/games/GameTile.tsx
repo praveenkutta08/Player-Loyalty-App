@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { useAppDispatch, useAppSelector } from '../../app/store';
 import { StatusPill, ThemedText } from '../../components';
+import { withAlpha } from '../../theme/color';
 import { useTheme } from '../../theme/ThemeProvider';
 
 import { isFavorite, setFavorite } from './favoritesSlice';
@@ -49,21 +50,30 @@ export function GameTile({
     else void unfavorite(game.id);
   }
 
+  const c = theme.colors;
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      style={[styles.row, { borderBottomColor: theme.colors.border.soft }]}
+      style={[styles.row, { borderBottomColor: c.border.ghost ?? c.border.soft }]}
     >
-      <View style={[styles.thumb, { backgroundColor: theme.colors.bg.surface }]}>
-        <Dices size={22} color={theme.colors.text.muted} />
+      <View
+        style={[
+          styles.thumb,
+          {
+            backgroundColor: withAlpha(c.brand.accent, 0.1),
+            borderColor: c.border.ghost ?? c.border.strong,
+          },
+        ]}
+      >
+        <Dices size={22} color={c.brand.accent} />
       </View>
       <View style={styles.body}>
         <ThemedText variant="title" numberOfLines={1}>
           {game.title}
         </ThemedText>
         {game.provider ? (
-          <ThemedText variant="label" color="muted">
+          <ThemedText variant="mono" color="muted">
             {game.provider}
           </ThemedText>
         ) : null}
@@ -82,8 +92,8 @@ export function GameTile({
       >
         <Heart
           size={20}
-          color={favorited ? theme.colors.brand.gold : theme.colors.text.muted}
-          fill={favorited ? theme.colors.brand.gold : 'transparent'}
+          color={favorited ? c.brand.accent : c.text.muted}
+          fill={favorited ? c.brand.accent : 'transparent'}
         />
       </Pressable>
     </Pressable>
@@ -94,19 +104,20 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   thumb: {
     width: 48,
     height: 48,
-    borderRadius: 10,
+    borderRadius: 12,
+    borderWidth: StyleSheet.hairlineWidth,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: 14,
   },
   body: { flex: 1 },
-  badge: { marginTop: 4 },
+  badge: { marginTop: 4, alignSelf: 'flex-start' },
 });
 
 export { volatility };

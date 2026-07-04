@@ -2,7 +2,15 @@ import { Search, Trophy } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { Button, Card, Input, Screen, SegmentedControl, ThemedText } from '../../components';
+import {
+  GlassCard,
+  ImmersiveCard,
+  Input,
+  PillButton,
+  Screen,
+  SegmentedControl,
+  ThemedText,
+} from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
 import { formatMoney } from '../wallet/money';
 
@@ -37,32 +45,26 @@ export function GamesCatalogScreen({ navigation }: Props): React.JSX.Element {
     <Screen>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
         {jackpot ? (
-          <Card style={[styles.jackpot, { backgroundColor: theme.colors.brand.gold }]}>
-            <View style={styles.jackpotHead}>
-              <Trophy size={20} color={theme.colors.brand.onGold} />
-              <ThemedText
-                variant="kicker"
-                style={[styles.jackpotKicker, { color: theme.colors.brand.onGold }]}
-              >
-                Jackpot of the day
-              </ThemedText>
-            </View>
-            <ThemedText variant="h2" style={{ color: theme.colors.brand.onGold }}>
-              {jackpot.title}
-            </ThemedText>
-            {jackpot.jackpot_amount_cents != null ? (
-              <ThemedText variant="display" style={{ color: theme.colors.brand.onGold }}>
-                {formatMoney(jackpot.jackpot_amount_cents)}
-              </ThemedText>
-            ) : null}
-            <Button
-              label="Play now"
-              variant="secondary"
-              style={styles.playNow}
-              onPress={() => navigation.navigate('GameDetail', { game: jackpot })}
-              testID="jackpot-play"
+          <View style={styles.jackpot}>
+            <ImmersiveCard
+              kicker="Jackpot of the Day"
+              title={jackpot.title}
+              subtitle={
+                jackpot.jackpot_amount_cents != null
+                  ? formatMoney(jackpot.jackpot_amount_cents)
+                  : undefined
+              }
+              height={220}
+              actions={
+                <PillButton
+                  label="Play now"
+                  variant="accent"
+                  onPress={() => navigation.navigate('GameDetail', { game: jackpot })}
+                  testID="jackpot-play"
+                />
+              }
             />
-          </Card>
+          </View>
         ) : null}
 
         <Input
@@ -84,29 +86,31 @@ export function GamesCatalogScreen({ navigation }: Props): React.JSX.Element {
           <SegmentedControl segments={FILTERS} value={filter} onChange={setFilter} />
         </View>
 
-        <Button
-          label="View leaderboard"
-          variant="secondary"
-          icon={<Trophy size={16} color={theme.colors.text.primary} />}
-          style={styles.leaderboardBtn}
-          onPress={() => navigation.navigate('Leaderboard')}
-        />
+        <View style={styles.leaderboardBtn}>
+          <PillButton
+            label="View leaderboard"
+            variant="secondary"
+            block
+            icon={<Trophy size={16} color={theme.colors.text.primary} />}
+            onPress={() => navigation.navigate('Leaderboard')}
+          />
+        </View>
 
-        <Card style={styles.list}>
-          {(games.data ?? []).length === 0 ? (
-            <ThemedText variant="body" color="muted">
-              {games.isFetching ? 'Loading…' : 'No games match your search.'}
-            </ThemedText>
-          ) : (
-            (games.data ?? []).map((g) => (
+        {(games.data ?? []).length === 0 ? (
+          <ThemedText variant="body" color="muted" style={styles.empty}>
+            {games.isFetching ? 'Loading…' : 'No games match your search.'}
+          </ThemedText>
+        ) : (
+          <GlassCard bare style={styles.list}>
+            {(games.data ?? []).map((g) => (
               <GameTile
                 key={g.id}
                 game={g}
                 onPress={() => navigation.navigate('GameDetail', { game: g })}
               />
-            ))
-          )}
-        </Card>
+            ))}
+          </GlassCard>
+        )}
       </ScrollView>
     </Screen>
   );
@@ -114,14 +118,12 @@ export function GamesCatalogScreen({ navigation }: Props): React.JSX.Element {
 
 const styles = StyleSheet.create({
   content: { paddingVertical: 16, paddingBottom: 32 },
-  jackpot: { marginBottom: 16 },
-  jackpotHead: { flexDirection: 'row', alignItems: 'center', marginBottom: 4 },
-  jackpotKicker: { marginLeft: 8 },
-  playNow: { marginTop: 16, alignSelf: 'flex-start' },
+  jackpot: { marginBottom: 24 },
   search: { marginBottom: 4 },
   searchHint: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
   searchHintText: { marginLeft: 6 },
   filter: { marginBottom: 12 },
   leaderboardBtn: { marginBottom: 16 },
   list: {},
+  empty: { paddingVertical: 16 },
 });

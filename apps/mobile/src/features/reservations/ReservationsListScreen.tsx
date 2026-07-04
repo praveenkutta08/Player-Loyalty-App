@@ -1,8 +1,18 @@
 import { CalendarPlus, Hotel, UtensilsCrossed, Wine } from 'lucide-react-native';
 import React from 'react';
-import { Pressable, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 
-import { Button, Card, Screen, StatusPill, ThemedText } from '../../components';
+import {
+  CapsLabel,
+  GlassCard,
+  HairlineRow,
+  Kicker,
+  PillButton,
+  Screen,
+  StatusPill,
+  ThemedText,
+} from '../../components';
+import { withAlpha } from '../../theme/color';
 import { useTheme } from '../../theme/ThemeProvider';
 
 import { formatSlot, isUpcoming, reservationTone, reservationTypeLabel } from './format';
@@ -21,7 +31,11 @@ const TYPE_ICON: Record<string, LucideIcon> = {
   nightlife: Wine,
 };
 
-/** C10 — Reservations list: upcoming + past, with a Book CTA. */
+/**
+ * C10 — Reservations, re-skinned to obsidian luxury (RS6): a Playfair header, an indigo Book CTA,
+ * and upcoming/past reservations as glass rows (type kicker + Playfair label, mono slot, status)
+ * with 64px section gaps between lifestyle categories. Reservation/cancel flows are unchanged.
+ */
 export function ReservationsListScreen({ navigation }: Props): React.JSX.Element {
   const theme = useTheme();
   const q = useGetReservationsQuery();
@@ -38,38 +52,56 @@ export function ReservationsListScreen({ navigation }: Props): React.JSX.Element
           <RefreshControl refreshing={q.isFetching} onRefresh={() => void q.refetch()} />
         }
       >
-        <Button
+        <Kicker color="secondary">Concierge · Reserve</Kicker>
+        <ThemedText variant="display" style={styles.title}>
+          Reservations
+        </ThemedText>
+
+        <PillButton
           label="Book a reservation"
-          icon={<CalendarPlus size={18} color={theme.colors.brand.onGold} />}
+          variant="accent"
+          block
+          icon={
+            <CalendarPlus
+              size={18}
+              color={theme.colors.brand.onAccent ?? theme.colors.text.primary}
+            />
+          }
           onPress={() => navigation.navigate('ReservationBook')}
           testID="book-cta"
         />
 
         <Section title="Upcoming">
           {upcoming.length === 0 ? (
-            <ThemedText variant="body" color="muted">
+            <ThemedText variant="body" color="muted" style={styles.empty}>
               No upcoming reservations.
             </ThemedText>
           ) : (
-            upcoming.map((r) => (
-              <ReservationRow
-                key={r.id}
-                res={r}
-                onPress={() => navigation.navigate('ReservationDetail', { id: r.id })}
-              />
-            ))
+            <GlassCard bare>
+              {upcoming.map((r, i) => (
+                <ReservationRow
+                  key={r.id}
+                  res={r}
+                  divider={i < upcoming.length - 1}
+                  onPress={() => navigation.navigate('ReservationDetail', { id: r.id })}
+                />
+              ))}
+            </GlassCard>
           )}
         </Section>
 
         {past.length > 0 ? (
           <Section title="Past">
-            {past.map((r) => (
-              <ReservationRow
-                key={r.id}
-                res={r}
-                onPress={() => navigation.navigate('ReservationDetail', { id: r.id })}
-              />
-            ))}
+            <GlassCard bare>
+              {past.map((r, i) => (
+                <ReservationRow
+                  key={r.id}
+                  res={r}
+                  divider={i < past.length - 1}
+                  onPress={() => navigation.navigate('ReservationDetail', { id: r.id })}
+                />
+              ))}
+            </GlassCard>
           </Section>
         ) : null}
       </ScrollView>
@@ -86,10 +118,8 @@ function Section({
 }): React.JSX.Element {
   return (
     <View style={styles.section}>
-      <ThemedText variant="label" color="muted" style={styles.sectionLabel}>
-        {title}
-      </ThemedText>
-      <Card>{children}</Card>
+      <CapsLabel style={styles.sectionLabel}>{title}</CapsLabel>
+      {children}
     </View>
   );
 }
@@ -97,39 +127,54 @@ function Section({
 function ReservationRow({
   res,
   onPress,
+  divider,
 }: {
   res: ReservationOut;
   onPress: () => void;
+  divider: boolean;
 }): React.JSX.Element {
   const theme = useTheme();
+  const c = theme.colors;
   const Icon = TYPE_ICON[res.type] ?? Hotel;
   return (
-    <Pressable
-      onPress={onPress}
-      accessibilityRole="button"
-      style={[styles.row, { borderBottomColor: theme.colors.border.soft }]}
-    >
-      <Icon size={20} color={theme.colors.text.secondary} />
+    <HairlineRow onPress={onPress} divider={divider} style={styles.row}>
+      <View
+        style={[
+          styles.chip,
+          {
+            backgroundColor: withAlpha(c.brand.accent, 0.1),
+            borderColor: c.border.ghost ?? c.border.strong,
+          },
+        ]}
+      >
+        <Icon size={18} color={c.brand.accent} />
+      </View>
       <View style={styles.rowBody}>
         <ThemedText variant="title">{reservationTypeLabel(res.type)}</ThemedText>
-        <ThemedText variant="label" color="muted">
+        <ThemedText variant="mono" color="muted">
           {formatSlot(res.start_at)}
         </ThemedText>
       </View>
       <StatusPill label={res.status} tone={reservationTone(res.status)} />
-    </Pressable>
+    </HairlineRow>
   );
 }
 
 const styles = StyleSheet.create({
   content: { paddingVertical: 16, paddingBottom: 32 },
-  section: { marginTop: 20 },
-  sectionLabel: { marginBottom: 8 },
-  row: {
-    flexDirection: 'row',
+  title: { marginTop: 8, marginBottom: 24 },
+  empty: { paddingVertical: 8 },
+  section: { marginTop: 64 },
+  sectionLabel: { marginBottom: 12 },
+  row: { marginHorizontal: 16 },
+  chip: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    borderWidth: StyleSheet.hairlineWidth,
     alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    justifyContent: 'center',
+    marginRight: 14,
   },
-  rowBody: { flex: 1, marginLeft: 12 },
+  rowBody: { flex: 1 },
 });
