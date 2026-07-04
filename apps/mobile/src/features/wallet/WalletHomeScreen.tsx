@@ -1,29 +1,50 @@
 import { ArrowDownToLine, ArrowUpFromLine, CreditCard, Send } from 'lucide-react-native';
 import React from 'react';
-import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 
-import { Button, Card, ListRow, Screen, StatusPill, ThemedText } from '../../components';
+import { useManifest } from '../../app/manifest/ManifestProvider';
+import {
+  CapsLabel,
+  GlassCard,
+  HairlineRow,
+  Kicker,
+  Screen,
+  StatusPill,
+  ThemedText,
+} from '../../components';
+import { withAlpha } from '../../theme/color';
 import { useTheme } from '../../theme/ThemeProvider';
+import { useGetAccountMeQuery } from '../account/accountApi';
 
+import { MemberCard } from './MemberCard';
 import { formatMoney } from './money';
 import { TransactionRow } from './TransactionRow';
 import { useGetTransactionsQuery, useGetWalletQuery } from './walletApi';
 
 import type { WalletStackParamList } from './types';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { LucideIcon } from 'lucide-react-native';
 
 type Props = NativeStackScreenProps<WalletStackParamList, 'WalletHome'>;
 
-/** S5 — Wallet home: balance, money actions (deposit/withdraw/transfer), and recent ledger rows. */
+/**
+ * S5 — Wallet home, re-skinned to obsidian luxury (RS3): a metallic digital member card, a Playfair
+ * balance block with the available credit in indigo, a 3-up glass action row, and the recent ledger
+ * as inset hairline rows. All money values and idempotency logic are unchanged.
+ */
 export function WalletHomeScreen({ navigation }: Props): React.JSX.Element {
   const theme = useTheme();
+  const c = theme.colors;
+  const { manifest } = useManifest();
   const wallet = useGetWalletQuery();
+  const me = useGetAccountMeQuery();
   const txns = useGetTransactionsQuery();
   const recent = (txns.data ?? []).slice(0, 5);
   const refreshing = wallet.isFetching || txns.isFetching;
+  const balance = wallet.data?.balance_cents ?? 0;
 
   return (
-    <Screen>
+    <Screen padded={false}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}
@@ -37,71 +58,94 @@ export function WalletHomeScreen({ navigation }: Props): React.JSX.Element {
           />
         }
       >
-        <Card style={[styles.hero, { backgroundColor: theme.colors.brand.gold }]}>
-          <ThemedText variant="kicker" style={{ color: theme.colors.brand.onGold }}>
-            Wallet balance
-          </ThemedText>
-          <ThemedText variant="display" style={{ color: theme.colors.brand.onGold }}>
-            {formatMoney(wallet.data?.balance_cents ?? 0)}
-          </ThemedText>
-          {wallet.data?.status && wallet.data.status !== 'active' ? (
-            <StatusPill label={wallet.data.status} tone="warning" />
-          ) : null}
-        </Card>
+        <MemberCard
+          tier={me.data?.tier}
+          walletId={wallet.data?.id}
+          brandName={manifest?.name ?? 'Executive Companion'}
+        />
 
+        {/* Balance block */}
+        <View style={styles.balanceBlock}>
+          <CapsLabel color="muted">Current Balance</CapsLabel>
+          <ThemedText variant="display" style={styles.balance}>
+            {formatMoney(balance)}
+          </ThemedText>
+          <View style={styles.availRow}>
+            <Kicker color="secondary">Available Credit</Kicker>
+            <ThemedText variant="mono" style={{ color: c.brand.accent }}>
+              {formatMoney(balance)}
+            </ThemedText>
+          </View>
+          {wallet.data?.status && wallet.data.status !== 'active' ? (
+            <View style={{ marginTop: 8 }}>
+              <StatusPill label={wallet.data.status} tone="warning" />
+            </View>
+          ) : null}
+        </View>
+
+        {/* 3-up glass action row */}
         <View style={styles.actions}>
-          <Button
+          <WalletAction
+            icon={ArrowDownToLine}
             label="Deposit"
-            icon={<ArrowDownToLine size={18} color={theme.colors.brand.onGold} />}
-            style={styles.actionBtn}
             onPress={() => navigation.navigate('Deposit')}
             testID="wallet-deposit"
           />
-          <Button
+          <WalletAction
+            icon={ArrowUpFromLine}
             label="Withdraw"
-            variant="secondary"
-            icon={<ArrowUpFromLine size={18} color={theme.colors.text.primary} />}
-            style={styles.actionBtn}
             onPress={() => navigation.navigate('Withdraw')}
           />
+          <WalletAction
+            icon={Send}
+            label="Transfer"
+            onPress={() => navigation.navigate('Transfer')}
+          />
         </View>
-        <Button
-          label="Transfer to a machine"
-          variant="secondary"
-          icon={<Send size={18} color={theme.colors.text.primary} />}
-          style={styles.transfer}
-          onPress={() => navigation.navigate('Transfer')}
-        />
 
-        <ListRow
-          icon={<CreditCard size={20} color={theme.colors.text.secondary} />}
-          title="Payment methods"
-          subtitle="Manage saved cards"
-          onPress={() => navigation.navigate('PaymentMethods')}
-        />
-
-        <View style={styles.recentHead}>
-          <ThemedText variant="label" color="muted">
-            Recent activity
-          </ThemedText>
-          {recent.length > 0 ? (
-            <ThemedText
-              variant="label"
-              color="secondary"
-              onPress={() => navigation.navigate('TransactionHistory')}
+        <View style={styles.section}>
+          <HairlineRow
+            onPress={() => navigation.navigate('PaymentMethods')}
+            divider={false}
+            style={styles.pmRow}
+          >
+            <View
+              style={[
+                styles.pmIcon,
+                {
+                  backgroundColor: withAlpha(c.brand.accent, 0.1),
+                  borderColor: c.border.ghost ?? c.border.strong,
+                },
+              ]}
             >
-              See all
-            </ThemedText>
+              <CreditCard size={18} color={c.brand.accent} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <ThemedText variant="title">Payment methods</ThemedText>
+              <ThemedText variant="mono" color="muted">
+                Manage saved cards
+              </ThemedText>
+            </View>
+          </HairlineRow>
+        </View>
+
+        {/* Recent transactions */}
+        <View style={styles.recentHead}>
+          <CapsLabel>Recent Transactions</CapsLabel>
+          {recent.length > 0 ? (
+            <Pressable onPress={() => navigation.navigate('TransactionHistory')} hitSlop={8}>
+              <CapsLabel color="faint">View All</CapsLabel>
+            </Pressable>
           ) : null}
         </View>
-        <Card style={styles.card}>
+
+        <View style={styles.ledger}>
           {txns.isError ? (
-            // Distinct error state (LOW) — a load failure is not an empty ledger.
-            <ThemedText variant="body" color="muted">
+            <ThemedText variant="body" color="muted" style={styles.ledgerMsg}>
               Couldn’t load transactions. Pull to retry.
             </ThemedText>
           ) : recent.length === 0 ? (
-            <ThemedText variant="body" color="muted">
+            <ThemedText variant="body" color="muted" style={styles.ledgerMsg}>
               No transactions yet. Make a deposit to get started.
             </ThemedText>
           ) : (
@@ -113,24 +157,75 @@ export function WalletHomeScreen({ navigation }: Props): React.JSX.Element {
               />
             ))
           )}
-        </Card>
+        </View>
       </ScrollView>
     </Screen>
   );
 }
 
+function WalletAction({
+  icon: Icon,
+  label,
+  onPress,
+  testID,
+}: {
+  icon: LucideIcon;
+  label: string;
+  onPress: () => void;
+  testID?: string;
+}): React.JSX.Element {
+  const theme = useTheme();
+  return (
+    <Pressable
+      style={styles.actionWrap}
+      onPress={onPress}
+      testID={testID}
+      accessibilityRole="button"
+    >
+      <GlassCard style={styles.actionCard} bare>
+        <View style={styles.actionInner}>
+          <Icon size={22} color={theme.colors.brand.accent} />
+          <ThemedText variant="label" color="secondary" style={{ marginTop: 8 }}>
+            {label}
+          </ThemedText>
+        </View>
+      </GlassCard>
+    </Pressable>
+  );
+}
+
 const styles = StyleSheet.create({
-  content: { paddingVertical: 16, paddingBottom: 32 },
-  hero: { marginBottom: 16 },
-  actions: { flexDirection: 'row', gap: 12 },
-  actionBtn: { flex: 1 },
-  transfer: { marginTop: 12, marginBottom: 8 },
+  content: { paddingHorizontal: 24, paddingTop: 16, paddingBottom: 32 },
+  balanceBlock: { marginTop: 32 },
+  balance: { marginTop: 8 },
+  availRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  actions: { flexDirection: 'row', gap: 12, marginTop: 32 },
+  actionWrap: { flex: 1 },
+  actionCard: { alignItems: 'stretch' },
+  actionInner: { alignItems: 'center', paddingVertical: 18 },
+  section: { marginTop: 24 },
+  pmRow: { marginHorizontal: 0, paddingVertical: 0 },
+  pmIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    borderWidth: StyleSheet.hairlineWidth,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 14,
+  },
   recentHead: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 16,
+    marginTop: 40,
     marginBottom: 8,
   },
-  card: { marginBottom: 16 },
+  ledger: {},
+  ledgerMsg: { paddingVertical: 16 },
 });

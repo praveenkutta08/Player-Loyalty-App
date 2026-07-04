@@ -2,7 +2,8 @@ import { ArrowDownLeft, ArrowUpRight, RotateCcw, Send } from 'lucide-react-nativ
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { StatusPill, ThemedText } from '../../components';
+import { CapsLabel, ThemedText } from '../../components';
+import { withAlpha } from '../../theme/color';
 import { useTheme } from '../../theme/ThemeProvider';
 
 import { formatMoney, formatTxnDate, txnLabel } from './money';
@@ -17,7 +18,11 @@ const ICONS: Record<string, LucideIcon> = {
   refund: RotateCcw,
 };
 
-/** One ledger entry: type icon + label + date on the left, signed amount (+ failure pill) right. */
+/**
+ * One ledger entry as an obsidian utility row (RS3): an indigo-tinted icon chip, the type label +
+ * timestamp (utility-mono) on the left, and the signed amount on the right — credit in indigo,
+ * debit in soft red — with a caps status when it isn't a plain completed credit.
+ */
 export function TransactionRow({
   txn,
   onPress,
@@ -26,27 +31,36 @@ export function TransactionRow({
   onPress?: () => void;
 }): React.JSX.Element {
   const theme = useTheme();
+  const c = theme.colors;
   const Icon = ICONS[txn.type] ?? ArrowDownLeft;
   const credit = txn.amount_cents >= 0;
   const failed = txn.status === 'failed';
   const amountColor = failed
-    ? theme.colors.text.muted
+    ? c.text.muted
     : credit
-      ? theme.colors.state.success
-      : theme.colors.text.primary;
+      ? (c.state.credit ?? c.brand.accent)
+      : (c.state.debit ?? c.state.error);
 
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole={onPress ? 'button' : undefined}
-      style={[styles.row, { borderBottomColor: theme.colors.border.soft }]}
+      style={[styles.row, { borderBottomColor: c.border.ghost ?? c.border.soft }]}
     >
-      <View style={[styles.icon, { backgroundColor: theme.colors.bg.base }]}>
-        <Icon size={18} color={theme.colors.text.secondary} />
+      <View
+        style={[
+          styles.icon,
+          {
+            backgroundColor: withAlpha(c.brand.accent, 0.1),
+            borderColor: c.border.ghost ?? c.border.strong,
+          },
+        ]}
+      >
+        <Icon size={18} color={c.brand.accent} />
       </View>
       <View style={styles.body}>
         <ThemedText variant="title">{txnLabel(txn.type)}</ThemedText>
-        <ThemedText variant="label" color="muted">
+        <ThemedText variant="mono" color="muted">
           {txn.egm_id ? `${txn.egm_id} · ` : ''}
           {formatTxnDate(txn.created_at)}
         </ThemedText>
@@ -56,7 +70,11 @@ export function TransactionRow({
           {credit ? '+' : ''}
           {formatMoney(txn.amount_cents)}
         </ThemedText>
-        {failed ? <StatusPill label="failed" tone="error" /> : null}
+        {failed ? (
+          <CapsLabel style={{ color: c.state.error }}>Failed</CapsLabel>
+        ) : txn.status !== 'completed' ? (
+          <CapsLabel color="muted">{txn.status}</CapsLabel>
+        ) : null}
       </View>
     </Pressable>
   );
@@ -66,17 +84,18 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 14,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   icon: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    borderWidth: StyleSheet.hairlineWidth,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: 14,
   },
   body: { flex: 1 },
-  right: { alignItems: 'flex-end' },
+  right: { alignItems: 'flex-end', gap: 4 },
 });
