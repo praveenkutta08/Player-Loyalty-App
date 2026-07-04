@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>EXECUTIVE COMPANION | GAMING</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#0d0e0f",
+                    "primary-container": "#050505",
+                    "surface-dim": "#121414",
+                    "primary-fixed": "#e5e2e1",
+                    "background": "#121414",
+                    "error-container": "#93000a",
+                    "tertiary": "#c2c1ff",
+                    "surface-tint": "#c9c6c5",
+                    "on-tertiary-fixed-variant": "#332dbc",
+                    "surface": "#121414",
+                    "surface-container-low": "#1a1c1c",
+                    "tertiary-fixed-dim": "#c2c1ff",
+                    "on-background": "#e2e2e2",
+                    "on-primary-container": "#797777",
+                    "error": "#ffb4ab",
+                    "on-surface-variant": "#c4c7c7",
+                    "on-secondary-fixed-variant": "#474649",
+                    "surface-container-highest": "#333535",
+                    "outline": "#8e9192",
+                    "primary-fixed-dim": "#c9c6c5",
+                    "on-secondary": "#303032",
+                    "on-secondary-fixed": "#1b1b1d",
+                    "secondary-fixed": "#e4e2e4",
+                    "on-primary-fixed-variant": "#474646",
+                    "surface-container-high": "#282a2b",
+                    "inverse-surface": "#e2e2e2",
+                    "on-secondary-container": "#b7b4b7",
+                    "on-primary-fixed": "#1c1b1b",
+                    "surface-variant": "#333535",
+                    "on-primary": "#313030",
+                    "tertiary-fixed": "#e2dfff",
+                    "surface-container": "#1e2020",
+                    "tertiary-container": "#020026",
+                    "outline-variant": "#444748",
+                    "on-tertiary": "#1800a7",
+                    "secondary-fixed-dim": "#c8c6c8",
+                    "inverse-primary": "#5f5e5e",
+                    "on-surface": "#e2e2e2",
+                    "on-tertiary-fixed": "#0c006b",
+                    "surface-bright": "#38393a",
+                    "on-tertiary-container": "#6765ef",
+                    "primary": "#c9c6c5",
+                    "on-error-container": "#ffdad6",
+                    "secondary-container": "#474649",
+                    "inverse-on-surface": "#2f3131",
+                    "secondary": "#c8c6c8",
+                    "on-error": "#690005"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "safe-margin": "24px",
+                    "section-gap": "64px",
+                    "gutter": "16px",
+                    "stack-sm": "8px",
+                    "stack-lg": "32px",
+                    "stack-md": "16px"
+            },
+            "fontFamily": {
+                    "utility-mono": ["Inter"],
+                    "display-lg": ["Playfair Display"],
+                    "display-lg-mobile": ["Playfair Display"],
+                    "headline-md": ["Playfair Display"],
+                    "body-md": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "utility-mono": ["13px", {"lineHeight": "18px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-md": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(26, 26, 28, 0.7);
+            backdrop-filter: blur(20px);
+            border-top: 0.5px solid rgba(201, 198, 197, 0.15);
+            border-left: 0.5px solid rgba(201, 198, 197, 0.15);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-glow {
+            text-shadow: 0 0 10px rgba(194, 193, 255, 0.4);
+        }
+        @keyframes ticker {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
+        .haptic-light:active { transform: scale(0.98); transition: transform 0.1s ease; }
+        
+        ::-webkit-scrollbar { display: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest text-on-surface font-body-md selection:bg-tertiary selection:text-tertiary-container overflow-x-hidden">
+<!-- TOP APP BAR -->
+<header class="flex justify-between items-center w-full px-safe-margin py-4 fixed top-0 z-50 backdrop-blur-xl bg-surface-dim/60 border-b-[0.5px] border-primary/15">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full border border-primary/20 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A sophisticated close-up portrait of a high-end luxury resort guest with elegant lighting and soft focus, reflecting a premium onyx-tier loyalty status within a dark, architectural casino environment. The aesthetic is refined, using deep obsidian tones and subtle pearl highlights to convey exclusivity and digital concierge precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC57ng3jfeyrr2pMeRaazWyM-xiuZ3HMVRRRrDTkQqe9R1BDQ4z4Yr57_fCYCgBm1c8rAsmKVJsmrufVzW9p2yvi0ZlRPdTa9t_7WB9EuRmYTAg6E27s86eZya96z799slp6wH_wWxoTm9ITwYBYxQvzkj6C7snr5oscAprktLgGK69Cdp_0UxPg4tQJgn29Vu-wo6nr0LBlMPb9qCoJvYgn_7MzJJ7MleN4DPAbtrkx30_PWa9n1gwb5GWP1Es9RhnnWU5bL0upl0"/>
+</div>
+<span class="font-utility-mono text-utility-mono tracking-[0.2em] text-primary">EXECUTIVE COMPANION</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity">account_balance_wallet</button>
+</div>
+</header>
+<main class="pt-24 pb-32 px-safe-margin max-w-5xl mx-auto space-y-stack-lg">
+<!-- SEARCH & FILTERS -->
+<div class="space-y-stack-md">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-on-surface-variant/50">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-xl py-4 pl-12 pr-4 text-on-surface font-body-md focus:ring-1 focus:ring-primary/30 placeholder:text-on-surface-variant/30" placeholder="Search premier titles..." type="text"/>
+</div>
+<div class="flex gap-stack-sm overflow-x-auto pb-2 no-scrollbar">
+<button class="px-6 py-2 rounded-full border border-primary text-primary font-utility-mono text-label-caps whitespace-nowrap active-glow transition-all">ALL GAMES</button>
+<button class="px-6 py-2 rounded-full border border-primary/10 bg-surface-container-high/40 text-on-surface-variant font-utility-mono text-label-caps whitespace-nowrap hover:bg-surface-container-high transition-colors">SLOTS</button>
+<button class="px-6 py-2 rounded-full border border-primary/10 bg-surface-container-high/40 text-on-surface-variant font-utility-mono text-label-caps whitespace-nowrap hover:bg-surface-container-high transition-colors">TABLES</button>
+<button class="px-6 py-2 rounded-full border border-primary/10 bg-surface-container-high/40 text-on-surface-variant font-utility-mono text-label-caps whitespace-nowrap hover:bg-surface-container-high transition-colors">LIVE CASINO</button>
+</div>
+</div>
+<!-- HERO: JACKPOT OF THE DAY -->
+<section class="relative h-[420px] rounded-3xl overflow-hidden glass-card group cursor-pointer">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A high-motion dynamic shot of a modern, ultra-luxury mechanical slot machine with glowing indigo and pearl accents. The camera angle is low and wide, capturing the rapid spin of the reels in a dark, atmospheric obsidian casino floor with soft bokeh lights in the background. The mood is high-stakes and immersive, reflecting a top-tier resort experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAp0PvzoyoYcjod23xC_GY71UnBEHBrjc5RI-iwlppkeXNL2VS9fnXNm0T12OhdENN6kmy8nccwOaIGWGbasbHP1xLciOYDO3FApeOZ50B2E1YZn0xpe8BfxUypVo543WkNs8etfAbgBqCjRXGbeSVZRDE4EDbuNrCcsAPHACUFbX2Oxf-1t9vg1Fmh2_B_SZAbKYjF6QbQa0qFJAOSblLZVbuN7Uy6SSzRlnIB3eWU2Q82il2QHT6V8Y4TvenOuGpMlgA1t3o9eW4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+</div>
+<div class="absolute inset-0 z-10 p-stack-lg flex flex-col justify-end items-start space-y-4">
+<span class="font-utility-mono text-label-caps text-tertiary bg-tertiary-container/30 px-3 py-1 rounded-full backdrop-blur-md border border-tertiary/20">JACKPOT OF THE DAY</span>
+<div class="space-y-1">
+<h2 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-on-surface">Vane's Legacy</h2>
+<div class="flex items-baseline gap-2 text-primary">
+<span class="font-utility-mono text-headline-md">$</span>
+<div class="h-8 overflow-hidden font-display-lg-mobile text-display-lg-mobile leading-none" id="jackpot-counter">
+<!-- Animated Ticker Simulation -->
+<div class="flex flex-col animate-[ticker_10s_infinite_linear]">
+<span>1,240,500.22</span>
+<span>1,240,580.45</span>
+<span>1,240,622.10</span>
+<span>1,240,701.33</span>
+<span>1,240,785.90</span>
+<span>1,240,840.00</span>
+<span>1,240,500.22</span>
+</div>
+</div>
+</div>
+</div>
+<button class="bg-primary text-on-primary-fixed px-8 py-3 rounded-full font-utility-mono text-label-caps haptic-light mt-4">PLAY NOW</button>
+</div>
+</section>
+<!-- FAVORITE GAMES BENTO GRID -->
+<section class="space-y-stack-md">
+<div class="flex justify-between items-end">
+<h3 class="font-headline-md text-headline-md text-on-surface">FAVORITE GAMES</h3>
+<span class="font-utility-mono text-label-caps text-primary cursor-pointer hover:underline underline-offset-4">VIEW ALL</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Card 1 -->
+<div class="aspect-[3/4] relative rounded-2xl overflow-hidden glass-card group">
+<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A high-contrast stylized illustration of a mythical silver tiger for a luxury casino game, set against a dark indigo background with glowing particle effects. The artwork is sleek and modern, using pearl and platinum tones to create a sense of premium craftsmanship and architectural precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuARKeRHm-B6ZIyvtHNV5WDT1AScI_cVg2zOa203aR-D21m9qDmHKIY-36iUwGX2U1oyY6LKZt0c6Jz6lDcCeLZU6qGXbTB6SaIKbWcHCVip9KrTZD3STbxGQ5PnOOYVOZVsjoGF1m8xEsWZluqWUCYVYzjzpsWbN8DIQGRHKNo5bg-PDMcwzBMYZpkYaE-9Xc44vh4yHULpvpDTOoInRT6zN1BKr0UsgXb-70bAn_ONRKJTw5dnMyCGx0EAoIqkJsIC6mIT5Lkl0aA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4">
+<p class="font-headline-md text-body-lg text-on-surface leading-tight">Azure Tiger</p>
+<p class="font-utility-mono text-[10px] text-on-surface-variant/60 uppercase tracking-widest mt-1">VOLATILITY: HIGH</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="aspect-[3/4] relative rounded-2xl overflow-hidden glass-card group">
+<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A macro shot of a sleek, black polished obsidian sphere with glowing neon violet rings for a modern casino interface. The lighting is low and moody, emphasizing textures of smooth stone and electrical light pulses, creating a mysterious and sophisticated digital gaming atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6lYJsgsmyM4uQ0WJau7t-lnQrNAimETdp9MCBp-g7PebjzZgwkZ8Vyax_d1lk9gONACiGcYsgYkUaLyCS3to_qlYBMHgLDGNTi62PsDT-BWOqLIP7KEsAf7Ar1KVytCj330vyTqqi_BivQr8GbGz8K0mA4axwU3k8BxLaocNWwASh-tJQfrlenkpELGCDvgSsAvFHH1ClGVzLoNZBsjfX2XCgW4WzKHz_nftEOth1dwe8BEmfTEMGmxfRofEkCdRUORxUI92eEh4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4">
+<p class="font-headline-md text-body-lg text-on-surface leading-tight">Void Spinner</p>
+<p class="font-utility-mono text-[10px] text-on-surface-variant/60 uppercase tracking-widest mt-1">VOLATILITY: MED</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="aspect-[3/4] relative rounded-2xl overflow-hidden glass-card group">
+<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Opulent 3D rendered golden masks with intricate floral engravings inspired by high-fashion masquerades, illuminated by warm candlelight against a deep slate background. The image feels exclusive and theatrical, perfectly suited for a premium resort's digital gambling environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbKNWDIXZwSPf7Fr5QQbwN64v9gISi4ympG9LJIsht0l5-IbqAkcVrTucvhAqe0FrPw8zP1QywNhCun8fqOFI_hpjm03f80K0y1NhdeWl97eEnkFoKZIgRXsJPpQ9gLeqV4I_DJ6HgOk28z67cvMnKAZZITV97aE2o537K626oqHyyy7R9XYcnLY7l8f-t5-NI0OHHZyjEssQoBBOSAAo32JbgCnASmuF7vFOoRcCAnW87ayQzAzE6lyLA2FhcVlAh3qDDIoGuUlE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4">
+<p class="font-headline-md text-body-lg text-on-surface leading-tight">Onyx Masque</p>
+<p class="font-utility-mono text-[10px] text-on-surface-variant/60 uppercase tracking-widest mt-1">JACKPOT ELIGIBLE</p>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="aspect-[3/4] relative rounded-2xl overflow-hidden glass-card group">
+<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="A minimalist architectural shot of a sleek infinity pool at night with reflections of neon signs, designed as a background for a modern casino game card. The aesthetic is clean and luxurious, utilizing deep blues and crisp white highlights to evoke a high-end traveler's lifestyle." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBX5T4QeCZPC8pTAETOn55zxEpOo5C2HCH2K_ca60w7RUU5anADexjuQ-SAicpATWKBDtaPz7iNxAsAmggjB1OEvIwCL3YCL8531m6R7cQn7xioVCAmk-DKKaej8lSy6DpeeYmUO9hUYYfbjB5LzSbqbTMcFjnTGUnbnFUkNTCpdC3nD95q4CMcMUcH_5VrE-5FTTOU3-r58YclTr4kNHDfNDioEjokVQkVn5DDBu_OrGvDd9Eue2oYtgzPDSibnz0xVabV1AC4SDw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-dim via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4">
+<p class="font-headline-md text-body-lg text-on-surface leading-tight">Resort Reels</p>
+<p class="font-utility-mono text-[10px] text-on-surface-variant/60 uppercase tracking-widest mt-1">FREE SPINS AVAIL.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- LEADERBOARD SNIPPET -->
+<section class="space-y-stack-md pt-stack-lg">
+<h3 class="font-headline-md text-headline-md text-on-surface">LEADERBOARD</h3>
+<div class="glass-card rounded-2xl p-4 space-y-4">
+<!-- User Entry -->
+<div class="flex items-center justify-between py-2 border-b border-primary/5">
+<div class="flex items-center gap-4">
+<span class="font-utility-mono text-on-surface-variant w-4">1</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-primary/10"></div>
+<span class="font-utility-mono text-label-caps text-on-surface">JONATHAN R.</span>
+</div>
+<span class="font-utility-mono text-primary">2,450,000 PTS</span>
+</div>
+<!-- User Entry -->
+<div class="flex items-center justify-between py-2 border-b border-primary/5">
+<div class="flex items-center gap-4">
+<span class="font-utility-mono text-on-surface-variant w-4">2</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-primary/10"></div>
+<span class="font-utility-mono text-label-caps text-on-surface">CLAIRE V.</span>
+</div>
+<span class="font-utility-mono text-primary">1,890,200 PTS</span>
+</div>
+<!-- Current User Context -->
+<div class="flex items-center justify-between py-4 px-4 bg-primary/5 rounded-xl border border-primary/10">
+<div class="flex items-center gap-4">
+<span class="font-utility-mono text-primary font-bold w-4">12</span>
+<div class="w-8 h-8 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center">
+<span class="text-[10px] font-bold">MV</span>
+</div>
+<span class="font-utility-mono text-label-caps text-primary font-bold uppercase">MARCUS VANE</span>
+</div>
+<div class="text-right">
+<span class="block font-utility-mono text-primary font-bold">1,240,500 PTS</span>
+<span class="block text-[10px] text-on-surface-variant/60">+12k from last session</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BOTTOM NAVBAR -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50 flex justify-around items-center py-2 px-2 bg-surface-container/80 backdrop-blur-3xl border-[0.5px] border-primary/20 shadow-2xl rounded-full">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-utility-mono text-[9px] tracking-tighter">HOME</span>
+</a>
+<!-- Gaming (Active) -->
+<a class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-full py-2 px-4 active-glow scale-95 duration-300" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">casino</span>
+<span class="font-utility-mono text-[9px] tracking-tighter font-bold">GAMING</span>
+</a>
+<!-- Wallet -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">payments</span>
+<span class="font-utility-mono text-[9px] tracking-tighter">WALLET</span>
+</a>
+<!-- Resort -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">apartment</span>
+<span class="font-utility-mono text-[9px] tracking-tighter">RESORT</span>
+</a>
+<!-- Messages -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">chat_bubble</span>
+<span class="font-utility-mono text-[9px] tracking-tighter">MESSAGES</span>
+</a>
+</nav>
+<script>
+        // Simple Micro-interaction for the jackpot ticker
+        const jackpotDiv = document.getElementById('jackpot-counter');
+        let currentAmt = 1240500.22;
+        
+        setInterval(() => {
+            currentAmt += (Math.random() * 5);
+            // Updating the ticker slightly visually if needed, 
+            // but the CSS animation handles the smooth roll.
+        }, 2000);
+
+        // Ripple / Haptic simulation
+        document.querySelectorAll('.haptic-light').forEach(btn => {
+            btn.addEventListener('touchstart', () => {
+                btn.style.transform = 'scale(0.96)';
+            });
+            btn.addEventListener('touchend', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body></html>

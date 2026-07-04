@@ -52,7 +52,7 @@ function ThemedRoot(): React.JSX.Element {
   const title = manifest?.name ?? buildConfig.appName;
 
   return (
-    <ThemeProvider tokens={tokens}>
+    <ThemeProvider tokens={tokens} forcedScheme={manifest?.themeMode}>
       <FeatureProvider flags={flags}>
         <ThemedStatusBar />
         {status === 'loading' && !manifest ? (

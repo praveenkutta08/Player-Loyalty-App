@@ -26,6 +26,8 @@ export interface ResolvedManifest {
   tenantSlug: string;
   name: string;
   theme: ThemeTokens;
+  /** Tenant-forced color scheme (`theme.mode` in the manifest). `undefined`/`system` = follow OS. */
+  themeMode?: 'dark' | 'light' | 'system';
   featureFlags: FeatureFlags;
   navigation?: ManifestNavigation;
   /** Concierge persona (P6.5); the `concierge` feature flag gates the UI. */
@@ -106,12 +108,17 @@ function normalizeConcierge(raw: WireConcierge | null | undefined): ManifestConc
 export function normalizeManifest(raw: ManifestOut, etag?: string): ResolvedManifest {
   const theme = deepMerge<ThemeTokens>(DEFAULT_THEME, raw.theme);
   const endpoints = raw.endpoints ?? {};
+  // `mode` is an additive manifest field (ManifestTheme extra="allow"); read it defensively.
+  const rawMode = (raw.theme as { mode?: unknown } | undefined)?.mode;
+  const themeMode =
+    rawMode === 'dark' || rawMode === 'light' || rawMode === 'system' ? rawMode : undefined;
   return {
     version: raw.version,
     tenantId: raw.tenant_id,
     tenantSlug: raw.tenant_slug,
     name: raw.name,
     theme,
+    themeMode,
     featureFlags: coerceFlags(raw.feature_flags),
     navigation: normalizeNavigation(raw.navigation),
     concierge: normalizeConcierge(raw.concierge),

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Wallet Overview | EXECUTIVE COMPANION</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --obsidian: #050505;
+        }
+        body {
+            background-color: var(--obsidian);
+            color: #e2e2e2;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+        .glass-card {
+            backdrop-filter: blur(40px);
+            background: rgba(26, 26, 28, 0.7);
+            border-top: 0.5px solid rgba(201, 198, 197, 0.15);
+            border-left: 0.5px solid rgba(201, 198, 197, 0.15);
+        }
+        .holographic-card {
+            background: linear-gradient(135deg, #1a1a1c 0%, #2a2a2d 50%, #1a1a1c 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .holographic-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                125deg,
+                transparent 0%,
+                transparent 40%,
+                rgba(201, 198, 197, 0.1) 45%,
+                rgba(201, 198, 197, 0.2) 50%,
+                rgba(201, 198, 197, 0.1) 55%,
+                transparent 60%,
+                transparent 100%
+            );
+            background-size: 200% 200%;
+            animation: holo-shine 8s linear infinite;
+            pointer-events: none;
+        }
+        @keyframes holo-shine {
+            0% { background-position: 200% 200%; }
+            100% { background-position: -200% -200%; }
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .haptic-light:active {
+            transform: scale(0.95);
+            transition: transform 0.1s ease;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#0d0e0f",
+                    "primary-container": "#050505",
+                    "surface-dim": "#121414",
+                    "primary-fixed": "#e5e2e1",
+                    "background": "#121414",
+                    "error-container": "#93000a",
+                    "tertiary": "#c2c1ff",
+                    "surface-tint": "#c9c6c5",
+                    "on-tertiary-fixed-variant": "#332dbc",
+                    "surface": "#121414",
+                    "surface-container-low": "#1a1c1c",
+                    "tertiary-fixed-dim": "#c2c1ff",
+                    "on-background": "#e2e2e2",
+                    "on-primary-container": "#797777",
+                    "error": "#ffb4ab",
+                    "on-surface-variant": "#c4c7c7",
+                    "on-secondary-fixed-variant": "#474649",
+                    "surface-container-highest": "#333535",
+                    "outline": "#8e9192",
+                    "primary-fixed-dim": "#c9c6c5",
+                    "on-secondary": "#303032",
+                    "on-secondary-fixed": "#1b1b1d",
+                    "secondary-fixed": "#e4e2e4",
+                    "on-primary-fixed-variant": "#474646",
+                    "surface-container-high": "#282a2b",
+                    "inverse-surface": "#e2e2e2",
+                    "on-secondary-container": "#b7b4b7",
+                    "on-primary-fixed": "#1c1b1b",
+                    "surface-variant": "#333535",
+                    "on-primary": "#313030",
+                    "tertiary-fixed": "#e2dfff",
+                    "surface-container": "#1e2020",
+                    "tertiary-container": "#020026",
+                    "outline-variant": "#444748",
+                    "on-tertiary": "#1800a7",
+                    "secondary-fixed-dim": "#c8c6c8",
+                    "inverse-primary": "#5f5e5e",
+                    "on-surface": "#e2e2e2",
+                    "on-tertiary-fixed": "#0c006b",
+                    "surface-bright": "#38393a",
+                    "on-tertiary-container": "#6765ef",
+                    "primary": "#c9c6c5",
+                    "on-error-container": "#ffdad6",
+                    "secondary-container": "#474649",
+                    "inverse-on-surface": "#2f3131",
+                    "secondary": "#c8c6c8",
+                    "on-error": "#690005"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "safe-margin": "24px",
+                    "section-gap": "64px",
+                    "gutter": "16px",
+                    "stack-sm": "8px",
+                    "stack-lg": "32px",
+                    "stack-md": "16px"
+            },
+            "fontFamily": {
+                    "utility-mono": ["Inter", "monospace"],
+                    "display-lg": ["Playfair Display", "serif"],
+                    "headline-md": ["Playfair Display", "serif"],
+                    "body-md": ["Inter", "sans-serif"],
+                    "label-caps": ["Inter", "sans-serif"]
+            },
+            "fontSize": {
+                    "utility-mono": ["13px", { "lineHeight": "18px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+                    "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                    "headline-md": ["28px", { "lineHeight": "34px", "fontWeight": "600" }],
+                    "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600" }]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-primary-container min-h-screen pb-32">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center w-full px-safe-margin py-4 fixed top-0 z-50 backdrop-blur-xl bg-surface-dim/60 border-b-[0.5px] border-primary/15">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full border border-primary/30 p-0.5 overflow-hidden">
+<img class="w-full h-full object-cover rounded-full" data-alt="A sophisticated portrait of a high-end luxury client, lighting is dramatic and moody with deep shadows and soft rim lights. The aesthetic is clean, professional, and exclusive, matching a high-society concierge app. Colors are muted slate and obsidian with subtle pearl highlights on the skin." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2UGIupQlkIBJIMWY2lOL0qkw9p-8u5eR0tIyZx50HH6jw30FIpMErYnUA_9bDkh79r1ZDg5lzb7fbBNIRjWoBYVTLepKRyFzve94mIDSF6WiBbhEINcEz1PcGY6Lj6cj0PQ0-QMQJe3teCDhN7G6_Es4KG03ogCeF00o5rMMxYBViPjkuCn3aIM7vO4G4IIVAkt7xOjbtg0Q3-AG2H7Ywuvnk7NXwLV7Ibei1_sqgiDaIN0cUsXaVsbDokRdORbXinqMbxv4I4ME"/>
+</div>
+<span class="font-utility-mono text-utility-mono tracking-[0.2em] text-primary">EXECUTIVE COMPANION</span>
+</div>
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity">account_balance_wallet</button>
+</header>
+<main class="pt-24 px-6 max-w-lg mx-auto">
+<!-- Digital Member Card -->
+<section class="mb-stack-lg">
+<div class="holographic-card w-full aspect-[1.586/1] rounded-xl p-8 flex flex-col justify-between shadow-2xl border-[0.5px] border-primary/20">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-utility-mono text-label-caps text-primary/60 mb-1">DIGITAL MEMBER CARD</span>
+<span class="font-headline-md text-primary tracking-widest">ONYX</span>
+</div>
+<div class="w-12 h-12">
+<img class="w-full h-full object-contain brightness-125 opacity-80" data-alt="A minimalist, geometric architectural logo representing a luxury resort brand. The design is executed in a high-contrast metallic pearl finish against a deep obsidian background. The lines are razor-thin and precise, evoking the craftsmanship of a luxury watchmaker." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkECwOD1bOW08GmAaBSWwvXPs0vJqXPT9gRLiZk-Ewq1qweeDtA4llA-5EAkv9-KKgeJIFp4K_C9jQHC2BToPLqE-JV1NkldZLXkRHNgPKR0KOO6lX1sc7Guh54-jNewsEc4jX0aH0qm-OLrjV7BxFsWeeznVa8kDRLbPlQfagUIgj5nv6A1c6J1VHyF6r2794BQQmIWRcCExQeIAkFya-q0ZwgooCUd2KVqtiG0-35hc77yGYtcONiV_HndmZyD-a6rdWmyhT5AA"/>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-utility-mono text-label-caps text-primary/50">MARCUS VANE</span>
+<div class="flex justify-between items-end">
+<span class="font-utility-mono text-utility-mono tracking-[0.3em] text-primary/80">8842 0019 3320 0411</span>
+<div class="flex gap-2">
+<div class="w-8 h-5 rounded bg-primary/20 backdrop-blur-md border border-primary/10"></div>
+<div class="w-8 h-5 rounded bg-primary/10 backdrop-blur-md border border-primary/10"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Balance Section -->
+<section class="text-center mb-stack-lg">
+<p class="font-utility-mono text-label-caps text-on-surface-variant/60 mb-2">CURRENT BALANCE</p>
+<h1 class="font-utility-mono text-[42px] leading-tight font-bold text-primary">$1,240,500.00</h1>
+<p class="font-utility-mono text-[10px] text-on-tertiary-container/80 mt-2 tracking-widest uppercase">Available Credit: $500,000</p>
+</section>
+<!-- Action Buttons -->
+<section class="grid grid-cols-3 gap-4 mb-section-gap">
+<button class="haptic-light flex flex-col items-center justify-center py-4 rounded-xl glass-card border border-primary/10 group transition-all hover:bg-primary/5">
+<span class="material-symbols-outlined text-primary mb-2 group-hover:scale-110 transition-transform">add_circle</span>
+<span class="font-utility-mono text-[10px] tracking-widest font-bold">DEPOSIT</span>
+</button>
+<button class="haptic-light flex flex-col items-center justify-center py-4 rounded-xl glass-card border border-primary/10 group transition-all hover:bg-primary/5">
+<span class="material-symbols-outlined text-primary mb-2 group-hover:scale-110 transition-transform">payments</span>
+<span class="font-utility-mono text-[10px] tracking-widest font-bold">WITHDRAW</span>
+</button>
+<button class="haptic-light flex flex-col items-center justify-center py-4 rounded-xl glass-card border border-primary/10 group transition-all hover:bg-primary/5">
+<span class="material-symbols-outlined text-primary mb-2 group-hover:scale-110 transition-transform">loyalty</span>
+<span class="font-utility-mono text-[10px] tracking-widest font-bold">REWARDS</span>
+</button>
+</section>
+<!-- Recent Transactions -->
+<section class="mb-12">
+<div class="flex justify-between items-end mb-6">
+<h2 class="font-headline-md text-xl text-primary">RECENT TRANSACTIONS</h2>
+<span class="font-utility-mono text-[10px] text-on-surface-variant/40 tracking-widest cursor-pointer hover:text-primary transition-colors">VIEW ALL</span>
+</div>
+<div class="space-y-0">
+<!-- Transaction 1 -->
+<div class="flex items-center justify-between py-5 border-b-[0.5px] border-primary/10">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-high border border-primary/5">
+<span class="material-symbols-outlined text-primary/70 text-lg">casino</span>
+</div>
+<div>
+<p class="font-body-md font-medium text-on-surface">Blackjack Suite #04</p>
+<p class="font-utility-mono text-[11px] text-on-surface-variant/50">NOV 14, 2023 • 11:24 PM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-utility-mono text-body-md text-error">-$24,500.00</p>
+<p class="font-utility-mono text-[10px] text-on-surface-variant/30">PENDING</p>
+</div>
+</div>
+<!-- Transaction 2 -->
+<div class="flex items-center justify-between py-5 border-b-[0.5px] border-primary/10">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-high border border-primary/5">
+<span class="material-symbols-outlined text-primary/70 text-lg">apartment</span>
+</div>
+<div>
+<p class="font-body-md font-medium text-on-surface">The Pearl Brasserie</p>
+<p class="font-utility-mono text-[11px] text-on-surface-variant/50">NOV 14, 2023 • 08:15 PM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-utility-mono text-body-md text-error">-$1,120.45</p>
+<p class="font-utility-mono text-[10px] text-on-surface-variant/30">COMPLETED</p>
+</div>
+</div>
+<!-- Transaction 3 -->
+<div class="flex items-center justify-between py-5 border-b-[0.5px] border-primary/10">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-high border border-primary/5">
+<span class="material-symbols-outlined text-primary/70 text-lg">add_circle</span>
+</div>
+<div>
+<p class="font-body-md font-medium text-on-surface">Wallet Deposit</p>
+<p class="font-utility-mono text-[11px] text-on-surface-variant/50">NOV 13, 2023 • 02:30 PM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-utility-mono text-body-md text-on-tertiary-container">+$500,000.00</p>
+<p class="font-utility-mono text-[10px] text-on-surface-variant/30">COMPLETED</p>
+</div>
+</div>
+<!-- Transaction 4 -->
+<div class="flex items-center justify-between py-5 border-b-[0.5px] border-primary/10">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-high border border-primary/5">
+<span class="material-symbols-outlined text-primary/70 text-lg">hotel</span>
+</div>
+<div>
+<p class="font-body-md font-medium text-on-surface">Onyx Penthouse Room Service</p>
+<p class="font-utility-mono text-[11px] text-on-surface-variant/50">NOV 13, 2023 • 07:44 AM</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-utility-mono text-body-md text-error">-$450.00</p>
+<p class="font-utility-mono text-[10px] text-on-surface-variant/30">COMPLETED</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50 flex justify-around items-center py-2 px-2 bg-surface-container/80 backdrop-blur-3xl border-[0.5px] border-primary/20 shadow-2xl rounded-full">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-utility-mono text-[9px] mt-1 tracking-tighter">HOME</span>
+</a>
+<!-- Gaming -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">casino</span>
+<span class="font-utility-mono text-[9px] mt-1 tracking-tighter">GAMING</span>
+</a>
+<!-- Wallet (Active) -->
+<a class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-full py-2 px-4 haptic-light" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-utility-mono text-[9px] mt-1 tracking-tighter font-bold">WALLET</span>
+</a>
+<!-- Resort -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">apartment</span>
+<span class="font-utility-mono text-[9px] mt-1 tracking-tighter">RESORT</span>
+</a>
+<!-- Messages -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-utility-mono text-[9px] mt-1 tracking-tighter">MESSAGES</span>
+</a>
+</nav>
+<script>
+        // Optional light micro-interaction for the card
+        const card = document.querySelector('.holographic-card');
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+        });
+    </script>
+</body></html>

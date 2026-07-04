@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Promotions | Executive Companion</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#0d0e0f",
+                    "primary-container": "#050505",
+                    "surface-dim": "#121414",
+                    "primary-fixed": "#e5e2e1",
+                    "background": "#121414",
+                    "error-container": "#93000a",
+                    "tertiary": "#c2c1ff",
+                    "surface-tint": "#c9c6c5",
+                    "on-tertiary-fixed-variant": "#332dbc",
+                    "surface": "#121414",
+                    "surface-container-low": "#1a1c1c",
+                    "tertiary-fixed-dim": "#c2c1ff",
+                    "on-background": "#e2e2e2",
+                    "on-primary-container": "#797777",
+                    "error": "#ffb4ab",
+                    "on-surface-variant": "#c4c7c7",
+                    "on-secondary-fixed-variant": "#474649",
+                    "surface-container-highest": "#333535",
+                    "outline": "#8e9192",
+                    "primary-fixed-dim": "#c9c6c5",
+                    "on-secondary": "#303032",
+                    "on-secondary-fixed": "#1b1b1d",
+                    "secondary-fixed": "#e4e2e4",
+                    "on-primary-fixed-variant": "#474646",
+                    "surface-container-high": "#282a2b",
+                    "inverse-surface": "#e2e2e2",
+                    "on-secondary-container": "#b7b4b7",
+                    "on-primary-fixed": "#1c1b1b",
+                    "surface-variant": "#333535",
+                    "on-primary": "#313030",
+                    "tertiary-fixed": "#e2dfff",
+                    "surface-container": "#1e2020",
+                    "tertiary-container": "#020026",
+                    "outline-variant": "#444748",
+                    "on-tertiary": "#1800a7",
+                    "secondary-fixed-dim": "#c8c6c8",
+                    "inverse-primary": "#5f5e5e",
+                    "on-surface": "#e2e2e2",
+                    "on-tertiary-fixed": "#0c006b",
+                    "surface-bright": "#38393a",
+                    "on-tertiary-container": "#6765ef",
+                    "primary": "#c9c6c5",
+                    "on-error-container": "#ffdad6",
+                    "secondary-container": "#474649",
+                    "inverse-on-surface": "#2f3131",
+                    "secondary": "#c8c6c8",
+                    "on-error": "#690005"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "safe-margin": "24px",
+                    "section-gap": "64px",
+                    "gutter": "16px",
+                    "stack-sm": "8px",
+                    "stack-lg": "32px",
+                    "stack-md": "16px"
+            },
+            "fontFamily": {
+                    "utility-mono": ["Inter"],
+                    "display-lg": ["Playfair Display"],
+                    "display-lg-mobile": ["Playfair Display"],
+                    "headline-md": ["Playfair Display"],
+                    "body-md": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "utility-mono": ["13px", {"lineHeight": "18px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-md": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            background-color: #050505;
+            color: #e2e2e2;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            backdrop-filter: blur(20px);
+            background: linear-gradient(135deg, rgba(26, 26, 28, 0.7) 0%, rgba(5, 5, 5, 0.9) 100%);
+            border-top: 0.5px solid rgba(201, 198, 197, 0.15);
+            border-left: 0.5px solid rgba(201, 198, 197, 0.15);
+        }
+        .text-shadow-premium {
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+        .scrim-gradient {
+            background: linear-gradient(to top, #050505 0%, rgba(5, 5, 5, 0.8) 20%, rgba(5, 5, 5, 0) 60%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-safe-margin py-4 fixed top-0 z-50 backdrop-blur-xl bg-surface-dim/60 border-b-[0.5px] border-primary/15">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border border-primary/20 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a sophisticated high-net-worth individual with a focused expression, softly lit by ambient warm hotel lighting. The style is cinematic and architectural, featuring a shallow depth of field against a blurred backdrop of an obsidian-toned luxury lounge. Rich textures and subtle metallic highlights emphasize a premium, exclusive atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6HrUOTu0Yc-s37X0YJdqEuc25qp3Fb14Q7Tn497d5y1xm6vI4tm9xmg4DWRklE70U4ApLanN1Gghn04LzfHhqSimI4jMAzr3bFHK2ByqbdsAf15bCMyrAssgxPW6A21WL_CSIdHYg8-e80UDi1WI8KSla9N5wmPpt6UzcmBjRi9t0Z1GKCyXN9ZReR3-4vSJj0rhh57-I14jxUHGzkSUvAp4ELYk6Z5-xmuBCE6qWfpt1DNJSjsbPwzRG6cGCf0n2BPOcpoXsNBA"/>
+</div>
+<span class="font-utility-mono text-utility-mono tracking-[0.2em] text-primary">EXECUTIVE COMPANION</span>
+</div>
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity active:scale-95 duration-200" data-icon="account_balance_wallet">account_balance_wallet</button>
+</header>
+<main class="pt-24 pb-32 px-safe-margin min-h-screen">
+<!-- Section Header -->
+<div class="mb-stack-lg">
+<h1 class="font-headline-md text-headline-md text-primary tracking-tight">CURATED OFFERS</h1>
+<p class="font-utility-mono text-label-caps text-on-surface-variant/60 mt-2">EXCLUSIVE ACCESS • WINTER 2024</p>
+</div>
+<!-- Offers Feed -->
+<div class="space-y-gutter">
+<!-- Offer Card 1: Bonus -->
+<div class="relative w-full aspect-[4/5] rounded-xl overflow-hidden glass-card group cursor-pointer transition-transform duration-500 hover:scale-[1.01]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="An ultra-luxury private gaming salon with deep obsidian floors and gold-leaf architectural accents. The lighting is moody and atmospheric, focusing on a high-stakes baccarat table. A sophisticated, tech-minimalist aesthetic dominates the scene, with pearl-white highlights catching the edge of polished surfaces. The mood is silent, powerful, and exceptionally exclusive." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDnS43Hh486VvuZ7Y4aH2pwdRLWohRHp7nmX97ikZQVXmshI1XQC1068lLjTda_OOsKMOL9UnCy6k_s0Zdc0VB1PtvSTlfYAMjnpb1oUO5nyUrBqbmzg56eSIhAY24n8TN_DwXp_0SNMRHt31UjZC7NuxAPmax4ggMA8IouuV1ytTBsiLK0wLXc8gFQF0M5EaKMeL2zJIRoaMxbIJJ5qXLa1QW5G-VkprDOTauDhwhfB_bExarJ6iDWV9dUwe_JygCV9ALmQuIHsOE')">
+</div>
+<div class="absolute inset-0 scrim-gradient"></div>
+<div class="absolute inset-0 p-stack-lg flex flex-col justify-end items-start">
+<span class="font-utility-mono text-label-caps text-primary/80 mb-2">LIMITED TIME</span>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-6 text-shadow-premium">$5,000 High Roller Bonus</h2>
+<div class="flex gap-4 w-full">
+<button class="flex-1 py-4 px-6 rounded-full bg-primary text-on-primary font-utility-mono text-label-caps hover:opacity-90 transition-all active:scale-95">CLAIM</button>
+<button class="px-6 rounded-full border border-primary/20 bg-surface-container/30 backdrop-blur-md text-primary font-utility-mono text-label-caps hover:bg-surface-container/50 transition-all">VIEW DETAILS</button>
+</div>
+</div>
+</div>
+<!-- Offer Card 2: Upgrade -->
+<div class="relative w-full aspect-[4/5] rounded-xl overflow-hidden glass-card group cursor-pointer transition-transform duration-500 hover:scale-[1.01]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="A panoramic view of a minimalist luxury penthouse interior at night. Floor-to-ceiling glass walls overlook a glowing city skyline with deep indigo and violet hues. Inside, modern architectural furniture sits on dark stone floors. The lighting is soft and recessed, creating a sense of infinite space and architectural precision. The overall aesthetic is clean, glass-heavy, and serene." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB6mPrm9InytXSYgxOKAYRVTqa15udovxXKaMafizNonT-OkPy3m06Iw2SIvQldf_eARIQmMT5ITGQjhe3H7iyWikF-_WIgsYfguttU80OiVF44qTH7AmptEeYvOp8nQ-XgB_9wTSujXbUsA_GN2qfyXa421cDvifv4EvQR3TAo5IFkVm785zzVXKuYzqKO-zdT-oftFqg7rBwSL0sONZZo1591V1YcIC14rYkQZ26piinAPm8o5ICgzP92CncchjkPmXEji-Z9R3g')">
+</div>
+<div class="absolute inset-0 scrim-gradient"></div>
+<div class="absolute inset-0 p-stack-lg flex flex-col justify-end items-start">
+<span class="font-utility-mono text-label-caps text-primary/80 mb-2">LOYALTY REWARD</span>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-6 text-shadow-premium">Complimentary Penthouse Upgrade</h2>
+<div class="flex gap-4 w-full">
+<button class="flex-1 py-4 px-6 rounded-full bg-primary text-on-primary font-utility-mono text-label-caps hover:opacity-90 transition-all active:scale-95">CLAIM</button>
+<button class="px-6 rounded-full border border-primary/20 bg-surface-container/30 backdrop-blur-md text-primary font-utility-mono text-label-caps hover:bg-surface-container/50 transition-all">VIEW DETAILS</button>
+</div>
+</div>
+</div>
+<!-- Offer Card 3: DJ Set -->
+<div class="relative w-full aspect-[4/5] rounded-xl overflow-hidden glass-card group cursor-pointer transition-transform duration-500 hover:scale-[1.01]">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110" data-alt="A highly curated, private rooftop lounge event at twilight. Minimalist stage design with glowing indigo LED light-strips framing a sleek DJ booth. Sophisticated guests in elegant evening wear are silhouetted against a deep obsidian sky. The mood is electric but refined, emphasizing architectural beauty and the high-tech soul of a premium digital resort experience." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDHHZGPgHz8Ap5ry4X-aXQPqrmzrY0Sohcio8X60-ezPodOg0ofEBYcqRIAEb-vz3h8pSr3RHYhCx1_4Bzr8nNkK_smkh5m_AQiJsQ9MnbAo1wXR9UEi4S6O98RAS3S2t-yvZpzOWrNOki7BKsiDG0moIvrD5qOsgsdsPKY7u2eFwyBlfxPYsUEroWgllhKdPvM9hSgOtkhq4i0lluMJ4funukt2oUbedp5Rcr6RllovIYe14AE0ercq7ggxnvU2d-FeJbVj-XEWRk')">
+</div>
+<div class="absolute inset-0 scrim-gradient"></div>
+<div class="absolute inset-0 p-stack-lg flex flex-col justify-end items-start">
+<span class="font-utility-mono text-label-caps text-primary/80 mb-2">ONYX EXCLUSIVE</span>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-6 text-shadow-premium">Exclusive DJ Set Access</h2>
+<div class="flex gap-4 w-full">
+<button class="flex-1 py-4 px-6 rounded-full bg-primary text-on-primary font-utility-mono text-label-caps hover:opacity-90 transition-all active:scale-95">CLAIM</button>
+<button class="px-6 rounded-full border border-primary/20 bg-surface-container/30 backdrop-blur-md text-primary font-utility-mono text-label-caps hover:bg-surface-container/50 transition-all">VIEW DETAILS</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50 flex justify-around items-center py-2 px-2 bg-surface-container/80 backdrop-blur-3xl border-[0.5px] border-primary/20 rounded-full shadow-[0_0_40px_rgba(0,0,0,0.5)]">
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="home">home</span>
+<span class="font-utility-mono text-label-caps">HOME</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="casino">casino</span>
+<span class="font-utility-mono text-label-caps">GAMING</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="payments">payments</span>
+<span class="font-utility-mono text-label-caps">WALLET</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-full py-2 px-4 scale-90 duration-300" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="apartment">apartment</span>
+<span class="font-utility-mono text-label-caps">RESORT</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-utility-mono text-label-caps">MESSAGES</span>
+</a>
+</nav>
+<script>
+        // Micro-interaction for buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(10);
+                }
+            });
+        });
+
+        // Background parallax effect on scroll
+        window.addEventListener('scroll', () => {
+            const scroll = window.pageYOffset;
+            document.querySelectorAll('.group div[style*="background-image"]').forEach(bg => {
+                const speed = 0.1;
+                bg.style.backgroundPositionY = `${scroll * speed}px`;
+            });
+        });
+    </script>
+</body></html>

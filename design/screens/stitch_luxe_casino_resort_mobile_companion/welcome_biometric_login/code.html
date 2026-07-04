@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Obsidian Luxury Companion | Authentication</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --glass-bg: rgba(26, 26, 28, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+        body {
+            background-color: #050505;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-island {
+            backdrop-filter: blur(40px) saturate(150%);
+            -webkit-backdrop-filter: blur(40px) saturate(150%);
+            background: var(--glass-bg);
+            border-top: 0.5px solid var(--glass-border);
+            border-left: 0.5px solid var(--glass-border);
+        }
+        .biometric-scan {
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.4; transform: scale(1); filter: drop-shadow(0 0 0px rgba(201, 198, 197, 0)); }
+            50% { opacity: 1; transform: scale(1.05); filter: drop-shadow(0 0 15px rgba(201, 198, 197, 0.3)); }
+        }
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background-size: 200% 100%;
+            animation: shimmer-effect 4s infinite linear;
+        }
+        @keyframes shimmer-effect {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .fade-in {
+            animation: fadeInScale 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#0d0e0f",
+                        "primary-container": "#050505",
+                        "surface-dim": "#121414",
+                        "primary-fixed": "#e5e2e1",
+                        "background": "#121414",
+                        "error-container": "#93000a",
+                        "tertiary": "#c2c1ff",
+                        "surface-tint": "#c9c6c5",
+                        "on-tertiary-fixed-variant": "#332dbc",
+                        "surface": "#121414",
+                        "surface-container-low": "#1a1c1c",
+                        "tertiary-fixed-dim": "#c2c1ff",
+                        "on-background": "#e2e2e2",
+                        "on-primary-container": "#797777",
+                        "error": "#ffb4ab",
+                        "on-surface-variant": "#c4c7c7",
+                        "on-secondary-fixed-variant": "#474649",
+                        "surface-container-highest": "#333535",
+                        "outline": "#8e9192",
+                        "primary-fixed-dim": "#c9c6c5",
+                        "on-secondary": "#303032",
+                        "on-secondary-fixed": "#1b1b1d",
+                        "secondary-fixed": "#e4e2e4",
+                        "on-primary-fixed-variant": "#474646",
+                        "surface-container-high": "#282a2b",
+                        "inverse-surface": "#e2e2e2",
+                        "on-secondary-container": "#b7b4b7",
+                        "on-primary-fixed": "#1c1b1b",
+                        "surface-variant": "#333535",
+                        "on-primary": "#313030",
+                        "tertiary-fixed": "#e2dfff",
+                        "surface-container": "#1e2020",
+                        "tertiary-container": "#020026",
+                        "outline-variant": "#444748",
+                        "on-tertiary": "#1800a7",
+                        "secondary-fixed-dim": "#c8c6c8",
+                        "inverse-primary": "#5f5e5e",
+                        "on-surface": "#e2e2e2",
+                        "on-tertiary-fixed": "#0c006b",
+                        "surface-bright": "#38393a",
+                        "on-tertiary-container": "#6765ef",
+                        "primary": "#c9c6c5",
+                        "on-error-container": "#ffdad6",
+                        "secondary-container": "#474649",
+                        "inverse-on-surface": "#2f3131",
+                        "secondary": "#c8c6c8",
+                        "on-error": "#690005"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "safe-margin": "24px",
+                        "section-gap": "64px",
+                        "gutter": "16px",
+                        "stack-sm": "8px",
+                        "stack-lg": "32px",
+                        "stack-md": "16px"
+                    },
+                    "fontFamily": {
+                        "utility-mono": ["Inter"],
+                        "display-lg": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "headline-md": ["Playfair Display"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "utility-mono": ["13px", {"lineHeight": "18px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-md": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-primary-container h-screen w-screen relative flex items-center justify-center overflow-hidden">
+<!-- Immersive Background Image -->
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center brightness-[0.4] scale-105" data-alt="A wide-angle, low-contrast architectural photograph of a high-end luxury resort lobby at twilight. The scene features soaring limestone columns, minimalist water features, and soft, warm indirect lighting that accentuates geometric shadows. The aesthetic is sophisticated and serene, dominated by obsidian blacks and deep slate tones with pearl highlights. The atmosphere is quiet, elite, and professionally composed." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBL7ETWObry6RWllNJMFS9TAtt7UkLcVy-6PuOFz-PFBI_-CldHxbiyqL7DL87Q4wWQFDhHgkuQe-tmA__S23OuItJBI4iw34eVK5OJUH7si5z2DgAYBvVv1A63YDb8bmLy4TqvEoe73BFwRXEzoYuh8dow4GlM4jig4jmSp9tfnac2BDsqaJV3LIq7IK8HyDpXo6E90apSTeAAifSk-50sfZPUSUQWCd8xZe0KN4B67aM41aMotvDwmuTJdRXZuZR5uhz3jRS2G6k')">
+</div>
+<!-- Gradient Scrim for depth -->
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container via-transparent to-primary-container/20"></div>
+</div>
+<!-- Status Bar Icons (Simulated) -->
+<div class="fixed top-0 left-0 right-0 px-8 py-4 flex justify-between items-center z-50 text-white/90">
+<div class="font-utility-mono text-label-caps">9:41</div>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-[18px]">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[18px]">wifi</span>
+<span class="material-symbols-outlined text-[18px]">battery_very_low</span>
+</div>
+</div>
+<!-- Main Content Area -->
+<main class="relative z-10 w-full h-full flex flex-col justify-between items-center px-stack-lg pt-24 pb-12">
+<!-- Greeting Header -->
+<div class="text-center fade-in" style="animation-delay: 0.2s;">
+<p class="font-utility-mono text-label-caps text-primary tracking-[0.3em] mb-4 opacity-60">EXECUTIVE COMPANION</p>
+<h1 class="font-headline-md text-display-lg-mobile md:text-display-lg text-on-surface leading-tight">
+                Welcome back,<br/><span class="italic text-primary">Marcus</span>
+</h1>
+</div>
+<!-- Biometric Focus Area -->
+<div class="flex flex-col items-center justify-center fade-in" style="animation-delay: 0.5s;">
+<div class="relative biometric-scan group cursor-pointer" onclick="handleAuth()">
+<!-- Fine-line silver glyph wrapper -->
+<div class="w-24 h-24 rounded-full border-[0.5px] border-primary/30 flex items-center justify-center glass-island shadow-2xl">
+<span class="material-symbols-outlined text-primary text-[48px] font-thin" style="font-variation-settings: 'wght' 100;">shape_recognition</span>
+</div>
+<!-- Interactive Rings -->
+<div class="absolute inset-0 -m-4 border-[0.5px] border-primary/10 rounded-full animate-spin" style="animation-duration: 8s;"></div>
+</div>
+<p class="mt-8 font-utility-mono text-label-caps text-on-surface-variant tracking-widest uppercase">Biometric Active</p>
+</div>
+<!-- Bottom Action Sheet (Glass Island) -->
+<div class="w-full max-w-md fade-in" style="animation-delay: 0.8s;">
+<div class="glass-island rounded-[2rem] p-8 flex flex-col items-center gap-6 shadow-2xl border-b-[0.5px] border-primary/5">
+<button class="relative w-full overflow-hidden bg-primary text-on-primary font-utility-mono text-label-caps py-5 rounded-full tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-95 group" onclick="handleAuth()">
+<span class="relative z-10">IDENTIFY TO ENTER</span>
+<div class="absolute inset-0 shimmer opacity-30"></div>
+</button>
+<div class="flex justify-between w-full px-4">
+<button class="font-utility-mono text-label-caps text-on-surface-variant hover:text-primary transition-colors">USE PASSCODE</button>
+<button class="font-utility-mono text-label-caps text-on-surface-variant hover:text-primary transition-colors">HELP</button>
+</div>
+</div>
+<!-- Branding Accent -->
+<div class="mt-10 flex justify-center items-center gap-3 opacity-30">
+<div class="h-[1px] w-8 bg-primary"></div>
+<span class="font-utility-mono text-[10px] tracking-[0.5em] text-primary">OBSIDIAN LUXURY</span>
+<div class="h-[1px] w-8 bg-primary"></div>
+</div>
+</div>
+</main>
+<!-- Micro-interaction Scripts -->
+<script>
+        function handleAuth() {
+            const btn = document.querySelector('button');
+            const icon = document.querySelector('.biometric-scan');
+            
+            // Visual feedback
+            btn.innerHTML = 'VERIFYING...';
+            icon.style.animation = 'none';
+            icon.classList.add('scale-90', 'opacity-50', 'transition-all', 'duration-500');
+            
+            // Simulate haptic & success
+            setTimeout(() => {
+                if (window.navigator.vibrate) window.navigator.vibrate(10);
+                btn.innerHTML = 'ACCESS GRANTED';
+                btn.classList.replace('bg-primary', 'bg-tertiary-container');
+                btn.classList.add('text-tertiary');
+                
+                // Final reveal transition
+                setTimeout(() => {
+                    document.body.style.opacity = '0';
+                    document.body.style.transition = 'opacity 1s ease-out';
+                }, 800);
+            }, 1500);
+        }
+
+        // Atmosphere Effect: Subtle Mouse Parallax
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 20;
+            const y = (e.clientY / window.innerHeight - 0.5) * 20;
+            document.querySelector('[style*="background-image"]').style.transform = `scale(1.1) translate(${x}px, ${y}px)`;
+        });
+    </script>
+</body></html>

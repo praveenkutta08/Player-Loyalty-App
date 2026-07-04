@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>EXECUTIVE COMPANION - Rewards &amp; Progress</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container-lowest": "#0d0e0f",
+                "primary-container": "#050505",
+                "surface-dim": "#121414",
+                "primary-fixed": "#e5e2e1",
+                "background": "#121414",
+                "error-container": "#93000a",
+                "tertiary": "#c2c1ff",
+                "surface-tint": "#c9c6c5",
+                "on-tertiary-fixed-variant": "#332dbc",
+                "surface": "#121414",
+                "surface-container-low": "#1a1c1c",
+                "tertiary-fixed-dim": "#c2c1ff",
+                "on-background": "#e2e2e2",
+                "on-primary-container": "#797777",
+                "error": "#ffb4ab",
+                "on-surface-variant": "#c4c7c7",
+                "on-secondary-fixed-variant": "#474649",
+                "surface-container-highest": "#333535",
+                "outline": "#8e9192",
+                "primary-fixed-dim": "#c9c6c5",
+                "on-secondary": "#303032",
+                "on-secondary-fixed": "#1b1b1d",
+                "secondary-fixed": "#e4e2e4",
+                "on-primary-fixed-variant": "#474646",
+                "surface-container-high": "#282a2b",
+                "inverse-surface": "#e2e2e2",
+                "on-secondary-container": "#b7b4b7",
+                "on-primary-fixed": "#1c1b1b",
+                "surface-variant": "#333535",
+                "on-primary": "#313030",
+                "tertiary-fixed": "#e2dfff",
+                "surface-container": "#1e2020",
+                "tertiary-container": "#020026",
+                "outline-variant": "#444748",
+                "on-tertiary": "#1800a7",
+                "secondary-fixed-dim": "#c8c6c8",
+                "inverse-primary": "#5f5e5e",
+                "on-surface": "#e2e2e2",
+                "on-tertiary-fixed": "#0c006b",
+                "surface-bright": "#38393a",
+                "on-tertiary-container": "#6765ef",
+                "primary": "#c9c6c5",
+                "on-error-container": "#ffdad6",
+                "secondary-container": "#474649",
+                "inverse-on-surface": "#2f3131",
+                "secondary": "#c8c6c8",
+                "on-error": "#690005"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "safe-margin": "24px",
+                "section-gap": "64px",
+                "gutter": "16px",
+                "stack-sm": "8px",
+                "stack-lg": "32px",
+                "stack-md": "16px"
+            },
+            "fontFamily": {
+                "utility-mono": ["Inter", "monospace"],
+                "display-lg": ["Playfair Display"],
+                "display-lg-mobile": ["Playfair Display"],
+                "headline-md": ["Playfair Display"],
+                "body-md": ["Inter"],
+                "label-caps": ["Inter"],
+                "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                "utility-mono": ["13px", {"lineHeight": "18px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "headline-md": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #050505;
+            color: #e2e2e2;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(26, 26, 28, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-top: 0.5px solid rgba(201, 198, 197, 0.15);
+            border-left: 0.5px solid rgba(201, 198, 197, 0.1);
+        }
+
+        .progress-ring-circle {
+            transition: stroke-dashoffset 1s ease-in-out;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .metallic-text {
+            background: linear-gradient(135deg, #c9c6c5 0%, #ffffff 50%, #797777 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .obsidian-gradient {
+            background: radial-gradient(circle at top right, rgba(40, 42, 43, 0.4), transparent);
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-primary-container selection:bg-primary/30">
+<!-- Top App Bar -->
+<header class="backdrop-blur-xl bg-surface-dim/60 border-b-[0.5px] border-primary/15 flex justify-between items-center w-full px-safe-margin py-4 fixed top-0 z-50">
+<div class="flex items-center gap-3">
+<div class="relative">
+<img class="w-10 h-10 rounded-full border border-primary/20 object-cover" data-alt="A macro close-up of a high-end black obsidian luxury membership card with metallic silver accents. The lighting is moody and cinematic, highlighting the fine texture of the stone and the laser-etched onyx tier insignia. Soft indigo rim light catches the polished edges of the card, creating a deep sense of atmospheric depth and exclusivity within a dark, minimalist resort environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxXY7bX_Gs-sDn9bJBI0uIoFILePCP8ll3m0mMMA3z1Q0Ir4eedgUVzCcCDyJm98RhPsb4IdzmP1u6N8sFMDqrYemW7f9YbGC_9kpGK34PC0s72WePOTtm8u74l4RW1SH1XlX_A_HA9kC6hX97OWh6lNUAI3u3zkxf9QJlvympbjryHCZO3OyjniT06Iu-Bt4JKBZ0DPx8JV0GS09djt6muWAso52U5y1Glm0NpxgHIrz6hI9uc1D0fhHdQfUvF7W0wXTrheumYyI"/>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-[10px] text-on-primary font-bold">star</span>
+</div>
+</div>
+<span class="font-utility-mono text-utility-mono tracking-[0.2em] text-primary">EXECUTIVE COMPANION</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+</button>
+</div>
+</header>
+<main class="pt-24 pb-32 px-safe-margin max-w-lg mx-auto">
+<!-- Progress Ring Section -->
+<section class="flex flex-col items-center mt-stack-lg mb-section-gap">
+<div class="relative w-64 h-64 flex items-center justify-center">
+<svg class="w-full h-full">
+<circle cx="128" cy="128" fill="transparent" r="110" stroke="#1e2020" stroke-width="4"></circle>
+<circle class="progress-ring-circle" cx="128" cy="128" fill="transparent" r="110" stroke="url(#onyxGradient)" stroke-dasharray="691" stroke-dashoffset="262.5" stroke-linecap="round" stroke-width="8"></circle>
+<defs>
+<lineargradient id="onyxGradient" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#c9c6c5;stop-opacity:1"></stop>
+<stop offset="50%" style="stop-color:#ffffff;stop-opacity:1"></stop>
+<stop offset="100%" style="stop-color:#474646;stop-opacity:1"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="absolute text-center flex flex-col items-center">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-1">ONYX PROGRESS</span>
+<span class="font-utility-mono text-headline-md metallic-text tabular-nums">1,240,500</span>
+<div class="h-[0.5px] w-12 bg-primary/20 my-2"></div>
+<span class="font-utility-mono text-label-caps text-on-primary-container tracking-wider">2,000,000 PTS</span>
+</div>
+</div>
+<p class="font-body-md text-on-surface-variant mt-6 text-center text-sm opacity-60">
+                759,500 points until Titanium Tier
+            </p>
+</section>
+<!-- Onyx Benefits Section -->
+<section class="mb-section-gap">
+<div class="flex justify-between items-end mb-stack-md">
+<h2 class="font-headline-md text-headline-md text-primary">ONYX BENEFITS</h2>
+<span class="font-utility-mono text-label-caps text-primary/40 pb-1">LEVEL 04</span>
+</div>
+<div class="space-y-4">
+<!-- Benefit Item 1 -->
+<div class="glass-panel p-5 rounded-xl flex items-center gap-4 transition-all hover:bg-surface-container-low">
+<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center border border-primary/10">
+<span class="material-symbols-outlined text-primary">airport_shuttle</span>
+</div>
+<div class="flex-1">
+<h3 class="font-body-lg font-semibold text-primary leading-tight">Limo Service</h3>
+<p class="font-body-md text-on-surface-variant text-sm">Complimentary airport &amp; local transfers</p>
+</div>
+<span class="material-symbols-outlined text-primary/30">chevron_right</span>
+</div>
+<!-- Benefit Item 2 -->
+<div class="glass-panel p-5 rounded-xl flex items-center gap-4 transition-all hover:bg-surface-container-low">
+<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center border border-primary/10">
+<span class="material-symbols-outlined text-primary">hotel_class</span>
+</div>
+<div class="flex-1">
+<h3 class="font-body-lg font-semibold text-primary leading-tight">Suite Upgrades</h3>
+<p class="font-body-md text-on-surface-variant text-sm">Priority access to Panoramic Suites</p>
+</div>
+<span class="material-symbols-outlined text-primary/30">chevron_right</span>
+</div>
+<!-- Benefit Item 3 -->
+<div class="glass-panel p-5 rounded-xl flex items-center gap-4 transition-all hover:bg-surface-container-low">
+<div class="w-10 h-10 rounded-lg bg-primary/5 flex items-center justify-center border border-primary/10">
+<span class="material-symbols-outlined text-primary">concierge</span>
+</div>
+<div class="flex-1">
+<h3 class="font-body-lg font-semibold text-primary leading-tight">24/7 Concierge</h3>
+<p class="font-body-md text-on-surface-variant text-sm">Dedicated agent for all reservations</p>
+</div>
+<span class="material-symbols-outlined text-primary/30">chevron_right</span>
+</div>
+</div>
+</section>
+<!-- Rewards Marketplace Section -->
+<section>
+<div class="flex justify-between items-center mb-stack-md">
+<h2 class="font-headline-md text-headline-md text-primary">MARKETPLACE</h2>
+<button class="font-utility-mono text-label-caps text-primary border-b border-primary/30">VIEW ALL</button>
+</div>
+<div class="flex gap-4 overflow-x-auto no-scrollbar pb-4 -mx-safe-margin px-safe-margin">
+<!-- Market Card 1 -->
+<div class="min-w-[280px] group">
+<div class="relative h-48 rounded-xl overflow-hidden mb-3 border border-primary/10 shadow-2xl">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
+<img class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" data-alt="A luxury Swiss mechanical watch with a brushed titanium finish and an obsidian face, displayed on a minimalist marble pedestal. The lighting is sharp and cold, emphasizing the precision engineering and 'watchmaker' craftsmanship. The background is a blurred, high-contrast dark resort interior with deep slate tones and soft pearl highlights, conveying technical precision and infinite space." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXYSrSr_vKcarnJS1msSlCoE2Zvb9oV1idQWwJa0gJeMPH5iQPIImRee2-wPQAYibJJhXx4o42kYuOzl59NEz1Ax8Cpzy-kNQaCJvZ4nk7mFEEh5EgdXO6mV3ss9_8vuD4VCQ_6WRCqzqt-ImYlojOEnJUFBByCrPi7arA2cl_HT4qEIXoUzyJgnH5hvwvS7RdfPRm4nm0inkGgrnKf70WmdLi9y1WtGVYnRoODP6dNU6C_gvkPhPVtWuNifhQNYkwgYDA5xbWJ1U"/>
+<div class="absolute bottom-4 left-4 z-20">
+<span class="font-utility-mono text-label-caps bg-primary text-on-primary px-2 py-1 rounded">CURATED</span>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-body-lg font-semibold text-primary">Vanguard Timepiece</h4>
+<p class="font-utility-mono text-xs text-on-surface-variant uppercase">Limited Edition</p>
+</div>
+<span class="font-utility-mono text-sm text-primary">850,000 PTS</span>
+</div>
+</div>
+<!-- Market Card 2 -->
+<div class="min-w-[280px] group">
+<div class="relative h-48 rounded-xl overflow-hidden mb-3 border border-primary/10 shadow-2xl">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
+<img class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" data-alt="A wide, sweeping architectural shot of a private luxury jet interior with cream leather seating and dark wood accents. The cabin is bathed in soft, high-altitude golden hour light streaming through the windows. The aesthetic is extremely minimalist and clean, reflecting the brand's authoritative yet invisible personality. The mood is serene, exclusive, and technologically advanced." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDEkFS62AxaOvdBp4UZ4EzlSfce6LylnOqoHfZse09W0ZhmsvLijt2qGepGxBtRwfT5Xy5l_IOK7vraplH3Hw8WCuM7VJVvhjxjuQD8ykc4M-6sw-skaZC_nEm_OOqfntWVO3hm12xB9UQ89PgnkxTdBmaMhsTsI_kd94Cc5oiz33BBwVpSH-R57n3bdPoVijon5mIk7Gt4A4IFGRNGFURF86tfk5JUTWCFcV7P_ZewRrpcVQKNDv3Cf8ZZM9esIj_SSNLEXO3_v4"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-body-lg font-semibold text-primary">Private Jet Credit</h4>
+<p class="font-utility-mono text-xs text-on-surface-variant uppercase">Global Mobility</p>
+</div>
+<span class="font-utility-mono text-sm text-primary">1,200,000 PTS</span>
+</div>
+</div>
+<!-- Market Card 3 -->
+<div class="min-w-[280px] group">
+<div class="relative h-48 rounded-xl overflow-hidden mb-3 border border-primary/10 shadow-2xl">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
+<img class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" data-alt="An abstract, close-up shot of high-stakes gaming chips stacked perfectly on a velvet-textured slate surface. The chips feature intricate metallic foils that shimmer under cool, focused spotlights. The composition is asymmetrical and modern, with a sense of quiet intensity and luxury utility. The color palette consists of deep blacks, greys, and pearl-tinted highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcQgQ61CdEfAEXgfNS0Q9e9D72lryJ0zzfvJlPuQ-N2OUgDwGDT75YLiP_2qY-RNbQMAspWECeKIE5uck7C181i6vx_wH6ccFGsAGNLeWt6w-XnJdwaCaN7yWpsOmTL8JEaU_IkV84O8JBscj1YtYxy66vXjfm3hAurHrSzW1GMAo2adFhShJ66QHYFKEPThLzcrTTpOh4kR5b0OpvMMSByiFCuBzNR2LoVhY6ncZzNoZPDMg3zHKtr9jsLpTOTxvnAYgUIaqvJNA"/>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-body-lg font-semibold text-primary">Play Credit Bundle</h4>
+<p class="font-utility-mono text-xs text-on-surface-variant uppercase">Instant Redemption</p>
+</div>
+<span class="font-utility-mono text-sm text-primary">250,000 PTS</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Navigation Shell (BottomNavBar) -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50 flex justify-around items-center py-2 px-2 bg-surface-container/80 backdrop-blur-3xl border-[0.5px] border-primary/20 shadow-[0_0_40px_rgba(0,0,0,0.5)] rounded-full">
+<!-- HOME -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-utility-mono text-label-caps">HOME</span>
+</a>
+<!-- GAMING -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">casino</span>
+<span class="font-utility-mono text-label-caps">GAMING</span>
+</a>
+<!-- WALLET (ACTIVE) -->
+<a class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-full py-2 px-4 scale-95 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined mb-1">payments</span>
+<span class="font-utility-mono text-label-caps">WALLET</span>
+</a>
+<!-- RESORT -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">apartment</span>
+<span class="font-utility-mono text-label-caps">RESORT</span>
+</a>
+<!-- MESSAGES -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">chat_bubble</span>
+<span class="font-utility-mono text-label-caps">MESSAGES</span>
+</a>
+</nav>
+<!-- Micro-interaction Scripts -->
+<script>
+        // Haptic feel simulation for interactions
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('click', () => {
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(5);
+                }
+            });
+        });
+
+        // Subtle background shimmer effect on scroll
+        window.addEventListener('scroll', () => {
+            const opacity = Math.min(window.scrollY / 500, 0.4);
+            document.body.style.backgroundColor = `rgba(5, 5, 5, ${1 - opacity})`;
+        });
+    </script>
+</body></html>

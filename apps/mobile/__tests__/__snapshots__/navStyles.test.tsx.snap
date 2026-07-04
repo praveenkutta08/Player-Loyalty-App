@@ -11,8 +11,8 @@ exports[`snapshots per style × theme editorial × dark 1`] = `
         "height": 56,
       },
       {
-        "backgroundColor": "#0e0f13",
-        "borderTopColor": "#1b1e24",
+        "backgroundColor": "#050505",
+        "borderTopColor": "#1E2020",
         "paddingBottom": 34,
       },
     ]
@@ -69,15 +69,15 @@ exports[`snapshots per style × theme editorial × dark 1`] = `
       style={
         [
           {
-            "fontFamily": "Manrope",
-            "fontSize": 11,
+            "fontFamily": "Inter",
+            "fontSize": 12,
             "fontWeight": "600",
-            "letterSpacing": 0.55,
-            "lineHeight": 14,
+            "letterSpacing": 1.2000000000000002,
+            "lineHeight": 16,
             "textTransform": "uppercase",
           },
           {
-            "color": "#f2f3f5",
+            "color": "#E2E2E2",
           },
           [
             {
@@ -138,22 +138,22 @@ exports[`snapshots per style × theme editorial × dark 1`] = `
     testID="nav-Offers"
   >
     <View
-      color="#8b929c"
+      color="#8E9192"
       size={22}
     />
     <Text
       style={
         [
           {
-            "fontFamily": "Manrope",
-            "fontSize": 11,
+            "fontFamily": "Inter",
+            "fontSize": 12,
             "fontWeight": "600",
-            "letterSpacing": 0.55,
-            "lineHeight": 14,
+            "letterSpacing": 1.2000000000000002,
+            "lineHeight": 16,
             "textTransform": "uppercase",
           },
           {
-            "color": "#f2f3f5",
+            "color": "#E2E2E2",
           },
           [
             {
@@ -161,7 +161,7 @@ exports[`snapshots per style × theme editorial × dark 1`] = `
               "letterSpacing": 0.4,
             },
             {
-              "color": "#8b929c",
+              "color": "#8E9192",
               "fontWeight": "400",
             },
           ],
@@ -238,15 +238,15 @@ exports[`snapshots per style × theme editorial × dark 1`] = `
       style={
         [
           {
-            "fontFamily": "Manrope",
-            "fontSize": 11,
+            "fontFamily": "Inter",
+            "fontSize": 12,
             "fontWeight": "600",
-            "letterSpacing": 0.55,
-            "lineHeight": 14,
+            "letterSpacing": 1.2000000000000002,
+            "lineHeight": 16,
             "textTransform": "uppercase",
           },
           {
-            "color": "#f2f3f5",
+            "color": "#E2E2E2",
           },
           [
             {
@@ -306,22 +306,22 @@ exports[`snapshots per style × theme editorial × dark 1`] = `
     testID="nav-Account"
   >
     <View
-      color="#8b929c"
+      color="#8E9192"
       size={22}
     />
     <Text
       style={
         [
           {
-            "fontFamily": "Manrope",
-            "fontSize": 11,
+            "fontFamily": "Inter",
+            "fontSize": 12,
             "fontWeight": "600",
-            "letterSpacing": 0.55,
-            "lineHeight": 14,
+            "letterSpacing": 1.2000000000000002,
+            "lineHeight": 16,
             "textTransform": "uppercase",
           },
           {
-            "color": "#f2f3f5",
+            "color": "#E2E2E2",
           },
           [
             {
@@ -329,7 +329,7 @@ exports[`snapshots per style × theme editorial × dark 1`] = `
               "letterSpacing": 0.4,
             },
             {
-              "color": "#8b929c",
+              "color": "#8E9192",
               "fontWeight": "400",
             },
           ],
@@ -382,22 +382,22 @@ exports[`snapshots per style × theme editorial × dark 1`] = `
     testID="nav-More"
   >
     <View
-      color="#8b929c"
+      color="#8E9192"
       size={22}
     />
     <Text
       style={
         [
           {
-            "fontFamily": "Manrope",
-            "fontSize": 11,
+            "fontFamily": "Inter",
+            "fontSize": 12,
             "fontWeight": "600",
-            "letterSpacing": 0.55,
-            "lineHeight": 14,
+            "letterSpacing": 1.2000000000000002,
+            "lineHeight": 16,
             "textTransform": "uppercase",
           },
           {
-            "color": "#f2f3f5",
+            "color": "#E2E2E2",
           },
           [
             {
@@ -405,7 +405,7 @@ exports[`snapshots per style × theme editorial × dark 1`] = `
               "letterSpacing": 0.4,
             },
             {
-              "color": "#8b929c",
+              "color": "#8E9192",
               "fontWeight": "400",
             },
           ],
@@ -429,8 +429,8 @@ exports[`snapshots per style × theme editorial × light 1`] = `
         "height": 56,
       },
       {
-        "backgroundColor": "#f5f4f0",
-        "borderTopColor": "#edeae2",
+        "backgroundColor": "#F5F4F0",
+        "borderTopColor": "#EDEAE2",
         "paddingBottom": 34,
       },
     ]
@@ -487,15 +487,15 @@ exports[`snapshots per style × theme editorial × light 1`] = `
       style={
         [
           {
-            "fontFamily": "Manrope",
-            "fontSize": 11,
+            "fontFamily": "Inter",
+            "fontSize": 12,
             "fontWeight": "600",
-            "letterSpacing": 0.55,
-            "lineHeight": 14,
+            "letterSpacing": 1.2000000000000002,
+            "lineHeight": 16,
             "textTransform": "uppercase",
           },
           {
-            "color": "#1a1c20",
+            "color": "#1A1C20",
           },
           [
             {
@@ -556,22 +556,22 @@ exports[`snapshots per style × theme editorial × light 1`] = `
     testID="nav-Offers"
   >
     <View
-      color="#767c85"
+      color="#767C85"
       size={22}
     />
     <Text
       style={
         [
           {
-            "fontFamily": "Manrope",
-            "fontSize": 11,
+            "fontFamily": "Inter",
+            "fontSize": 12,
             "fontWeight": "600",
-            "letterSpacing": 0.55,
-            "lineHeight": 14,
+            "letterSpacing": 1.2000000000000002,
+            "lineHeight": 16,
             "textTransform": "uppercase",
           },
           {
-            "color": "#1a1c20",
+            "color": "#1A1C20",
           },
           [
             {
@@ -579,7 +579,7 @@ exports[`snapshots per style × theme editorial × light 1`] = `
               "letterSpacing": 0.4,
             },
             {
-              "color": "#767c85",
+              "color": "#767C85",
               "fontWeight": "400",
             },
           ],
@@ -656,15 +656,15 @@ exports[`snapshots per style × theme editorial × light 1`] = `
       style={
         [
           {
-            "fontFamily": "Manrope",
-            "fontSize": 11,
+            "fontFamily": "Inter",
+            "fontSize": 12,
             "fontWeight": "600",
-            "letterSpacing": 0.55,
-            "lineHeight": 14,
+            "letterSpacing": 1.2000000000000002,
+            "lineHeight": 16,
             "textTransform": "uppercase",
           },
           {
-            "color": "#1a1c20",
+            "color": "#1A1C20",
           },
           [
             {
@@ -724,22 +724,22 @@ exports[`snapshots per style × theme editorial × light 1`] = `
     testID="nav-Account"
   >
     <View
-      color="#767c85"
+      color="#767C85"
       size={22}
     />
     <Text
       style={
         [
           {
-            "fontFamily": "Manrope",
-            "fontSize": 11,
+            "fontFamily": "Inter",
+            "fontSize": 12,
             "fontWeight": "600",
-            "letterSpacing": 0.55,
-            "lineHeight": 14,
+            "letterSpacing": 1.2000000000000002,
+            "lineHeight": 16,
             "textTransform": "uppercase",
           },
           {
-            "color": "#1a1c20",
+            "color": "#1A1C20",
           },
           [
             {
@@ -747,7 +747,7 @@ exports[`snapshots per style × theme editorial × light 1`] = `
               "letterSpacing": 0.4,
             },
             {
-              "color": "#767c85",
+              "color": "#767C85",
               "fontWeight": "400",
             },
           ],
@@ -800,22 +800,22 @@ exports[`snapshots per style × theme editorial × light 1`] = `
     testID="nav-More"
   >
     <View
-      color="#767c85"
+      color="#767C85"
       size={22}
     />
     <Text
       style={
         [
           {
-            "fontFamily": "Manrope",
-            "fontSize": 11,
+            "fontFamily": "Inter",
+            "fontSize": 12,
             "fontWeight": "600",
-            "letterSpacing": 0.55,
-            "lineHeight": 14,
+            "letterSpacing": 1.2000000000000002,
+            "lineHeight": 16,
             "textTransform": "uppercase",
           },
           {
-            "color": "#1a1c20",
+            "color": "#1A1C20",
           },
           [
             {
@@ -823,7 +823,7 @@ exports[`snapshots per style × theme editorial × light 1`] = `
               "letterSpacing": 0.4,
             },
             {
-              "color": "#767c85",
+              "color": "#767C85",
               "fontWeight": "400",
             },
           ],
@@ -872,8 +872,8 @@ exports[`snapshots per style × theme floatingPill × dark 1`] = `
           "shadowRadius": 16,
         },
         {
-          "backgroundColor": "#1b1e23EB",
-          "borderColor": "#1b1e24",
+          "backgroundColor": "#1A1A1CEB",
+          "borderColor": "#1E2020",
         },
       ]
     }
@@ -983,7 +983,7 @@ exports[`snapshots per style × theme floatingPill × dark 1`] = `
       testID="nav-Offers"
     >
       <View
-        color="#8b929c"
+        color="#8E9192"
         size={22}
       />
       <View
@@ -1119,7 +1119,7 @@ exports[`snapshots per style × theme floatingPill × dark 1`] = `
       testID="nav-Account"
     >
       <View
-        color="#8b929c"
+        color="#8E9192"
         size={22}
       />
       <View
@@ -1181,7 +1181,7 @@ exports[`snapshots per style × theme floatingPill × dark 1`] = `
       testID="nav-More"
     >
       <View
-        color="#8b929c"
+        color="#8E9192"
         size={22}
       />
       <View
@@ -1240,8 +1240,8 @@ exports[`snapshots per style × theme floatingPill × light 1`] = `
           "shadowRadius": 16,
         },
         {
-          "backgroundColor": "#faf9f5EB",
-          "borderColor": "#edeae2",
+          "backgroundColor": "#FAF9F5EB",
+          "borderColor": "#EDEAE2",
         },
       ]
     }
@@ -1351,7 +1351,7 @@ exports[`snapshots per style × theme floatingPill × light 1`] = `
       testID="nav-Offers"
     >
       <View
-        color="#767c85"
+        color="#767C85"
         size={22}
       />
       <View
@@ -1487,7 +1487,7 @@ exports[`snapshots per style × theme floatingPill × light 1`] = `
       testID="nav-Account"
     >
       <View
-        color="#767c85"
+        color="#767C85"
         size={22}
       />
       <View
@@ -1549,7 +1549,7 @@ exports[`snapshots per style × theme floatingPill × light 1`] = `
       testID="nav-More"
     >
       <View
-        color="#767c85"
+        color="#767C85"
         size={22}
       />
       <View

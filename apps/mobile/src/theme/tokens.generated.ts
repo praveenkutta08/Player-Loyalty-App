@@ -4,101 +4,117 @@ import type { ThemeTokens } from '@repo/shared-types';
 export const GENERATED_DEFAULT_THEME: ThemeTokens = {
   "color": {
     "brand": {
-      "primary": "#E7DFCD",
-      "onPrimary": "#0C0C0E",
+      "primary": "#E5E2E1",
+      "onPrimary": "#1C1B1B",
       "secondary": "#E6B450",
-      "accent": "#E6B450",
+      "accent": "#5E5CE6",
+      "onAccent": "#FFFFFF",
+      "indigo": "#5E5CE6",
+      "onIndigo": "#FFFFFF",
       "gold": "#E6B450",
       "onGold": "#1A1408"
     },
     "bg": {
-      "base": "#0e0f13",
-      "surface": "#16181d",
-      "elevated": "#1b1e23",
-      "sidebar": "#0a0b0e",
+      "base": "#050505",
+      "surface": "#121414",
+      "elevated": "#1A1A1C",
+      "container": "#1E2020",
+      "sidebar": "#0D0E0F",
       "scrim": "rgba(0,0,0,0.60)"
     },
     "text": {
-      "primary": "#f2f3f5",
-      "secondary": "#c7ccd3",
-      "muted": "#8b929c",
-      "faint": "#5c636e",
-      "inverse": "#1A1408"
+      "primary": "#E2E2E2",
+      "secondary": "#A1A1A6",
+      "muted": "#8E9192",
+      "faint": "#5F5E5E",
+      "inverse": "#1C1B1B"
     },
     "state": {
-      "success": "#5cc48f",
+      "success": "#5CC48F",
       "warning": "#E6B450",
-      "error": "#e5736b",
-      "info": "#6aa6e8",
-      "purple": "#b08ae0"
+      "error": "#FFB4AB",
+      "info": "#5E5CE6",
+      "purple": "#C2C1FF",
+      "credit": "#5E5CE6",
+      "debit": "#FFB4AB"
     },
     "border": {
-      "default": "#23262d",
-      "soft": "#1b1e24",
-      "strong": "#2c3039",
-      "focus": "#E6B450"
+      "default": "#282A2B",
+      "soft": "#1E2020",
+      "strong": "#333535",
+      "ghost": "rgba(226,226,226,0.15)",
+      "focus": "#5E5CE6"
     }
   },
   "colorLight": {
     "brand": {
-      "primary": "#E6B450",
-      "onPrimary": "#1A1408",
-      "secondary": "#9a6c15",
-      "accent": "#9a6c15",
+      "primary": "#5E5CE6",
+      "onPrimary": "#FFFFFF",
+      "secondary": "#9A6C15",
+      "accent": "#4B49C4",
+      "onAccent": "#FFFFFF",
+      "indigo": "#5E5CE6",
+      "onIndigo": "#FFFFFF",
       "gold": "#E6B450",
       "onGold": "#1A1408"
     },
     "bg": {
-      "base": "#f5f4f0",
-      "surface": "#ffffff",
-      "elevated": "#faf9f5",
-      "sidebar": "#fbfaf7",
+      "base": "#F5F4F0",
+      "surface": "#FFFFFF",
+      "elevated": "#FAF9F5",
+      "container": "#F1EFE9",
+      "sidebar": "#FBFAF7",
       "scrim": "rgba(20,22,28,0.40)"
     },
     "text": {
-      "primary": "#1a1c20",
-      "secondary": "#454a52",
-      "muted": "#767c85",
-      "faint": "#a3a8b0",
-      "inverse": "#ffffff"
+      "primary": "#1A1C20",
+      "secondary": "#454A52",
+      "muted": "#767C85",
+      "faint": "#A3A8B0",
+      "inverse": "#FFFFFF"
     },
     "state": {
-      "success": "#1f9d5f",
-      "warning": "#9a6c15",
-      "error": "#d64d43",
-      "info": "#2f74c8",
-      "purple": "#7c4fd0"
+      "success": "#1F9D5F",
+      "warning": "#9A6C15",
+      "error": "#D64D43",
+      "info": "#4B49C4",
+      "purple": "#7C4FD0",
+      "credit": "#4B49C4",
+      "debit": "#D64D43"
     },
     "border": {
-      "default": "#e5e2da",
-      "soft": "#edeae2",
-      "strong": "#d9d5cb",
-      "focus": "#9a6c15"
+      "default": "#E5E2DA",
+      "soft": "#EDEAE2",
+      "strong": "#D9D5CB",
+      "ghost": "rgba(20,22,28,0.10)",
+      "focus": "#4B49C4"
     }
   },
   "typography": {
     "fontFamily": {
-      "display": "Bodoni Moda",
-      "sans": "Manrope",
+      "display": "Playfair Display",
+      "sans": "Inter",
       "mono": "JetBrains Mono"
     },
     "scale": {
       "display": {
         "font": "display",
-        "size": 32,
+        "size": 34,
         "lineHeight": 40,
-        "weight": 500
+        "weight": 700,
+        "letterSpacing": "-0.01em"
       },
       "h1": {
         "font": "display",
-        "size": 26,
-        "lineHeight": 32,
-        "weight": 600
+        "size": 28,
+        "lineHeight": 34,
+        "weight": 600,
+        "letterSpacing": "-0.01em"
       },
       "h2": {
         "font": "display",
-        "size": 20,
-        "lineHeight": 26,
+        "size": 22,
+        "lineHeight": 28,
         "weight": 600
       },
       "title": {
@@ -109,17 +125,23 @@ export const GENERATED_DEFAULT_THEME: ThemeTokens = {
       },
       "body": {
         "font": "sans",
+        "size": 15,
+        "lineHeight": 24,
+        "weight": 400
+      },
+      "bodySm": {
+        "font": "sans",
         "size": 13,
         "lineHeight": 20,
         "weight": 400
       },
       "label": {
         "font": "sans",
-        "size": 11,
-        "lineHeight": 14,
+        "size": 12,
+        "lineHeight": 16,
         "weight": 600,
         "uppercase": true,
-        "letterSpacing": "0.05em"
+        "letterSpacing": "0.1em"
       },
       "kicker": {
         "font": "sans",
@@ -131,20 +153,23 @@ export const GENERATED_DEFAULT_THEME: ThemeTokens = {
       },
       "mono": {
         "font": "mono",
-        "size": 12.5,
+        "size": 13,
         "lineHeight": 18,
-        "weight": 500
+        "weight": 500,
+        "letterSpacing": "-0.01em"
       }
     }
   },
   "radius": {
-    "control": 9,
-    "card": 15,
-    "pill": 20,
+    "control": 16,
+    "card": 16,
+    "wallet": 12,
+    "image": 24,
+    "pill": 999,
     "sm": 8,
-    "md": 14,
-    "lg": 20,
-    "xl": 28
+    "md": 12,
+    "lg": 16,
+    "xl": 24
   },
   "spacing": {
     "xs": 4,
@@ -152,37 +177,65 @@ export const GENERATED_DEFAULT_THEME: ThemeTokens = {
     "md": 16,
     "lg": 24,
     "xl": 32,
-    "2xl": 48
+    "2xl": 48,
+    "safe": 24,
+    "section": 64
   },
   "shadow": {
     "sm": "0 1px 2px rgba(0,0,0,0.50)",
     "md": "0 8px 24px rgba(0,0,0,0.45)",
+    "glass": "0 8px 40px rgba(0,0,0,0.55)",
     "cardLight": "0 1px 2px rgba(20,22,28,.05), 0 1px 3px rgba(20,22,28,.05)",
+    "ghost": "inset 0.5px 0.5px 0 rgba(226,226,226,0.15)",
+    "indigoGlow": "0 0 0 1px rgba(94,92,230,0.35)",
     "goldGlow": "0 0 0 1px rgba(230,180,80,0.35)"
   },
   "components": {
     "buttonPrimary": {
-      "bg": "brand.gold",
-      "fg": "brand.onGold",
+      "bg": "brand.primary",
+      "fg": "brand.onPrimary",
       "radius": "pill",
-      "height": 40
+      "height": 48
+    },
+    "buttonAccent": {
+      "bg": "brand.accent",
+      "fg": "brand.onAccent",
+      "radius": "pill",
+      "height": 48
     },
     "buttonSecondary": {
       "bg": "transparent",
       "fg": "text.primary",
-      "border": "border.strong",
-      "radius": "control",
-      "height": 36
+      "border": "border.ghost",
+      "radius": "pill",
+      "height": 44
     },
     "card": {
-      "bg": "bg.surface",
-      "border": "border.default",
+      "bg": "bg.elevated",
+      "border": "border.ghost",
       "radius": "card",
-      "shadow": "sm"
+      "shadow": "glass"
+    },
+    "glassCard": {
+      "bg": "bg.elevated",
+      "border": "border.ghost",
+      "radius": "card",
+      "blur": 28,
+      "opacity": 0.7
+    },
+    "immersiveCard": {
+      "radius": "image",
+      "scrim": "linear-gradient(180deg, rgba(5,5,5,0) 30%, rgba(5,5,5,0.85) 100%)"
+    },
+    "walletCard": {
+      "bg": "bg.container",
+      "border": "border.ghost",
+      "radius": "wallet",
+      "chip": "brand.accent"
     },
     "input": {
-      "bg": "bg.surface",
-      "border": "border.default",
+      "bg": "transparent",
+      "border": "border.ghost",
       "radius": "control",
       "placeholder": "text.muted"
     },
@@ -194,13 +247,26 @@ export const GENERATED_DEFAULT_THEME: ThemeTokens = {
       "bg": "bg.base",
       "height": 64
     },
+    "tabbar": {
+      "bg": "bg.elevated",
+      "border": "border.ghost",
+      "radius": "pill",
+      "blur": 32,
+      "active": "brand.accent",
+      "floatOffset": 16
+    },
     "statusPill": {
       "radius": "pill",
       "dot": true
     },
+    "hairline": {
+      "color": "border.ghost",
+      "thickness": 0.5,
+      "inset": 24
+    },
     "toggle": {
-      "onTrack": "brand.gold",
-      "onKnob": "brand.onGold",
+      "onTrack": "brand.accent",
+      "onKnob": "brand.onAccent",
       "offTrack": "border.soft",
       "offKnob": "text.faint"
     }

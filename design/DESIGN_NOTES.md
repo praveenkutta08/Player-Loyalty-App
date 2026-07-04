@@ -1,3 +1,10 @@
+> **CURRENT DEFAULT (2026-07-04): "Obsidian Luxury Companion."** `tokens.json` has been updated to the
+> obsidian system in `design/screens/stitch_luxe_casino_resort_mobile_companion/obsidian_luxury_companion/DESIGN.md`
+> — obsidian base `#050505`, pearl text, **indigo `#5E5CE6` primary accent with champagne gold `#E6B450`
+> retained as the tier accent**, Playfair Display + Inter. See `docs/MOBILE_RESKIN_PLAYBOOK.md` for the
+> screen re-skin prompts. The notes below describe the earlier "Executive Companion" sample and are kept
+> for history.
+
 # Design notes — Executive Companion (sample)
 
 Derived from the sample screens. Aesthetic: **dark "obsidian" luxury** — near-black canvas,

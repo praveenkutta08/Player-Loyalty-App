@@ -16,3 +16,14 @@ export { SegmentedControl } from './SegmentedControl';
 export type { Segment } from './SegmentedControl';
 export { ProgressBar } from './ProgressBar';
 export { ListRow } from './ListRow';
+
+// Obsidian glass UI kit (RS0)
+export { GlassCard } from './GlassCard';
+export type { GlassCardProps } from './GlassCard';
+export { ImmersiveCard } from './ImmersiveCard';
+export type { ImmersiveCardProps } from './ImmersiveCard';
+export { PillButton, PillButtonRow } from './PillButton';
+export type { PillButtonProps, PillVariant } from './PillButton';
+export { Kicker, CapsLabel } from './Kicker';
+export { HairlineRow } from './HairlineRow';
+export type { HairlineRowProps } from './HairlineRow';

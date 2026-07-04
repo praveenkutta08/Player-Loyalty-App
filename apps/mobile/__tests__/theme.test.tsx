@@ -28,7 +28,8 @@ describe('theme resolution', () => {
     expect(screen.getByTestId('scheme')).toHaveTextContent('dark');
     expect(screen.getByTestId('gold')).toHaveTextContent(DEFAULT_THEME.color.brand.gold);
     expect(screen.getByTestId('bg')).toHaveTextContent(DEFAULT_THEME.color.bg.base);
-    expect(screen.getByTestId('bodySize')).toHaveTextContent('13');
+    // Obsidian system (RS0): body is 15px (was 13).
+    expect(screen.getByTestId('bodySize')).toHaveTextContent('15');
   });
 
   it('switches to light-scheme palette', () => {

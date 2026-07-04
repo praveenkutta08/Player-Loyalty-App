@@ -38,7 +38,7 @@ describe('normalizeManifest', () => {
   it('merges the partial theme over the defaults', () => {
     expect(m.theme.color.brand.gold).toBe('#123456'); // overridden
     expect(m.theme.color.bg.base).toBe(DEFAULT_THEME.color.bg.base); // preserved default
-    expect(m.theme.typography.scale.body.size).toBe(13); // untouched default subtree
+    expect(m.theme.typography.scale.body.size).toBe(15); // untouched default subtree (obsidian body = 15)
   });
 
   it('camelCases fields and coerces flags to booleans', () => {

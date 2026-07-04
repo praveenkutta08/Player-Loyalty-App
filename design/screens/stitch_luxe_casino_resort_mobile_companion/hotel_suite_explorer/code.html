@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>EXECUTIVE COMPANION | LUXURY BOOKING</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#0d0e0f",
+                    "primary-container": "#050505",
+                    "surface-dim": "#121414",
+                    "primary-fixed": "#e5e2e1",
+                    "background": "#121414",
+                    "error-container": "#93000a",
+                    "tertiary": "#c2c1ff",
+                    "surface-tint": "#c9c6c5",
+                    "on-tertiary-fixed-variant": "#332dbc",
+                    "surface": "#121414",
+                    "surface-container-low": "#1a1c1c",
+                    "tertiary-fixed-dim": "#c2c1ff",
+                    "on-background": "#e2e2e2",
+                    "on-primary-container": "#797777",
+                    "error": "#ffb4ab",
+                    "on-surface-variant": "#c4c7c7",
+                    "on-secondary-fixed-variant": "#474649",
+                    "surface-container-highest": "#333535",
+                    "outline": "#8e9192",
+                    "primary-fixed-dim": "#c9c6c5",
+                    "on-secondary": "#303032",
+                    "on-secondary-fixed": "#1b1b1d",
+                    "secondary-fixed": "#e4e2e4",
+                    "on-primary-fixed-variant": "#474646",
+                    "surface-container-high": "#282a2b",
+                    "inverse-surface": "#e2e2e2",
+                    "on-secondary-container": "#b7b4b7",
+                    "on-primary-fixed": "#1c1b1b",
+                    "surface-variant": "#333535",
+                    "on-primary": "#313030",
+                    "tertiary-fixed": "#e2dfff",
+                    "surface-container": "#1e2020",
+                    "tertiary-container": "#020026",
+                    "outline-variant": "#444748",
+                    "on-tertiary": "#1800a7",
+                    "secondary-fixed-dim": "#c8c6c8",
+                    "inverse-primary": "#5f5e5e",
+                    "on-surface": "#e2e2e2",
+                    "on-tertiary-fixed": "#0c006b",
+                    "surface-bright": "#38393a",
+                    "on-tertiary-container": "#6765ef",
+                    "primary": "#c9c6c5",
+                    "on-error-container": "#ffdad6",
+                    "secondary-container": "#474649",
+                    "inverse-on-surface": "#2f3131",
+                    "secondary": "#c8c6c8",
+                    "on-error": "#690005"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "safe-margin": "24px",
+                    "section-gap": "64px",
+                    "gutter": "16px",
+                    "stack-sm": "8px",
+                    "stack-lg": "32px",
+                    "stack-md": "16px"
+            },
+            "fontFamily": {
+                    "utility-mono": ["Inter", "monospace"],
+                    "display-lg": ["Playfair Display", "serif"],
+                    "display-lg-mobile": ["Playfair Display", "serif"],
+                    "headline-md": ["Playfair Display", "serif"],
+                    "body-md": ["Inter", "sans-serif"],
+                    "label-caps": ["Inter", "sans-serif"],
+                    "body-lg": ["Inter", "sans-serif"]
+            },
+            "fontSize": {
+                    "utility-mono": ["13px", {"lineHeight": "18px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-md": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #050505;
+            color: #e2e2e2;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+        .glass-panel {
+            backdrop-filter: blur(20px);
+            background: rgba(26, 26, 28, 0.7);
+            border: 0.5px solid rgba(201, 198, 197, 0.15);
+        }
+        .scrim-bottom {
+            background: linear-gradient(to top, rgba(5, 5, 5, 1) 0%, rgba(5, 5, 5, 0) 100%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .haptic-light:active {
+            transform: scale(0.98);
+            transition: transform 0.1s ease;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-on-background">
+<!-- Top Navigation -->
+<nav class="flex justify-between items-center w-full px-safe-margin py-4 fixed top-0 z-50 backdrop-blur-xl bg-surface-dim/60 border-b-[0.5px] border-primary/15">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full border border-primary/30 p-0.5 overflow-hidden">
+<img class="w-full h-full object-cover rounded-full" data-alt="A professional headshot of a high-net-worth individual, Marcus Vane, with sharp features and a sophisticated gaze. The lighting is dramatic and moody, utilizing high-contrast shadows against a dark, minimalist obsidian background. The overall aesthetic is ultra-luxurious, conveying an aura of quiet power and technical precision in a modern digital concierge context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDm4Ny0iPVZY1ZUq04BOpBVjri5XeO3amYDx-6IOQUmyvNXyYykNQO3wRGG90ghHYggH-muzKSSdPTzfPRfBNDBmaRDfZA5-Etj9PH34KZKNnCNHFf9IaMQNzKKhPULoeijzY3aX1sWhhrxUWS61anr7F9yVgiQ7GycaA60VfHBzWOVhn_dc75kPSt8Ch1wSTJC7p9v0O78OY0kkc2UeJiPPPqz2jJZupPwM6cn6dQ69i4YrZ3z2sAHrCuWFnC3z_1VEtl1XnIuW8o"/>
+</div>
+<span class="font-utility-mono text-utility-mono tracking-[0.2em] text-primary">EXECUTIVE COMPANION</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity">account_balance_wallet</button>
+</div>
+</nav>
+<main class="pb-32">
+<!-- Hero Section -->
+<section class="relative h-[751px] w-full overflow-hidden">
+<div class="absolute inset-0">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-[10s] scale-105 hover:scale-100" data-alt="A wide architectural photograph of a luxury Skyline Penthouse at night. Massive floor-to-ceiling windows reveal a shimmering, sprawling metropolitan city grid beneath a deep indigo sky. The interior features minimalist furniture with charcoal textures, a soft glowing ambient light strip along the floor, and a sense of immense height and quiet solitude. High-end architectural photography style with cool, obsidian tones." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuACI05aSUEHRSMBP5eqbAuG4n6dPRA0U8D-FNVQjzunAgfkzRiKSTjArJYiHGVwXGslO6kkEUwU0-_NUOB3664Oy_HJc13A_DZak-zC4txEf6jf7NheIiez-0FPHIlN16gIk5OfdH_-RBFbNaKI9u2eS7SUQPvzZ1WrH70FCSv9mwVYfExa6O0GZ-ZHJO5oYrYxoXXcWMs-82KsiY9XSr__5tGbyuRzqW1GCIMaqIEMJkXXq0pZYtAqcZyBpF9BDbwXMb1UrmVMJ1o')">
+</div>
+<div class="absolute inset-0 scrim-bottom"></div>
+</div>
+<div class="absolute bottom-0 left-0 w-full px-safe-margin pb-32">
+<p class="font-utility-mono text-label-caps text-primary mb-2">FEATURED DESTINATION</p>
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-6 max-w-xl">
+                    Skyline Penthouse
+                </h1>
+<!-- Booking Bar (Integrated Glass) -->
+<div class="glass-panel rounded-full p-2 flex items-center justify-between max-w-2xl">
+<div class="flex flex-1 divide-x divide-primary/10">
+<button class="flex-1 px-6 py-2 text-left group">
+<p class="font-utility-mono text-[10px] text-on-primary-container group-hover:text-primary transition-colors">DATES</p>
+<p class="font-body-md text-sm text-on-surface">Oct 12 — Oct 18</p>
+</button>
+<button class="flex-1 px-6 py-2 text-left group">
+<p class="font-utility-mono text-[10px] text-on-primary-container group-hover:text-primary transition-colors">GUESTS</p>
+<p class="font-body-md text-sm text-on-surface">2 Adults</p>
+</button>
+</div>
+<button class="bg-primary text-on-primary h-12 px-8 rounded-full font-utility-mono text-label-caps hover:opacity-90 active:scale-95 transition-all">
+                        CHECK AVAILABILITY
+                    </button>
+</div>
+</div>
+</section>
+<!-- Recommended Section -->
+<section class="px-safe-margin mt-stack-lg">
+<div class="flex justify-between items-end mb-stack-md">
+<h2 class="font-headline-md text-headline-md text-on-surface">RECOMENDED FOR YOU</h2>
+<a class="font-utility-mono text-label-caps text-primary hover:underline" href="#">VIEW ALL SUITES</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Onyx Suite -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-xl overflow-hidden mb-4">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Interior view of the Onyx Suite, featuring dark marble textures, an integrated minimalist fireplace, and a plush king-sized bed with slate-gray silk linens. The room is illuminated by soft, recessed architectural lighting that highlights the ultra-fine craftsmanship of the wood paneling. The aesthetic is monochromatic and moody, embodying high-end hospitality and elite comfort." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBljltejw34AIPaBUGOc7WYtqs-BGATUys38k9qo094c15WkaDbedJK2LR1PFPHK8bHlWIsArFV8VLXbCZqXE3pHj9fTeAOBnBgOBhp2Y4QshWl3nGsAS68K7EWYrf6aQStJeivEUUDAcC2yFUgJNdQLjqZ9JDlOCECsG1eZXvqZXPfCUWfTwxGSreH-OiHbjFe0Cxz1BEdse4VMymbLnmb3hOI3gx3fY9kI6hcjgKfQ5b7YsS7ZFtZGtR1AVy0xx50eyNN_kDYy08"/>
+<div class="absolute top-4 right-4 glass-panel px-3 py-1 rounded-full">
+<span class="font-utility-mono text-xs text-primary">ONYX</span>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-xl text-on-surface mb-2">Onyx Grand Suite</h3>
+<div class="flex gap-4 opacity-60">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">fitness_center</span>
+<span class="font-utility-mono text-[10px]">GYM</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">pool</span>
+<span class="font-utility-mono text-[10px]">PRIVATE POOL</span>
+</div>
+</div>
+</div>
+<p class="font-utility-mono text-sm text-primary">$2,450 / NT</p>
+</div>
+</div>
+<!-- Pearl Suite -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-xl overflow-hidden mb-4">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A brightly lit Pearl Suite with iridescent white surfaces, polished pearl-tinted glass partitions, and panoramic views of a tranquil turquoise ocean. The design is airy and minimalist, featuring soft-touch fabrics and brushed silver accents. The lighting is natural and high-key, creating a serene, ethereal atmosphere for a premium resort experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB1f44LD-qppvfJPqCzPfwsS4wYsR4IzE2wV36Imh3i1J_0DCaLgH4Ljxsq0y213wB685goT-GgnBD2gXawx2xIyDlFaXQeYKRg37j-Iagk_MY5aQ31snoFL3GNwcueXwezGsQefX2OhMwRBETWEf2HHcIwCwb38uA2GKQUVZO5SJ_S-sBoFSpsrhBmSN-DPIdqaCyvltEVA19tw5gGXrIYfV2YJwYlmxCGxCzzPITL-d97sTKrv2q-t3xCq1CvFRcH8SALb-MVrw"/>
+<div class="absolute top-4 right-4 glass-panel px-3 py-1 rounded-full">
+<span class="font-utility-mono text-xs text-primary">PEARL</span>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-xl text-on-surface mb-2">Pearl Terrace Room</h3>
+<div class="flex gap-4 opacity-60">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">spa</span>
+<span class="font-utility-mono text-[10px]">SPA</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">restaurant</span>
+<span class="font-utility-mono text-[10px]">DINING</span>
+</div>
+</div>
+</div>
+<p class="font-utility-mono text-sm text-primary">$1,800 / NT</p>
+</div>
+</div>
+<!-- Sapphire Suite -->
+<div class="group cursor-pointer">
+<div class="relative aspect-[4/5] rounded-xl overflow-hidden mb-4">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="The Sapphire Suite interior at twilight, featuring deep navy velvet accents and rich mahogany furniture. The lighting is warm and amber, contrasting with the cool blue hour light entering through large windows. A private library corner and a marble-clad bathroom are visible. The mood is sophisticated, classic, and intellectually refined, part of a luxury resort's executive wing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA06BqBvsyIYs5D5a5NLxzBwkaHteP63uxQbFPGXJTOYGjiW8T1n1PAM7EB73KDOhx2A3h8Aw2tdfAoePZILNcBu_2cXyshbeQj46dLByUq6z13vf9kO8txIUg7Bp-59Ziop0281gxcWsgbIWAepxUVruVyYuIylMo9nUxPVNOTt3rYxIhasbXavI4AGjcU1tNtzKxUZHVmH19s8ReiqsEtlLGWAwGXwaObJnBMBRWFzq0AAK8g53fOcnlcGn4wtlCvu5E9X6Gvbb8"/>
+<div class="absolute top-4 right-4 glass-panel px-3 py-1 rounded-full">
+<span class="font-utility-mono text-xs text-primary">SAPPHIRE</span>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-xl text-on-surface mb-2">Sapphire Library Wing</h3>
+<div class="flex gap-4 opacity-60">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+<span class="font-utility-mono text-[10px]">LIBRARY</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">wine_bar</span>
+<span class="font-utility-mono text-[10px]">LOUNGE</span>
+</div>
+</div>
+</div>
+<p class="font-utility-mono text-sm text-primary">$3,100 / NT</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Amenity Spotlight (Asymmetric Layout) -->
+<section class="mt-section-gap grid grid-cols-1 md:grid-cols-2 gap-0 overflow-hidden">
+<div class="px-safe-margin flex flex-col justify-center py-16 order-2 md:order-1">
+<span class="font-utility-mono text-label-caps text-primary-fixed mb-4">UNPARALLELED ACCESS</span>
+<h2 class="font-display-lg-mobile text-display-lg-mobile text-on-surface mb-6">World-Class Wellness &amp; Gaming</h2>
+<p class="font-body-lg text-on-surface-variant max-w-md mb-8">
+                    Your residency includes private access to the Obsidian Spa and our high-limit gaming salon. Every detail is calibrated for the discerning executive.
+                </p>
+<div class="space-y-4">
+<div class="flex items-center gap-4 py-4 border-b border-primary/10">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+<span class="font-utility-mono text-sm">24/7 PERSONAL CONCIERGE</span>
+</div>
+<div class="flex items-center gap-4 py-4 border-b border-primary/10">
+<span class="material-symbols-outlined text-primary">directions_car</span>
+<span class="font-utility-mono text-sm">CHAUFFEUR SERVICE</span>
+</div>
+</div>
+</div>
+<div class="h-[600px] bg-cover bg-center order-1 md:order-2" data-alt="An ultra-modern, dimly lit luxury spa area with a long infinity pool that reflects the obsidian-tiled walls. Subtle steam rises from the water, caught in thin beams of overhead focus lighting. The architecture is sharp and brutalist but softened by the water's surface. The aesthetic is pure tranquility and high-end technical precision, with no people present, emphasizing a private, exclusive atmosphere." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCFPG1VudOVC0RUNKWxbvUzxcsQIH4h3p2mhI0GrXjPsQg9U2qr8fXHOs46OYCCUbb2tCKzDQ2nfRObjm90VNNIh1RkDlLim3ZOZyFIY3tkyUd9YljlePLiw1rCmV6pZv7eAbUeoxuxJI0_oH_jEliWB1bBBpHgUPiqnUiBazcjUH5Gy16UorPZTEhZPm0Mf_WJiY0jvpBGgSmRi3QxTUxLl2Fti5bqgVhFakEw5pzv05cp_YcuKejPhYXHc-5-I3zp6aeHl297Xa8')">
+</div>
+</section>
+</main>
+<!-- Navigation Bar -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50 flex justify-around items-center py-2 px-2 backdrop-blur-3xl bg-surface-container/80 border-[0.5px] border-primary/20 shadow-2xl shadow-primary/5 rounded-full">
+<!-- HOME -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-utility-mono text-[10px] tracking-tighter">HOME</span>
+</a>
+<!-- GAMING -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">casino</span>
+<span class="font-utility-mono text-[10px] tracking-tighter">GAMING</span>
+</a>
+<!-- WALLET -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">payments</span>
+<span class="font-utility-mono text-[10px] tracking-tighter">WALLET</span>
+</a>
+<!-- RESORT (ACTIVE) -->
+<a class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-full py-2 px-4 haptic-light" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">apartment</span>
+<span class="font-utility-mono text-[10px] tracking-tighter font-bold">RESORT</span>
+</a>
+<!-- MESSAGES -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined mb-1">chat_bubble</span>
+<span class="font-utility-mono text-[10px] tracking-tighter">MESSAGES</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions and atmospheric logic
+        document.querySelectorAll('a, button').forEach(el => {
+            el.addEventListener('touchstart', () => {
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(5); // Ultra-light haptic tap simulation
+                }
+            });
+        });
+
+        // Subtle parallax on hero image
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('[data-alt*="Skyline Penthouse"]');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+            }
+        });
+    </script>
+</body></html>

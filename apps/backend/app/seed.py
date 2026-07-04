@@ -101,13 +101,26 @@ async def _seed(session_factory: async_sessionmaker[AsyncSession]) -> dict[str, 
             config.concierge = DEFAULT_CONCIERGE_CONFIG
         if not config.feature_flags.get("concierge"):
             config.feature_flags = {**config.feature_flags, "concierge": True}
-        await _get_or_create(
+        # Obsidian Luxury default: force the dark scheme so the app doesn't follow the device's
+        # light mode; the full obsidian palette is the app's bundled default (design/tokens.json),
+        # so we only pin the scheme + a couple of brand accents here. `mode` rides through the
+        # manifest via ManifestTheme(extra="allow").
+        obsidian_tokens = {
+            "mode": "dark",
+            "color": {"brand": {"accent": "#5E5CE6", "gold": "#E6B450"}},
+        }
+        theme = await _get_or_create(
             session,
             Theme,
-            {"tokens": {"color": {"gold": "#E6B450"}}, "is_active": True},
+            {"tokens": obsidian_tokens, "is_active": True},
             tenant_id=tenant.id,
             name="Casino Luxe",
         )
+        # Backfill the obsidian defaults onto a pre-existing seed (tokens are create-only above),
+        # so re-seeding an existing DB flips it to dark without a full reset.
+        if theme.tokens.get("mode") != "dark":
+            theme.tokens = {**theme.tokens, **obsidian_tokens}
+            theme.is_active = True
 
         # Admins for each role; global super-admin is unscoped, the rest are scoped to the tenant.
         await _seed_admin(session, tenant.id, "super@demo-casino.com", "super_admin", scoped=False)

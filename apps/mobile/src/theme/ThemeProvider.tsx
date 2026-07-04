@@ -47,14 +47,22 @@ export function ThemeProvider({
   children,
   tokens = DEFAULT_THEME,
   initialScheme,
+  forcedScheme,
 }: {
   children: React.ReactNode;
   tokens?: ThemeTokens;
   initialScheme?: ColorScheme;
+  /** Tenant-forced scheme from the manifest (`theme.mode`). Overrides the OS default but not an
+   * explicit user toggle. `'system'`/undefined = follow the device. */
+  forcedScheme?: ColorScheme | 'system';
 }): React.JSX.Element {
   const systemScheme = useColorScheme();
   const [override, setOverride] = useState<ColorScheme | undefined>(initialScheme);
-  const scheme: ColorScheme = override ?? (systemScheme === 'light' ? 'light' : 'dark');
+  const forced: ColorScheme | undefined =
+    forcedScheme === 'dark' || forcedScheme === 'light' ? forcedScheme : undefined;
+  const systemFallback: ColorScheme = systemScheme === 'light' ? 'light' : 'dark';
+  // Precedence: explicit user toggle > tenant-forced mode > OS setting.
+  const scheme: ColorScheme = override ?? forced ?? systemFallback;
 
   const toggleScheme = useCallback(
     () => setOverride((prev) => ((prev ?? scheme) === 'dark' ? 'light' : 'dark')),

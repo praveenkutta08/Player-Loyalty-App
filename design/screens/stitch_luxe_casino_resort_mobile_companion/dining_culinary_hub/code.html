@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>Lumière Dining | EXECUTIVE COMPANION</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#0d0e0f",
+                    "primary-container": "#050505",
+                    "surface-dim": "#121414",
+                    "primary-fixed": "#e5e2e1",
+                    "background": "#121414",
+                    "error-container": "#93000a",
+                    "tertiary": "#c2c1ff",
+                    "surface-tint": "#c9c6c5",
+                    "on-tertiary-fixed-variant": "#332dbc",
+                    "surface": "#121414",
+                    "surface-container-low": "#1a1c1c",
+                    "tertiary-fixed-dim": "#c2c1ff",
+                    "on-background": "#e2e2e2",
+                    "on-primary-container": "#797777",
+                    "error": "#ffb4ab",
+                    "on-surface-variant": "#c4c7c7",
+                    "on-secondary-fixed-variant": "#474649",
+                    "surface-container-highest": "#333535",
+                    "outline": "#8e9192",
+                    "primary-fixed-dim": "#c9c6c5",
+                    "on-secondary": "#303032",
+                    "on-secondary-fixed": "#1b1b1d",
+                    "secondary-fixed": "#e4e2e4",
+                    "on-primary-fixed-variant": "#474646",
+                    "surface-container-high": "#282a2b",
+                    "inverse-surface": "#e2e2e2",
+                    "on-secondary-container": "#b7b4b7",
+                    "on-primary-fixed": "#1c1b1b",
+                    "surface-variant": "#333535",
+                    "on-primary": "#313030",
+                    "tertiary-fixed": "#e2dfff",
+                    "surface-container": "#1e2020",
+                    "tertiary-container": "#020026",
+                    "outline-variant": "#444748",
+                    "on-tertiary": "#1800a7",
+                    "secondary-fixed-dim": "#c8c6c8",
+                    "inverse-primary": "#5f5e5e",
+                    "on-surface": "#e2e2e2",
+                    "on-tertiary-fixed": "#0c006b",
+                    "surface-bright": "#38393a",
+                    "on-tertiary-container": "#6765ef",
+                    "primary": "#c9c6c5",
+                    "on-error-container": "#ffdad6",
+                    "secondary-container": "#474649",
+                    "inverse-on-surface": "#2f3131",
+                    "secondary": "#c8c6c8",
+                    "on-error": "#690005"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "safe-margin": "24px",
+                    "section-gap": "64px",
+                    "gutter": "16px",
+                    "stack-sm": "8px",
+                    "stack-lg": "32px",
+                    "stack-md": "16px"
+            },
+            "fontFamily": {
+                    "utility-mono": ["Inter"],
+                    "display-lg": ["Playfair Display"],
+                    "display-lg-mobile": ["Playfair Display"],
+                    "headline-md": ["Playfair Display"],
+                    "body-md": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "utility-mono": ["13px", {"lineHeight": "18px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-md": ["28px", {"lineHeight": "34px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #050505;
+            color: #e2e2e2;
+            -webkit-font-smoothing: antialiased;
+        }
+        .glass-card {
+            background: rgba(26, 26, 28, 0.7);
+            backdrop-filter: blur(20px);
+            border: 0.5px solid rgba(201, 198, 197, 0.15);
+        }
+        .scrim-bottom {
+            background: linear-gradient(to top, rgba(5,5,5,0.9) 0%, rgba(5,5,5,0) 100%);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-md text-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-safe-margin py-4 fixed top-0 z-50 backdrop-blur-xl bg-surface-dim/60 border-b-[0.5px] border-primary/15">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full border border-primary/20 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A sophisticated portrait of a high-net-worth individual, Marcus Vane, looking away with a background of a luxury hotel lobby. The lighting is low-key with golden rim lights, matching an Obsidian luxury aesthetic. Deep slate and charcoal tones dominate the frame, conveying exclusivity and technical precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKXFeTrMl7qbYcTmN1eS9c7IRsSZjDQJIxPX7QLXIHs1WhLl80dQ75s617fG7rmxu1hboyAcO85qvDSiv4FYR7jV6HCy-qOzOnn2lpNqhNkWUujNIg3b3PoeRaNbVVP2-oRZWjyZyFyBma2iw-6MvMP0MPsT0FVEx6XGh1JG-dWK0fcW2jCzzyYcMGYh9xgTm_PhwakSJ0XHd7kiwsv1asfXTs2YcwtjCKNAJq28GcvOr92MPZBXsxXSpGM2NZ-_bZHrcF8sKcsCI"/>
+</div>
+<div class="flex flex-col">
+<span class="font-utility-mono text-utility-mono tracking-[0.2em] text-primary">EXECUTIVE COMPANION</span>
+<span class="text-[10px] font-utility-mono text-on-surface-variant flex items-center gap-1 uppercase">
+<span class="material-symbols-outlined text-[12px]">location_on</span> Las Vegas Strip
+                </span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-primary text-2xl hover:opacity-80 transition-opacity">account_balance_wallet</button>
+</div>
+</header>
+<main class="pb-32 pt-0">
+<!-- Hero Section -->
+<section class="relative h-[530px] w-full overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A moody, high-contrast close-up shot of a gourmet sushi omakase course from Lumière Omakase. The dish features a single, perfectly sliced piece of Otoro tuna on a dark stone plate, accented with gold leaf and a micro-green garnish. The lighting is dramatic, casting soft shadows on a polished black marble surface, reflecting the minimal, high-end resort aesthetic of the Obsidian brand." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDlUD7YY8xlSBRRytkahBmbO1LnWWwH9eMZWrsEY_zka4euaKoYZiT8O5yhwXMivwpGUFlXZgBL58WCdqYDsFfWYiEQ5qpsPcj0cDx1m0n5wrb7k0NDVWfEOr2QKjJ6wsHft7TLU8pbUjgBd2Gqp8T4kZMGm0xscumA_3VSQsPVQwdRD9ByGNddK2tUwR-7djNGxS7PqmwYaOd5lz31Qh1N9WRSAvnqqPXX0NBcsFo44QJX_LHu_fM7aFJYtZKhI21pau_MYZ76oE4')"></div>
+<div class="absolute inset-0 scrim-bottom"></div>
+<div class="absolute bottom-12 left-safe-margin right-safe-margin">
+<h1 class="font-headline-md text-display-lg-mobile md:text-display-lg text-primary mb-2">Lumière Omakase</h1>
+<p class="font-utility-mono text-label-caps text-on-surface-variant tracking-widest mb-6">INTIMATE • 18 SEATS • MICHELIN STARRED</p>
+<button class="bg-primary text-on-primary px-8 py-4 rounded-full font-utility-mono text-label-caps hover:scale-95 transition-transform duration-200">RESERVE A TABLE</button>
+</div>
+</section>
+<!-- Filters Section -->
+<section class="mt-stack-lg px-safe-margin">
+<div class="flex gap-stack-sm overflow-x-auto no-scrollbar pb-2">
+<button class="glass-card px-6 py-2 rounded-full border-primary/40 text-primary font-utility-mono text-label-caps whitespace-nowrap">DIETARY</button>
+<button class="glass-card px-6 py-2 rounded-full border-primary/10 text-on-surface-variant font-utility-mono text-label-caps whitespace-nowrap">PRICE: $$$$</button>
+<button class="glass-card px-6 py-2 rounded-full border-primary/10 text-on-surface-variant font-utility-mono text-label-caps whitespace-nowrap">AVAILABILITY</button>
+<button class="glass-card px-6 py-2 rounded-full border-primary/10 text-on-surface-variant font-utility-mono text-label-caps whitespace-nowrap">CUISINE</button>
+</div>
+</section>
+<!-- Vibe Categories: Lively -->
+<section class="mt-stack-lg">
+<div class="px-safe-margin mb-gutter flex justify-between items-end">
+<h2 class="font-headline-md text-headline-md text-primary">Lively Vibes</h2>
+<span class="font-utility-mono text-label-caps text-on-surface-variant mb-1">VIEW ALL</span>
+</div>
+<div class="flex gap-gutter overflow-x-auto no-scrollbar px-safe-margin">
+<!-- Card 1 -->
+<div class="min-w-[280px] md:min-w-[400px] group">
+<div class="relative h-[320px] rounded-2xl overflow-hidden glass-card mb-4">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="The interior of a vibrant, high-end lounge called 'Aura Social'. The space is filled with warm ambient lighting, velvet blue booths, and a central circular bar with back-lit crystal bottles. People in formal evening wear are seen in blurred motion, creating a lively atmosphere. The architectural style is modern with clean lines and premium materials like brushed brass and dark oak." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPFDpb04PEo90U7Jv_liKGGkFa5Qo7GuBhQYmPQWgK1vdm2Xc9PkInQM-kCzpSHUeJIlBomLLphNX3NiTqUQWeLbG9iApTcJXx54b6R-QcxlBxV5Ggg2YnqvUl2uDWNA-4FsFL_egcpT2rxGY-aXvPk1n2TtGcrcE99I4meBDSP6WwGA-EUdr4HgYDMHj3HAOdJv4ZL0M9rg08tfPXg-w2t8xamjwFok8HsFQOmkrJEhz8IUrpZKK_Ys_KLizSlV1zs8ku3CD6QWg"/>
+<div class="absolute top-4 left-4 glass-card px-3 py-1 rounded-full flex items-center gap-1.5">
+<span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+<span class="text-[10px] font-utility-mono text-primary">8:30 PM AVAILABLE</span>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-body-lg text-primary">Aura Social</h3>
+<p class="text-on-surface-variant font-utility-mono text-[11px] mt-1">MIXOLOGY • MODERN TAPAS • $$$</p>
+</div>
+<button class="border border-primary/20 text-primary font-utility-mono text-[10px] px-4 py-2 rounded-full hover:bg-primary/10 transition-colors uppercase">View Menu</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="min-w-[280px] md:min-w-[400px] group">
+<div class="relative h-[320px] rounded-2xl overflow-hidden glass-card mb-4">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A grand dining hall of an upscale Italian steakhouse 'Vittorio'. The ceiling is vaulted with intricate gold detailing. Large floor-to-ceiling windows show a blurred cityscape at night. Circular white-clothed tables are surrounded by dark leather chairs. The lighting is sophisticated, using tall taper candles and low-hanging crystal chandeliers." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDm_b7RLZnpAJNgBRDqzzdYu6H7X2GJvxtsG5cQ9mfHofSmHkqY82s7TysBQJP2_JHvV0AqjaKRxYHed7VZKoHoP4AL6YnB-vp2UNirHC2e9x_9EvfKYbHKk1NvEr96eSm6vimmjhVbgESWBKZB3Xnjkmge23W5ZoYf4motPI23dLAt99ly2ntKY9JFls4IZlJvlL2sCZ5nquAgCgwCj_ggHGmDdJpeaKoBjcqlH-v8J7p-kq2CaxdPS2EIyxmTOkLQQJZEop8qUpc"/>
+<div class="absolute top-4 left-4 glass-card px-3 py-1 rounded-full flex items-center gap-1.5">
+<span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+<span class="text-[10px] font-utility-mono text-primary">WAITLIST ONLY</span>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-headline-md text-body-lg text-primary">Vittorio</h3>
+<p class="text-on-surface-variant font-utility-mono text-[11px] mt-1">STEAKHOUSE • ITALIAN • $$$$</p>
+</div>
+<button class="border border-primary/20 text-primary font-utility-mono text-[10px] px-4 py-2 rounded-full hover:bg-primary/10 transition-colors uppercase">View Menu</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Vibe Categories: Intimate -->
+<section class="mt-section-gap">
+<div class="px-safe-margin mb-gutter flex justify-between items-end">
+<h2 class="font-headline-md text-headline-md text-primary">Intimate Settings</h2>
+<span class="font-utility-mono text-label-caps text-on-surface-variant mb-1">VIEW ALL</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter px-safe-margin">
+<!-- Large Feature Card -->
+<div class="relative h-[480px] rounded-3xl overflow-hidden glass-card md:col-span-2 group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" data-alt="A secluded, dimly lit dining booth at 'The Obsidian Vault' restaurant. The booth is upholstered in deep charcoal leather, with a private velvet curtain partially drawn. A single spotlight highlights a perfectly set table for two with silver cutlery and thin-stemmed wine glasses. The background shows hints of a temperature-controlled wine cellar behind glass walls." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAx5aFzsUVGWoR5Bslc-aK6sDtBHWlMe_MyNjQrJDUiSWaVXyiQlXrQssLK6VQtOCyUtxdcOGHa_a28ZYK-wb2r51rsJJTLX0jGkbfdbVjUkeBN4YQckGaNx6uhtentOO_YDeTaGlLQHk9_XMkrSQu2B-y87HEXllGHQ24rNa6uKDb3NczMdWHvgCU_BXqLfBwGPXvs70ZX2vwXlmJMPpXVOoWAL_wbA74eUtQZiMdm4KfL09mn0WzUfusYxISEyruQea1ATNFDc3Q"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-8 left-8 right-8 flex justify-between items-end">
+<div>
+<span class="text-tertiary font-utility-mono text-label-caps mb-2 block">MEMBERS ONLY</span>
+<h3 class="font-headline-md text-display-lg-mobile text-primary">The Obsidian Vault</h3>
+<p class="text-on-surface-variant font-body-md max-w-md">Discreet, world-class dining for Onyx tier members. Private cellars and rare vintage pairings.</p>
+</div>
+<div class="flex flex-col items-end gap-4">
+<div class="glass-card px-4 py-2 rounded-full flex items-center gap-2">
+<span class="w-2 h-2 bg-green-500 rounded-full"></span>
+<span class="text-[10px] font-utility-mono text-primary">OPEN SLOTS: 10 PM</span>
+</div>
+<button class="bg-primary text-on-primary px-6 py-3 rounded-full font-utility-mono text-label-caps uppercase">Reserve Now</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Vibe Categories: Casual -->
+<section class="mt-section-gap mb-16">
+<div class="px-safe-margin mb-gutter flex justify-between items-end">
+<h2 class="font-headline-md text-headline-md text-primary">Casual Luxury</h2>
+<span class="font-utility-mono text-label-caps text-on-surface-variant mb-1">VIEW ALL</span>
+</div>
+<div class="flex gap-gutter overflow-x-auto no-scrollbar px-safe-margin">
+<!-- Bento Small Card 1 -->
+<div class="min-w-[200px] glass-card p-4 rounded-2xl flex flex-col gap-4">
+<div class="h-32 rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A sun-drenched outdoor terrace cafe, 'Solstice', overlooking a turquoise infinity pool. White linen umbrellas and light wood furniture create a Mediterranean aesthetic. The lighting is bright and airy, reflecting a morning breakfast setting in a high-end desert resort." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3V1diJz3oETMviOqT3PvGNwLXeWHGHqwjCMWJbCwxTMvnpE-QWp7OuQELaaJiUwFxaZA3y0P9qrhHETH0-O1nz3N15SsyEheORjeNHbpexgxIqKcdpkCD31P8lj7-CrOl7zcLUr7MWd6rX87dlCyy1TH3bGFEpidwVE-ZR0vQv1z3mb0wdlwNRqzsYWTaqpoJ7MTdX5Nf2bKxIBg9Albazjod34ftQ2gx-0BLDmeVPukoC6ApIx6bf9Mj8GmUwSNDB2EPOW0oc6k"/>
+</div>
+<div>
+<h4 class="font-headline-md text-body-md text-primary">Solstice</h4>
+<p class="text-[10px] font-utility-mono text-on-surface-variant">BRUNCH • $$$</p>
+</div>
+<div class="mt-auto">
+<span class="text-[10px] font-utility-mono text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">schedule</span> 15m Wait
+                        </span>
+</div>
+</div>
+<!-- Bento Small Card 2 -->
+<div class="min-w-[200px] glass-card p-4 rounded-2xl flex flex-col gap-4">
+<div class="h-32 rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A minimalist espresso bar, 'Cortex', with stainless steel counters and industrial slate walls. High-end espresso machines are visible. The design is hyper-modern and sleek, focusing on technical precision and cleanliness in a luxury resort corridor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC37RZNoUXQrrVj0R8suGL6TyGoBT96NBaKbnegIPDT1JwSnUSQhWjrBxXqCRMDkTP4o47RS5IZRIH_I2uGg_1oioRnpSMgrP_NUEcf5YaXz_Qm_qihCZL5ju_3mfb7ATwDG5ZV_0-A8Ht78JXBx8RQbAtRCAULMuwPeggwnAfp1x7Ys4TSkMPswZgbkgjqcFM2zv9z9xXmh0Ne8j9GlA848RpAiWYVpTDtVSiSzk7X3zFENvNnCvfqV5k_QNfS0hkMM_It8mQM0dM"/>
+</div>
+<div>
+<h4 class="font-headline-md text-body-md text-primary">Cortex</h4>
+<p class="text-[10px] font-utility-mono text-on-surface-variant">COFFEE • $$</p>
+</div>
+<div class="mt-auto">
+<span class="text-[10px] font-utility-mono text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">check_circle</span> Walk-in Ready
+                        </span>
+</div>
+</div>
+<!-- Bento Small Card 3 -->
+<div class="min-w-[200px] glass-card p-4 rounded-2xl flex flex-col gap-4">
+<div class="h-32 rounded-xl overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A gourmet deli and market named 'Provisions'. Artisanal cheeses and breads are displayed in glass cases under warm, focused lighting. The interior uses light grey marble and light oak wood, maintaining a clean, high-end minimalist look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDU2eCuxCwMClgxTkBDkyYOsIDs8AuIC5jnxUHQr0wLwOA9aHIqiViKjGQbaF6B7ToFAj44AfwHsdsYmw0b6SMqhm7jOKsbyLWUp5n0GwwUyeSeC7QvhPYsp1VzObmK_sMSsyMOmJTP7mMyA1w-mLEu6cL986VIxC3n-Xob0gXG-2vcQSGEgodP9pLVEY34P3drHc8pQxm0UaAKZ4pL8YBtcJR-vKFNgBoxbTa7yOt0SHaufATwo-jUfBP-TXgzTUoH3F_OhH6fM1Y"/>
+</div>
+<div>
+<h4 class="font-headline-md text-body-md text-primary">Provisions</h4>
+<p class="text-[10px] font-utility-mono text-on-surface-variant">DELI • $$$</p>
+</div>
+<div class="mt-auto">
+<span class="text-[10px] font-utility-mono text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">check_circle</span> Walk-in Ready
+                        </span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50 flex justify-around items-center py-2 px-2 bg-surface-container/80 backdrop-blur-3xl border-[0.5px] border-primary/20 shadow-[0_0_40px_rgba(0,0,0,0.5)] rounded-full">
+<div class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-utility-mono text-[10px] tracking-tight">HOME</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined mb-1">casino</span>
+<span class="font-utility-mono text-[10px] tracking-tight">GAMING</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined mb-1">payments</span>
+<span class="font-utility-mono text-[10px] tracking-tight">WALLET</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-full py-2 px-4 scale-90 duration-300">
+<span class="material-symbols-outlined mb-1">apartment</span>
+<span class="font-utility-mono text-[10px] tracking-tight">RESORT</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant/60 py-2 px-4 hover:text-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined mb-1">chat_bubble</span>
+<span class="font-utility-mono text-[10px] tracking-tight">MESSAGES</span>
+</div>
+</nav>
+<script>
+        // Micro-interactions for glass cards
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('touchstart', () => {
+                card.style.transform = 'scale(0.98)';
+                card.style.transition = 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            });
+            card.addEventListener('touchend', () => {
+                card.style.transform = 'scale(1)';
+            });
+        });
+
+        // Simple scroll observer for TopAppBar transparency
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('bg-surface-dim/95');
+                header.classList.remove('bg-surface-dim/60');
+            } else {
+                header.classList.add('bg-surface-dim/60');
+                header.classList.remove('bg-surface-dim/95');
+            }
+        });
+    </script>
+</body></html>
