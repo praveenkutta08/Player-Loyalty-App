@@ -43,8 +43,8 @@ describe('OfferCard', () => {
     expect(screen.getByText('Welcome bonus')).toBeOnTheScreen();
   });
 
-  it('shows a Redeemed pill when redeemed', () => {
+  it('shows a claimed marker when redeemed', () => {
     render(wrap(<OfferCard offer={OFFER} redeemed />));
-    expect(screen.getByText('Redeemed')).toBeOnTheScreen();
+    expect(screen.getByText('✓ Claimed')).toBeOnTheScreen();
   });
 });

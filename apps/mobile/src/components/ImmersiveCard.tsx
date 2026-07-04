@@ -11,8 +11,8 @@ import { ThemedText } from './ThemedText';
 import type { ImageSourcePropType, StyleProp, ViewStyle } from 'react-native';
 
 export interface ImmersiveCardProps {
-  /** Full-bleed background photo (manifest URI or a bundled default). */
-  image: ImageSourcePropType;
+  /** Full-bleed background photo. When omitted, a themed obsidian gradient stands in for it. */
+  image?: ImageSourcePropType | null;
   /** Playfair title anchored bottom-left. */
   title: string;
   /** Uppercase category kicker above the title (e.g. "LIMITED TIME"). */
@@ -46,40 +46,65 @@ export function ImmersiveCard({
   testID,
 }: ImmersiveCardProps): React.JSX.Element {
   const theme = useTheme();
+  const c = theme.colors;
   const r = theme.radius.image ?? theme.radius.card;
-  const voidColor = theme.colors.bg.base;
+  const voidColor = c.bg.base;
+
+  const overlay = (
+    <>
+      {/* Bottom-weighted scrim so the Playfair title reads over any photo; with no photo the same
+          gradient (plus a faint indigo cast) becomes the card's obsidian backdrop. */}
+      <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+        <Defs>
+          <LinearGradient id="immersiveScrim" x1="0" y1="0" x2="0" y2="1">
+            <Stop offset="0" stopColor={image ? withAlpha(voidColor, 0) : c.bg.surface} />
+            <Stop
+              offset="0.45"
+              stopColor={image ? withAlpha(voidColor, 0) : withAlpha(c.bg.surface, 0.4)}
+            />
+            <Stop offset="1" stopColor={image ? withAlpha(voidColor, 0.85) : voidColor} />
+          </LinearGradient>
+        </Defs>
+        <Rect x="0" y="0" width="100%" height="100%" fill="url(#immersiveScrim)" />
+      </Svg>
+
+      <View style={[styles.content, { padding: theme.spacing.lg }]}>
+        {kicker ? <Kicker color="secondary">{kicker}</Kicker> : null}
+        <ThemedText variant="h1" style={{ marginTop: theme.spacing.xs }}>
+          {title}
+        </ThemedText>
+        {subtitle ? (
+          <ThemedText variant="bodySm" color="secondary" style={{ marginTop: theme.spacing.xs }}>
+            {subtitle}
+          </ThemedText>
+        ) : null}
+        {actions ? <View style={{ marginTop: theme.spacing.md }}>{actions}</View> : null}
+      </View>
+    </>
+  );
 
   return (
     <View
       testID={testID}
       onTouchEnd={onPress}
-      style={[{ height, borderRadius: r, overflow: 'hidden' }, style]}
+      style={[
+        {
+          height,
+          borderRadius: r,
+          overflow: 'hidden',
+          borderWidth: StyleSheet.hairlineWidth,
+          borderColor: c.border.ghost ?? c.border.soft,
+        },
+        style,
+      ]}
     >
-      <ImageBackground source={image} style={StyleSheet.absoluteFill} resizeMode="cover">
-        {/* Bottom-weighted scrim so the Playfair title reads over any photo. */}
-        <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
-          <Defs>
-            <LinearGradient id="immersiveScrim" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0.3" stopColor={withAlpha(voidColor, 0)} />
-              <Stop offset="1" stopColor={withAlpha(voidColor, 0.85)} />
-            </LinearGradient>
-          </Defs>
-          <Rect x="0" y="0" width="100%" height="100%" fill="url(#immersiveScrim)" />
-        </Svg>
-
-        <View style={[styles.content, { padding: theme.spacing.lg }]}>
-          {kicker ? <Kicker color="secondary">{kicker}</Kicker> : null}
-          <ThemedText variant="h1" style={{ marginTop: theme.spacing.xs }}>
-            {title}
-          </ThemedText>
-          {subtitle ? (
-            <ThemedText variant="bodySm" color="secondary" style={{ marginTop: theme.spacing.xs }}>
-              {subtitle}
-            </ThemedText>
-          ) : null}
-          {actions ? <View style={{ marginTop: theme.spacing.md }}>{actions}</View> : null}
-        </View>
-      </ImageBackground>
+      {image ? (
+        <ImageBackground source={image} style={StyleSheet.absoluteFill} resizeMode="cover">
+          {overlay}
+        </ImageBackground>
+      ) : (
+        overlay
+      )}
     </View>
   );
 }

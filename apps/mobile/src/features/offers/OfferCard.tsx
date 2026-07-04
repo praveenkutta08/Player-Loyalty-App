@@ -1,14 +1,20 @@
 import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import { Card, StatusPill, ThemedText } from '../../components';
-import { useTheme } from '../../theme/ThemeProvider';
+import { CapsLabel, ImmersiveCard, PillButton, PillButtonRow } from '../../components';
 
 import type { OfferOut } from './offersApi';
 
+/** Category kicker for an offer — segment name if present, else a kind-based label. */
+function offerKicker(offer: OfferOut): string {
+  if (offer.segment) return offer.segment;
+  return offer.kind === 'promotion' ? 'Limited Time' : 'Loyalty Reward';
+}
+
 /**
- * Offer/promotion summary card used in lists and on Home. Shows title, blurb, a kind badge and a
- * "Redeemed" pill when already redeemed. Purely presentational + token-driven.
+ * Offer/promotion card as an obsidian ImmersiveCard (RS4): full-bleed image (or a themed gradient
+ * when none), a category kicker, a Playfair title, and CLAIM + VIEW DETAILS pills — or a CLAIMED
+ * marker once redeemed. Presentational + token-driven; the claim/idempotency flow lives in detail.
  */
 export function OfferCard({
   offer,
@@ -19,28 +25,29 @@ export function OfferCard({
   redeemed?: boolean;
   onPress?: () => void;
 }): React.JSX.Element {
-  const theme = useTheme();
   return (
-    <Pressable onPress={onPress} accessibilityRole="button">
-      <Card style={styles.card}>
-        <View style={styles.headerRow}>
-          <StatusPill label={offer.kind} tone={offer.kind === 'promotion' ? 'purple' : 'info'} />
-          {redeemed ? <StatusPill label="Redeemed" tone="success" /> : null}
-        </View>
-        <ThemedText variant="title" style={{ marginTop: theme.spacing.sm }}>
-          {offer.title}
-        </ThemedText>
-        {offer.description ? (
-          <ThemedText variant="body" color="muted" numberOfLines={2} style={{ marginTop: 4 }}>
-            {offer.description}
-          </ThemedText>
-        ) : null}
-      </Card>
-    </Pressable>
+    <View style={styles.wrap}>
+      <ImmersiveCard
+        image={offer.image_url ? { uri: offer.image_url } : undefined}
+        kicker={offerKicker(offer)}
+        title={offer.title}
+        subtitle={offer.description ?? undefined}
+        onPress={onPress}
+        actions={
+          redeemed ? (
+            <CapsLabel color="secondary">✓ Claimed</CapsLabel>
+          ) : (
+            <PillButtonRow>
+              <PillButton label="Claim" variant="accent" onPress={onPress} />
+              <PillButton label="View details" variant="secondary" onPress={onPress} />
+            </PillButtonRow>
+          )
+        }
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { marginBottom: 12 },
-  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  wrap: { marginBottom: 16 },
 });

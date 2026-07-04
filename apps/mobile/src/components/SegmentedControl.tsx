@@ -21,11 +21,12 @@ export function SegmentedControl<T extends string>({
   onChange: (key: T) => void;
 }): React.JSX.Element {
   const theme = useTheme();
+  const c = theme.colors;
   return (
     <View
       style={[
         styles.track,
-        { backgroundColor: theme.colors.bg.surface, borderColor: theme.colors.border.default },
+        { backgroundColor: c.bg.elevated, borderColor: c.border.ghost ?? c.border.default },
       ]}
     >
       {segments.map((seg) => {
@@ -36,17 +37,12 @@ export function SegmentedControl<T extends string>({
             onPress={() => onChange(seg.key)}
             accessibilityRole="tab"
             accessibilityState={{ selected: active }}
-            style={[
-              styles.segment,
-              active && {
-                backgroundColor: theme.colors.brand.gold,
-                borderRadius: theme.radius.control,
-              },
-            ]}
+            style={[styles.segment, active && { backgroundColor: c.brand.primary }]}
           >
             <ThemedText
               variant="label"
-              style={{ color: active ? theme.colors.brand.onGold : theme.colors.text.muted }}
+              numberOfLines={1}
+              style={{ color: active ? c.brand.onPrimary : c.text.muted }}
             >
               {seg.label}
             </ThemedText>
@@ -58,11 +54,18 @@ export function SegmentedControl<T extends string>({
 }
 
 const styles = StyleSheet.create({
+  // Glass pill track; active segment is a filled pearl caps pill (obsidian system, RS4).
   track: {
     flexDirection: 'row',
     borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 12,
-    padding: 3,
+    borderRadius: 999,
+    padding: 4,
   },
-  segment: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 8 },
+  segment: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 9,
+    borderRadius: 999,
+  },
 });

@@ -3,7 +3,7 @@ import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 
 import { useFeature } from '../../app/providers/FeatureProvider';
 import { useAppSelector } from '../../app/store';
-import { Input, Screen, SegmentedControl, ThemedText } from '../../components';
+import { Input, Kicker, Screen, SegmentedControl, ThemedText } from '../../components';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useTrackEventMutation } from '../analytics/analyticsApi';
 import { ForYouPanel } from '../concierge/ForYouPanel';
@@ -60,9 +60,12 @@ export function OffersScreen({ navigation, route }: Props): React.JSX.Element {
 
   return (
     <Screen>
-      <ThemedText variant="h1" style={styles.title}>
-        Offers
-      </ThemedText>
+      <View style={styles.header}>
+        <Kicker color="secondary">Exclusive Access · {season()}</Kicker>
+        <ThemedText variant="display" style={styles.title}>
+          Curated Offers
+        </ThemedText>
+      </View>
       <SegmentedControl segments={segments} value={segment} onChange={setSegment} />
 
       {segment === 'foryou' ? (
@@ -103,7 +106,7 @@ export function OffersScreen({ navigation, route }: Props): React.JSX.Element {
               <RefreshControl
                 refreshing={active.isFetching}
                 onRefresh={active.refetch}
-                tintColor={theme.colors.brand.gold}
+                tintColor={theme.colors.brand.accent}
               />
             }
             ListEmptyComponent={
@@ -129,8 +132,18 @@ export function OffersScreen({ navigation, route }: Props): React.JSX.Element {
   );
 }
 
+/** Coarse season label for the "Exclusive Access · <season>" kicker (device clock). */
+function season(): string {
+  const m = new Date().getMonth();
+  if (m <= 1 || m === 11) return 'Winter';
+  if (m <= 4) return 'Spring';
+  if (m <= 7) return 'Summer';
+  return 'Autumn';
+}
+
 const styles = StyleSheet.create({
-  title: { marginBottom: 16 },
+  header: { marginBottom: 16 },
+  title: { marginTop: 8, marginBottom: 16 },
   search: { marginTop: 16, marginBottom: 8 },
   list: { paddingTop: 8, paddingBottom: 24 },
   emptyText: { textAlign: 'center', marginTop: 40 },
