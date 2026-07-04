@@ -27,3 +27,5 @@ export type { PillButtonProps, PillVariant } from './PillButton';
 export { Kicker, CapsLabel } from './Kicker';
 export { HairlineRow } from './HairlineRow';
 export type { HairlineRowProps } from './HairlineRow';
+export { ProgressRing } from './ProgressRing';
+export type { ProgressRingProps } from './ProgressRing';
