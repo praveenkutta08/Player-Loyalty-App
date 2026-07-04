@@ -1,11 +1,13 @@
-import { HelpCircle, ScanFace } from 'lucide-react-native';
+import { ScanFace } from 'lucide-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { useAppDispatch } from '../../../app/store';
-import { Button, Input, Screen, ThemedText } from '../../../components';
+import { Input, Kicker, PillButton, ThemedText } from '../../../components';
 import { biometrics } from '../../../native/biometrics';
+import { withAlpha } from '../../../theme/color';
 import { useTheme } from '../../../theme/ThemeProvider';
+import { AuthScaffold } from '../AuthScaffold';
 import { unlock } from '../biometricSlice';
 import { verifyPasscode } from '../biometricStore';
 import { logout } from '../session';
@@ -13,10 +15,30 @@ import { logout } from '../session';
 /** After this many biometric failures we fall back to the passcode automatically. */
 const MAX_BIOMETRIC_TRIES = 3;
 
+/** Glowing indigo "biometric active" orb (RS1) — concentric ghost rings around a Face-ID glyph. */
+function BiometricOrb(): React.JSX.Element {
+  const theme = useTheme();
+  const indigo = theme.colors.brand.accent;
+  return (
+    <View style={styles.orbWrap}>
+      <View style={[styles.ring, styles.ringOuter, { borderColor: withAlpha(indigo, 0.15) }]} />
+      <View style={[styles.ring, styles.ringMid, { borderColor: withAlpha(indigo, 0.3) }]} />
+      <View
+        style={[
+          styles.orb,
+          { backgroundColor: withAlpha(indigo, 0.12), borderColor: withAlpha(indigo, 0.5) },
+        ]}
+      >
+        <ScanFace size={44} color={indigo} />
+      </View>
+    </View>
+  );
+}
+
 /**
- * A2 / A6 — "Identify to Enter". Gates a restored session: Face/Touch ID first, with a passcode
- * fallback and a Help path (sign in with password). No secrets leave the device — success just
- * unlocks the already-validated session.
+ * A2 / A6 — "Identify to Enter", re-skinned to obsidian luxury (RS1). Face/Touch ID first behind a
+ * glowing orb, with a passcode fallback and a Help path (sign in with password). No secrets leave
+ * the device — success just unlocks the already-validated session. Auth logic is unchanged.
  */
 export function LockScreen(): React.JSX.Element {
   const theme = useTheme();
@@ -54,86 +76,101 @@ export function LockScreen(): React.JSX.Element {
     }
   }
 
-  return (
-    <Screen>
-      <View style={styles.center}>
-        <ScanFace size={64} color={theme.colors.brand.gold} />
-        <ThemedText variant="h2" style={styles.title}>
-          Identify to enter
-        </ThemedText>
+  const center =
+    mode === 'biometric' ? (
+      <>
+        <BiometricOrb />
+        <Kicker color="secondary" style={{ marginTop: theme.spacing.lg }}>
+          Biometric Active
+        </Kicker>
+      </>
+    ) : null;
 
-        {mode === 'biometric' ? (
-          <>
-            <ThemedText variant="body" color="muted" style={styles.blurb}>
-              Use Face ID to unlock your account.
+  return (
+    <AuthScaffold kicker="Executive Companion" title="Welcome back" center={center}>
+      {mode === 'biometric' ? (
+        <>
+          {error ? (
+            <ThemedText variant="label" style={[styles.error, { color: theme.colors.state.error }]}>
+              {error}
             </ThemedText>
-            {error ? (
-              <ThemedText
-                variant="label"
-                style={[styles.error, { color: theme.colors.state.error }]}
-              >
-                {error}
-              </ThemedText>
-            ) : null}
-            <Button
-              label="Try Face ID"
-              style={styles.action}
-              onPress={() => void runBiometric()}
-              testID="try-biometric"
-            />
-            <Button
-              label="Use passcode"
-              variant="secondary"
-              style={styles.action}
+          ) : null}
+          <PillButton
+            label="Identify to enter"
+            variant="accent"
+            block
+            onPress={() => void runBiometric()}
+            testID="try-biometric"
+          />
+          <View style={styles.links}>
+            <Pressable
               onPress={() => {
                 setError(null);
                 setMode('passcode');
               }}
+              hitSlop={8}
               testID="use-passcode"
-            />
-          </>
-        ) : (
-          <>
-            <Input
-              label="Passcode"
-              value={pin}
-              onChangeText={(t) => {
-                setPin(t.replace(/\D/g, '').slice(0, 6));
-                setError(null);
-              }}
-              keyboardType="number-pad"
-              secureTextEntry
-              containerStyle={styles.input}
-              error={error ?? undefined}
-            />
-            <Button
-              label="Unlock"
-              style={styles.action}
-              disabled={pin.length < 4}
-              onPress={() => void submitPasscode()}
-              testID="submit-passcode"
-            />
-          </>
-        )}
-
-        <Button
-          label="Help — sign in with password"
-          variant="secondary"
-          icon={<HelpCircle size={16} color={theme.colors.text.primary} />}
-          style={styles.help}
-          onPress={() => void logout()}
-        />
-      </View>
-    </Screen>
+            >
+              <ThemedText variant="label" style={{ color: theme.colors.brand.accent }}>
+                Use passcode
+              </ThemedText>
+            </Pressable>
+            <Pressable onPress={() => void logout()} hitSlop={8}>
+              <ThemedText variant="label" color="muted">
+                Help
+              </ThemedText>
+            </Pressable>
+          </View>
+        </>
+      ) : (
+        <>
+          <Input
+            label="Passcode"
+            value={pin}
+            onChangeText={(t) => {
+              setPin(t.replace(/\D/g, '').slice(0, 6));
+              setError(null);
+            }}
+            keyboardType="number-pad"
+            secureTextEntry
+            containerStyle={styles.field}
+            error={error ?? undefined}
+          />
+          <PillButton
+            label="Unlock"
+            variant="accent"
+            block
+            disabled={pin.length < 4}
+            onPress={() => void submitPasscode()}
+            testID="submit-passcode"
+          />
+          <View style={styles.links}>
+            <Pressable onPress={() => void logout()} hitSlop={8}>
+              <ThemedText variant="label" color="muted">
+                Help — sign in with password
+              </ThemedText>
+            </Pressable>
+          </View>
+        </>
+      )}
+    </AuthScaffold>
   );
 }
 
 const styles = StyleSheet.create({
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  title: { marginTop: 16 },
-  blurb: { marginTop: 8, marginBottom: 16, textAlign: 'center' },
-  error: { marginBottom: 12, textAlign: 'center' },
-  input: { marginTop: 8, marginBottom: 8, width: '100%' },
-  action: { marginTop: 10, alignSelf: 'stretch' },
-  help: { marginTop: 24, alignSelf: 'stretch' },
+  error: { textAlign: 'center', marginBottom: 12 },
+  field: { marginBottom: 8 },
+  links: { marginTop: 20, flexDirection: 'row', justifyContent: 'space-between' },
+  orbWrap: { alignItems: 'center', justifyContent: 'center', width: 200, height: 200 },
+  ring: { position: 'absolute', borderWidth: StyleSheet.hairlineWidth, borderRadius: 999 },
+  ringOuter: { width: 200, height: 200 },
+  ringMid: { width: 150, height: 150 },
+  orb: {
+    width: 100,
+    height: 100,
+    borderRadius: 999,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

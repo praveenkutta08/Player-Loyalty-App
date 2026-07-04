@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { useManifest } from '../../../app/manifest/ManifestProvider';
-import { Button, Input, Screen, ThemedText } from '../../../components';
+import { Input, PillButton, ThemedText } from '../../../components';
 import { useTheme } from '../../../theme/ThemeProvider';
 import { usePlayerLoginMutation } from '../authApi';
+import { AuthScaffold } from '../AuthScaffold';
 import { errorMessage } from '../errors';
 import { persistTokens } from '../session';
 
@@ -13,7 +14,12 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
-/** A3 — email + password login. Passwordless (OTP) enrolment and recovery are one tap away. */
+/**
+ * A3 — email + password login, re-skinned to the obsidian luxury system (RS1): atmospheric backdrop,
+ * caps kicker + Playfair title, a floating glass action sheet with an indigo primary pill, and caps
+ * links for OTP / recovery. Auth logic, OTP/recovery routes, and H7 device-registration ordering are
+ * unchanged.
+ */
 export function LoginScreen({ navigation }: Props): React.JSX.Element {
   const theme = useTheme();
   const { manifest } = useManifest();
@@ -33,20 +39,8 @@ export function LoginScreen({ navigation }: Props): React.JSX.Element {
   };
 
   return (
-    <Screen>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.fill}
-      >
-        <View style={styles.header}>
-          <ThemedText variant="display" style={{ color: theme.colors.brand.gold }}>
-            {manifest?.name ?? 'Welcome'}
-          </ThemedText>
-          <ThemedText variant="body" color="muted" style={{ marginTop: theme.spacing.xs }}>
-            Sign in to continue
-          </ThemedText>
-        </View>
-
+    <AuthScaffold kicker={manifest?.name ?? 'Executive Companion'} title="Welcome">
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <Input
           label="Email"
           value={email}
@@ -72,17 +66,18 @@ export function LoginScreen({ navigation }: Props): React.JSX.Element {
           </ThemedText>
         ) : null}
 
-        <Button
-          label="Sign in"
+        <PillButton
+          label="Identify to enter"
+          variant="accent"
+          block
           onPress={onSubmit}
-          loading={isLoading}
-          disabled={!email || !password}
+          disabled={!email || !password || isLoading}
           testID="login-submit"
         />
 
         <View style={styles.links}>
           <Pressable onPress={() => navigation.navigate('Enrol')} hitSlop={8}>
-            <ThemedText variant="label" style={{ color: theme.colors.brand.gold }}>
+            <ThemedText variant="label" style={{ color: theme.colors.brand.accent }}>
               Use a one-time code
             </ThemedText>
           </Pressable>
@@ -93,13 +88,11 @@ export function LoginScreen({ navigation }: Props): React.JSX.Element {
           </Pressable>
         </View>
       </KeyboardAvoidingView>
-    </Screen>
+    </AuthScaffold>
   );
 }
 
 const styles = StyleSheet.create({
-  fill: { flex: 1, justifyContent: 'center' },
-  header: { marginBottom: 32 },
   field: { marginBottom: 16 },
   links: { marginTop: 24, flexDirection: 'row', justifyContent: 'space-between' },
 });
