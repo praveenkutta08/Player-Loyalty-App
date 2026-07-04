@@ -1,11 +1,13 @@
 import { ScanLine, Sparkles, Wallet } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import Svg, { Defs, LinearGradient, RadialGradient, Rect, Stop } from 'react-native-svg';
 
 import { useManifest } from '../../app/manifest/ManifestProvider';
 import { navigationRef } from '../../app/navigation/navigationRef';
 import { useFeature } from '../../app/providers/FeatureProvider';
-import { Card, Screen, StatusPill, ThemedText } from '../../components';
+import { CapsLabel, GlassCard, Kicker, Screen, StatusPill, ThemedText } from '../../components';
+import { withAlpha } from '../../theme/color';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useGetAccountMeQuery } from '../account/accountApi';
 import { useTrackEventMutation } from '../analytics/analyticsApi';
@@ -22,14 +24,24 @@ import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
 type Props = BottomTabScreenProps<MainTabParamList, 'Home'>;
 
+/** Time-of-day greeting (local device clock) — "Good Morning / Afternoon / Evening". */
+function greeting(): string {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good Morning';
+  if (h < 18) return 'Good Afternoon';
+  return 'Good Evening';
+}
+
 /**
- * H1 — Home: brandable hero + tier/points, promotions carousel, quick actions. With the
- * `concierge` flag on, the recommendations slot becomes the concierge hero (prefetched during
- * splash — rendered from cache, never a spinner); flag off (or brief not yet cached) falls back
- * to the static featured offer, so there are no dead ends either way.
+ * H1 — Home, re-skinned to obsidian luxury (RS2). A full-bleed atmospheric hero with a Playfair
+ * time-of-day greeting, an "AI RECOMMENDATIONS" section driven by the existing concierge brief
+ * (rendered from cache — never a spinner; RG-safe copy + "some context unavailable" behavior
+ * intact), a promotions rail, and a tier/points stat strip. Content, concierge behavior, and the
+ * tab bar structure (Option B) are unchanged — visual layer only.
  */
 export function HomeScreen({ navigation }: Props): React.JSX.Element {
   const theme = useTheme();
+  const c = theme.colors;
   const { manifest } = useManifest();
   const me = useGetAccountMeQuery();
   const promotions = useGetPromotionsQuery();
@@ -51,10 +63,7 @@ export function HomeScreen({ navigation }: Props): React.JSX.Element {
   React.useEffect(() => {
     if (showConciergeHero && !renderTracked.current) {
       renderTracked.current = true;
-      void trackEvent({
-        type: 'brief_render_ms',
-        meta: { ms: Date.now() - mountedAt.current },
-      });
+      void trackEvent({ type: 'brief_render_ms', meta: { ms: Date.now() - mountedAt.current } });
     }
   }, [showConciergeHero, trackEvent]);
 
@@ -64,111 +73,134 @@ export function HomeScreen({ navigation }: Props): React.JSX.Element {
     navigation.navigate('Offers', { screen: 'OfferDetail', params: { offer } });
   const onHeroCta = (action: string): void => {
     if (action === 'concierge.plan') {
-      // answer_accepted: the headline concierge metric (mentor notes §9).
       void trackEvent({ type: 'answer_accepted', meta: { fit_score: brief.data?.fit_score } });
       setPlanOpen(true);
     }
   };
 
   return (
-    <Screen>
+    <Screen padded={false}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        {/* Hero */}
-        <ThemedText variant="kicker" color="muted">
-          {manifest?.name ?? 'Welcome'}
-        </ThemedText>
-        <ThemedText variant="display" style={{ color: theme.colors.brand.gold }}>
-          Hi {greetingName}
-        </ThemedText>
+        {/* Atmospheric hero: Playfair greeting over a soft indigo glow. */}
+        <View style={styles.hero}>
+          <Svg style={StyleSheet.absoluteFill} pointerEvents="none">
+            <Defs>
+              <LinearGradient id="homeVoid" x1="0" y1="0" x2="0" y2="1">
+                <Stop offset="0" stopColor={c.bg.surface} />
+                <Stop offset="1" stopColor={c.bg.base} />
+              </LinearGradient>
+              <RadialGradient id="homeGlow" cx="78%" cy="18%" r="70%">
+                <Stop offset="0" stopColor={withAlpha(c.brand.accent, 0.22)} />
+                <Stop offset="1" stopColor={withAlpha(c.brand.accent, 0)} />
+              </RadialGradient>
+            </Defs>
+            <Rect x="0" y="0" width="100%" height="100%" fill="url(#homeVoid)" />
+            <Rect x="0" y="0" width="100%" height="100%" fill="url(#homeGlow)" />
+          </Svg>
 
-        {/* Concierge hero (H1 recommendations slot) — pre-fetched brief, advisory only. */}
-        {showConciergeHero && brief.data ? (
-          <View style={styles.conciergeSlot}>
-            <RecoHero envelope={brief.data} onCta={onHeroCta} />
-            <View style={styles.contextStrip}>
-              <ContextStrip signals={brief.data.signals} />
+          <View style={styles.topRow}>
+            <Kicker color="secondary">{manifest?.name ?? 'Executive Companion'}</Kicker>
+            <View style={[styles.pointsPill, { borderColor: c.border.ghost ?? c.border.strong }]}>
+              <ThemedText variant="mono" style={{ color: c.brand.accent }}>
+                {me.data?.points ?? 0} pts
+              </ThemedText>
             </View>
-            <Pressable
-              accessibilityRole="button"
-              testID="ask-entry"
-              onPress={() => navigationRef.navigate('AskAI')}
-              style={styles.askRow}
-            >
-              <Sparkles size={14} color={theme.colors.text.muted} />
-              <ThemedText variant="label" color="muted" style={styles.askLabel}>
-                Ask {personaName} about your visit
-              </ThemedText>
-            </Pressable>
           </View>
-        ) : null}
 
-        {/* Tier + points snapshot */}
-        <Card style={styles.tierCard}>
-          <View style={styles.tierRow}>
-            <View>
-              <ThemedText variant="label" color="muted">
-                Tier
-              </ThemedText>
-              <ThemedText variant="h2" style={{ textTransform: 'capitalize' }}>
+          <View style={styles.heroTitle}>
+            <ThemedText variant="display">{greeting()},</ThemedText>
+            <ThemedText variant="display" color="secondary" style={styles.heroName}>
+              {greetingName}
+            </ThemedText>
+          </View>
+        </View>
+
+        <View style={styles.body}>
+          {/* AI recommendations — the concierge brief, advisory only (RG-safe copy preserved). */}
+          {showConciergeHero && brief.data ? (
+            <View style={styles.section}>
+              <View style={styles.sectionHead}>
+                <CapsLabel>AI Recommendations</CapsLabel>
+                <Pressable onPress={() => navigationRef.navigate('AskAI')} hitSlop={8}>
+                  <CapsLabel color="faint">View All</CapsLabel>
+                </Pressable>
+              </View>
+              <RecoHero envelope={brief.data} onCta={onHeroCta} />
+              <View style={styles.contextStrip}>
+                <ContextStrip signals={brief.data.signals} />
+              </View>
+              <Pressable
+                accessibilityRole="button"
+                testID="ask-entry"
+                onPress={() => navigationRef.navigate('AskAI')}
+                style={styles.askRow}
+              >
+                <Sparkles size={14} color={c.brand.accent} />
+                <ThemedText variant="label" style={[styles.askLabel, { color: c.brand.accent }]}>
+                  Ask {personaName} about your visit
+                </ThemedText>
+              </Pressable>
+            </View>
+          ) : null}
+
+          {/* Quick actions */}
+          <View style={styles.actions}>
+            <QuickAction
+              icon={<ScanLine size={22} color={c.brand.accent} />}
+              label={cashless ? 'Scan / Play' : 'Wallet'}
+              onPress={() => navigation.navigate('Play')}
+            />
+            <QuickAction
+              icon={<Wallet size={22} color={c.brand.accent} />}
+              label="Wallet"
+              onPress={() => navigation.navigate('Play')}
+            />
+          </View>
+
+          {/* Promotions rail */}
+          {promotions.data && promotions.data.length > 0 ? (
+            <View style={styles.section}>
+              <CapsLabel style={styles.sectionTitle}>Promotions</CapsLabel>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {promotions.data.map((p) => (
+                  <View key={p.id} style={styles.carouselItem}>
+                    <OfferCard offer={p} onPress={() => openPromotion(p)} />
+                  </View>
+                ))}
+              </ScrollView>
+            </View>
+          ) : null}
+
+          {/* Featured offer — static fallback when concierge is off / brief not yet cached. */}
+          {!showConciergeHero && featured ? (
+            <View style={styles.section}>
+              <CapsLabel style={styles.sectionTitle} testID="featured-offer">
+                Featured Offer
+              </CapsLabel>
+              <OfferCard offer={featured} onPress={() => openOffer(featured)} />
+            </View>
+          ) : null}
+
+          {/* Tier / points stat strip */}
+          <GlassCard style={styles.statStrip}>
+            <View style={styles.statCol}>
+              <CapsLabel color="muted">Current Tier</CapsLabel>
+              <ThemedText variant="h2" style={styles.statValue}>
                 {me.data?.tier ?? '—'}
               </ThemedText>
+              {me.data?.segment ? <StatusPill label={me.data.segment} tone="purple" /> : null}
             </View>
-            <View style={{ alignItems: 'flex-end' }}>
-              <ThemedText variant="label" color="muted">
-                Points
-              </ThemedText>
-              <ThemedText variant="h2" style={{ color: theme.colors.brand.gold }}>
+            <View
+              style={[styles.statDivider, { backgroundColor: c.border.ghost ?? c.border.soft }]}
+            />
+            <View style={styles.statCol}>
+              <CapsLabel color="muted">Points Balance</CapsLabel>
+              <ThemedText variant="h2" style={{ color: c.brand.accent }}>
                 {me.data?.points ?? 0}
               </ThemedText>
             </View>
-          </View>
-          {me.data?.segment ? (
-            <View style={styles.segmentPill}>
-              <StatusPill label={me.data.segment} tone="purple" />
-            </View>
-          ) : null}
-        </Card>
-
-        {/* Quick actions */}
-        <View style={styles.actions}>
-          <QuickAction
-            icon={<ScanLine size={22} color={theme.colors.brand.onGold} />}
-            label={cashless ? 'Scan / Play' : 'Wallet'}
-            onPress={() => navigation.navigate('Play')}
-          />
-          <QuickAction
-            icon={<Wallet size={22} color={theme.colors.brand.onGold} />}
-            label="Wallet"
-            onPress={() => navigation.navigate('Play')}
-          />
+          </GlassCard>
         </View>
-
-        {/* Promotions carousel */}
-        {promotions.data && promotions.data.length > 0 ? (
-          <>
-            <ThemedText variant="title" style={styles.sectionTitle}>
-              Promotions
-            </ThemedText>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {promotions.data.map((p) => (
-                <View key={p.id} style={styles.carouselItem}>
-                  <OfferCard offer={p} onPress={() => openPromotion(p)} />
-                </View>
-              ))}
-            </ScrollView>
-          </>
-        ) : null}
-
-        {/* Featured offer — the static fallback recommendation when the concierge is off
-            (or its brief hasn't landed yet). Never both surfaces at once. */}
-        {!showConciergeHero && featured ? (
-          <>
-            <ThemedText variant="title" style={styles.sectionTitle} testID="featured-offer">
-              Featured offer
-            </ThemedText>
-            <OfferCard offer={featured} onPress={() => openOffer(featured)} />
-          </>
-        ) : null}
       </ScrollView>
       <PlanSheet visible={planOpen} onClose={() => setPlanOpen(false)} />
     </Screen>
@@ -185,10 +217,21 @@ function QuickAction({
   onPress: () => void;
 }): React.JSX.Element {
   const theme = useTheme();
+  const c = theme.colors;
   return (
     <Pressable onPress={onPress} style={styles.action} accessibilityRole="button">
-      <View style={[styles.actionIcon, { backgroundColor: theme.colors.brand.gold }]}>{icon}</View>
-      <ThemedText variant="label" color="secondary" style={{ marginTop: 6 }}>
+      <View
+        style={[
+          styles.actionIcon,
+          {
+            backgroundColor: withAlpha(c.brand.accent, 0.12),
+            borderColor: c.border.ghost ?? c.border.strong,
+          },
+        ]}
+      >
+        {icon}
+      </View>
+      <ThemedText variant="label" color="secondary" style={{ marginTop: 8 }}>
         {label}
       </ThemedText>
     </Pressable>
@@ -196,23 +239,42 @@ function QuickAction({
 }
 
 const styles = StyleSheet.create({
-  content: { paddingVertical: 16, paddingBottom: 32 },
-  conciergeSlot: { marginTop: 20 },
+  content: { paddingBottom: 32 },
+  hero: { paddingHorizontal: 24, paddingTop: 24, paddingBottom: 32, overflow: 'hidden' },
+  topRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  pointsPill: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+  },
+  heroTitle: { marginTop: 40 },
+  heroName: { fontStyle: 'italic' },
+  body: { paddingHorizontal: 24 },
+  section: { marginTop: 32 },
+  sectionHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
   contextStrip: { marginTop: 10 },
-  askRow: { flexDirection: 'row', alignItems: 'center', marginTop: 10 },
+  askRow: { flexDirection: 'row', alignItems: 'center', marginTop: 12 },
   askLabel: { marginLeft: 6 },
-  tierCard: { marginTop: 20 },
-  tierRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  segmentPill: { marginTop: 12 },
-  actions: { flexDirection: 'row', marginTop: 24 },
+  actions: { flexDirection: 'row', marginTop: 32 },
   action: { alignItems: 'center', marginRight: 28 },
   actionIcon: {
-    width: 52,
-    height: 52,
+    width: 56,
+    height: 56,
     borderRadius: 16,
+    borderWidth: StyleSheet.hairlineWidth,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  sectionTitle: { marginTop: 28, marginBottom: 12 },
+  sectionTitle: { marginBottom: 12 },
   carouselItem: { width: 260, marginRight: 12 },
+  statStrip: { flexDirection: 'row', alignItems: 'center', marginTop: 32 },
+  statCol: { flex: 1, alignItems: 'flex-start', gap: 6 },
+  statValue: { textTransform: 'capitalize' },
+  statDivider: { width: StyleSheet.hairlineWidth, alignSelf: 'stretch', marginHorizontal: 16 },
 });
