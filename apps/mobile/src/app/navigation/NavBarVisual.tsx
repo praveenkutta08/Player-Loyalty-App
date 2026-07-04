@@ -2,6 +2,7 @@ import React from 'react';
 import { Platform, Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '../../components';
+import { withAlpha } from '../../theme/color';
 import { useTheme } from '../../theme/ThemeProvider';
 
 import {
@@ -37,12 +38,14 @@ export function NavBarVisual({
 }: NavBarVisualProps): React.JSX.Element {
   const theme = useTheme();
   const floating = styleKey === 'floatingPill';
-  const gold = theme.colors.brand.gold;
+  // Obsidian system (RS7): the electric indigo accent carries active/center state (gold is demoted).
+  const accent = theme.colors.brand.accent;
+  const onAccent = theme.colors.brand.onAccent ?? theme.colors.text.primary;
   const muted = theme.colors.text.muted;
 
   const items = tabs.map(({ route, label, icon: Icon, isCenter }) => {
     const active = route === activeRoute;
-    const tint = active ? gold : muted;
+    const tint = active ? accent : muted;
 
     if (isCenter) {
       const size = floating ? FLOATING_PILL.centerSize : EDITORIAL.centerBadgeSize;
@@ -62,14 +65,14 @@ export function NavBarVisual({
                 width: size,
                 height: size,
                 borderRadius: size / 2,
-                backgroundColor: gold,
+                backgroundColor: accent,
                 alignItems: 'center',
                 justifyContent: 'center',
               },
               floating
                 ? {
                     marginTop: -FLOATING_PILL.centerRaise,
-                    shadowColor: gold, // primary-color-only glow (splash language)
+                    shadowColor: accent, // primary-color-only glow (splash language)
                     shadowOpacity: 0.45,
                     shadowRadius: 12,
                     shadowOffset: { width: 0, height: 4 },
@@ -78,10 +81,10 @@ export function NavBarVisual({
                 : null,
             ]}
           >
-            <Icon size={floating ? 24 : EDITORIAL.iconSize} color={theme.colors.brand.onGold} />
+            <Icon size={floating ? 24 : EDITORIAL.iconSize} color={onAccent} />
           </View>
           {!floating ? (
-            <ThemedText variant="label" style={[styles.editorialLabel, { color: gold }]}>
+            <ThemedText variant="label" style={[styles.editorialLabel, { color: accent }]}>
               {label}
             </ThemedText>
           ) : null}
@@ -99,16 +102,26 @@ export function NavBarVisual({
         onPress={() => onPress(route)}
         style={styles.item}
       >
-        <Icon size={floating ? FLOATING_PILL.iconSize : EDITORIAL.iconSize} color={tint} />
         {floating ? (
-          <View style={[styles.pillDot, { backgroundColor: active ? gold : 'transparent' }]} />
-        ) : (
-          <ThemedText
-            variant="label"
-            style={[styles.editorialLabel, { color: tint, fontWeight: active ? '600' : '400' }]}
+          // Active = a filled indigo pill behind the icon (obsidian system, RS7).
+          <View
+            style={[
+              styles.activePill,
+              active ? { backgroundColor: withAlpha(accent, 0.16) } : null,
+            ]}
           >
-            {label}
-          </ThemedText>
+            <Icon size={FLOATING_PILL.iconSize} color={tint} />
+          </View>
+        ) : (
+          <>
+            <Icon size={EDITORIAL.iconSize} color={tint} />
+            <ThemedText
+              variant="label"
+              style={[styles.editorialLabel, { color: tint, fontWeight: active ? '600' : '400' }]}
+            >
+              {label}
+            </ThemedText>
+          </>
         )}
       </Pressable>
     );
@@ -125,7 +138,7 @@ export function NavBarVisual({
           style={[
             styles.pill,
             {
-              borderColor: theme.colors.border.soft,
+              borderColor: theme.colors.border.ghost ?? theme.colors.border.soft,
               // iOS: translucent stand-in for native blur; Android: translucent solid (spec).
               backgroundColor:
                 Platform.OS === 'ios' ? `${theme.colors.bg.elevated}EB` : theme.colors.bg.elevated,
@@ -145,7 +158,7 @@ export function NavBarVisual({
         styles.editorialBar,
         {
           backgroundColor: theme.colors.bg.base,
-          borderTopColor: theme.colors.border.soft,
+          borderTopColor: theme.colors.border.ghost ?? theme.colors.border.soft,
           paddingBottom: editorialBottomPadding(safeAreaBottom),
         },
       ]}
@@ -181,10 +194,9 @@ const styles = StyleSheet.create({
   },
   item: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: EDITORIAL.labelGap },
   editorialLabel: { fontSize: EDITORIAL.labelSize, letterSpacing: 0.4 },
-  pillDot: {
-    width: FLOATING_PILL.activeDotSize,
-    height: FLOATING_PILL.activeDotSize,
-    borderRadius: FLOATING_PILL.activeDotSize / 2,
-    marginTop: 4,
+  activePill: {
+    paddingHorizontal: 18,
+    paddingVertical: 8,
+    borderRadius: 999,
   },
 });

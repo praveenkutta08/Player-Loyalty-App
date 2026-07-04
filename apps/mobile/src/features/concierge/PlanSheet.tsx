@@ -33,7 +33,11 @@ export function PlanSheet({
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable style={styles.backdrop} onPress={onClose} accessibilityLabel="Close plan" />
+      <Pressable
+        style={[styles.backdrop, { backgroundColor: theme.colors.bg.scrim }]}
+        onPress={onClose}
+        accessibilityLabel="Close plan"
+      />
       <View
         style={[
           styles.sheet,
@@ -88,7 +92,7 @@ export function PlanSheet({
 }
 
 const styles = StyleSheet.create({
-  backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)' },
+  backdrop: { flex: 1 },
   sheet: {
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,

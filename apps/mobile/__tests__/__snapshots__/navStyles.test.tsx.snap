@@ -12,7 +12,7 @@ exports[`snapshots per style × theme editorial × dark 1`] = `
       },
       {
         "backgroundColor": "#050505",
-        "borderTopColor": "#1E2020",
+        "borderTopColor": "rgba(226,226,226,0.15)",
         "paddingBottom": 34,
       },
     ]
@@ -62,7 +62,7 @@ exports[`snapshots per style × theme editorial × dark 1`] = `
     testID="nav-Home"
   >
     <View
-      color="#E6B450"
+      color="#5E5CE6"
       size={22}
     />
     <Text
@@ -85,7 +85,7 @@ exports[`snapshots per style × theme editorial × dark 1`] = `
               "letterSpacing": 0.4,
             },
             {
-              "color": "#E6B450",
+              "color": "#5E5CE6",
               "fontWeight": "600",
             },
           ],
@@ -218,7 +218,7 @@ exports[`snapshots per style × theme editorial × dark 1`] = `
         [
           {
             "alignItems": "center",
-            "backgroundColor": "#E6B450",
+            "backgroundColor": "#5E5CE6",
             "borderRadius": 20,
             "height": 40,
             "justifyContent": "center",
@@ -230,7 +230,7 @@ exports[`snapshots per style × theme editorial × dark 1`] = `
       testID="nav-center-badge"
     >
       <View
-        color="#1A1408"
+        color="#FFFFFF"
         size={22}
       />
     </View>
@@ -254,7 +254,7 @@ exports[`snapshots per style × theme editorial × dark 1`] = `
               "letterSpacing": 0.4,
             },
             {
-              "color": "#E6B450",
+              "color": "#5E5CE6",
             },
           ],
         ]
@@ -430,7 +430,7 @@ exports[`snapshots per style × theme editorial × light 1`] = `
       },
       {
         "backgroundColor": "#F5F4F0",
-        "borderTopColor": "#EDEAE2",
+        "borderTopColor": "rgba(20,22,28,0.10)",
         "paddingBottom": 34,
       },
     ]
@@ -480,7 +480,7 @@ exports[`snapshots per style × theme editorial × light 1`] = `
     testID="nav-Home"
   >
     <View
-      color="#E6B450"
+      color="#4B49C4"
       size={22}
     />
     <Text
@@ -503,7 +503,7 @@ exports[`snapshots per style × theme editorial × light 1`] = `
               "letterSpacing": 0.4,
             },
             {
-              "color": "#E6B450",
+              "color": "#4B49C4",
               "fontWeight": "600",
             },
           ],
@@ -636,7 +636,7 @@ exports[`snapshots per style × theme editorial × light 1`] = `
         [
           {
             "alignItems": "center",
-            "backgroundColor": "#E6B450",
+            "backgroundColor": "#4B49C4",
             "borderRadius": 20,
             "height": 40,
             "justifyContent": "center",
@@ -648,7 +648,7 @@ exports[`snapshots per style × theme editorial × light 1`] = `
       testID="nav-center-badge"
     >
       <View
-        color="#1A1408"
+        color="#FFFFFF"
         size={22}
       />
     </View>
@@ -672,7 +672,7 @@ exports[`snapshots per style × theme editorial × light 1`] = `
               "letterSpacing": 0.4,
             },
             {
-              "color": "#E6B450",
+              "color": "#4B49C4",
             },
           ],
         ]
@@ -873,7 +873,7 @@ exports[`snapshots per style × theme floatingPill × dark 1`] = `
         },
         {
           "backgroundColor": "#1A1A1CEB",
-          "borderColor": "#1E2020",
+          "borderColor": "rgba(226,226,226,0.15)",
         },
       ]
     }
@@ -921,24 +921,24 @@ exports[`snapshots per style × theme floatingPill × dark 1`] = `
       testID="nav-Home"
     >
       <View
-        color="#E6B450"
-        size={22}
-      />
-      <View
         style={
           [
             {
-              "borderRadius": 2,
-              "height": 4,
-              "marginTop": 4,
-              "width": 4,
+              "borderRadius": 999,
+              "paddingHorizontal": 18,
+              "paddingVertical": 8,
             },
             {
-              "backgroundColor": "#E6B450",
+              "backgroundColor": "rgba(94, 92, 230, 0.16)",
             },
           ]
         }
-      />
+      >
+        <View
+          color="#5E5CE6"
+          size={22}
+        />
+      </View>
     </View>
     <View
       accessibilityLabel="Offers"
@@ -983,24 +983,22 @@ exports[`snapshots per style × theme floatingPill × dark 1`] = `
       testID="nav-Offers"
     >
       <View
-        color="#8E9192"
-        size={22}
-      />
-      <View
         style={
           [
             {
-              "borderRadius": 2,
-              "height": 4,
-              "marginTop": 4,
-              "width": 4,
+              "borderRadius": 999,
+              "paddingHorizontal": 18,
+              "paddingVertical": 8,
             },
-            {
-              "backgroundColor": "transparent",
-            },
+            null,
           ]
         }
-      />
+      >
+        <View
+          color="#8E9192"
+          size={22}
+        />
+      </View>
     </View>
     <View
       accessibilityLabel="Scan/Play"
@@ -1049,7 +1047,7 @@ exports[`snapshots per style × theme floatingPill × dark 1`] = `
           [
             {
               "alignItems": "center",
-              "backgroundColor": "#E6B450",
+              "backgroundColor": "#5E5CE6",
               "borderRadius": 24,
               "height": 48,
               "justifyContent": "center",
@@ -1058,7 +1056,7 @@ exports[`snapshots per style × theme floatingPill × dark 1`] = `
             {
               "elevation": 8,
               "marginTop": -14,
-              "shadowColor": "#E6B450",
+              "shadowColor": "#5E5CE6",
               "shadowOffset": {
                 "height": 4,
                 "width": 0,
@@ -1071,7 +1069,7 @@ exports[`snapshots per style × theme floatingPill × dark 1`] = `
         testID="nav-center-badge"
       >
         <View
-          color="#1A1408"
+          color="#FFFFFF"
           size={24}
         />
       </View>
@@ -1119,24 +1117,22 @@ exports[`snapshots per style × theme floatingPill × dark 1`] = `
       testID="nav-Account"
     >
       <View
-        color="#8E9192"
-        size={22}
-      />
-      <View
         style={
           [
             {
-              "borderRadius": 2,
-              "height": 4,
-              "marginTop": 4,
-              "width": 4,
+              "borderRadius": 999,
+              "paddingHorizontal": 18,
+              "paddingVertical": 8,
             },
-            {
-              "backgroundColor": "transparent",
-            },
+            null,
           ]
         }
-      />
+      >
+        <View
+          color="#8E9192"
+          size={22}
+        />
+      </View>
     </View>
     <View
       accessibilityLabel="More"
@@ -1181,24 +1177,22 @@ exports[`snapshots per style × theme floatingPill × dark 1`] = `
       testID="nav-More"
     >
       <View
-        color="#8E9192"
-        size={22}
-      />
-      <View
         style={
           [
             {
-              "borderRadius": 2,
-              "height": 4,
-              "marginTop": 4,
-              "width": 4,
+              "borderRadius": 999,
+              "paddingHorizontal": 18,
+              "paddingVertical": 8,
             },
-            {
-              "backgroundColor": "transparent",
-            },
+            null,
           ]
         }
-      />
+      >
+        <View
+          color="#8E9192"
+          size={22}
+        />
+      </View>
     </View>
   </View>
 </View>
@@ -1241,7 +1235,7 @@ exports[`snapshots per style × theme floatingPill × light 1`] = `
         },
         {
           "backgroundColor": "#FAF9F5EB",
-          "borderColor": "#EDEAE2",
+          "borderColor": "rgba(20,22,28,0.10)",
         },
       ]
     }
@@ -1289,24 +1283,24 @@ exports[`snapshots per style × theme floatingPill × light 1`] = `
       testID="nav-Home"
     >
       <View
-        color="#E6B450"
-        size={22}
-      />
-      <View
         style={
           [
             {
-              "borderRadius": 2,
-              "height": 4,
-              "marginTop": 4,
-              "width": 4,
+              "borderRadius": 999,
+              "paddingHorizontal": 18,
+              "paddingVertical": 8,
             },
             {
-              "backgroundColor": "#E6B450",
+              "backgroundColor": "rgba(75, 73, 196, 0.16)",
             },
           ]
         }
-      />
+      >
+        <View
+          color="#4B49C4"
+          size={22}
+        />
+      </View>
     </View>
     <View
       accessibilityLabel="Offers"
@@ -1351,24 +1345,22 @@ exports[`snapshots per style × theme floatingPill × light 1`] = `
       testID="nav-Offers"
     >
       <View
-        color="#767C85"
-        size={22}
-      />
-      <View
         style={
           [
             {
-              "borderRadius": 2,
-              "height": 4,
-              "marginTop": 4,
-              "width": 4,
+              "borderRadius": 999,
+              "paddingHorizontal": 18,
+              "paddingVertical": 8,
             },
-            {
-              "backgroundColor": "transparent",
-            },
+            null,
           ]
         }
-      />
+      >
+        <View
+          color="#767C85"
+          size={22}
+        />
+      </View>
     </View>
     <View
       accessibilityLabel="Scan/Play"
@@ -1417,7 +1409,7 @@ exports[`snapshots per style × theme floatingPill × light 1`] = `
           [
             {
               "alignItems": "center",
-              "backgroundColor": "#E6B450",
+              "backgroundColor": "#4B49C4",
               "borderRadius": 24,
               "height": 48,
               "justifyContent": "center",
@@ -1426,7 +1418,7 @@ exports[`snapshots per style × theme floatingPill × light 1`] = `
             {
               "elevation": 8,
               "marginTop": -14,
-              "shadowColor": "#E6B450",
+              "shadowColor": "#4B49C4",
               "shadowOffset": {
                 "height": 4,
                 "width": 0,
@@ -1439,7 +1431,7 @@ exports[`snapshots per style × theme floatingPill × light 1`] = `
         testID="nav-center-badge"
       >
         <View
-          color="#1A1408"
+          color="#FFFFFF"
           size={24}
         />
       </View>
@@ -1487,24 +1479,22 @@ exports[`snapshots per style × theme floatingPill × light 1`] = `
       testID="nav-Account"
     >
       <View
-        color="#767C85"
-        size={22}
-      />
-      <View
         style={
           [
             {
-              "borderRadius": 2,
-              "height": 4,
-              "marginTop": 4,
-              "width": 4,
+              "borderRadius": 999,
+              "paddingHorizontal": 18,
+              "paddingVertical": 8,
             },
-            {
-              "backgroundColor": "transparent",
-            },
+            null,
           ]
         }
-      />
+      >
+        <View
+          color="#767C85"
+          size={22}
+        />
+      </View>
     </View>
     <View
       accessibilityLabel="More"
@@ -1549,24 +1539,22 @@ exports[`snapshots per style × theme floatingPill × light 1`] = `
       testID="nav-More"
     >
       <View
-        color="#767C85"
-        size={22}
-      />
-      <View
         style={
           [
             {
-              "borderRadius": 2,
-              "height": 4,
-              "marginTop": 4,
-              "width": 4,
+              "borderRadius": 999,
+              "paddingHorizontal": 18,
+              "paddingVertical": 8,
             },
-            {
-              "backgroundColor": "transparent",
-            },
+            null,
           ]
         }
-      />
+      >
+        <View
+          color="#767C85"
+          size={22}
+        />
+      </View>
     </View>
   </View>
 </View>
