@@ -1,0 +1,14 @@
+# Keep the admin build context lean (build context = repo root).
+**/node_modules
+**/dist
+**/.turbo
+**/.venv
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+.git
+apps/mobile/android
+apps/mobile/ios
+**/.env
