@@ -1,0 +1,2 @@
+# Drop brand TTFs here (Bodoni Moda, Manrope, JetBrains Mono), then run `npx react-native-asset`.
+# These are per-tenant/brand assets; the app falls back to system fonts when absent.

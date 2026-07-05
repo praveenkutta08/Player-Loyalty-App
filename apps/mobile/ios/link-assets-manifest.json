@@ -1,0 +1,53 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/.gitkeep",
+      "sha1": "540bc071a4c5a71657768bf21ab491081f0b88a4"
+    },
+    {
+      "path": "assets/fonts/Bodoni Moda_bold.ttf",
+      "sha1": "83823078d7c1f27a76b1cdc75bbf2232205076ce"
+    },
+    {
+      "path": "assets/fonts/Bodoni Moda.ttf",
+      "sha1": "ca5168a0491b461c5f9e13b77579c8f4d971f480"
+    },
+    {
+      "path": "assets/fonts/Inter_bold.ttf",
+      "sha1": "34eb34633e83f1aea439833a7de0aebad6edda55"
+    },
+    {
+      "path": "assets/fonts/Inter.ttf",
+      "sha1": "55da6af145c957de15ac6c6e55fa841a83369b8f"
+    },
+    {
+      "path": "assets/fonts/JetBrains Mono_bold.ttf",
+      "sha1": "13962f0a35324137289f1e1107182553878a34e7"
+    },
+    {
+      "path": "assets/fonts/JetBrains Mono.ttf",
+      "sha1": "a0ae7f1a4a6f0dcdf4e3742323390270496fa741"
+    },
+    {
+      "path": "assets/fonts/Manrope_bold.ttf",
+      "sha1": "a1f45b2c111eb4d0a28c230bf8b26dddf1d7f9f1"
+    },
+    {
+      "path": "assets/fonts/Manrope.ttf",
+      "sha1": "63d42623e23acdcfa64139f9ec00c5bc1e469182"
+    },
+    {
+      "path": "assets/fonts/OFL-ATTRIBUTION.md",
+      "sha1": "27b80579302c45ebfb5604c3537c91c9eff5a98b"
+    },
+    {
+      "path": "assets/fonts/Playfair Display_bold.ttf",
+      "sha1": "60f1c6f4bf1532fbff417f58564f3a527e77af05"
+    },
+    {
+      "path": "assets/fonts/Playfair Display.ttf",
+      "sha1": "acabb4d8575dca3b89090a3127aca67cfcc50eee"
+    }
+  ]
+}

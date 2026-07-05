@@ -11,6 +11,18 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		2E8A4D724F7F4AD0AD5B3F96 /* Bodoni Moda.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 73274C447D3248FF94471387 /* Bodoni Moda.ttf */; };
+		FB7D0461863B4A4DB76909BC /* Bodoni Moda_bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C1FD19DA7EB74043AF89C17E /* Bodoni Moda_bold.ttf */; };
+		AC1C758BAD0249D8840329DF /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B19F15BDE8C04F9FB59F5E6C /* Inter.ttf */; };
+		C4F6AF13C6144F0EB8E2B501 /* Inter_bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FBA9972086E24268BFCC75B0 /* Inter_bold.ttf */; };
+		FB2C1D9AC9B84F1C8302F04D /* JetBrains Mono.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B448393C31044A6493351F85 /* JetBrains Mono.ttf */; };
+		7E443FB7F9AE4A8A970CA113 /* JetBrains Mono_bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 014D1153660342809B0ECE3A /* JetBrains Mono_bold.ttf */; };
+		92A8AD4B988E4076B822B195 /* Manrope.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BBC2B7C2C21E4032A7F241A2 /* Manrope.ttf */; };
+		144C5D63856C488AA9140847 /* Manrope_bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 39DD60B5FC3A4C868F9B79E1 /* Manrope_bold.ttf */; };
+		6ACC8471069341AB9BFD270A /* Playfair Display.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 87386CE066C94355BB749C2E /* Playfair Display.ttf */; };
+		A7305AD54AA74445A7C454F4 /* Playfair Display_bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D00B33897A7422DBF894072 /* Playfair Display_bold.ttf */; };
+		7B08534FC43142ED8CF10253 /* .gitkeep in Resources */ = {isa = PBXBuildFile; fileRef = 79FE98B0A91E4AE5A60698BD /* .gitkeep */; };
+		FE2AD9DE349B40DC921ACF9D /* OFL-ATTRIBUTION.md in Resources */ = {isa = PBXBuildFile; fileRef = 722BFE116E6A40E6A22CE553 /* OFL-ATTRIBUTION.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +36,18 @@
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = mobile/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = mobile/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		73274C447D3248FF94471387 /* Bodoni Moda.ttf */ = {isa = PBXFileReference; name = "Bodoni Moda.ttf"; path = "../assets/fonts/Bodoni Moda.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C1FD19DA7EB74043AF89C17E /* Bodoni Moda_bold.ttf */ = {isa = PBXFileReference; name = "Bodoni Moda_bold.ttf"; path = "../assets/fonts/Bodoni Moda_bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B19F15BDE8C04F9FB59F5E6C /* Inter.ttf */ = {isa = PBXFileReference; name = "Inter.ttf"; path = "../assets/fonts/Inter.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		FBA9972086E24268BFCC75B0 /* Inter_bold.ttf */ = {isa = PBXFileReference; name = "Inter_bold.ttf"; path = "../assets/fonts/Inter_bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B448393C31044A6493351F85 /* JetBrains Mono.ttf */ = {isa = PBXFileReference; name = "JetBrains Mono.ttf"; path = "../assets/fonts/JetBrains Mono.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		014D1153660342809B0ECE3A /* JetBrains Mono_bold.ttf */ = {isa = PBXFileReference; name = "JetBrains Mono_bold.ttf"; path = "../assets/fonts/JetBrains Mono_bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		BBC2B7C2C21E4032A7F241A2 /* Manrope.ttf */ = {isa = PBXFileReference; name = "Manrope.ttf"; path = "../assets/fonts/Manrope.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		39DD60B5FC3A4C868F9B79E1 /* Manrope_bold.ttf */ = {isa = PBXFileReference; name = "Manrope_bold.ttf"; path = "../assets/fonts/Manrope_bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		87386CE066C94355BB749C2E /* Playfair Display.ttf */ = {isa = PBXFileReference; name = "Playfair Display.ttf"; path = "../assets/fonts/Playfair Display.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1D00B33897A7422DBF894072 /* Playfair Display_bold.ttf */ = {isa = PBXFileReference; name = "Playfair Display_bold.ttf"; path = "../assets/fonts/Playfair Display_bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		79FE98B0A91E4AE5A60698BD /* .gitkeep */ = {isa = PBXFileReference; name = ".gitkeep"; path = "../assets/fonts/.gitkeep"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		722BFE116E6A40E6A22CE553 /* OFL-ATTRIBUTION.md */ = {isa = PBXFileReference; name = "OFL-ATTRIBUTION.md"; path = "../assets/fonts/OFL-ATTRIBUTION.md"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +98,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				E2F520060A8D4C22A4958014 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -96,6 +121,26 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		E2F520060A8D4C22A4958014 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				73274C447D3248FF94471387 /* Bodoni Moda.ttf */,
+				C1FD19DA7EB74043AF89C17E /* Bodoni Moda_bold.ttf */,
+				B19F15BDE8C04F9FB59F5E6C /* Inter.ttf */,
+				FBA9972086E24268BFCC75B0 /* Inter_bold.ttf */,
+				B448393C31044A6493351F85 /* JetBrains Mono.ttf */,
+				014D1153660342809B0ECE3A /* JetBrains Mono_bold.ttf */,
+				BBC2B7C2C21E4032A7F241A2 /* Manrope.ttf */,
+				39DD60B5FC3A4C868F9B79E1 /* Manrope_bold.ttf */,
+				87386CE066C94355BB749C2E /* Playfair Display.ttf */,
+				1D00B33897A7422DBF894072 /* Playfair Display_bold.ttf */,
+				79FE98B0A91E4AE5A60698BD /* .gitkeep */,
+				722BFE116E6A40E6A22CE553 /* OFL-ATTRIBUTION.md */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -159,6 +204,18 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				2E8A4D724F7F4AD0AD5B3F96 /* Bodoni Moda.ttf in Resources */,
+				FB7D0461863B4A4DB76909BC /* Bodoni Moda_bold.ttf in Resources */,
+				AC1C758BAD0249D8840329DF /* Inter.ttf in Resources */,
+				C4F6AF13C6144F0EB8E2B501 /* Inter_bold.ttf in Resources */,
+				FB2C1D9AC9B84F1C8302F04D /* JetBrains Mono.ttf in Resources */,
+				7E443FB7F9AE4A8A970CA113 /* JetBrains Mono_bold.ttf in Resources */,
+				92A8AD4B988E4076B822B195 /* Manrope.ttf in Resources */,
+				144C5D63856C488AA9140847 /* Manrope_bold.ttf in Resources */,
+				6ACC8471069341AB9BFD270A /* Playfair Display.ttf in Resources */,
+				A7305AD54AA74445A7C454F4 /* Playfair Display_bold.ttf in Resources */,
+				7B08534FC43142ED8CF10253 /* .gitkeep in Resources */,
+				FE2AD9DE349B40DC921ACF9D /* OFL-ATTRIBUTION.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
