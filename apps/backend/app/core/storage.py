@@ -38,6 +38,13 @@ def create_presigned_upload(key: str, *, content_type: str, expires_in: int = 36
 
 
 def public_url(key: str) -> str:
-    """The stable public URL for an uploaded object."""
+    """The stable public URL for an uploaded object.
+
+    Uses ``S3_PUBLIC_BASE_URL`` (a stable CDN/public host) when set, so the URL persisted on an
+    offer/content item doesn't depend on the internal upload endpoint (``S3_ENDPOINT``), which may
+    be unreachable from browsers/devices. Falls back to ``{endpoint}/{bucket}``.
+    """
     settings = get_settings()
+    if settings.s3_public_base_url:
+        return f"{settings.s3_public_base_url.rstrip('/')}/{key}"
     return f"{settings.s3_endpoint.rstrip('/')}/{settings.s3_bucket}/{key}"

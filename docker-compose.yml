@@ -35,6 +35,20 @@ services:
     ports: ['9000:9000', '9001:9001']
     volumes: ['miniodata:/data']
 
+  # One-shot: create the media bucket and make it public-read so uploaded offer/content images
+  # load in the browser and mobile app (objects are served by anonymous GET). Retries until MinIO
+  # is up, then exits. Idempotent — safe to re-run on every `infra:up`.
+  minio-setup:
+    image: minio/mc
+    depends_on: [minio]
+    entrypoint: >
+      /bin/sh -c "
+      until mc alias set local http://minio:9000 minioadmin minioadmin; do echo 'waiting for minio...'; sleep 2; done &&
+      mc mb --ignore-existing local/player-media &&
+      mc anonymous set download local/player-media &&
+      echo 'player-media bucket ready (public-read)';
+      "
+
   mailhog:
     image: mailhog/mailhog
     ports: ['1025:1025', '8025:8025']

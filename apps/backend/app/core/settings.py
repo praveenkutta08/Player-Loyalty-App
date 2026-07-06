@@ -96,6 +96,11 @@ class Settings(BaseSettings):
     s3_access_key: str = "minioadmin"
     s3_secret_key: str = "minioadmin"
     s3_region: str = "us-east-1"
+    # Stable public/CDN base for object GET URLs (must already include the bucket if the object key
+    # doesn't). When unset, public_url() falls back to {s3_endpoint}/{s3_bucket}. Set this to a host
+    # reachable from browsers/devices (e.g. a CDN, or http://10.0.2.2:9000/player-media for the
+    # Android emulator) so persisted media URLs stay valid independent of the upload endpoint.
+    s3_public_base_url: str | None = None
 
     # CORS — the admin console dev origin (Vite default port).
     cors_origins: list[str] = ["http://localhost:5173"]
