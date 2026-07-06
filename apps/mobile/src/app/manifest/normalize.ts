@@ -28,6 +28,8 @@ export interface ResolvedManifest {
   theme: ThemeTokens;
   /** Tenant-forced color scheme (`theme.mode` in the manifest). `undefined`/`system` = follow OS. */
   themeMode?: 'dark' | 'light' | 'system';
+  /** Per-tier member-card art keyed by lowercase tier key (`theme.tierCards` in the manifest). */
+  tierCards?: Record<string, string>;
   featureFlags: FeatureFlags;
   navigation?: ManifestNavigation;
   /** Concierge persona (P6.5); the `concierge` feature flag gates the UI. */
@@ -112,6 +114,17 @@ export function normalizeManifest(raw: ManifestOut, etag?: string): ResolvedMani
   const rawMode = (raw.theme as { mode?: unknown } | undefined)?.mode;
   const themeMode =
     rawMode === 'dark' || rawMode === 'light' || rawMode === 'system' ? rawMode : undefined;
+  // `tierCards` is an additive theme field (ManifestTheme extra="allow"): { bronze: url, ... }.
+  const rawTierCards = (raw.theme as { tierCards?: unknown } | undefined)?.tierCards;
+  let tierCards: Record<string, string> | undefined;
+  if (rawTierCards && typeof rawTierCards === 'object') {
+    const entries = Object.entries(rawTierCards as Record<string, unknown>).filter(
+      ([, v]) => typeof v === 'string' && v,
+    ) as [string, string][];
+    if (entries.length) {
+      tierCards = Object.fromEntries(entries.map(([k, v]) => [k.toLowerCase(), v]));
+    }
+  }
   return {
     version: raw.version,
     tenantId: raw.tenant_id,
@@ -119,6 +132,7 @@ export function normalizeManifest(raw: ManifestOut, etag?: string): ResolvedMani
     name: raw.name,
     theme,
     themeMode,
+    tierCards,
     featureFlags: coerceFlags(raw.feature_flags),
     navigation: normalizeNavigation(raw.navigation),
     concierge: normalizeConcierge(raw.concierge),

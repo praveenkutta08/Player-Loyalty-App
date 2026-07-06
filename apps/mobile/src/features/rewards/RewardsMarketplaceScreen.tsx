@@ -2,6 +2,7 @@ import React from 'react';
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 
 import { CapsLabel, ImmersiveCard, Kicker, PillButton, Screen, ThemedText } from '../../components';
+import { resolveAssetUri } from '../../lib/assetUri';
 import { useTheme } from '../../theme/ThemeProvider';
 import { useGetPointsQuery } from '../account/accountApi';
 
@@ -80,7 +81,7 @@ function RewardCard({
   return (
     <View style={styles.card}>
       <ImmersiveCard
-        image={item.image_url ? { uri: item.image_url } : undefined}
+        image={resolveAssetUri(item.image_url) ? { uri: resolveAssetUri(item.image_url) } : undefined}
         kicker="Curated"
         title={item.title}
         height={200}

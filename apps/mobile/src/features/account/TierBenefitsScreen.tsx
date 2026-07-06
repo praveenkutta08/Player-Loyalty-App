@@ -1,8 +1,10 @@
 import { Check, Lock } from 'lucide-react-native';
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 
+import { useManifest } from '../../app/manifest/ManifestProvider';
 import { Card, ProgressBar, Screen, StatusPill, ThemedText } from '../../components';
+import { resolveAssetUri } from '../../lib/assetUri';
 import { useTheme } from '../../theme/ThemeProvider';
 
 import { useGetAccountMeQuery } from './accountApi';
@@ -11,15 +13,24 @@ import { TIER_LADDER, tierProgress } from './tiers';
 /** C3 — Tier & benefits: progress to the next tier and the full benefit ladder (current + upcoming). */
 export function TierBenefitsScreen(): React.JSX.Element {
   const theme = useTheme();
+  const { manifest } = useManifest();
   const me = useGetAccountMeQuery();
 
   const points = me.data?.points ?? 0;
   const progress = tierProgress(points, me.data?.tier ?? 'bronze');
   const currentIdx = TIER_LADDER.findIndex((t) => t.key === progress.current.key);
+  const cardArt = resolveAssetUri(manifest?.tierCards?.[progress.current.key]);
 
   return (
     <Screen>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+        {cardArt ? (
+          <Image
+            source={{ uri: cardArt }}
+            style={[styles.hero, { borderRadius: theme.radius.wallet ?? 12 }]}
+            resizeMode="cover"
+          />
+        ) : null}
         <Card style={styles.card}>
           <View style={styles.rowBetween}>
             <ThemedText variant="h2">{progress.current.label}</ThemedText>
@@ -86,6 +97,7 @@ export function TierBenefitsScreen(): React.JSX.Element {
 
 const styles = StyleSheet.create({
   content: { paddingVertical: 16, paddingBottom: 32 },
+  hero: { width: '100%', aspectRatio: 1.6, marginBottom: 16 },
   card: { marginBottom: 12 },
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   progress: { marginVertical: 12 },

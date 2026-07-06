@@ -105,9 +105,15 @@ async def _seed(session_factory: async_sessionmaker[AsyncSession]) -> dict[str, 
         # light mode; the full obsidian palette is the app's bundled default (design/tokens.json),
         # so we only pin the scheme + a couple of brand accents here. `mode` rides through the
         # manifest via ManifestTheme(extra="allow").
+        # Demo tier-card art (bronze = the demo player's tier) so the feature is visible without a
+        # manual upload; admins Replace it per tier under Rewards ▸ Tiers. Deterministic public image.
+        demo_tier_cards = {
+            "bronze": "https://picsum.photos/seed/obsidian-bronze/1000/620",
+        }
         obsidian_tokens = {
             "mode": "dark",
             "color": {"brand": {"accent": "#5E5CE6", "gold": "#E6B450"}},
+            "tierCards": demo_tier_cards,
         }
         theme = await _get_or_create(
             session,
@@ -117,9 +123,14 @@ async def _seed(session_factory: async_sessionmaker[AsyncSession]) -> dict[str, 
             name="Casino Luxe",
         )
         # Backfill the obsidian defaults onto a pre-existing seed (tokens are create-only above),
-        # so re-seeding an existing DB flips it to dark without a full reset.
-        if theme.tokens.get("mode") != "dark":
-            theme.tokens = {**theme.tokens, **obsidian_tokens}
+        # so re-seeding an existing DB flips it to dark + adds demo tier art without a full reset.
+        if theme.tokens.get("mode") != "dark" or "tierCards" not in theme.tokens:
+            theme.tokens = {
+                **theme.tokens,
+                **obsidian_tokens,
+                # Preserve any admin-uploaded tier art; only fill in what's missing.
+                "tierCards": {**demo_tier_cards, **(theme.tokens.get("tierCards") or {})},
+            }
             theme.is_active = True
 
         # Admins for each role; global super-admin is unscoped, the rest are scoped to the tenant.

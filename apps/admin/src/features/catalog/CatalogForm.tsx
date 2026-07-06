@@ -1,11 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import type { Offer, OfferCreate } from './catalogApi';
 
-import { Button, Field, Input, Modal, Select, Textarea } from '@/components/ui';
+import { usePresignMediaMutation } from '@/features/media/mediaApi';
+
+import { Button, Field, Input, Modal, Select, Textarea, useToast } from '@/components/ui';
 import { SEGMENTS } from '@/features/shared/segments';
 
 export type CatalogFormValues = OfferCreate & { title: string };
@@ -71,16 +73,55 @@ export function CatalogForm({
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormShape>({
     resolver: zodResolver(schema),
     defaultValues: defaults(editing),
   });
 
+  const { toast } = useToast();
+  const [presign] = usePresignMediaMutation();
+  const [uploading, setUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const imageUrl = watch('image_url');
+
   // Rehydrate when the modal opens for a different record.
   useEffect(() => {
     if (open) reset(defaults(editing));
   }, [open, editing, reset]);
+
+  // Presign → PUT to object storage → store the public media_url on the offer (reuses the CMS
+  // media presign; same pattern as the Media Library). A failed PUT aborts, never silently "works".
+  const onPickImage = async (file: File) => {
+    if (!file.type.startsWith('image/')) {
+      toast('Please choose an image file.', 'error');
+      return;
+    }
+    setUploading(true);
+    try {
+      const res = await presign({
+        filename: file.name,
+        content_type: file.type || 'application/octet-stream',
+      }).unwrap();
+      const put = await fetch(res.upload_url, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type || 'application/octet-stream' },
+      });
+      if (!put.ok) {
+        toast(`Upload failed (${put.status}) — image not stored.`, 'error');
+        return;
+      }
+      setValue('image_url', res.media_url, { shouldValidate: true, shouldDirty: true });
+      toast('Image uploaded');
+    } catch {
+      toast('Upload failed — image not stored.', 'error');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const submit = handleSubmit(async (v) => {
     await onSave({
@@ -126,8 +167,56 @@ export function CatalogForm({
               ))}
             </Select>
           </Field>
-          <Field label="Image URL">
-            <Input {...register('image_url')} placeholder="From Media Library" />
+          <Field label="Image">
+            <div className="flex items-center gap-3">
+              <div className="h-14 w-20 shrink-0 overflow-hidden rounded-md border border-[var(--token-border-ghost)] bg-[var(--token-bg-container)]">
+                {imageUrl ? (
+                  <img src={imageUrl} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-[10px] text-muted">
+                    No image
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col gap-1">
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) void onPickImage(f);
+                    e.target.value = '';
+                  }}
+                />
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    disabled={uploading}
+                    onClick={() => fileRef.current?.click()}
+                  >
+                    {uploading ? 'Uploading…' : imageUrl ? 'Replace' : 'Upload image'}
+                  </Button>
+                  {imageUrl && (
+                    <Button
+                      type="button"
+                      onClick={() =>
+                        setValue('image_url', '', { shouldValidate: true, shouldDirty: true })
+                      }
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+            {/* Keep a URL field so an external/CDN link can still be pasted; upload just fills it. */}
+            <Input
+              {...register('image_url')}
+              placeholder="…or paste an image URL"
+              className="mt-2"
+            />
             {errors.image_url && (
               <p className="mt-1 text-[12px] text-red">{errors.image_url.message}</p>
             )}

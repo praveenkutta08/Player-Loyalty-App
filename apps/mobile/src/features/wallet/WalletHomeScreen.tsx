@@ -62,6 +62,9 @@ export function WalletHomeScreen({ navigation }: Props): React.JSX.Element {
           tier={me.data?.tier}
           walletId={wallet.data?.id}
           brandName={manifest?.name ?? 'Executive Companion'}
+          imageUri={
+            me.data?.tier ? manifest?.tierCards?.[me.data.tier.toLowerCase()] : undefined
+          }
         />
 
         {/* Balance block */}

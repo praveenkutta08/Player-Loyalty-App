@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { CapsLabel, ImmersiveCard, PillButton, PillButtonRow } from '../../components';
+import { resolveAssetUri } from '../../lib/assetUri';
 
 import type { OfferOut } from './offersApi';
 
@@ -25,10 +26,11 @@ export function OfferCard({
   redeemed?: boolean;
   onPress?: () => void;
 }): React.JSX.Element {
+  const imageUri = resolveAssetUri(offer.image_url);
   return (
     <View style={styles.wrap}>
       <ImmersiveCard
-        image={offer.image_url ? { uri: offer.image_url } : undefined}
+        image={imageUri ? { uri: imageUri } : undefined}
         kicker={offerKicker(offer)}
         title={offer.title}
         subtitle={offer.description ?? undefined}
